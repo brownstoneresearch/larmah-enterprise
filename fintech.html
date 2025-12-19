@@ -1,870 +1,680 @@
-<!-- fintech.html (UPDATED for Currency Exchanges) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Currency Exchange & Verification | Larmah Enterprise</title>
-
-  <meta name="description" content="Verified USD to Naira exchange, cryptocurrency conversions, and secure financial verification services. Best rates, transparent process, WhatsApp-first support." />
-  <meta name="theme-color" content="#070A12" />
-  <link rel="canonical" href="./fintech.html" />
-
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Currency Exchange & Verification | Larmah Enterprise" />
-  <meta property="og:description" content="Verified USD/GBP/EUR to Naira exchange, crypto conversions, and financial verification. Secure transactions with trusted rates." />
-  <meta property="og:image" content="assets/images/larmah-header.jpeg" />
-  <meta property="og:url" content="./fintech.html" />
-
-  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
-  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
-
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="assets/js/app.js"></script>
-
-  <style>
-    .catalog-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-    .filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0 6px}
-    @media(max-width:980px){.filters{grid-template-columns:1fr}}
-    .hero-quick{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Currency Exchange | USD to Naira • Crypto to Naira | Larmah Enterprise</title>
+    <meta name="description" content="Real-time USD to Naira, GBP to Naira, EUR to Naira exchange. Bitcoin, Ethereum, USDT conversions. Best rates with escrow protection.">
     
-    /* Currency Specific Styles */
-    .currency-ticker {
-      background: rgba(0,217,129,.08);
-      border: 1px solid rgba(0,217,129,.2);
-      border-radius: 12px;
-      padding: 16px;
-      margin: 20px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-    
-    .currency-pair {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    
-    .currency-flag {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid rgba(255,255,255,.1);
-    }
-    
-    .currency-flag img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .currency-rate {
-      font-size: 1.5rem;
-      font-weight: 950;
-      color: var(--brand);
-    }
-    
-    .currency-change {
-      font-size: 0.9rem;
-      padding: 4px 8px;
-      border-radius: 8px;
-      background: rgba(67,209,125,.1);
-      color: var(--ok);
-    }
-    
-    .currency-change.negative {
-      background: rgba(255,90,103,.1);
-      color: var(--bad);
-    }
-    
-    .exchange-calculator {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-      margin: 24px 0;
-    }
-    
-    .calc-grid {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 16px;
-      align-items: end;
-    }
-    
-    @media (max-width: 768px) {
-      .calc-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    
-    .calc-swap {
-      display: flex;
-      justify-content: center;
-      padding-bottom: 10px;
-    }
-    
-    .swap-btn {
-      background: rgba(255,255,255,.05);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all var(--t);
-    }
-    
-    .swap-btn:hover {
-      background: rgba(212,175,55,.1);
-      border-color: rgba(212,175,55,.3);
-      transform: rotate(180deg);
-    }
-    
-    .crypto-badges {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 12px;
-    }
-    
-    .crypto-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      background: rgba(255,255,255,.03);
-      border: 1px solid rgba(255,255,255,.1);
-      font-size: 0.9rem;
-      font-weight: 900;
-    }
-    
-    .exchange-steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin: 24px 0;
-    }
-    
-    .exchange-step {
-      text-align: center;
-      padding: 16px;
-      background: rgba(255,255,255,.02);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.05);
-    }
-    
-    .exchange-step i {
-      font-size: 1.5rem;
-      color: var(--brand);
-      margin-bottom: 12px;
-    }
-    
-    .rate-card {
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .rate-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: rgba(212,175,55,.9);
-      color: #0b0d12;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 950;
-    }
-    
-    .trust-score {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      background: rgba(67,209,125,.1);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 900;
-      color: var(--ok);
-    }
-  </style>
-</head>
-
-<body data-page="fintech">
-  <header>
-    <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Home">
-        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-      </a>
-
-      <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-
-      <nav id="nav" aria-label="Primary navigation">
-        <ul>
-          <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
-          <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-          <li><a class="nav-link active" href="fintech.html" data-link="fintech">Currency Exchange</a></li>
-          <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
-        </ul>
-      </nav>
-
-      <div class="header-actions">
-        <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium Rates</a>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-shell">
-        <div class="hero-inner">
-          <div>
-            <div class="hero-kicker">
-              <span class="kicker-pill">
-                <i class="fa-solid fa-money-bill-transfer"></i>
-                Verified Currency Exchange
-              </span>
-              <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Best Rates • Secure Transactions</span>
-            </div>
-
-            <h1>Exchange Currencies. Verified & Secure.</h1>
-            <p class="lead">
-              Convert USD, GBP, EUR to Naira at competitive rates. Trade cryptocurrencies safely with verified partners. All transactions secured with escrow protection.
-            </p>
-
-            <!-- Live Currency Ticker -->
-            <div class="currency-ticker">
-              <div class="currency-pair">
-                <div class="currency-flag">
-                  <img src="https://flagcdn.com/w40/us.png" alt="USD" loading="lazy">
-                </div>
-                <div>
-                  <div class="small">USD → NGN</div>
-                  <div class="currency-rate" id="usdRate">₦1,450</div>
-                </div>
-                <span class="currency-change" id="usdChange">+0.8%</span>
-              </div>
-              
-              <div class="currency-pair">
-                <div class="currency-flag">
-                  <img src="https://flagcdn.com/w40/gb.png" alt="GBP" loading="lazy">
-                </div>
-                <div>
-                  <div class="small">GBP → NGN</div>
-                  <div class="currency-rate" id="gbpRate">₦1,820</div>
-                </div>
-                <span class="currency-change" id="gbpChange">+0.5%</span>
-              </div>
-              
-              <div class="currency-pair">
-                <div class="currency-flag">
-                  <img src="https://flagcdn.com/w40/eu.png" alt="EUR" loading="lazy">
-                </div>
-                <div>
-                  <div class="small">EUR → NGN</div>
-                  <div class="currency-rate" id="eurRate">₦1,580</div>
-                </div>
-                <span class="currency-change" id="eurChange">+0.3%</span>
-              </div>
-            </div>
-
-            <div class="hero-quick">
-              <a class="btn solid" href="#calculator"><i class="fa-solid fa-calculator"></i> Calculate Exchange</a>
-              <a class="btn primary" href="#catalog"><i class="fa-solid fa-bolt"></i> View Rates</a>
-              <button class="btn" onclick="openWhatsApp('Exchange Request')">
-                <i class="fa-brands fa-whatsapp"></i> Quick Quote
-              </button>
-            </div>
-
-            <div class="trust-row">
-              <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Escrow Protection</div>
-              <div class="trust-badge"><i class="fa-solid fa-chart-line"></i> Best Market Rates</div>
-              <div class="trust-badge"><i class="fa-solid fa-clock"></i> Same Day Settlement</div>
-              <div class="trust-badge"><i class="fa-solid fa-user-check"></i> Verified Partners</div>
-            </div>
-          </div>
-
-          <div class="hero-badges">
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-dollar-sign"></i> USD → Naira</h3>
-              <p>Best rates for Dollar to Naira exchanges. Bank transfer & cash options available.</p>
-              <div class="crypto-badges">
-                <span class="crypto-badge"><i class="fa-brands fa-bitcoin"></i> BTC Accepted</span>
-              </div>
-            </div>
-            
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-coins"></i> Crypto Exchange</h3>
-              <p>Bitcoin, USDT, Ethereum to Naira. Secure wallet-to-bank transfers.</p>
-              <div class="crypto-badges">
-                <span class="crypto-badge"><i class="fa-brands fa-ethereum"></i> ETH</span>
-                <span class="crypto-badge"><i class="fa-solid fa-circle-dollar"></i> USDT</span>
-              </div>
-            </div>
-            
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-file-contract"></i> Verification</h3>
-              <p>Document verification for property, vehicle, and financial agreements.</p>
-              <div class="trust-score">
-                <i class="fa-solid fa-circle-check"></i> Trust Score: 98%
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- EXCHANGE CALCULATOR -->
-    <section class="section" id="calculator">
-      <h2>Exchange Calculator</h2>
-      <p class="lead">Calculate your exchange rate instantly. Rates update in real-time.</p>
-      
-      <div class="exchange-calculator">
-        <div class="calc-grid">
-          <div>
-            <label class="small">From Currency</label>
-            <select id="fromCurrency" class="input" onchange="calculateExchange()">
-              <option value="USD">🇺🇸 US Dollar (USD)</option>
-              <option value="GBP">🇬🇧 British Pound (GBP)</option>
-              <option value="EUR">🇪🇺 Euro (EUR)</option>
-              <option value="BTC">₿ Bitcoin (BTC)</option>
-              <option value="ETH">Ξ Ethereum (ETH)</option>
-              <option value="USDT">💵 USDT (Tether)</option>
-            </select>
-          </div>
-          
-          <div class="calc-swap">
-            <button class="swap-btn" onclick="swapCurrencies()">
-              <i class="fa-solid fa-right-left"></i>
-            </button>
-          </div>
-          
-          <div>
-            <label class="small">To Currency</label>
-            <select id="toCurrency" class="input" onchange="calculateExchange()">
-              <option value="NGN">🇳🇬 Nigerian Naira (NGN)</option>
-              <option value="USD">🇺🇸 US Dollar (USD)</option>
-              <option value="BTC">₿ Bitcoin (BTC)</option>
-              <option value="ETH">Ξ Ethereum (ETH)</option>
-            </select>
-          </div>
-        </div>
-        
-        <div class="row2" style="margin-top: 20px;">
-          <div>
-            <label class="small">Amount to Convert</label>
-            <input type="number" id="amount" class="input" placeholder="0.00" value="100" oninput="calculateExchange()" min="0" step="0.01">
-          </div>
-          <div>
-            <label class="small">You Will Receive</label>
-            <div class="input" style="background: rgba(0,217,129,.05); border-color: rgba(0,217,129,.2); font-size: 1.2rem; font-weight: 950; display: flex; align-items: center;">
-              <span id="convertedAmount">₦145,000</span>
-            </div>
-          </div>
-        </div>
-        
-        <div style="margin-top: 16px; padding: 12px; background: rgba(212,175,55,.05); border-radius: 12px;">
-          <div class="small" style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-            <span>Exchange Rate:</span>
-            <span id="exchangeRate">1 USD = ₦1,450</span>
-          </div>
-          <div class="small" style="display: flex; justify-content: space-between;">
-            <span>Service Fee:</span>
-            <span id="serviceFee">0.5% • ₦725</span>
-          </div>
-        </div>
-        
-        <div class="actions" style="margin-top: 20px;">
-          <button class="btn solid" style="flex: 1;" onclick="initiateExchange()">
-            <i class="fa-brands fa-whatsapp"></i> Proceed with this Rate
-          </button>
-        </div>
-      </div>
-      
-      <div class="exchange-steps">
-        <div class="exchange-step">
-          <i class="fa-solid fa-comment-dots"></i>
-          <h4>1. Request Quote</h4>
-          <p class="small">Send us your exchange details via WhatsApp</p>
-        </div>
-        <div class="exchange-step">
-          <i class="fa-solid fa-handshake"></i>
-          <h4>2. Get Verified</h4>
-          <p class="small">We verify rates & provide secure transaction details</p>
-        </div>
-        <div class="exchange-step">
-          <i class="fa-solid fa-lock"></i>
-          <h4>3. Secure Transfer</h4>
-          <p class="small">Funds held in escrow until confirmation</p>
-        </div>
-        <div class="exchange-step">
-          <i class="fa-solid fa-check-circle"></i>
-          <h4>4. Receive Funds</h4>
-          <p class="small">Get your money in minutes, not days</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- RATES CATALOG -->
-    <section class="section" id="catalog">
-      <div class="catalog-head">
-        <div>
-          <h2>Today's Exchange Rates</h2>
-          <p class="lead">Competitive rates for verified exchanges. Updated every 15 minutes.</p>
-        </div>
-        <a class="btn small" href="premium.html"><i class="fa-solid fa-crown"></i> Premium Rates</a>
-      </div>
-
-      <div class="card" style="margin-bottom:12px">
-        <div class="filters">
-          <div>
-            <label class="small">Currency Pair</label>
-            <select id="ft_pair_filter" class="input" onchange="filterRates()">
-              <option value="">All Pairs</option>
-              <option value="USD">USD Exchanges</option>
-              <option value="EUR">EUR Exchanges</option>
-              <option value="GBP">GBP Exchanges</option>
-              <option value="crypto">Cryptocurrency</option>
-            </select>
-          </div>
-          <div>
-            <label class="small">Transaction Type</label>
-            <select id="ft_type_filter" class="input" onchange="filterRates()">
-              <option value="">All Types</option>
-              <option value="buy">Buy Naira</option>
-              <option value="sell">Sell Naira</option>
-              <option value="crypto">Crypto Exchange</option>
-            </select>
-          </div>
-          <div>
-            <label class="small">Sort By</label>
-            <select id="ft_sort" class="input" onchange="filterRates()">
-              <option value="rate">Best Rate</option>
-              <option value="volume">High Volume</option>
-              <option value="speed">Fastest</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div id="ratesMount"></div>
-    </section>
-
-    <!-- EXCHANGE REQUEST -->
-    <section class="section" id="request">
-      <h2>Start an Exchange</h2>
-      <p class="lead">Provide the details below and get a verified quote within minutes via WhatsApp.</p>
-
-      <div class="card">
-        <div class="row2">
-          <div>
-            <label class="small">Full Name</label>
-            <input id="ft_name" class="input" placeholder="Full name" required />
-          </div>
-          <div>
-            <label class="small">WhatsApp Number</label>
-            <input id="ft_phone" class="input" placeholder="+234..." required />
-          </div>
-        </div>
-
-        <div class="row2" style="margin-top:12px">
-          <div>
-            <label class="small">Exchange Type</label>
-            <select id="ft_exchange_type" class="input">
-              <option value="USD to NGN">USD → Nigerian Naira</option>
-              <option value="GBP to NGN">GBP → Nigerian Naira</option>
-              <option value="EUR to NGN">EUR → Nigerian Naira</option>
-              <option value="BTC to NGN">Bitcoin → Naira</option>
-              <option value="ETH to NGN">Ethereum → Naira</option>
-              <option value="USDT to NGN">USDT → Naira</option>
-              <option value="NGN to USD">Naira → USD</option>
-              <option value="NGN to BTC">Naira → Bitcoin</option>
-            </select>
-          </div>
-          <div>
-            <label class="small">Amount</label>
-            <input id="ft_amount" class="input" placeholder="e.g., 1000" type="number" min="0" step="0.01" />
-          </div>
-        </div>
-
-        <div class="row2" style="margin-top:12px">
-          <div>
-            <label class="small">Payment Method</label>
-            <select id="ft_payment_method" class="input">
-              <option value="Bank Transfer">Bank Transfer</option>
-              <option value="Cash">Cash (Lagos Only)</option>
-              <option value="Crypto Wallet">Crypto Wallet</option>
-              <option value="Escrow Service">Escrow Service</option>
-            </select>
-          </div>
-          <div>
-            <label class="small">Delivery Method</label>
-            <select id="ft_delivery_method" class="input">
-              <option value="Bank Transfer">Bank Transfer</option>
-              <option value="Cash Pickup">Cash Pickup</option>
-              <option value="Crypto Wallet">Crypto Wallet</option>
-            </select>
-          </div>
-        </div>
-
-        <div style="margin-top:12px">
-          <label class="small">Additional Notes</label>
-          <textarea id="ft_notes" class="input" placeholder="Any special requirements or instructions..."></textarea>
-        </div>
-
-        <div class="actions" style="margin-top:20px">
-          <button class="btn solid" style="flex:1" onclick="sendExchangeRequest()">
-            <i class="fa-brands fa-whatsapp"></i> Get Verified Quote
-          </button>
-          <a class="btn primary" href="premium.html">
-            <i class="fa-solid fa-star"></i> Priority Exchange
-          </a>
-        </div>
-
-        <div class="small" style="margin-top:16px; padding: 12px; background: rgba(0,0,0,.1); border-radius: 8px;">
-          <i class="fa-solid fa-shield-halved"></i> <strong>Security Note:</strong> All exchanges are conducted through verified channels with escrow protection. Never share sensitive banking details publicly.
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="brandline">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-            <div>
-              <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Currency Exchange • Verification • Trust Services</div>
-            </div>
-          </div>
-          <div class="small" style="margin-top:8px">
-            Trusted currency exchange and verification services with escrow protection and best market rates.
-          </div>
-
-          <div class="social-row" aria-label="Social links">
-            <a class="social-btn" href="https://instagram.com/hey_larmah" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a class="social-btn" href="https://x.com/heylarmah_tech" target="_blank" rel="noopener noreferrer" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-            <a class="social-btn" href="https://t.me/heylarmah_tech" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a class="social-btn" href="https://youtube.com/@heylarmah" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <b>Exchange Services</b>
-          <div class="small" style="margin-top:10px"><a href="#catalog">USD to Naira</a></div>
-          <div class="small"><a href="#catalog">EUR to Naira</a></div>
-          <div class="small"><a href="#catalog">GBP to Naira</a></div>
-          <div class="small"><a href="#catalog">Crypto Exchange</a></div>
-          <div class="small"><a href="premium.html">Premium Rates</a></div>
-        </div>
-
-        <div>
-          <b>Contact Hub</b>
-          <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> exchange@larmah.co</div>
-          <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-          <div class="small" style="margin-top:10px; opacity:.7">Operating Hours: 8AM - 8PM (WAT)</div>
-        </div>
-      </div>
-
-      <div class="small" style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(255,255,255,.1);">
-        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-          <span>© <span id="year"></span> Larmah Enterprise. All rights reserved.</span>
-          <span class="small" style="opacity:.7">Rates subject to market conditions</span>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <script>
-    // Exchange Rates Data
-    const exchangeRates = {
-      USD: { buy: 1450, sell: 1480, change: 0.8, volume: "High", speed: "15min" },
-      GBP: { buy: 1820, sell: 1850, change: 0.5, volume: "Medium", speed: "30min" },
-      EUR: { buy: 1580, sell: 1610, change: 0.3, volume: "Medium", speed: "30min" },
-      BTC: { buy: 85000000, sell: 87000000, change: 2.1, volume: "High", speed: "45min" },
-      ETH: { buy: 4500000, sell: 4600000, change: 1.8, volume: "Medium", speed: "45min" },
-      USDT: { buy: 1470, sell: 1490, change: 0.7, volume: "Very High", speed: "10min" }
-    };
-
-    // Mock Rates Catalog
-    const ratesCatalog = [
-      { id: 1, title: "USD to NGN (Bank Transfer)", description: "Best rate for USD to Naira bank transfers", price: "₦1,450/$", type: "buy", pair: "USD", volume: "High", min: "$100", max: "$50,000", speed: "15-30 minutes" },
-      { id: 2, title: "USD to NGN (Cash)", description: "Cash exchange with physical delivery in Lagos", price: "₦1,440/$", type: "buy", pair: "USD", volume: "Medium", min: "$500", max: "$10,000", speed: "1-2 hours" },
-      { id: 3, title: "GBP to NGN", description: "British Pounds to Naira exchange", price: "₦1,820/£", type: "buy", pair: "GBP", volume: "Medium", min: "£100", max: "£20,000", speed: "30-60 minutes" },
-      { id: 4, title: "EUR to NGN", description: "Euro to Naira exchange service", price: "₦1,580/€", type: "buy", pair: "EUR", volume: "Medium", min: "€100", max: "€20,000", speed: "30-60 minutes" },
-      { id: 5, title: "Bitcoin to NGN", description: "BTC to Naira direct exchange", price: "₦85M/BTC", type: "buy", pair: "crypto", volume: "High", min: "0.001 BTC", max: "5 BTC", speed: "45-90 minutes" },
-      { id: 6, title: "USDT to NGN", description: "Tether to Naira instant exchange", price: "₦1,470/USDT", type: "buy", pair: "crypto", volume: "Very High", min: "10 USDT", max: "100,000 USDT", speed: "10-20 minutes" },
-      { id: 7, title: "NGN to USD", description: "Naira to Dollar exchange", price: "₦1,480/$", type: "sell", pair: "USD", volume: "Medium", min: "₦100,000", max: "₦50M", speed: "1-2 hours" },
-      { id: 8, title: "NGN to BTC", description: "Naira to Bitcoin purchase", price: "₦87M/BTC", type: "sell", pair: "crypto", volume: "High", min: "₦500,000", max: "₦100M", speed: "1-2 hours" }
-    ];
-
-    // Initialize page
-    document.addEventListener("DOMContentLoaded", function() {
-      // Set current year
-      document.getElementById('year').textContent = new Date().getFullYear();
-      
-      // Update live rates
-      updateLiveRates();
-      
-      // Load rates catalog
-      renderRatesCatalog();
-      
-      // Setup calculator
-      calculateExchange();
-      
-      // Setup menu toggle
-      setupMenuToggle();
-      
-      // Update rates every 30 seconds (simulated)
-      setInterval(updateLiveRates, 30000);
-    });
-
-    function setupMenuToggle() {
-      const menuBtn = document.querySelector('.menu-btn');
-      const nav = document.getElementById('nav');
-      
-      if (menuBtn && nav) {
-        menuBtn.onclick = function() {
-          nav.classList.toggle('active');
-          menuBtn.setAttribute('aria-expanded', nav.classList.contains('active'));
-        };
-        
-        // Close menu when clicking outside
-        document.addEventListener('click', function(e) {
-          if (nav.classList.contains('active') && 
-              !nav.contains(e.target) && 
-              !menuBtn.contains(e.target)) {
-            nav.classList.remove('active');
-            menuBtn.setAttribute('aria-expanded', 'false');
-          }
-        });
-      }
-    }
-
-    function updateLiveRates() {
-      // Simulate rate changes
-      Object.keys(exchangeRates).forEach(currency => {
-        const change = (Math.random() - 0.5) * 0.5;
-        exchangeRates[currency].buy *= (1 + change/100);
-        exchangeRates[currency].sell *= (1 + change/100);
-        exchangeRates[currency].change += change;
-      });
-      
-      // Update display
-      document.getElementById('usdRate').textContent = `₦${exchangeRates.USD.buy.toLocaleString()}`;
-      document.getElementById('gbpRate').textContent = `₦${exchangeRates.GBP.buy.toLocaleString()}`;
-      document.getElementById('eurRate').textContent = `₦${exchangeRates.EUR.buy.toLocaleString()}`;
-      
-      document.getElementById('usdChange').textContent = `${exchangeRates.USD.change >= 0 ? '+' : ''}${exchangeRates.USD.change.toFixed(1)}%`;
-      document.getElementById('gbpChange').textContent = `${exchangeRates.GBP.change >= 0 ? '+' : ''}${exchangeRates.GBP.change.toFixed(1)}%`;
-      document.getElementById('eurChange').textContent = `${exchangeRates.EUR.change >= 0 ? '+' : ''}${exchangeRates.EUR.change.toFixed(1)}%`;
-      
-      // Update change colors
-      ['usdChange', 'gbpChange', 'eurChange'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el.textContent.includes('-')) {
-          el.className = 'currency-change negative';
-        } else {
-          el.className = 'currency-change';
+    <!-- Add to your existing assets/css/style.css or create new file -->
+    <link rel="stylesheet" href="assets/css/exchange.css">
+    <style>
+        /* Exchange-specific styles */
+        .live-ticker {
+            background: linear-gradient(90deg, var(--brand) 0%, var(--brand2) 100%);
+            color: white;
+            padding: 12px 0;
+            font-weight: 900;
         }
-      });
-    }
-
-    function calculateExchange() {
-      const fromCurrency = document.getElementById('fromCurrency').value;
-      const toCurrency = document.getElementById('toCurrency').value;
-      const amount = parseFloat(document.getElementById('amount').value) || 0;
-      
-      let rate = 1;
-      let feePercentage = 0.005; // 0.5%
-      
-      if (fromCurrency === 'USD' && toCurrency === 'NGN') {
-        rate = exchangeRates.USD.buy;
-      } else if (fromCurrency === 'GBP' && toCurrency === 'NGN') {
-        rate = exchangeRates.GBP.buy;
-      } else if (fromCurrency === 'EUR' && toCurrency === 'NGN') {
-        rate = exchangeRates.EUR.buy;
-      } else if (fromCurrency === 'BTC' && toCurrency === 'NGN') {
-        rate = exchangeRates.BTC.buy;
-      } else if (fromCurrency === 'ETH' && toCurrency === 'NGN') {
-        rate = exchangeRates.ETH.buy;
-      } else if (fromCurrency === 'USDT' && toCurrency === 'NGN') {
-        rate = exchangeRates.USDT.buy;
-      } else if (fromCurrency === 'NGN' && toCurrency === 'USD') {
-        rate = 1 / exchangeRates.USD.sell;
-      } else if (fromCurrency === 'NGN' && toCurrency === 'BTC') {
-        rate = 1 / exchangeRates.BTC.sell;
-      } else {
-        rate = 1; // Default
-      }
-      
-      const converted = amount * rate;
-      const fee = converted * feePercentage;
-      const finalAmount = converted - fee;
-      
-      document.getElementById('convertedAmount').textContent = formatCurrency(finalAmount, toCurrency);
-      document.getElementById('exchangeRate').textContent = `1 ${fromCurrency} = ${formatCurrency(rate, toCurrency)}`;
-      document.getElementById('serviceFee').textContent = `${(feePercentage * 100).toFixed(1)}% • ${formatCurrency(fee, toCurrency)}`;
-    }
-
-    function swapCurrencies() {
-      const fromSelect = document.getElementById('fromCurrency');
-      const toSelect = document.getElementById('toCurrency');
-      const temp = fromSelect.value;
-      
-      fromSelect.value = toSelect.value;
-      toSelect.value = temp;
-      
-      calculateExchange();
-    }
-
-    function formatCurrency(amount, currency) {
-      if (currency === 'NGN') {
-        return `₦${amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
-      } else if (currency === 'USD') {
-        return `$${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      } else if (currency === 'GBP') {
-        return `£${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      } else if (currency === 'EUR') {
-        return `€${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      } else if (currency === 'BTC') {
-        return `${amount.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 })} BTC`;
-      } else if (currency === 'ETH') {
-        return `${amount.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 })} ETH`;
-      } else {
-        return amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      }
-    }
-
-    function renderRatesCatalog() {
-      const mount = document.getElementById('ratesMount');
-      if (!mount) return;
-      
-      mount.innerHTML = `
-        <div class="grid">
-          ${ratesCatalog.map(rate => `
-            <div class="card rate-card">
-              ${rate.pair === 'crypto' ? '<div class="rate-badge">Crypto</div>' : ''}
-              <h3><i class="fa-solid fa-${rate.pair === 'crypto' ? 'coins' : 'money-bill-transfer'}"></i> ${rate.title}</h3>
-              <p>${rate.description}</p>
-              <div class="price" style="font-size: 1.3rem;">${rate.price}</div>
-              <div class="meta">
-                <div style="display: flex; justify-content: space-between; margin-top: 8px;">
-                  <span><i class="fa-solid fa-chart-line"></i> ${rate.volume}</span>
-                  <span><i class="fa-solid fa-clock"></i> ${rate.speed}</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                  <span class="small">Min: ${rate.min}</span>
-                  <span class="small">Max: ${rate.max}</span>
-                </div>
-              </div>
-              <div class="actions" style="margin-top: 12px;">
-                <button class="btn small primary" onclick="selectRate(${rate.id})">
-                  <i class="fa-brands fa-whatsapp"></i> Get Quote
-                </button>
-              </div>
+        
+        .rate-card {
+            border: 2px solid var(--brand);
+            background: rgba(0,217,129,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .rate-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--accent);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 950;
+        }
+        
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .crypto-coin {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body data-page="exchange">
+    <!-- Live Rate Ticker -->
+    <div class="live-ticker">
+        <div class="container">
+            <div class="ticker-content" id="liveRatesTicker">
+                <span>📈 LIVE: USD/NGN: ₦1,450.25 | GBP/NGN: ₦1,820.75 | EUR/NGN: ₦1,580.50</span>
             </div>
-          `).join('')}
         </div>
-      `;
-    }
+    </div>
 
-    function filterRates() {
-      // Implement filtering logic here
-      console.log('Filtering rates...');
-    }
+    <!-- Rest of your header stays the same -->
+    <header>...</header>
 
-    function selectRate(rateId) {
-      const rate = ratesCatalog.find(r => r.id === rateId);
-      if (!rate) return;
-      
-      const message = `*Exchange Quote Request*\n\n*Service:* ${rate.title}\n*Rate:* ${rate.price}\n*Min Amount:* ${rate.min}\n*Max Amount:* ${rate.max}\n*Speed:* ${rate.speed}\n\nPlease provide:\n1. Amount to exchange\n2. Preferred payment method\n3. Delivery method`;
-      
-      openWhatsApp('Exchange Quote', message);
-    }
+    <main class="container">
+        <!-- HERO SECTION - EXCHANGE FOCUSED -->
+        <section class="hero">
+            <div class="hero-shell">
+                <div class="hero-inner">
+                    <div>
+                        <div class="hero-kicker">
+                            <span class="kicker-pill">
+                                <i class="fa-solid fa-money-bill-transfer"></i>
+                                LIVE CURRENCY EXCHANGE
+                            </span>
+                            <span class="kicker-dot">•</span>
+                            <span class="kicker-sub">Best Rates • Escrow Protected</span>
+                        </div>
 
-    function initiateExchange() {
-      const fromCurrency = document.getElementById('fromCurrency').value;
-      const toCurrency = document.getElementById('toCurrency').value;
-      const amount = document.getElementById('amount').value;
-      const converted = document.getElementById('convertedAmount').textContent;
-      
-      const message = `*Exchange Initiation*\n\n*From:* ${amount} ${fromCurrency}\n*To:* ${converted} (${toCurrency})\n*Exchange Rate:* ${document.getElementById('exchangeRate').textContent}\n*Service Fee:* ${document.getElementById('serviceFee').textContent}\n\nPlease confirm these details to proceed.`;
-      
-      openWhatsApp('Exchange Initiation', message);
-    }
+                        <h1>Exchange Currencies<br>With Confidence</h1>
+                        <p class="lead">
+                            Convert <strong>USD, GBP, EUR to Naira</strong> at market-beating rates. 
+                            Trade <strong>Bitcoin, Ethereum, USDT</strong> securely with escrow protection.
+                        </p>
 
-    function sendExchangeRequest() {
-      const name = document.getElementById('ft_name').value.trim();
-      const phone = document.getElementById('ft_phone').value.trim();
-      const exchangeType = document.getElementById('ft_exchange_type').value;
-      const amount = document.getElementById('ft_amount').value;
-      const paymentMethod = document.getElementById('ft_payment_method').value;
-      const deliveryMethod = document.getElementById('ft_delivery_method').value;
-      const notes = document.getElementById('ft_notes').value.trim();
-      
-      if (!name || !phone || !amount) {
-        showToast('Please fill in all required fields', 'error');
-        return;
-      }
-      
-      const message = `*Exchange Request*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Exchange Type:* ${exchangeType}\n*Amount:* ${amount}\n*Payment Method:* ${paymentMethod}\n*Delivery Method:* ${deliveryMethod}\n*Notes:* ${notes || 'None'}\n\nA verified agent will contact you shortly with the best available rate.`;
-      
-      openWhatsApp('Exchange Request', message);
-      
-      // Clear form
-      document.getElementById('ft_name').value = '';
-      document.getElementById('ft_phone').value = '';
-      document.getElementById('ft_amount').value = '';
-      document.getElementById('ft_notes').value = '';
-      
-      showToast('Request sent successfully! We\'ll contact you shortly.', 'success');
-    }
+                        <!-- Quick Exchange Calculator -->
+                        <div class="exchange-quick-calc">
+                            <div class="calc-inputs">
+                                <div class="input-group">
+                                    <input type="number" value="100" id="quickAmount" class="input">
+                                    <select class="input" id="quickFrom">
+                                        <option value="USD">🇺🇸 USD</option>
+                                        <option value="GBP">🇬🇧 GBP</option>
+                                        <option value="EUR">🇪🇺 EUR</option>
+                                        <option value="BTC">₿ Bitcoin</option>
+                                        <option value="USDT">💵 USDT</option>
+                                    </select>
+                                </div>
+                                <div class="calc-arrow">→</div>
+                                <div class="input-group">
+                                    <div class="result-display" id="quickResult">₦145,025</div>
+                                    <select class="input" id="quickTo">
+                                        <option value="NGN">🇳🇬 NGN</option>
+                                        <option value="USD">🇺🇸 USD</option>
+                                        <option value="BTC">₿ Bitcoin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn solid" onclick="quickExchange()">
+                                <i class="fab fa-whatsapp"></i> Get This Rate
+                            </button>
+                        </div>
 
-    function openWhatsApp(subject, customMessage = null) {
-      const phone = "2347063080605";
-      const defaultMessage = `*${subject}*\n\nHello Larmah Exchange, I'd like to make an enquiry.`;
-      const message = customMessage || defaultMessage;
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
+                        <div class="trust-row">
+                            <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Escrow Protection</div>
+                            <div class="trust-badge"><i class="fa-solid fa-bolt"></i> Same-Day Settlement</div>
+                            <div class="trust-badge"><i class="fa-solid fa-user-check"></i> Verified Partners</div>
+                        </div>
+                    </div>
 
-    function showToast(message, type = 'info') {
-      const toast = document.getElementById('toast');
-      if (!toast) return;
-      
-      toast.textContent = message;
-      toast.className = 'toast ' + type;
-      toast.style.display = 'block';
-      toast.classList.add('show');
-      
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-          toast.style.display = 'none';
-        }, 300);
-      }, 3000);
-    }
-  </script>
+                    <div class="hero-badges">
+                        <div class="hero-card">
+                            <h3><i class="fa-solid fa-dollar-sign"></i> Foreign Exchange</h3>
+                            <p>USD/GBP/EUR to Naira. Bank transfer & cash options available.</p>
+                            <div class="card-actions">
+                                <a class="btn small" href="#forex-rates">View Rates</a>
+                            </div>
+                        </div>
+                        <div class="hero-card">
+                            <h3><i class="fa-solid fa-coins"></i> Crypto Exchange</h3>
+                            <p>Bitcoin, Ethereum, USDT to Naira. Secure wallet transfers.</p>
+                            <div class="card-actions">
+                                <a class="btn small" href="#crypto-rates">Trade Crypto</a>
+                            </div>
+                        </div>
+                        <div class="hero-card">
+                            <h3><i class="fa-solid fa-file-contract"></i> Verification</h3>
+                            <p>Document verification for secure transactions.</p>
+                            <div class="card-actions">
+                                <a class="btn small" href="#verification">Verify Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REAL-TIME RATES SECTION -->
+        <section class="section" id="forex-rates">
+            <div class="section-head-split">
+                <div>
+                    <h2>Live Exchange Rates</h2>
+                    <p class="lead">Updated every minute. Best rates guaranteed.</p>
+                </div>
+                <div class="last-updated" id="rateUpdateTime">Updated: Just now</div>
+            </div>
+
+            <!-- Forex Rates Grid -->
+            <div class="grid" id="forexRatesGrid">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Cryptocurrency Rates -->
+            <div class="section-head-split" style="margin-top: 40px;">
+                <h3>Cryptocurrency Rates</h3>
+                <div class="crypto-badges">
+                    <span class="crypto-badge"><i class="fab fa-bitcoin"></i> Bitcoin</span>
+                    <span class="crypto-badge"><i class="fab fa-ethereum"></i> Ethereum</span>
+                    <span class="crypto-badge"><i class="fas fa-coins"></i> USDT</span>
+                </div>
+            </div>
+            
+            <div class="grid" id="cryptoRatesGrid">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <!-- EXCHANGE CALCULATOR -->
+        <section class="section" id="calculator">
+            <div class="card">
+                <h2><i class="fas fa-calculator"></i> Advanced Exchange Calculator</h2>
+                <p class="lead">Calculate exact amounts with fees included.</p>
+                
+                <div class="calc-container">
+                    <div class="calc-row">
+                        <div>
+                            <label class="small">You Send</label>
+                            <input type="number" class="input" id="sendAmount" value="100" min="1">
+                        </div>
+                        <div>
+                            <label class="small">Currency</label>
+                            <select class="input" id="sendCurrency">
+                                <option value="USD">🇺🇸 US Dollar (USD)</option>
+                                <option value="GBP">🇬🇧 British Pound (GBP)</option>
+                                <option value="EUR">🇪🇺 Euro (EUR)</option>
+                                <option value="BTC">₿ Bitcoin (BTC)</option>
+                                <option value="ETH">Ξ Ethereum (ETH)</option>
+                                <option value="USDT">💵 USDT (Tether)</option>
+                                <option value="NGN">🇳🇬 Nigerian Naira (NGN)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="calc-swap">
+                        <button class="swap-btn" onclick="swapCurrencies()">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="calc-row">
+                        <div>
+                            <label class="small">You Receive</label>
+                            <div class="result-box" id="receiveAmount">₦145,025</div>
+                        </div>
+                        <div>
+                            <label class="small">Currency</label>
+                            <select class="input" id="receiveCurrency">
+                                <option value="NGN">🇳🇬 Nigerian Naira (NGN)</option>
+                                <option value="USD">🇺🇸 US Dollar (USD)</option>
+                                <option value="GBP">🇬🇧 British Pound (GBP)</option>
+                                <option value="EUR">🇪🇺 Euro (EUR)</option>
+                                <option value="BTC">₿ Bitcoin (BTC)</option>
+                                <option value="ETH">Ξ Ethereum (ETH)</option>
+                                <option value="USDT">💵 USDT (Tether)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="calc-details">
+                        <div class="detail-row">
+                            <span>Exchange Rate:</span>
+                            <span id="calcRate">1 USD = ₦1,450.25</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Service Fee (0.5%):</span>
+                            <span id="calcFee">₦725.13</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>Estimated Time:</span>
+                            <span id="calcTime">15-30 minutes</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn solid" style="width:100%;margin-top:20px;" onclick="initiateExchange()">
+                        <i class="fab fa-whatsapp"></i> Proceed with Exchange
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXCHANGE PROCESS -->
+        <section class="section">
+            <h2>How It Works</h2>
+            <div class="process-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h4>Get Quote</h4>
+                    <p>Use calculator or WhatsApp for live quote</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h4>Verify Details</h4>
+                    <p>Confirm rates & provide KYC details</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h4>Secure Payment</h4>
+                    <p>Funds held in escrow until confirmation</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h4>Receive Funds</h4>
+                    <p>Get your money in minutes</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXCHANGE FORM -->
+        <section class="section" id="exchange-form">
+            <div class="card">
+                <h2>Start Exchange Now</h2>
+                <p class="lead">Fill form for instant WhatsApp response</p>
+                
+                <form id="exchangeRequestForm">
+                    <div class="row2">
+                        <div>
+                            <label class="small">Full Name *</label>
+                            <input type="text" class="input" id="exName" required>
+                        </div>
+                        <div>
+                            <label class="small">WhatsApp Number *</label>
+                            <input type="tel" class="input" id="exPhone" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row2" style="margin-top:15px;">
+                        <div>
+                            <label class="small">Exchange Type *</label>
+                            <select class="input" id="exType" required>
+                                <option value="">Select exchange type</option>
+                                <option value="USD to NGN">USD → Nigerian Naira</option>
+                                <option value="GBP to NGN">GBP → Nigerian Naira</option>
+                                <option value="EUR to NGN">EUR → Nigerian Naira</option>
+                                <option value="BTC to NGN">Bitcoin → Naira</option>
+                                <option value="ETH to NGN">Ethereum → Naira</option>
+                                <option value="USDT to NGN">USDT → Naira</option>
+                                <option value="NGN to USD">Naira → USD</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="small">Amount *</label>
+                            <input type="number" class="input" id="exAmount" required>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top:15px;">
+                        <label class="small">Additional Notes</label>
+                        <textarea class="input" id="exNotes" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="actions" style="margin-top:20px;">
+                        <button type="submit" class="btn solid" style="flex:1;">
+                            <i class="fab fa-whatsapp"></i> Submit Exchange Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Update footer to highlight exchange services -->
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="brandline">
+                        <img src="assets/images/larmah-header.jpeg" alt="Larmah Exchange">
+                        <div>
+                            <div class="small">USD/GBP/EUR to Naira • Crypto Exchange • Verification</div>
+                        </div>
+                    </div>
+                    <div class="small" style="margin-top:8px">
+                        Best rates for currency exchange in Nigeria. Escrow protected transactions.
+                    </div>
+                </div>
+                
+                <div>
+                    <b>Exchange Services</b>
+                    <div class="small" style="margin-top:10px">
+                        <a href="#forex-rates"><i class="fas fa-arrow-right"></i> USD to Naira</a>
+                    </div>
+                    <div class="small">
+                        <a href="#forex-rates"><i class="fas fa-arrow-right"></i> GBP to Naira</a>
+                    </div>
+                    <div class="small">
+                        <a href="#forex-rates"><i class="fas fa-arrow-right"></i> EUR to Naira</a>
+                    </div>
+                    <div class="small">
+                        <a href="#crypto-rates"><i class="fas fa-arrow-right"></i> Crypto Exchange</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <b>Contact Exchange Desk</b>
+                    <div class="small" style="margin-top:10px">
+                        <i class="fab fa-whatsapp"></i> +234 706 308 0605
+                    </div>
+                    <div class="small">
+                        <i class="far fa-envelope"></i> business@heylarmah.tech
+                    </div>
+                    <div class="small">
+                        <i class="fas fa-clock"></i> 8AM - 10PM Daily
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Real-Time Exchange -->
+    <script>
+        // Exchange Configuration
+        const EXCHANGE_CONFIG = {
+            baseRates: {
+                USD: { buy: 1450, sell: 1480, fee: 0.005, min: 100, max: 50000 },
+                GBP: { buy: 1820, sell: 1850, fee: 0.005, min: 100, max: 30000 },
+                EUR: { buy: 1580, sell: 1610, fee: 0.005, min: 100, max: 30000 },
+                BTC: { buy: 85000000, sell: 87000000, fee: 0.01, min: 0.001, max: 5 },
+                ETH: { buy: 4500000, sell: 4700000, fee: 0.01, min: 0.01, max: 50 },
+                USDT: { buy: 1470, sell: 1490, fee: 0.003, min: 10, max: 100000 }
+            },
+            whatsappNumber: "2347063080605",
+            updateInterval: 60000 // 1 minute
+        };
+
+        // Initialize Exchange
+        class LarmahExchange {
+            constructor() {
+                this.rates = { ...EXCHANGE_CONFIG.baseRates };
+                this.lastUpdate = new Date();
+                this.init();
+            }
+
+            init() {
+                this.updateLiveRates();
+                this.renderRateCards();
+                this.setupEventListeners();
+                this.startRateUpdates();
+            }
+
+            updateLiveRates() {
+                // Simulate live rate changes (replace with real API)
+                Object.keys(this.rates).forEach(currency => {
+                    const change = (Math.random() - 0.5) * 0.3;
+                    this.rates[currency].buy *= (1 + change/100);
+                    this.rates[currency].sell *= (1 + change/100);
+                });
+                
+                this.lastUpdate = new Date();
+                this.updateDisplay();
+            }
+
+            updateDisplay() {
+                // Update ticker
+                const ticker = document.getElementById('liveRatesTicker');
+                if (ticker) {
+                    ticker.innerHTML = `
+                        📈 LIVE: USD/NGN: ₦${this.rates.USD.buy.toFixed(2)} | 
+                        GBP/NGN: ₦${this.rates.GBP.buy.toFixed(2)} | 
+                        EUR/NGN: ₦${this.rates.EUR.buy.toFixed(2)} |
+                        BTC/NGN: ₦${(this.rates.BTC.buy/1000000).toFixed(1)}M
+                    `;
+                }
+
+                // Update rate cards
+                this.renderRateCards();
+                
+                // Update timestamp
+                const timeElement = document.getElementById('rateUpdateTime');
+                if (timeElement) {
+                    const time = this.lastUpdate.toLocaleTimeString();
+                    timeElement.textContent = `Updated: ${time}`;
+                }
+            }
+
+            renderRateCards() {
+                // Forex Rates
+                const forexGrid = document.getElementById('forexRatesGrid');
+                if (forexGrid) {
+                    forexGrid.innerHTML = `
+                        ${this.createRateCard('USD', '🇺🇸 US Dollar', 'var(--brand)')}
+                        ${this.createRateCard('GBP', '🇬🇧 British Pound', '#1E429F')}
+                        ${this.createRateCard('EUR', '🇪🇺 Euro', '#003399')}
+                    `;
+                }
+
+                // Crypto Rates
+                const cryptoGrid = document.getElementById('cryptoRatesGrid');
+                if (cryptoGrid) {
+                    cryptoGrid.innerHTML = `
+                        ${this.createRateCard('BTC', '₿ Bitcoin', '#F7931A', true)}
+                        ${this.createRateCard('ETH', 'Ξ Ethereum', '#627EEA', true)}
+                        ${this.createRateCard('USDT', '💵 USDT', '#26A17B', true)}
+                    `;
+                }
+            }
+
+            createRateCard(currency, name, color, isCrypto = false) {
+                const rate = this.rates[currency];
+                const change = ((rate.buy - EXCHANGE_CONFIG.baseRates[currency].buy) / EXCHANGE_CONFIG.baseRates[currency].buy * 100).toFixed(1);
+                const changeClass = change >= 0 ? 'positive' : 'negative';
+                const changeSymbol = change >= 0 ? '+' : '';
+                
+                return `
+                    <div class="card rate-card">
+                        ${isCrypto ? '<div class="rate-badge">CRYPTO</div>' : ''}
+                        <h3 style="color:${color}">${name}</h3>
+                        <div class="price" style="font-size:1.5rem;margin:10px 0;">
+                            ₦${rate.buy.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+                        </div>
+                        <div class="meta">
+                            <span>Min: ${isCrypto ? rate.min + ' ' + currency : '$' + rate.min}</span>
+                            <span class="dot">•</span>
+                            <span>Max: ${isCrypto ? rate.max + ' ' + currency : '$' + rate.max.toLocaleString()}</span>
+                        </div>
+                        <div class="change-indicator ${changeClass}">
+                            ${changeSymbol}${change}%
+                        </div>
+                        <div class="actions">
+                            <button class="btn small primary" onclick="exchange.selectRate('${currency}')">
+                                <i class="fab fa-whatsapp"></i> Exchange ${currency}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            selectRate(currency) {
+                const rate = this.rates[currency];
+                const message = `*Exchange Request: ${currency}*\n\nI want to exchange ${currency} to NGN.\n\nCurrent rate: ₦${rate.buy.toFixed(2)}\n\nPlease contact me with next steps.`;
+                this.openWhatsApp(message);
+            }
+
+            calculateExchange(from, to, amount) {
+                let rate, feePercentage;
+                
+                if (to === 'NGN') {
+                    rate = this.rates[from].buy;
+                    feePercentage = this.rates[from].fee;
+                } else if (from === 'NGN') {
+                    rate = 1 / this.rates[to].sell;
+                    feePercentage = this.rates[to].fee;
+                } else {
+                    // Cross-currency conversion
+                    const toNaira = this.rates[from].buy;
+                    const fromNaira = 1 / this.rates[to].sell;
+                    rate = toNaira * fromNaira;
+                    feePercentage = Math.max(this.rates[from].fee, this.rates[to].fee);
+                }
+                
+                const converted = amount * rate;
+                const fee = converted * feePercentage;
+                const finalAmount = converted - fee;
+                
+                return {
+                    converted: finalAmount,
+                    rate: rate,
+                    fee: fee,
+                    feePercentage: feePercentage * 100
+                };
+            }
+
+            openWhatsApp(message) {
+                const url = `https://wa.me/${EXCHANGE_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
+                window.open(url, '_blank');
+            }
+
+            startRateUpdates() {
+                setInterval(() => {
+                    this.updateLiveRates();
+                }, EXCHANGE_CONFIG.updateInterval);
+            }
+
+            setupEventListeners() {
+                // Quick calculator
+                const quickInputs = ['quickAmount', 'quickFrom', 'quickTo'];
+                quickInputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.addEventListener('input', this.updateQuickCalc.bind(this));
+                });
+
+                // Advanced calculator
+                const calcInputs = ['sendAmount', 'sendCurrency', 'receiveCurrency'];
+                calcInputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.addEventListener('input', this.updateAdvancedCalc.bind(this));
+                });
+
+                // Exchange form
+                const form = document.getElementById('exchangeRequestForm');
+                if (form) {
+                    form.addEventListener('submit', this.handleExchangeRequest.bind(this));
+                }
+            }
+
+            updateQuickCalc() {
+                const amount = parseFloat(document.getElementById('quickAmount').value) || 0;
+                const from = document.getElementById('quickFrom').value;
+                const to = document.getElementById('quickTo').value;
+                
+                const result = this.calculateExchange(from, to, amount);
+                const formatted = this.formatCurrency(result.converted, to);
+                
+                document.getElementById('quickResult').textContent = formatted;
+            }
+
+            updateAdvancedCalc() {
+                const amount = parseFloat(document.getElementById('sendAmount').value) || 0;
+                const from = document.getElementById('sendCurrency').value;
+                const to = document.getElementById('receiveCurrency').value;
+                
+                const result = this.calculateExchange(from, to, amount);
+                
+                document.getElementById('receiveAmount').textContent = this.formatCurrency(result.converted, to);
+                document.getElementById('calcRate').textContent = `1 ${from} = ${this.formatCurrency(result.rate, to)}`;
+                document.getElementById('calcFee').textContent = `${result.feePercentage.toFixed(1)}% • ${this.formatCurrency(result.fee, to)}`;
+                
+                // Update estimated time
+                const time = from === 'BTC' || from === 'ETH' ? '45-90 minutes' : 
+                            to === 'BTC' || to === 'ETH' ? '60-120 minutes' : '15-30 minutes';
+                document.getElementById('calcTime').textContent = time;
+            }
+
+            formatCurrency(amount, currency) {
+                if (currency === 'NGN') {
+                    return `₦${amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                } else if (currency === 'USD') {
+                    return `$${amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                } else if (currency === 'BTC') {
+                    return `${amount.toFixed(6)} BTC`;
+                } else if (currency === 'ETH') {
+                    return `${amount.toFixed(4)} ETH`;
+                } else {
+                    return `${amount.toFixed(2)} ${currency}`;
+                }
+            }
+
+            handleExchangeRequest(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('exName').value;
+                const phone = document.getElementById('exPhone').value;
+                const type = document.getElementById('exType').value;
+                const amount = document.getElementById('exAmount').value;
+                const notes = document.getElementById('exNotes').value;
+                
+                if (!name || !phone || !type || !amount) {
+                    alert('Please fill all required fields');
+                    return;
+                }
+                
+                const message = `*Exchange Request*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Exchange:* ${type}\n*Amount:* ${amount}\n*Notes:* ${notes || 'None'}\n\nPlease provide best rate for this transaction.`;
+                
+                this.openWhatsApp(message);
+                
+                // Reset form
+                e.target.reset();
+                
+                // Show success message
+                const toast = document.createElement('div');
+                toast.className = 'toast success';
+                toast.textContent = 'Request sent! We\'ll contact you shortly.';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => toast.remove(), 3000);
+            }
+        }
+
+        // Global functions
+        function swapCurrencies() {
+            const from = document.getElementById('sendCurrency');
+            const to = document.getElementById('receiveCurrency');
+            const temp = from.value;
+            from.value = to.value;
+            to.value = temp;
+            exchange.updateAdvancedCalc();
+        }
+
+        function quickExchange() {
+            const amount = document.getElementById('quickAmount').value;
+            const from = document.getElementById('quickFrom').value;
+            const to = document.getElementById('quickTo').value;
+            const result = document.getElementById('quickResult').textContent;
+            
+            const message = `*Quick Exchange Quote*\n\nI want to exchange ${amount} ${from} to ${to}.\n\nExpected: ${result}\n\nPlease provide best rate.`;
+            exchange.openWhatsApp(message);
+        }
+
+        function initiateExchange() {
+            const amount = document.getElementById('sendAmount').value;
+            const from = document.getElementById('sendCurrency').value;
+            const to = document.getElementById('receiveCurrency').value;
+            const receive = document.getElementById('receiveAmount').textContent;
+            const rate = document.getElementById('calcRate').textContent;
+            
+            const message = `*Exchange Initiation*\n\n*From:* ${amount} ${from}\n*To:* ${receive} (${to})\n*Rate:* ${rate}\n\nPlease proceed with this exchange.`;
+            exchange.openWhatsApp(message);
+        }
+
+        // Initialize exchange when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.exchange = new LarmahExchange();
+        });
+    </script>
 </body>
 </html>
