@@ -1,4 +1,3 @@
-<!-- index.html (FIXED + FULLY UPGRADED to match your current style.css + app.js) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,14 +26,6 @@
   <!-- Supabase + App -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
-
-  <!-- Small page-specific helpers (minimal) -->
-  <style>
-    .home-grid{grid-template-columns:1fr 1fr}
-    @media(max-width:980px){.home-grid{grid-template-columns:1fr}}
-    .mini-link{font-weight:950; color: rgba(245,245,245,.84)}
-    .mini-link:hover{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
-  </style>
 </head>
 
 <body data-page="home">
@@ -48,17 +39,17 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
-      <!-- IMPORTANT: nav links use .nav-link + data-link for app.js active nav logic -->
       <nav id="nav" aria-label="Primary navigation">
         <ul>
           <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
           <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
           <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+          <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
         </ul>
       </nav>
 
-      <!-- IMPORTANT: app.js renders signed-in/out pill here -->
+      <!-- app.js renders signed-in/out pill here -->
       <div class="header-actions" id="authPill">
         <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
       </div>
@@ -88,7 +79,8 @@
             <div class="actions">
               <a class="btn solid" href="#latest"><i class="fa-solid fa-sparkles"></i> Browse Latest</a>
               <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
-              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { 'Name':'', 'Phone':'', 'Topic':'Real Estate / Logistics / FinTech', 'Message':'Hello Larmah, I need assistance.' }))">
+              <a class="btn" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
+              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { 'Name':'', 'Phone':'', 'Topic':'Real Estate / Logistics / FinTech / Exchange', 'Message':'Hello Larmah, I need assistance.' }))">
                 <i class="fa-brands fa-whatsapp"></i> Quick WhatsApp
               </button>
             </div>
@@ -129,7 +121,7 @@
       <div class="section-head-split">
         <div>
           <h2>Latest Catalogues</h2>
-          <p class="lead">Live preview from verified inventory — tap “Enquire” for instant WhatsApp.</p>
+          <p class="lead">Live preview from verified inventory — shows posted catalogue images automatically.</p>
         </div>
         <a class="btn small" href="insights.html"><i class="fa-solid fa-chart-line"></i> Market Insights</a>
       </div>
@@ -160,7 +152,7 @@
           <h2 style="margin:0">Need something specific?</h2>
           <p class="lead" style="margin:6px 0 0">Tell us your budget, location, and timeline — we’ll respond via WhatsApp.</p>
         </div>
-        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { 'Name':'', 'Phone':'', 'Category':'Real Estate / Logistics / FinTech', 'Details':'Describe what you need…' }))">
+        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { 'Name':'', 'Phone':'', 'Category':'Real Estate / Logistics / FinTech / Exchange', 'Details':'Describe what you need…' }))">
           <i class="fa-brands fa-whatsapp"></i> Start Request
         </button>
       </div>
@@ -174,7 +166,8 @@
           <div class="brandline">
             <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
             <div>
-              <div class="small">Real Estate • Logistics • FinTech</div>
+              <div style="font-weight:950">Larmah Enterprise</div>
+              <div class="small">Real Estate • Logistics • FinTech • Exchange</div>
             </div>
           </div>
           <div class="small" style="margin-top:8px">
@@ -194,6 +187,7 @@
           <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
           <div class="small"><a href="logistics.html">Logistics</a></div>
           <div class="small"><a href="fintech.html">FinTech</a></div>
+          <div class="small"><a href="exchange.html">Exchange</a></div>
           <div class="small"><a href="insights.html">Insights</a></div>
           <div class="small"><a href="premium.html">Premium</a></div>
         </div>
@@ -213,7 +207,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // Cache so enquiry doesn't re-fetch
     const __INDEX_CACHE = { "real-estate": [], "logistics": [] };
 
     function skel(mount){
@@ -225,9 +218,13 @@
       `;
     }
 
-    function safeImg(url){
-      // Prefer listing image; fallback to header image (always exists)
-      return url && String(url).trim() ? url : "assets/images/larmah-header.jpeg";
+    // ✅ ALWAYS prefer catalog image_url; fallback per category
+    function resolveCatalogImage(it, category){
+      const u = it?.image_url ? String(it.image_url).trim() : "";
+      if (u) return u;
+      if (category === "real-estate") return "assets/images/placeholder-home.jpg";
+      if (category === "logistics") return "assets/images/placeholder-car.jpg";
+      return "assets/images/larmah-header.jpeg";
     }
 
     async function renderPreview(category, mountId){
@@ -237,6 +234,7 @@
 
       try{
         if(!window.LARMAH || !LARMAH.fetchCatalog) throw new Error("App not ready");
+
         const items = (await LARMAH.fetchCatalog(category)) || [];
         __INDEX_CACHE[category] = items;
 
@@ -248,33 +246,40 @@
 
         mount.innerHTML = `
           <div class="latest-list">
-            ${top.map(it => `
-              <div class="latest-item">
-                <div class="latest-thumb">
-                  <img
-                    src="${LARMAH.escapeHtml(safeImg(it.image_url))}"
-                    alt="${LARMAH.escapeHtml(it.title)}"
-                    loading="lazy"
-                    onerror="this.src='assets/images/larmah-header.jpeg';"
-                  >
-                </div>
-                <div class="latest-body">
-                  <div class="latest-title">${LARMAH.escapeHtml(it.title)}</div>
-                  <div class="latest-meta">
-                    <span class="latest-price">${LARMAH.escapeHtml(it.price || 'Contact for quote')}</span>
-                    <span class="dot">•</span>
-                    <span class="small">Verified</span>
+            ${top.map(it => {
+              const img = resolveCatalogImage(it, category);
+              const fallback = category === "real-estate"
+                ? "assets/images/placeholder-home.jpg"
+                : "assets/images/placeholder-car.jpg";
+              return `
+                <div class="latest-item">
+                  <div class="latest-thumb">
+                    <img
+                      src="${LARMAH.escapeHtml(img)}"
+                      alt="${LARMAH.escapeHtml(it.title)}"
+                      loading="lazy"
+                      referrerpolicy="no-referrer"
+                      onerror="this.onerror=null; this.src='${fallback}'"
+                    >
                   </div>
-                  <button class="btn small primary" onclick="enquireFromIndex('${category}','${it.id}')">
-                    <i class="fa-brands fa-whatsapp"></i> Enquire
-                  </button>
+                  <div class="latest-body">
+                    <div class="latest-title">${LARMAH.escapeHtml(it.title)}</div>
+                    <div class="latest-meta">
+                      <span class="latest-price">${LARMAH.escapeHtml(it.price || 'Contact for quote')}</span>
+                      <span class="dot">•</span>
+                      <span class="small">Verified</span>
+                    </div>
+                    <button class="btn small primary" onclick="enquireFromIndex('${category}','${it.id}')">
+                      <i class="fa-brands fa-whatsapp"></i> Enquire
+                    </button>
+                  </div>
                 </div>
-              </div>
-            `).join('')}
+              `;
+            }).join('')}
           </div>
         `;
       }catch(e){
-        // Retry once (handles slow script load on some hosts)
+        // Retry once (slow load hosts)
         setTimeout(async () => {
           try{
             if(!window.LARMAH || !LARMAH.fetchCatalog) throw new Error("App not ready");
