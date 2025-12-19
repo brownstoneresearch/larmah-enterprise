@@ -5,25 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Larmah Enterprise | Nigeria’s Trust-First Commerce Hub</title>
-  <meta name="description" content="Seamless commerce with verified standards. Explore Real Estate, Logistics, and FinTech — WhatsApp-first support across Nigeria." />
+  <meta name="description" content="Seamless commerce with verified standards. Explore Real Estate, Logistics, Insights, and Exchange — WhatsApp-first support across Nigeria." />
   <meta name="theme-color" content="#070A12" />
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Larmah Enterprise | Nigeria’s Trust-First Commerce Hub" />
-  <meta property="og:description" content="Verified Real Estate, reliable Logistics, and secure FinTech — WhatsApp-first support across Nigeria." />
+  <meta property="og:description" content="Verified Real Estate, reliable Logistics, live Insights, and Exchange — WhatsApp-first support across Nigeria." />
   <meta property="og:image" content="assets/images/larmah-header.jpeg" />
   <meta property="og:url" content="./index.html" />
 
-  <!-- Icons -->
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
 
-  <!-- CSS -->
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- Supabase + App -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 </head>
@@ -43,13 +39,11 @@
         <ul>
           <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-          <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
           <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
           <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
         </ul>
       </nav>
 
-      <!-- app.js renders signed-in/out pill here -->
       <div class="header-actions" id="authPill">
         <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
       </div>
@@ -57,7 +51,6 @@
   </header>
 
   <main class="container">
-    <!-- HERO -->
     <section class="hero">
       <div class="hero-shell">
         <div class="hero-inner">
@@ -73,14 +66,14 @@
 
             <h1>Seamless Commerce.<br/>Verified Standards.</h1>
             <p class="lead">
-              Your premium gateway to verified Real Estate, reliable Logistics, and secure Nigerian FinTech solutions.
+              Verified Real Estate, reliable Logistics, live Insights, and Exchange support — built for Nigeria.
             </p>
 
             <div class="actions">
               <a class="btn solid" href="#latest"><i class="fa-solid fa-sparkles"></i> Browse Latest</a>
-              <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
               <a class="btn" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
-              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { 'Name':'', 'Phone':'', 'Topic':'Real Estate / Logistics / FinTech / Exchange', 'Message':'Hello Larmah, I need assistance.' }))">
+              <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
+              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { 'Name':'', 'Phone':'', 'Topic':'Real Estate / Logistics / Exchange', 'Message':'Hello Larmah, I need assistance.' }))">
                 <i class="fa-brands fa-whatsapp"></i> Quick WhatsApp
               </button>
             </div>
@@ -92,7 +85,6 @@
             </div>
           </div>
 
-          <!-- HERO CARDS -->
           <div class="hero-badges">
             <div class="hero-card">
               <h3><i class="fa-solid fa-building-circle-check" style="color:var(--brand)"></i> Real Estate</h3>
@@ -107,21 +99,21 @@
             </div>
 
             <div class="hero-card">
-              <h3><i class="fa-solid fa-shield-halved" style="color:var(--brand)"></i> FinTech</h3>
-              <p>Verification & trust services — protect your investments.</p>
-              <div class="card-actions"><a class="btn small" href="fintech.html">Verify</a></div>
+              <h3><i class="fa-solid fa-money-bill-transfer" style="color:var(--brand)"></i> Exchange</h3>
+              <p>USD/GBP/EUR and crypto exchange support — WhatsApp-first desk.</p>
+              <div class="card-actions"><a class="btn small" href="exchange.html">Get Rates</a></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- LATEST -->
+    <!-- Latest previews -->
     <section class="section" id="latest">
       <div class="section-head-split">
         <div>
           <h2>Latest Catalogues</h2>
-          <p class="lead">Live preview from verified inventory — shows posted catalogue images automatically.</p>
+          <p class="lead">Live preview from verified inventory — uses posted catalogue images.</p>
         </div>
         <a class="btn small" href="insights.html"><i class="fa-solid fa-chart-line"></i> Market Insights</a>
       </div>
@@ -145,14 +137,13 @@
       </div>
     </section>
 
-    <!-- CTA STRIP -->
     <section class="section">
       <div class="cta-strip">
         <div>
           <h2 style="margin:0">Need something specific?</h2>
           <p class="lead" style="margin:6px 0 0">Tell us your budget, location, and timeline — we’ll respond via WhatsApp.</p>
         </div>
-        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { 'Name':'', 'Phone':'', 'Category':'Real Estate / Logistics / FinTech / Exchange', 'Details':'Describe what you need…' }))">
+        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { 'Name':'', 'Phone':'', 'Category':'Real Estate / Logistics / Exchange', 'Details':'Describe what you need…' }))">
           <i class="fa-brands fa-whatsapp"></i> Start Request
         </button>
       </div>
@@ -167,9 +158,10 @@
             <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
             <div>
               <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Real Estate • Logistics • FinTech • Exchange</div>
+              <div class="small">Real Estate • Logistics • Insights • Exchange</div>
             </div>
           </div>
+
           <div class="small" style="margin-top:8px">
             Elevating Nigerian commerce through trust, verified data, and seamless WhatsApp integration.
           </div>
@@ -186,9 +178,8 @@
           <b>Navigation</b>
           <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
           <div class="small"><a href="logistics.html">Logistics</a></div>
-          <div class="small"><a href="fintech.html">FinTech</a></div>
-          <div class="small"><a href="exchange.html">Exchange</a></div>
           <div class="small"><a href="insights.html">Insights</a></div>
+          <div class="small"><a href="exchange.html">Exchange</a></div>
           <div class="small"><a href="premium.html">Premium</a></div>
         </div>
 
@@ -197,10 +188,11 @@
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
           <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
+          <div class="small" style="margin-top:10px;opacity:.75"><a href="admin.html">Admin Terminal</a></div>
         </div>
       </div>
 
-      <div class="small">© <span id="year"></span> Larmah Enterprise. Crafted for the Nigerian Community.</div>
+      <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
     </div>
   </footer>
 
@@ -218,12 +210,11 @@
       `;
     }
 
-    // ✅ ALWAYS prefer catalog image_url; fallback per category
     function resolveCatalogImage(it, category){
       const u = it?.image_url ? String(it.image_url).trim() : "";
-      if (u) return u;
-      if (category === "real-estate") return "assets/images/placeholder-home.jpg";
-      if (category === "logistics") return "assets/images/placeholder-car.jpg";
+      if(u) return u;
+      if(category === "real-estate") return "assets/images/placeholder-home.jpg";
+      if(category === "logistics") return "assets/images/placeholder-car.jpg";
       return "assets/images/larmah-header.jpeg";
     }
 
@@ -233,12 +224,10 @@
       skel(mount);
 
       try{
-        if(!window.LARMAH || !LARMAH.fetchCatalog) throw new Error("App not ready");
-
         const items = (await LARMAH.fetchCatalog(category)) || [];
         __INDEX_CACHE[category] = items;
 
-        const top = items.slice(0, 2);
+        const top = items.slice(0,2);
         if(!top.length){
           mount.innerHTML = `<div class="notice"><strong>No items yet.</strong> Check back soon.</div>`;
           return;
@@ -254,13 +243,11 @@
               return `
                 <div class="latest-item">
                   <div class="latest-thumb">
-                    <img
-                      src="${LARMAH.escapeHtml(img)}"
-                      alt="${LARMAH.escapeHtml(it.title)}"
-                      loading="lazy"
-                      referrerpolicy="no-referrer"
-                      onerror="this.onerror=null; this.src='${fallback}'"
-                    >
+                    <img src="${LARMAH.escapeHtml(img)}"
+                         alt="${LARMAH.escapeHtml(it.title)}"
+                         loading="lazy"
+                         referrerpolicy="no-referrer"
+                         onerror="this.onerror=null; this.src='${fallback}'">
                   </div>
                   <div class="latest-body">
                     <div class="latest-title">${LARMAH.escapeHtml(it.title)}</div>
@@ -279,17 +266,9 @@
           </div>
         `;
       }catch(e){
-        // Retry once (slow load hosts)
-        setTimeout(async () => {
-          try{
-            if(!window.LARMAH || !LARMAH.fetchCatalog) throw new Error("App not ready");
-            await renderPreview(category, mountId);
-          }catch(_){
-            mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)">
-              <strong>System link unavailable.</strong> Please refresh.
-            </div>`;
-          }
-        }, 250);
+        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)">
+          <strong>System link unavailable.</strong> Please refresh.
+        </div>`;
       }
     }
 
@@ -304,7 +283,6 @@
         "Price": item.price || "Negotiable",
         "Ref": "WEB-INDEX-" + id
       });
-
       LARMAH.openWhatsApp(msg);
     }
 
