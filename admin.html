@@ -1,548 +1,541 @@
+<!-- admin.html (UPGRADED to match current assets/css/style.css) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Admin Command Center | Larmah</title>
-    <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg"/>
-    <meta name="description" content="Larmah Internal Management: Catalogues, Insights, and Operations."/>
-    
-    <link rel="stylesheet" href="assets/css/style.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script defer src="assets/js/app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Command Center | Larmah Enterprise</title>
 
-    <style>
-        :root {
-            --primary: #00a86b;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-        }
+  <meta name="description" content="Larmah internal management: catalog items, insights posts, and operations." />
+  <meta name="theme-color" content="#070A12" />
+  <link rel="canonical" href="./admin.html" />
 
-        /* Admin Specific UI */
-        .admin-stat-bar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 30px;
-        }
+  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
+  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
 
-        .stat-card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-        }
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-        .thumb-mini img {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            object-fit: cover;
-            margin-right: 10px;
-            vertical-align: middle;
-            border: 1px solid var(--border);
-        }
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/js/app.js"></script>
 
-        .table-responsive {
-            overflow-x: auto;
-            background: var(--glass);
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th { text-align: left; padding: 15px; border-bottom: 1px solid var(--border); color: #888; text-transform: uppercase; font-size: 0.75rem; }
-        td { padding: 15px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-
-        .status-pill {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-        .status-active { background: rgba(0, 168, 107, 0.15); color: var(--primary); }
-        .status-disabled { background: rgba(255, 90, 103, 0.15); color: #ff5a67; }
-
-        /* Social Links */
-        .social-links { display: flex; gap: 12px; margin-top: 15px; }
-        .social-link {
-            width: 35px; height: 35px;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; transition: 0.3s;
-        }
-        .social-link:hover { background: var(--primary); transform: scale(1.1); color: #000; }
-    </style>
+  <style>
+    .statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+    .stat{display:flex;flex-direction:column;gap:6px}
+    .pilltag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(0,217,129,.20);
+      background: rgba(0,217,129,.10);
+      font-weight:950;font-size:.8rem
+    }
+    .status-active{color:var(--ok);font-weight:950}
+    .status-hidden{color:var(--bad);font-weight:950}
+    .table-wrap{overflow:auto}
+    .mutedline{color:var(--muted);font-size:.92rem}
+  </style>
 </head>
+
 <body data-page="admin">
-
-<header>
+  <header>
     <div class="container header-inner">
-        <a class="brand" href="index.html">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
-        </a>
+      <a class="brand" href="index.html" aria-label="Home">
+        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+      </a>
 
-        <button class="menu-btn" onclick="LARMAH.toggleMenu()">
-            <i class="fa-solid fa-bars"></i>
-        </button>
+      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
 
-        <nav id="nav">
-            <ul>
-                <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
-                <li><a class="nav-link" href="logistics.html">Logistics</a></li>
-                <li><a class="nav-link" href="fintech.html">FinTech</a></li>
-                <li><a class="nav-link" href="insights.html">Insights</a></li>
-            </ul>
-        </nav>
+      <nav id="nav" aria-label="Primary navigation">
+        <ul>
+          <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
+          <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
+          <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
+          <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+        </ul>
+      </nav>
 
-        <div class="header-actions">
-            <button class="pill outline small" onclick="LARMAH.signOut()"><i class="fa-solid fa-power-off"></i> Logout</button>
-        </div>
+      <div class="header-actions">
+        <button class="pill" onclick="LARMAH.signOut()"><i class="fa-solid fa-power-off"></i> Logout</button>
+      </div>
     </div>
-</header>
+  </header>
 
-<main class="container">
-    <section class="hero" style="padding: 40px 0 20px;">
-        <div class="hero-shell">
-            <div class="hero-inner" style="grid-template-columns:1fr;">
-                <div>
-                    <span style="color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">Internal Terminal</span>
-                    <h1 style="font-size: 2.5rem; margin-top: 10px;">Command Center</h1>
-                    <div id="adminStatus" class="notice" style="margin-top:15px; display:none; border-color: var(--primary);"></div>
-                    <div id="adminGate" class="notice" style="margin-top:12px; display:none; border-color: #ff5a67;"></div>
-                    <div id="adminError" class="notice" style="margin-top:12px; display:none; background: rgba(255,90,103,.1);"></div>
-                </div>
+  <main class="container">
+    <section class="hero">
+      <div class="hero-shell">
+        <div class="hero-inner" style="grid-template-columns:1fr">
+          <div>
+            <div class="hero-kicker">
+              <span class="kicker-pill"><i class="fa-solid fa-terminal"></i> Internal Terminal</span>
+              <span class="kicker-dot">•</span>
+              <span class="kicker-sub">Catalog + Insights management</span>
             </div>
+
+            <h1>Command Center</h1>
+            <div id="adminStatus" class="notice" style="margin-top:12px;display:none;border-color:rgba(0,217,129,.30)"></div>
+            <div id="adminGate" class="notice" style="margin-top:12px;display:none;border-color:rgba(255,90,103,.35);background:rgba(255,90,103,.08)"></div>
+            <div id="adminError" class="notice" style="margin-top:12px;display:none;border-color:rgba(255,90,103,.35);background:rgba(255,90,103,.08)"></div>
+          </div>
         </div>
+      </div>
     </section>
 
-    <div class="admin-stat-bar">
-        <div class="stat-card">
-            <div class="small">Session</div>
-            <div id="user_email" style="font-weight: 700; color: var(--primary);">Admin User</div>
-        </div>
-        <div class="stat-card">
-            <div class="small">Status</div>
-            <div style="font-weight: 700;">Live Connection</div>
-        </div>
+    <div class="statbar">
+      <div class="card stat">
+        <div class="small">Session</div>
+        <div id="user_email" style="font-weight:950;color:var(--brand)">Admin User</div>
+        <div class="small" style="opacity:.8">Role-gated access</div>
+      </div>
+      <div class="card stat">
+        <div class="small">Connection</div>
+        <div style="font-weight:950">Live</div>
+        <div class="small" style="opacity:.8">Supabase enabled</div>
+      </div>
     </div>
 
+    <!-- CATALOG MANAGER -->
     <section class="section" id="catalogAdmin">
-        <div class="section-header" style="display:flex; justify-content: space-between; align-items: flex-end;">
-            <div>
-                <h2>Catalogue Manager</h2>
-                <p>Manage inventory for Real Estate, Logistics, and Fintech.</p>
-            </div>
-            <button class="btn primary" onclick="openEditor()"><i class="fa-solid fa-plus"></i> New Item</button>
+      <div class="section-head-split">
+        <div>
+          <h2>Catalogue Manager</h2>
+          <p class="lead">Manage inventory for Real Estate, Logistics, and FinTech.</p>
+        </div>
+        <button class="btn solid" onclick="openEditor()"><i class="fa-solid fa-plus"></i> New Item</button>
+      </div>
+
+      <div class="card">
+        <div class="row2">
+          <div>
+            <label class="small">Category</label>
+            <select id="catCategory" class="input" onchange="loadCatalog()">
+              <option value="real-estate">Real Estate</option>
+              <option value="logistics">Logistics</option>
+              <option value="fintech">FinTech</option>
+            </select>
+          </div>
+          <div>
+            <label class="small">Search</label>
+            <input id="catSearch" class="input" placeholder="Filter by title / description..." oninput="loadCatalog()" />
+          </div>
         </div>
 
-        <div class="card" style="margin-top: 20px;">
-            <div class="row2">
-                <select id="catCategory" class="input" onchange="loadCatalog()">
-                    <option value="real-estate">Real Estate</option>
-                    <option value="logistics">Logistics</option>
-                    <option value="fintech">FinTech</option>
-                </select>
-                <input id="catSearch" class="input" placeholder="Filter items by title..." oninput="loadCatalog()"/>
-            </div>
-
-            <div class="table-responsive" style="margin-top:20px;">
-                <div id="catTable">
-                    </div>
-            </div>
+        <div class="table-wrap" style="margin-top:12px">
+          <div id="catTable"></div>
         </div>
+      </div>
     </section>
 
-    <section class="section" id="insightsAdmin" style="margin-top: 60px;">
-        <div class="section-header">
-            <h2>Insights Publisher</h2>
-            <p>Create and edit real-time community updates.</p>
+    <!-- INSIGHTS PUBLISHER -->
+    <section class="section" id="insightsAdmin" style="margin-top:24px">
+      <h2>Insights Publisher</h2>
+      <p class="lead">Create and edit real-time community updates.</p>
+
+      <div class="card">
+        <input id="ip_id" class="input" style="display:none" disabled />
+        <div class="notice" id="ip_mode" style="display:none;margin-bottom:12px;border-color:rgba(0,217,129,.30)">
+          <i class="fa-solid fa-pen-to-square"></i> <strong>Editing Post Mode</strong>
         </div>
 
-        <div class="card">
-            <input id="ip_id" class="input" style="display:none;" disabled/>
-            <div class="notice" id="ip_mode" style="display:none; margin-bottom: 15px;">
-                <i class="fa-solid fa-pen-to-square"></i> <strong>Editing Post Mode</strong>
-            </div>
+        <label class="small">Post Title</label>
+        <input id="ip_title" class="input" placeholder="Post headline" />
 
-            <input id="ip_title" class="input" placeholder="Post Title (Headline)" style="margin-top:10px;"/>
-            <textarea id="ip_body" class="input" style="margin-top:15px; height: 120px;" placeholder="What's the update for the community?"></textarea>
-
-            <div class="actions" style="margin-top:20px;">
-                <button class="btn primary" id="ip_publish_btn" onclick="publishInsight()"><i class="fa-solid fa-paper-plane"></i> Publish Now</button>
-                <button class="btn primary" id="ip_update_btn" onclick="updateInsight()" style="display:none;"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
-                <button class="btn outline" id="ip_cancel_btn" onclick="cancelInsightEdit()" style="display:none;">Cancel</button>
-            </div>
+        <div style="margin-top:12px">
+          <label class="small">Body</label>
+          <textarea id="ip_body" class="input" placeholder="What's the update for the community?"></textarea>
         </div>
 
-        <div id="insightsAdminList" style="margin-top:30px;">
-            </div>
+        <div class="actions" style="margin-top:12px">
+          <button class="btn solid" id="ip_publish_btn" onclick="publishInsight()"><i class="fa-solid fa-paper-plane"></i> Publish Now</button>
+          <button class="btn solid" id="ip_update_btn" onclick="updateInsight()" style="display:none"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+          <button class="btn" id="ip_cancel_btn" onclick="cancelInsightEdit()" style="display:none">Cancel</button>
+        </div>
+      </div>
+
+      <div id="insightsAdminList" style="margin-top:12px"></div>
     </section>
 
+    <!-- EDITOR MODAL -->
     <div id="editorOverlay" class="modal-overlay" onclick="closeEditor()">
-        <div class="modal" onclick="event.stopPropagation()">
-            <div class="modal-head">
-                <div>
-                    <h3 id="modalTitle" style="margin:0;">Item Editor</h3>
-                    <div class="small">Catalog image files upload to Supabase Storage.</div>
-                </div>
-                <button class="btn small outline" onclick="closeEditor()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <div class="modal-body">
-                <div class="row2">
-                    <div style="flex:1">
-                        <label class="small">Item ID</label>
-                        <input id="e_id" class="input" disabled value="new"/>
-                    </div>
-                    <div style="flex:1">
-                        <label class="small">Visibility</label>
-                        <select id="e_active" class="input">
-                            <option value="true">Active (Visible)</option>
-                            <option value="false">Disabled (Hidden)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row2" style="margin-top:15px;">
-                    <div style="flex:1">
-                        <label class="small">Headline Title</label>
-                        <input id="e_title" class="input" placeholder="Luxury 2 Bed Flat"/>
-                    </div>
-                    <div style="flex:1">
-                        <label class="small">Price Label</label>
-                        <input id="e_price" class="input" placeholder="₦150,000 / Day"/>
-                    </div>
-                </div>
-
-                <div style="margin-top:15px;">
-                    <label class="small">Short Description</label>
-                    <textarea id="e_desc" class="input" placeholder="Key features, location, etc." style="height: 80px;"></textarea>
-                </div>
-
-                <div class="row2" style="margin-top:15px;">
-                    <div style="flex:1">
-                        <label class="small">Image URL (External)</label>
-                        <input id="e_image_url" class="input" placeholder="https://..."/>
-                    </div>
-                    <div style="flex:1">
-                        <label class="small">Direct Upload</label>
-                        <input id="e_image_file" class="input" type="file" accept="image/*"/>
-                    </div>
-                </div>
-
-                <div style="margin-top:15px;">
-                    <label class="small">Search Tags (Comma separated)</label>
-                    <input id="e_tags" class="input" placeholder="Lekki, VIP, Security, SUV"/>
-                </div>
-            </div>
-
-            <div class="modal-actions" style="border-top: 1px solid var(--border); padding-top: 20px;">
-                <button class="btn outline" id="btnDelete" onclick="deleteItem()" style="color: #ff5a67;"><i class="fa-solid fa-trash"></i> Delete</button>
-                <button class="btn primary" onclick="saveItem()"><i class="fa-solid fa-check"></i> Save Record</button>
-            </div>
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-head">
+          <div>
+            <h3 id="modalTitle" style="margin:0">Item Editor</h3>
+            <div class="small">Upload images to Supabase Storage bucket: <b>catalog</b></div>
+          </div>
+          <button class="btn small" onclick="closeEditor()"><i class="fa-solid fa-xmark"></i></button>
         </div>
-    </div>
-</main>
 
-<footer>
+        <div class="modal-body">
+          <div class="row2">
+            <div>
+              <label class="small">Item ID</label>
+              <input id="e_id" class="input" disabled value="new" />
+            </div>
+            <div>
+              <label class="small">Visibility</label>
+              <select id="e_active" class="input">
+                <option value="true">Active (Visible)</option>
+                <option value="false">Disabled (Hidden)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row2" style="margin-top:12px">
+            <div>
+              <label class="small">Title</label>
+              <input id="e_title" class="input" placeholder="Luxury 2 Bed Flat / Premium SUV" />
+            </div>
+            <div>
+              <label class="small">Price</label>
+              <input id="e_price" class="input" placeholder="₦150,000 / Day" />
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label class="small">Description</label>
+            <textarea id="e_desc" class="input" placeholder="Key features, location, service details..."></textarea>
+          </div>
+
+          <div class="row2" style="margin-top:12px">
+            <div>
+              <label class="small">Image URL (External)</label>
+              <input id="e_image_url" class="input" placeholder="https://..." />
+            </div>
+            <div>
+              <label class="small">Upload Image</label>
+              <input id="e_image_file" class="input" type="file" accept="image/*" />
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label class="small">Tags (comma separated)</label>
+            <input id="e_tags" class="input" placeholder="Lekki, VIP, Security, SUV" />
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn danger" id="btnDelete" onclick="deleteItem()"><i class="fa-solid fa-trash"></i> Delete</button>
+          <button class="btn solid" onclick="saveItem()"><i class="fa-solid fa-check"></i> Save Record</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
     <div class="container">
-        <div class="footer-grid">
+      <div class="footer-grid">
+        <div>
+          <div class="brandline">
+            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
             <div>
-                <img src="assets/images/larmah-header.jpeg" alt="Larmah" style="height:40px; margin-bottom:15px;"/>
-                <p class="small">Internal Control Panel. Authorized staff access only.</p>
-                <div class="social-links">
-                    <a href="https://instagram.com/hey_larmah" class="social-link"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://x.com/heylarmah_tech" class="social-link"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="https://t.me/heylarmah_tech" class="social-link"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="https://youtube.com/@heylarmah" class="social-link"><i class="fa-brands fa-youtube"></i></a>
-                </div>
+              <div style="font-weight:950">Larmah Enterprise</div>
+              <div class="small">Administration</div>
             </div>
-            <div>
-                <b>Operations</b>
-                <div class="small" style="margin-top:10px;"><a href="index.html">Main Site</a></div>
-                <div class="small"><a href="insights.html">Public Insights</a></div>
-            </div>
+          </div>
+          <div class="small" style="margin-top:8px">Authorized staff access only.</div>
         </div>
-        <div style="text-align: center; margin-top: 40px; font-size: 0.8rem; opacity: 0.5; border-top: 1px solid var(--border); padding-top: 20px;">
-            © <span id="year"></span> Larmah Enterprise Administration.
+
+        <div>
+          <b>Operations</b>
+          <div class="small" style="margin-top:10px"><a href="index.html">Main Site</a></div>
+          <div class="small"><a href="insights.html">Public Insights</a></div>
         </div>
+      </div>
+
+      <div class="small">© <span id="year"></span> Larmah Enterprise Administration.</div>
     </div>
-</footer>
+  </footer>
 
-<div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script>
-document.getElementById('year').textContent = new Date().getFullYear();
+  <script>
+    let editing = null;
 
-var editing = null;
-
-function showAdminError(msg){
-    var el = document.getElementById('adminError');
-    if(!el) return;
-    el.style.display = 'block';
-    el.innerHTML = '<strong>Operation Error:</strong> ' + (msg || 'Unknown failure');
-}
-
-function clearAdminError(){
-    var el = document.getElementById('adminError');
-    if(el){ el.style.display = 'none'; el.textContent = ''; }
-}
-
-async function requireAdmin(){
-    var sb = await LARMAH.initSupabase();
-    var session = await LARMAH.getSession();
-    
-    if(!session){
-        document.getElementById("adminGate").style.display = "block";
-        document.getElementById("adminGate").innerHTML = "<strong>Access Required.</strong> Redirecting to login...";
-        setTimeout(() => { location.href = "auth.html"; }, 1500);
-        return false;
+    function showAdminError(msg){
+      const el = document.getElementById("adminError");
+      if(!el) return;
+      el.style.display = "block";
+      el.innerHTML = "<strong>Operation Error:</strong> " + (msg || "Unknown failure");
+    }
+    function clearAdminError(){
+      const el = document.getElementById("adminError");
+      if(el){ el.style.display = "none"; el.textContent = ""; }
     }
 
-    document.getElementById("user_email").textContent = session.user.email;
-    
-    var r = await sb.from("profiles").select("role").eq("id", session.user.id).single();
-    if(r.error || !r.data || r.data.role !== "admin"){
-        document.getElementById("adminGate").style.display = "block";
-        document.getElementById("adminGate").innerHTML = "<strong>Unauthorized.</strong> This account does not have Admin permissions.";
+    async function requireAdmin(){
+      const sb = await LARMAH.initSupabase();
+      const session = await LARMAH.getSession();
+
+      if(!session){
+        const g = document.getElementById("adminGate");
+        g.style.display = "block";
+        g.innerHTML = "<strong>Access Required.</strong> Redirecting to login...";
+        setTimeout(()=> location.href="auth.html", 1200);
         return false;
+      }
+
+      document.getElementById("user_email").textContent = session.user.email;
+
+      const r = await sb.from("profiles").select("role").eq("id", session.user.id).single();
+      if(r.error || !r.data || r.data.role !== "admin"){
+        const g = document.getElementById("adminGate");
+        g.style.display = "block";
+        g.innerHTML = "<strong>Unauthorized.</strong> This account does not have Admin permissions.";
+        return false;
+      }
+
+      const st = document.getElementById("adminStatus");
+      st.style.display = "block";
+      st.innerHTML = "<strong>Verified Admin Session:</strong> " + session.user.email;
+      return true;
     }
 
-    var st = document.getElementById("adminStatus");
-    if(st){ st.style.display = "block"; st.innerHTML = "<strong>Verified Admin Session:</strong> " + session.user.email; }
-    return true;
-}
+    async function loadCatalog(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const category = document.getElementById("catCategory").value;
+      const q = (document.getElementById("catSearch").value || "").toLowerCase();
 
-// Catalog Management
-async function loadCatalog(){
-    var sb = await LARMAH.initSupabase();
-    var category = document.getElementById("catCategory").value;
-    var q = (document.getElementById("catSearch").value || "").toLowerCase();
+      const r = await sb.from("catalog_items").select("*").eq("category", category).order("updated_at", {ascending:false});
+      if(r.error){ showAdminError(r.error.message); return; }
 
-    var r = await sb.from("catalog_items")
-        .select("*")
-        .eq("category", category)
-        .order("updated_at", {ascending: false});
+      const items = (r.data || []).filter(it => {
+        const hay = (it.title + " " + (it.description || "") + " " + (it.tags || []).join(" ")).toLowerCase();
+        return !q || hay.includes(q);
+      });
 
-    if(r.error){ LARMAH.toast(r.error.message); return; }
+      const mount = document.getElementById("catTable");
+      if(!items.length){
+        mount.innerHTML = `<div class="notice"><strong>No items found.</strong> Add a new item above.</div>`;
+        return;
+      }
 
-    var items = (r.data || []).filter(it => {
-        var hay = (it.title + " " + (it.description || "")).toLowerCase();
-        return !q || hay.indexOf(q) >= 0;
-    });
-
-    var mount = document.getElementById("catTable");
-    if(!items.length){ mount.innerHTML = "<div class='notice'>No items found in " + category + "</div>"; return; }
-
-    mount.innerHTML = 
-        "<table><thead><tr><th>Asset Detail</th><th>Price Point</th><th>Status</th><th>Actions</th></tr></thead><tbody>" +
-        items.map(it => {
-            var statusClass = it.active ? "status-active" : "status-disabled";
-            var statusText = it.active ? "Active" : "Hidden";
-            return `<tr>
-                <td>
-                    ${it.image_url ? `<span class="thumb-mini"><img src="${it.image_url}"></span>` : ""}
-                    <div style="display:inline-block; vertical-align:middle;">
-                        <b>${LARMAH.escapeHtml(it.title)}</b>
-                        <div class="small" style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${LARMAH.escapeHtml(it.description || "")}</div>
+      mount.innerHTML = `
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map(it => {
+              const statusText = it.active ? "Active" : "Hidden";
+              const statusClass = it.active ? "status-active" : "status-hidden";
+              return `
+                <tr>
+                  <td>
+                    ${it.image_url ? `<span class="thumb-mini"><img src="${LARMAH.escapeHtml(it.image_url)}" alt=""></span>` : ""}
+                    <div style="display:inline-block;vertical-align:middle">
+                      <b>${LARMAH.escapeHtml(it.title)}</b>
+                      <div class="small" style="max-width:520px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                        ${LARMAH.escapeHtml(it.description || "")}
+                      </div>
                     </div>
-                </td>
-                <td><b>${LARMAH.escapeHtml(it.price || "-")}</b></td>
-                <td><span class="status-pill ${statusClass}">${statusText}</span></td>
-                <td><button class="btn small outline" onclick="editItem('${it.id}')">Edit</button></td>
-            </tr>`;
-        }).join("") + "</tbody></table>";
-}
+                  </td>
+                  <td><b>${LARMAH.escapeHtml(it.price || "-")}</b></td>
+                  <td><span class="${statusClass}">${statusText}</span></td>
+                  <td>
+                    <button class="btn small" onclick="editItem('${it.id}')">Edit</button>
+                  </td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      `;
+    }
 
-function openEditor(id){
-    document.getElementById("editorOverlay").style.display = "flex";
-    document.getElementById("btnDelete").style.display = id ? "inline-flex" : "none";
-    document.getElementById("modalTitle").textContent = id ? "Modify Asset" : "Register New Asset";
-    document.getElementById("e_id").value = id || "System Generated";
-    
-    // Reset Form
-    document.getElementById("e_title").value = "";
-    document.getElementById("e_price").value = "";
-    document.getElementById("e_desc").value = "";
-    document.getElementById("e_tags").value = "";
-    document.getElementById("e_image_url").value = "";
-    document.getElementById("e_active").value = "true";
-    document.getElementById("e_image_file").value = "";
-    
-    editing = id ? { id: id } : null;
-}
+    function openEditor(id){
+      document.getElementById("editorOverlay").style.display = "flex";
+      document.getElementById("btnDelete").style.display = id ? "inline-flex" : "none";
+      document.getElementById("modalTitle").textContent = id ? "Modify Asset" : "Register New Asset";
+      document.getElementById("e_id").value = id || "System Generated";
 
-function closeEditor(){ document.getElementById("editorOverlay").style.display = "none"; }
+      document.getElementById("e_title").value = "";
+      document.getElementById("e_price").value = "";
+      document.getElementById("e_desc").value = "";
+      document.getElementById("e_tags").value = "";
+      document.getElementById("e_image_url").value = "";
+      document.getElementById("e_active").value = "true";
+      document.getElementById("e_image_file").value = "";
 
-async function editItem(id){
-    var sb = await LARMAH.initSupabase();
-    var r = await sb.from("catalog_items").select("*").eq("id", id).single();
-    if(r.error) return;
-    
-    editing = r.data;
-    openEditor(id);
-    
-    document.getElementById("e_title").value = r.data.title || "";
-    document.getElementById("e_price").value = r.data.price || "";
-    document.getElementById("e_desc").value = r.data.description || "";
-    document.getElementById("e_tags").value = (r.data.tags || []).join(", ");
-    document.getElementById("e_image_url").value = r.data.image_url || "";
-    document.getElementById("e_active").value = String(r.data.active);
-}
+      editing = id ? { id } : null;
+    }
+    function closeEditor(){ document.getElementById("editorOverlay").style.display = "none"; }
 
-async function saveItem(){
-    clearAdminError();
-    var sb = await LARMAH.initSupabase();
-    var category = document.getElementById("catCategory").value;
-    var title = document.getElementById("e_title").value.trim();
-    if(!title){ LARMAH.toast("Title is required"); return; }
+    async function editItem(id){
+      const sb = await LARMAH.initSupabase();
+      const r = await sb.from("catalog_items").select("*").eq("id", id).single();
+      if(r.error) return;
 
-    var payload = {
-        category: category,
-        title: title,
+      editing = r.data;
+      openEditor(id);
+
+      document.getElementById("e_title").value = r.data.title || "";
+      document.getElementById("e_price").value = r.data.price || "";
+      document.getElementById("e_desc").value = r.data.description || "";
+      document.getElementById("e_tags").value = (r.data.tags || []).join(", ");
+      document.getElementById("e_image_url").value = r.data.image_url || "";
+      document.getElementById("e_active").value = String(r.data.active);
+    }
+
+    async function saveItem(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const category = document.getElementById("catCategory").value;
+      const title = document.getElementById("e_title").value.trim();
+      if(!title){ LARMAH.toast("Title is required"); return; }
+
+      const payload = {
+        category,
+        title,
         price: document.getElementById("e_price").value.trim(),
         description: document.getElementById("e_desc").value.trim(),
-        tags: document.getElementById("e_tags").value.split(",").map(s => s.trim()).filter(Boolean),
+        tags: document.getElementById("e_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
         active: (document.getElementById("e_active").value === "true"),
         image_url: document.getElementById("e_image_url").value.trim(),
         updated_at: new Date().toISOString()
-    };
+      };
 
-    try {
-        var file = document.getElementById("e_image_file").files[0];
+      try{
+        const file = document.getElementById("e_image_file").files[0];
         if(file){
-            LARMAH.toast("Uploading asset...");
-            var path = "catalog/" + Date.now() + "_" + file.name;
-            await sb.storage.from("catalog").upload(path, file);
-            var pub = sb.storage.from("catalog").getPublicUrl(path);
-            payload.image_url = pub.data.publicUrl;
+          LARMAH.toast("Uploading asset...");
+          const path = "catalog/" + Date.now() + "_" + file.name;
+          const up = await sb.storage.from("catalog").upload(path, file, { upsert: false });
+          if(up.error) throw up.error;
+
+          const pub = sb.storage.from("catalog").getPublicUrl(path);
+          payload.image_url = pub.data.publicUrl;
         }
 
-        var res;
+        let res;
         if(editing && editing.id){
-            res = await sb.from("catalog_items").update(payload).eq("id", editing.id);
-        } else {
-            res = await sb.from("catalog_items").insert([payload]);
+          res = await sb.from("catalog_items").update(payload).eq("id", editing.id);
+        }else{
+          res = await sb.from("catalog_items").insert([payload]);
         }
-
         if(res.error) throw res.error;
-        
-        LARMAH.toast("Asset Recorded Successfully");
+
+        LARMAH.toast("Saved");
         closeEditor();
         loadCatalog();
-    } catch(err) {
+      }catch(err){
         showAdminError(err.message);
+      }
     }
-}
 
-async function deleteItem(){
-    if(!confirm("Are you sure you want to delete this asset forever?")) return;
-    var sb = await LARMAH.initSupabase();
-    var d = await sb.from("catalog_items").delete().eq("id", editing.id);
-    if(d.error){ LARMAH.toast(d.error.message); return; }
-    LARMAH.toast("Asset Removed");
-    closeEditor();
-    loadCatalog();
-}
+    async function deleteItem(){
+      if(!confirm("Delete this asset forever?")) return;
+      const sb = await LARMAH.initSupabase();
+      const d = await sb.from("catalog_items").delete().eq("id", editing.id);
+      if(d.error){ showAdminError(d.error.message); return; }
+      LARMAH.toast("Deleted");
+      closeEditor();
+      loadCatalog();
+    }
 
-// Insights Management
-async function publishInsight(){
-    var sb = await LARMAH.initSupabase();
-    var title = document.getElementById("ip_title").value.trim();
-    var body = document.getElementById("ip_body").value.trim();
-    
-    if(!title || !body){ LARMAH.toast("Both fields are required"); return; }
-    
-    var ins = await sb.from("insights_posts").insert([{ title, body, created_at: new Date().toISOString() }]);
-    if(ins.error){ LARMAH.toast(ins.error.message); return; }
-    
-    document.getElementById("ip_title").value = "";
-    document.getElementById("ip_body").value = "";
-    LARMAH.toast("Insight Published Live");
-    loadInsightsAdmin();
-}
+    // Insights publisher
+    async function publishInsight(){
+      const sb = await LARMAH.initSupabase();
+      const title = document.getElementById("ip_title").value.trim();
+      const body = document.getElementById("ip_body").value.trim();
+      if(!title || !body){ LARMAH.toast("Both fields are required"); return; }
 
-async function loadInsightsAdmin(){
-    var sb = await LARMAH.initSupabase();
-    var r = await sb.from("insights_posts").select("*").order("created_at", {ascending: false});
-    var mount = document.getElementById("insightsAdminList");
-    
-    if(!r.data || !r.data.length){ mount.innerHTML = "<div class='small'>No community insights found.</div>"; return; }
+      const ins = await sb.from("insights_posts").insert([{ title, body, created_at: new Date().toISOString() }]);
+      if(ins.error){ showAdminError(ins.error.message); return; }
 
-    mount.innerHTML = "<div class='grid'>" + r.data.map(p => `
-        <div class="card">
-            <h3 style="font-size: 1rem;">${LARMAH.escapeHtml(p.title)}</h3>
-            <p class="small" style="opacity: 0.8; margin: 10px 0;">${LARMAH.escapeHtml(p.body)}</p>
-            <div class="meta" style="font-size: 0.7rem;">Created: ${new Date(p.created_at).toLocaleDateString()}</div>
-            <div class="actions" style="margin-top:15px;">
-                <button class="btn small outline" onclick="startInsightEditFromId('${p.id}')">Edit</button>
-                <button class="btn small" onclick="deleteInsight('${p.id}')" style="color:#ff5a67;">Delete</button>
+      document.getElementById("ip_title").value = "";
+      document.getElementById("ip_body").value = "";
+      LARMAH.toast("Published");
+      loadInsightsAdmin();
+    }
+
+    async function loadInsightsAdmin(){
+      const sb = await LARMAH.initSupabase();
+      const r = await sb.from("insights_posts").select("*").order("created_at", {ascending:false});
+      const mount = document.getElementById("insightsAdminList");
+
+      if(!r.data || !r.data.length){
+        mount.innerHTML = "<div class='notice'><strong>No community insights.</strong></div>";
+        return;
+      }
+
+      mount.innerHTML =
+        "<div class='grid'>" +
+        r.data.map(p => `
+          <div class="card">
+            <h3 style="font-size:1rem">${LARMAH.escapeHtml(p.title)}</h3>
+            <p class="small" style="opacity:.9;margin-top:8px">${LARMAH.escapeHtml(p.body)}</p>
+            <div class="meta">Created: ${new Date(p.created_at).toLocaleString()}</div>
+            <div class="actions">
+              <button class="btn small" onclick="startInsightEditFromId('${p.id}')">Edit</button>
+              <button class="btn small danger" onclick="deleteInsight('${p.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
             </div>
-        </div>
-    `).join("") + "</div>";
-}
+          </div>
+        `).join("") +
+        "</div>";
+    }
 
-async function startInsightEditFromId(id){
-    var sb = await LARMAH.initSupabase();
-    var r = await sb.from("insights_posts").select("*").eq("id", id).single();
-    if(r.error) return;
-    
-    document.getElementById("ip_id").value = r.data.id;
-    document.getElementById("ip_mode").style.display = "block";
-    document.getElementById("ip_title").value = r.data.title;
-    document.getElementById("ip_body").value = r.data.body;
-    
-    document.getElementById("ip_publish_btn").style.display = "none";
-    document.getElementById("ip_update_btn").style.display = "inline-flex";
-    document.getElementById("ip_cancel_btn").style.display = "inline-flex";
-    
-    window.scrollTo({ top: document.getElementById('insightsAdmin').offsetTop - 100, behavior: 'smooth' });
-}
+    async function startInsightEditFromId(id){
+      const sb = await LARMAH.initSupabase();
+      const r = await sb.from("insights_posts").select("*").eq("id", id).single();
+      if(r.error) return;
 
-function cancelInsightEdit(){
-    document.getElementById("ip_mode").style.display = "none";
-    document.getElementById("ip_title").value = "";
-    document.getElementById("ip_body").value = "";
-    document.getElementById("ip_publish_btn").style.display = "inline-flex";
-    document.getElementById("ip_update_btn").style.display = "none";
-    document.getElementById("ip_cancel_btn").style.display = "none";
-}
+      document.getElementById("ip_id").value = r.data.id;
+      document.getElementById("ip_mode").style.display = "block";
+      document.getElementById("ip_title").value = r.data.title;
+      document.getElementById("ip_body").value = r.data.body;
 
-async function updateInsight(){
-    var sb = await LARMAH.initSupabase();
-    var id = document.getElementById("ip_id").value;
-    var title = document.getElementById("ip_title").value.trim();
-    var body = document.getElementById("ip_body").value.trim();
+      document.getElementById("ip_publish_btn").style.display = "none";
+      document.getElementById("ip_update_btn").style.display = "inline-flex";
+      document.getElementById("ip_cancel_btn").style.display = "inline-flex";
 
-    var u = await sb.from("insights_posts").update({ title, body }).eq("id", id);
-    if(u.error){ LARMAH.toast(u.error.message); return; }
-    
-    LARMAH.toast("Insight Updated");
-    cancelInsightEdit();
-    loadInsightsAdmin();
-}
+      window.scrollTo({ top: document.getElementById("insightsAdmin").offsetTop - 90, behavior: "smooth" });
+    }
 
-async function deleteInsight(id){
-    if(!confirm("Delete this Insight forever?")) return;
-    var sb = await LARMAH.initSupabase();
-    await sb.from("insights_posts").delete().eq("id", id);
-    loadInsightsAdmin();
-    LARMAH.toast("Insight Deleted");
-}
+    function cancelInsightEdit(){
+      document.getElementById("ip_mode").style.display = "none";
+      document.getElementById("ip_id").value = "";
+      document.getElementById("ip_title").value = "";
+      document.getElementById("ip_body").value = "";
+      document.getElementById("ip_publish_btn").style.display = "inline-flex";
+      document.getElementById("ip_update_btn").style.display = "none";
+      document.getElementById("ip_cancel_btn").style.display = "none";
+    }
 
-document.addEventListener("DOMContentLoaded", async function(){
-    var ok = await requireAdmin();
-    if(!ok) return;
-    loadCatalog();
-    loadInsightsAdmin();
-});
-</script>
+    async function updateInsight(){
+      const sb = await LARMAH.initSupabase();
+      const id = document.getElementById("ip_id").value;
+      const title = document.getElementById("ip_title").value.trim();
+      const body = document.getElementById("ip_body").value.trim();
+      const u = await sb.from("insights_posts").update({ title, body }).eq("id", id);
+      if(u.error){ showAdminError(u.error.message); return; }
+      LARMAH.toast("Updated");
+      cancelInsightEdit();
+      loadInsightsAdmin();
+    }
+
+    async function deleteInsight(id){
+      if(!confirm("Delete this insight forever?")) return;
+      const sb = await LARMAH.initSupabase();
+      const d = await sb.from("insights_posts").delete().eq("id", id);
+      if(d.error){ showAdminError(d.error.message); return; }
+      LARMAH.toast("Deleted");
+      loadInsightsAdmin();
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      const ok = await requireAdmin();
+      if(!ok) return;
+      loadCatalog();
+      loadInsightsAdmin();
+    });
+  </script>
 </body>
 </html>
