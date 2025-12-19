@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Insights | Larmah</title>
+<link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg"/>
+<meta name="description" content="Live NGN crypto prices + team updates (realtime)."/>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/app.js"></script>
+
+</head>
+<body data-page="insights">
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Home">
+      <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+    </a>
+
+    <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <nav id="nav" aria-label="Navigation">
+      <ul>
+        <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
+        <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
+        <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
+        <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions" id="authPill">
+      <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+    </div>
+  </div>
+</header>
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-shell">
+      <div class="hero-inner" style="grid-template-columns:1fr;">
+        <div>
+          <h1>Insights</h1>
+          <p>Real-time updates from our team + live crypto prices in NGN.</p>
+          <div class="actions">
+            <button class="btn solid" onclick="LARMAH.loadCrypto('livePrices')"><i class="fa-solid fa-rotate"></i> Refresh prices</button>
+            <a class="btn primary" href="#updates"><i class="fa-solid fa-bell"></i> Team updates</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Live crypto prices (NGN)</h2>
+    <p class="lead">Real-time from a public source.</p>
+    <div id="livePrices" class="notice"><strong>Loading…</strong></div>
+  </section>
+
+  <section class="section" id="updates">
+    <h2>Team updates</h2>
+    <p class="lead">Live feed from Supabase (realtime).</p>
+    <div id="insightsMount"></div>
+  </section>
+
+</main>
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brandline">
+          <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+        </div>
+        <div class="small">Real Estate • Logistics • FinTech • Insights</div>
+        <div class="small" style="margin-top:8px;">WhatsApp-first support for Nigeria community.</div>
+      </div>
+
+      <div>
+        <b>Contact</b>
+        <div class="small" style="margin-top:8px;">WhatsApp: +234 706 308 0605</div>
+        <div class="small">Email: business@heylarmah.tech</div>
+        <div class="small">Lagos, Nigeria</div>
+      </div>
+
+      <div>
+        <b>Admin</b>
+        <div class="small" style="margin-top:8px;"><a href="auth.html">Sign in</a></div>
+        <div class="small"><a href="admin.html">Command Center</a></div>
+      </div>
+    </div>
+
+    <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
+  </div>
+</footer>
+<div id="toast" class="toast"></div>
+<script>
+document.addEventListener("DOMContentLoaded", async function(){
+  await LARMAH.loadCrypto("livePrices");
+  await LARMAH.renderInsights("insightsMount");
+  await LARMAH.subscribeInsights("insightsMount");
+});
+</script>
+</body>
+</html>

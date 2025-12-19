@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Premium | Larmah</title>
+<link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg"/>
+<meta name="description" content="Premium membership: priority response + private options."/>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/app.js"></script>
+
+<script src="https://js.paystack.co/v2/inline.js"></script>
+</head>
+<body data-page="premium">
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Home">
+      <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+    </a>
+
+    <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <nav id="nav" aria-label="Navigation">
+      <ul>
+        <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
+        <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
+        <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
+        <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions" id="authPill">
+      <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+    </div>
+  </div>
+</header>
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-shell">
+      <div class="hero-inner">
+        <div>
+          <h1>Premium</h1>
+          <p>Priority response and private options. Payment via Paystack (optional).</p>
+          <div class="notice" style="margin-top:12px;">
+            <strong>Setup:</strong> Add your Paystack public key in <b>assets/js/app.js</b>.
+          </div>
+        </div>
+        <div class="hero-badges">
+          <div class="hero-card"><h3>Priority response</h3><p>Faster confirmations and support.</p></div>
+          <div class="hero-card"><h3>Private options</h3><p>More inventory and better availability.</p></div>
+          <div class="hero-card"><h3>Verified guidance</h3><p>Extra support on documents.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Plans</h2>
+    <p class="lead">Pay and we’ll get your confirmation on WhatsApp.</p>
+    <div class="grid">
+      <div class="card"><h3>Monthly</h3><p>Priority access.</p><div class="price">₦5,000</div><div class="actions"><button class="btn solid" onclick="pay('Monthly', 5000)">Pay</button></div></div>
+      <div class="card"><h3>Quarterly</h3><p>Better value.</p><div class="price">₦12,000</div><div class="actions"><button class="btn solid" onclick="pay('Quarterly', 12000)">Pay</button></div></div>
+      <div class="card"><h3>Yearly</h3><p>Best value.</p><div class="price">₦40,000</div><div class="actions"><button class="btn solid" onclick="pay('Yearly', 40000)">Pay</button></div></div>
+    </div>
+
+    <div class="card" style="margin-top:12px;">
+      <h3>Your details</h3>
+      <div class="row2" style="margin-top:10px;">
+        <input id="pm_name" class="input" placeholder="Full name"/>
+        <input id="pm_phone" class="input" placeholder="Phone (WhatsApp)"/>
+      </div>
+      <div class="row2" style="margin-top:12px;">
+        <input id="pm_email" class="input" placeholder="Email address"/>
+        <input id="pm_city" class="input" placeholder="City (optional)"/>
+      </div>
+      <div id="premiumStatus" class="notice" style="display:none;margin-top:12px;"></div>
+    </div>
+  </section>
+
+</main>
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brandline">
+          <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+        </div>
+        <div class="small">Real Estate • Logistics • FinTech • Insights</div>
+        <div class="small" style="margin-top:8px;">WhatsApp-first support for Nigeria community.</div>
+      </div>
+
+      <div>
+        <b>Contact</b>
+        <div class="small" style="margin-top:8px;">WhatsApp: +234 706 308 0605</div>
+        <div class="small">Email: business@heylarmah.tech</div>
+        <div class="small">Lagos, Nigeria</div>
+      </div>
+
+      <div>
+        <b>Admin</b>
+        <div class="small" style="margin-top:8px;"><a href="auth.html">Sign in</a></div>
+        <div class="small"><a href="admin.html">Command Center</a></div>
+      </div>
+    </div>
+
+    <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
+  </div>
+</footer>
+<div id="toast" class="toast"></div>
+<script>
+function pay(plan, amountNaira){
+  var name = document.getElementById("pm_name").value;
+  var phone = document.getElementById("pm_phone").value;
+  var email = document.getElementById("pm_email").value;
+  if(!LARMAH.PAYSTACK_PUBLIC_KEY || LARMAH.PAYSTACK_PUBLIC_KEY.indexOf("PUT_YOUR")>=0){
+    LARMAH.toast("Add your Paystack public key in assets/js/app.js");
+    return;
+  }
+  if(!email || email.indexOf("@")<0){ LARMAH.toast("Enter a valid email"); return; }
+  if(!phone || !phone.trim()){ LARMAH.toast("Enter your phone"); return; }
+
+  // For full production: verify on your server/webhook. Here we open WhatsApp and rely on Paystack receipt.
+  var msg = LARMAH.buildMessage("Premium Payment Intent", {
+    "Plan": plan,
+    "Amount": "₦"+amountNaira,
+    "Name": name,
+    "Phone": phone,
+    "Email": email
+  });
+  LARMAH.openWhatsApp(msg);
+}
+</script>
+</body>
+</html>

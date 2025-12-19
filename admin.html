@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin | Command Center</title>
+<link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg"/>
+<meta name="description" content="Admin: manage catalogues and insights using Supabase."/>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/app.js"></script>
+
+</head>
+<body data-page="admin">
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Home">
+      <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+    </a>
+
+    <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <nav id="nav" aria-label="Navigation">
+      <ul>
+        <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
+        <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
+        <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
+        <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions" id="authPill">
+      <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+    </div>
+  </div>
+</header>
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-shell">
+      <div class="hero-inner" style="grid-template-columns:1fr;">
+        <div>
+          <h1>Command Center (Admin)</h1>
+          <p>Manage catalogues (with images) and publish Insights posts. Powered by Supabase.</p>
+          <div class="actions">
+            <button class="btn" onclick="LARMAH.signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign out</button>
+            <a class="btn solid" href="#catalogAdmin"><i class="fa-solid fa-boxes-stacked"></i> Catalogues</a>
+            <a class="btn primary" href="#insightsAdmin"><i class="fa-solid fa-pen"></i> Insights</a>
+          </div>
+          <div id="adminGate" class="notice" style="margin-top:12px;display:none;"></div>
+<div id="adminStatus" class="notice" style="margin-top:12px;display:none;"></div>
+<div id="adminError" class="notice" style="margin-top:12px;display:none;border-color: rgba(255,90,103,.35);"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="catalogAdmin">
+    <h2>Catalogue management</h2>
+    <p class="lead">Add/edit items. Images are stored in Supabase Storage (bucket: <b>catalog</b>).</p>
+
+    <div class="card">
+      <div class="row2">
+        <select id="catCategory" class="input">
+          <option value="real-estate">Real Estate</option>
+          <option value="logistics">Logistics</option>
+          <option value="fintech">FinTech</option>
+          <option value="insights">Insights</option>
+        </select>
+        <input id="catSearch" class="input" placeholder="Search..." oninput="loadCatalog()"/>
+      </div>
+
+      <div class="actions" style="margin-top:12px;">
+        <button class="btn solid" onclick="openEditor()"><i class="fa-solid fa-plus"></i> Add item</button>
+        <button class="btn" onclick="loadCatalog()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
+
+      <div id="catTable" style="margin-top:12px;"></div>
+    </div>
+  </section>
+
+  <section class="section" id="insightsAdmin">
+    <h2>Publish Insights</h2>
+    <p class="lead">Create posts. They appear on Home and Insights in real time.</p>
+
+    <div class="card">
+      <input id="ip_id" class="input" placeholder="Post ID" disabled style="display:none;"/>
+      <div class="notice" id="ip_mode" style="display:none;margin-top:12px;">
+        <strong>Edit mode:</strong> You are editing an existing post.
+      </div>
+
+      <input id="ip_title" class="input" placeholder="Title" style="margin-top:12px;"/>
+      <textarea id="ip_body" class="input" style="margin-top:12px;" placeholder="Post body"></textarea>
+
+      <div class="actions" style="margin-top:12px;">
+        <button class="btn solid" id="ip_publish_btn" onclick="publishInsight()"><i class="fa-solid fa-paper-plane"></i> Publish</button>
+        <button class="btn solid" id="ip_update_btn" onclick="updateInsight()" style="display:none;"><i class="fa-solid fa-floppy-disk"></i> Update</button>
+        <button class="btn" id="ip_cancel_btn" onclick="cancelInsightEdit()" style="display:none;"><i class="fa-solid fa-xmark"></i> Cancel</button>
+        <button class="btn" onclick="loadInsightsAdmin()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
+
+      <div id="insightsAdminList" style="margin-top:12px;"></div>
+</div>
+  </section>
+
+  <div id="editorOverlay" class="modal-overlay" onclick="closeEditor(true)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-head">
+        <div>
+          <h3 id="modalTitle" style="margin:0;">Add item</h3>
+          <div class="small">Upload an image or paste an image URL.</div>
+        </div>
+        <button class="btn small" onclick="closeEditor(true)"><i class="fa-solid fa-xmark"></i> Close</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="row2">
+          <input id="e_id" class="input" placeholder="ID" disabled/>
+          <select id="e_active" class="input">
+            <option value="true">Active</option>
+            <option value="false">Disabled</option>
+          </select>
+        </div>
+
+        <div class="row2" style="margin-top:12px;">
+          <input id="e_title" class="input" placeholder="Title"/>
+          <input id="e_price" class="input" placeholder="Price (e.g., From ₦120k/night)"/>
+        </div>
+
+        <textarea id="e_desc" class="input" placeholder="Description" style="margin-top:12px;"></textarea>
+
+        <div class="row2" style="margin-top:12px;">
+          <input id="e_image_url" class="input" placeholder="Image URL (optional)"/>
+          <input id="e_image_file" class="input" type="file" accept="image/*"/>
+        </div>
+
+        <input id="e_tags" class="input" placeholder="Tags (comma separated)" style="margin-top:12px;"/>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn" id="btnDelete" onclick="deleteItem()"><i class="fa-solid fa-trash"></i> Delete</button>
+        <button class="btn solid" onclick="saveItem()"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brandline">
+          <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+        </div>
+        <div class="small">Real Estate • Logistics • FinTech • Insights</div>
+        <div class="small" style="margin-top:8px;">WhatsApp-first support for Nigeria community.</div>
+      </div>
+
+      <div>
+        <b>Contact</b>
+        <div class="small" style="margin-top:8px;">WhatsApp: +234 706 308 0605</div>
+        <div class="small">Email: business@heylarmah.tech</div>
+        <div class="small">Lagos, Nigeria</div>
+      </div>
+
+      <div>
+        <b>Admin</b>
+        <div class="small" style="margin-top:8px;"><a href="auth.html">Sign in</a></div>
+        <div class="small"><a href="admin.html">Command Center</a></div>
+      </div>
+    </div>
+
+    <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
+  </div>
+</footer>
+<div id="toast" class="toast"></div>
+<script>
+var editing = null;
+function showAdminError(msg){
+  var el=document.getElementById('adminError');
+  if(!el) return;
+  el.style.display='block';
+  el.innerHTML = '<strong>Save failed:</strong> ' + (msg||'Unknown error');
+}
+function clearAdminError(){
+  var el=document.getElementById('adminError');
+  if(el){ el.style.display='none'; el.textContent=''; }
+
+
+async function startInsightEditFromId(id){
+  var sb = await LARMAH.initSupabase();
+  var r = await sb.from("insights_posts").select("*").eq("id", id).single();
+  if(r.error){
+    LARMAH.toast(r.error.message);
+    if(typeof showAdminError === "function") showAdminError(r.error.message);
+    return;
+  }
+  startInsightEdit(r.data);
+}
+
+function startInsightEdit(post){
+  if(!post) return;
+  document.getElementById("ip_id").style.display = "block";
+  document.getElementById("ip_id").value = post.id;
+  document.getElementById("ip_mode").style.display = "block";
+
+  document.getElementById("ip_title").value = post.title || "";
+  document.getElementById("ip_body").value = post.body || "";
+
+  document.getElementById("ip_publish_btn").style.display = "none";
+  document.getElementById("ip_update_btn").style.display = "inline-flex";
+  document.getElementById("ip_cancel_btn").style.display = "inline-flex";
+
+  location.hash = "#insightsAdmin";
+}
+
+function cancelInsightEdit(){
+  document.getElementById("ip_id").style.display = "none";
+  document.getElementById("ip_id").value = "";
+  document.getElementById("ip_mode").style.display = "none";
+
+  document.getElementById("ip_title").value = "";
+  document.getElementById("ip_body").value = "";
+
+  document.getElementById("ip_publish_btn").style.display = "inline-flex";
+  document.getElementById("ip_update_btn").style.display = "none";
+  document.getElementById("ip_cancel_btn").style.display = "none";
+}
+
+async function updateInsight(){
+  var sb = await LARMAH.initSupabase();
+  if(typeof clearAdminError === "function") clearAdminError();
+
+  var id = document.getElementById("ip_id").value;
+  var title = document.getElementById("ip_title").value.trim();
+  var body = document.getElementById("ip_body").value.trim();
+
+  if(!id){ LARMAH.toast("Missing post id"); return; }
+  if(!title || !body){ LARMAH.toast("Title and body required"); return; }
+
+  var u = await sb.from("insights_posts").update({ title:title, body:body }).eq("id", id);
+  if(u.error){
+    console.error(u.error);
+    if(typeof showAdminError === "function") showAdminError(u.error.message);
+    LARMAH.toast(u.error.message);
+    return;
+  }
+  LARMAH.toast("Updated");
+  cancelInsightEdit();
+  await loadInsightsAdmin();
+}
+
+async function deleteInsight(id){
+  if(!id) return;
+  if(!confirm("Delete this insight post?")) return;
+
+  var sb = await LARMAH.initSupabase();
+  if(typeof clearAdminError === "function") clearAdminError();
+
+  var d = await sb.from("insights_posts").delete().eq("id", id);
+  if(d.error){
+    console.error(d.error);
+    if(typeof showAdminError === "function") showAdminError(d.error.message);
+    LARMAH.toast(d.error.message);
+    return;
+  }
+  LARMAH.toast("Deleted");
+  if(document.getElementById("ip_id").value === id) cancelInsightEdit();
+  await loadInsightsAdmin();
+}
+
+}
+
+
+async function requireAdmin(){
+  var sb = await LARMAH.initSupabase();
+  var session = await LARMAH.getSession();
+  if(!session){
+    var g = document.getElementById("adminGate");
+    g.style.display = "block";
+    g.innerHTML = "<strong>Sign in required.</strong> Please sign in to access admin tools.";
+    setTimeout(function(){ location.href="auth.html"; }, 800);
+    return false;
+  }
+  var r = await sb.from("profiles").select("role").eq("id", session.user.id).single();
+  if(r.error){
+    document.getElementById("adminGate").style.display = "block";
+    document.getElementById("adminGate").innerHTML = "<strong>Error reading profile.</strong> " + r.error.message;
+    return false;
+  }
+  if(!r.data || r.data.role !== "admin"){
+    document.getElementById("adminGate").style.display = "block";
+    document.getElementById("adminGate").innerHTML = "<strong>Access denied.</strong> Admin role required for this account.";
+    var st=document.getElementById("adminStatus");
+    if(st){ st.style.display="block"; st.innerHTML="<strong>Signed in as:</strong> "+(session.user.email||"") + "<br/><strong>Your role:</strong> "+(r.data ? r.data.role : "missing profile"); }
+    return false;
+  }
+  var st=document.getElementById("adminStatus");
+  if(st){ st.style.display="block"; st.innerHTML="<strong>Signed in as:</strong> "+(session.user.email||"")+"<br/><strong>Role:</strong> admin"; }
+
+  return true;
+}
+
+function openEditor(id){
+  document.getElementById("editorOverlay").style.display = "flex";
+  document.getElementById("btnDelete").style.display = id ? "inline-flex" : "none";
+  document.getElementById("modalTitle").textContent = id ? "Edit item" : "Add item";
+  document.getElementById("e_id").value = id || "new";
+  document.getElementById("e_title").value = "";
+  document.getElementById("e_price").value = "";
+  document.getElementById("e_desc").value = "";
+  document.getElementById("e_tags").value = "";
+  document.getElementById("e_image_url").value = "";
+  document.getElementById("e_active").value = "true";
+  document.getElementById("e_image_file").value = "";
+  editing = id ? { id: id } : null;
+}
+function closeEditor(){ document.getElementById("editorOverlay").style.display = "none"; }
+
+async function loadCatalog(){
+  var sb = await LARMAH.initSupabase();
+  var category = document.getElementById("catCategory").value;
+  var q = (document.getElementById("catSearch").value||"").toLowerCase();
+
+  var r = await sb.from("catalog_items")
+    .select("id,category,title,description,price,image_url,active,updated_at")
+    .eq("category", category)
+    .order("updated_at", {ascending:false});
+
+  if(r.error){ console.error(r.error); LARMAH.toast(r.error.message); return; }
+
+  var items = (r.data||[]).filter(function(it){
+    var hay = (it.title + " " + (it.description||"")).toLowerCase();
+    return !q || hay.indexOf(q) >= 0;
+  });
+
+  var mount = document.getElementById("catTable");
+  if(!items.length){ mount.innerHTML = "<div class='notice'><strong>No items.</strong> Add one.</div>"; return; }
+
+  mount.innerHTML =
+    "<table class='table'><thead><tr><th>Item</th><th>Price</th><th>Status</th><th>Updated</th><th></th></tr></thead><tbody>" +
+    items.map(function(it){
+      var status = it.active ? "<span style='color:var(--ok);font-weight:950'>Active</span>" : "<span style='color:var(--warn);font-weight:950'>Disabled</span>";
+      return "<tr>" +
+        "<td>" +
+          (it.image_url ? "<span class='thumb-mini'><img src='"+LARMAH.escapeHtml(it.image_url)+"'></span>" : "") +
+          "<b>"+LARMAH.escapeHtml(it.title)+"</b>" +
+          "<div class='small'>"+LARMAH.escapeHtml(it.description||"")+"</div>" +
+        "</td>" +
+        "<td>"+LARMAH.escapeHtml(it.price||"")+"</td>" +
+        "<td>"+status+"</td>" +
+        "<td>"+new Date(it.updated_at||Date.now()).toLocaleDateString()+"</td>" +
+        "<td><button class='btn small' onclick=\"editItem('"+it.id+"')\">Edit</button></td>" +
+      "</tr>";
+    }).join("") +
+    "</tbody></table>";
+}
+
+async function editItem(id){
+  var sb = await LARMAH.initSupabase();
+  var r = await sb.from("catalog_items").select("*").eq("id", id).single();
+  if(r.error){ LARMAH.toast(r.error.message); return; }
+  editing = r.data;
+  openEditor(id);
+  document.getElementById("e_title").value = r.data.title || "";
+  document.getElementById("e_price").value = r.data.price || "";
+  document.getElementById("e_desc").value = r.data.description || "";
+  document.getElementById("e_tags").value = (r.data.tags||[]).join(", ");
+  document.getElementById("e_image_url").value = r.data.image_url || "";
+  document.getElementById("e_active").value = String(r.data.active);
+}
+
+async function uploadImage(file){
+  var sb = await LARMAH.initSupabase();
+  var path = "catalog/" + Date.now() + "_" + file.name;
+  var up = await sb.storage.from("catalog").upload(path, file, { upsert:true });
+  if(up.error){
+    throw new Error("Storage upload error: " + up.error.message);
+  }
+  var pub = sb.storage.from("catalog").getPublicUrl(path);
+  return pub.data.publicUrl;
+}
+
+async function saveItem(){
+  clearAdminError();
+  var sb = await LARMAH.initSupabase();
+  var category = document.getElementById("catCategory").value;
+  var title = document.getElementById("e_title").value.trim();
+  if(!title){ LARMAH.toast("Title required"); return; }
+
+  var price = document.getElementById("e_price").value.trim();
+  var description = document.getElementById("e_desc").value.trim();
+  var tags = document.getElementById("e_tags").value.split(",").map(function(s){return s.trim();}).filter(Boolean);
+  var active = (document.getElementById("e_active").value === "true");
+  var image_url = document.getElementById("e_image_url").value.trim();
+
+  var saveBtn = document.querySelector(".modal-actions .btn.solid");
+  if(saveBtn){ saveBtn.disabled = true; saveBtn.style.opacity = ".6"; }
+
+  try{
+    var file = document.getElementById("e_image_file").files[0];
+    if(file){
+      image_url = await uploadImage(file);
+    }
+
+    var payload = {
+      category: category,
+      title: title,
+      price: price,
+      description: description,
+      tags: tags,
+      active: active,
+      image_url: image_url,
+      updated_at: new Date().toISOString()
+    };
+
+    var resp;
+    if(editing && editing.id && editing.id !== "new"){
+      resp = await sb.from("catalog_items").update(payload).eq("id", editing.id);
+    } else {
+      resp = await sb.from("catalog_items").insert([payload]);
+    }
+
+    if(resp.error){
+      console.error(resp.error);
+      showAdminError(resp.error.message);
+      LARMAH.toast(resp.error.message);
+      return;
+    }
+
+    LARMAH.toast("Saved");
+    closeEditor(true);
+    await loadCatalog();
+  } catch(err){
+    console.error(err);
+    var msg = (err && err.message) ? err.message : String(err);
+    showAdminError(msg);
+    LARMAH.toast(msg);
+  } finally {
+    if(saveBtn){ saveBtn.disabled = false; saveBtn.style.opacity = "1"; }
+  }
+}
+
+async function deleteItem(){
+  if(!editing || !editing.id || editing.id === "new") return;
+  if(!confirm("Delete this item?")) return;
+  var sb = await LARMAH.initSupabase();
+  var d = await sb.from("catalog_items").delete().eq("id", editing.id);
+  if(d.error){ LARMAH.toast(d.error.message); return; }
+  LARMAH.toast("Deleted");
+  closeEditor(true);
+  await loadCatalog();
+}
+
+async function publishInsight(){
+  var sb = await LARMAH.initSupabase();
+  var title = document.getElementById("ip_title").value.trim();
+  var body = document.getElementById("ip_body").value.trim();
+  if(!title || !body){ LARMAH.toast("Title and body required"); return; }
+  var ins = await sb.from("insights_posts").insert([{ title:title, body:body, created_at: new Date().toISOString() }]);
+  if(ins.error){ LARMAH.toast(ins.error.message); return; }
+  document.getElementById("ip_title").value = "";
+  document.getElementById("ip_body").value = "";
+  LARMAH.toast("Published");
+  await loadInsightsAdmin();
+  if(typeof cancelInsightEdit==="function") cancelInsightEdit();
+}
+
+async function loadInsightsAdmin(){
+  var sb = await LARMAH.initSupabase();
+  var r = await sb.from("insights_posts").select("*").order("created_at",{ascending:false}).limit(50);
+  if(r.error){
+    console.error(r.error);
+    if(typeof showAdminError === "function") showAdminError(r.error.message);
+    return;
+  }
+  var mount = document.getElementById("insightsAdminList");
+  if(!r.data || !r.data.length){
+    mount.innerHTML = "<div class='notice'><strong>No posts.</strong></div>";
+    return;
+  }
+  mount.innerHTML = "<div class='grid'>" + r.data.map(function(p){
+    return "<div class='card'>" +
+      "<h3>"+LARMAH.escapeHtml(p.title)+"</h3>" +
+      "<p>"+LARMAH.escapeHtml(p.body)+"</p>" +
+      "<div class='meta'>"+new Date(p.created_at).toLocaleString()+"</div>" +
+      "<div class='actions'>" +
+        "<button class='btn small' onclick='startInsightEditFromId(\""+p.id+"\")'>Edit</button>" +
+        "<button class='btn small' onclick='deleteInsight(\""+p.id+"\")'>Delete</button>" +
+      "</div>" +
+    "</div>";
+  }).join("") + "</div>";
+}
+
+document.addEventListener("DOMContentLoaded", async function(){
+  var ok = await requireAdmin();
+  if(!ok) return;
+  await loadCatalog();
+  await loadInsightsAdmin();
+});
+</script>
+</body>
+</html>

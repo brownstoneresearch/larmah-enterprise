@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FinTech | Larmah</title>
+<link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg"/>
+<meta name="description" content="Verification guidance for property, vehicle, and agreements. We tell you what to provide next."/>
+<link rel="stylesheet" href="assets/css/style.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="assets/js/app.js"></script>
+
+</head>
+<body data-page="fintech">
+<header>
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Home">
+      <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+    </a>
+
+    <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <nav id="nav" aria-label="Navigation">
+      <ul>
+        <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
+        <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
+        <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
+        <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions" id="authPill">
+      <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+    </div>
+  </div>
+</header>
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-shell">
+      <div class="hero-inner" style="grid-template-columns:1fr;">
+        <div>
+          <h1>FinTech</h1>
+          <p>Verification guidance for property, vehicle, and agreements. We tell you what to provide next.</p>
+          <div class="actions">
+            <a class="btn solid" href="#catalog"><i class="fa-solid fa-list"></i> Browse catalogue</a>
+            <a class="btn primary" href="#request"><i class="fa-brands fa-whatsapp"></i> Send request</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="catalog">
+    <h2>Catalogue</h2>
+    <p class="lead">Tap <b>Enquire</b> to message us. Admin manages these items.</p>
+    <div id="catalogMount"></div>
+  </section>
+
+  <section class="section" id="request">
+    <h2>Send a request</h2>
+    <p class="lead">Saves to Supabase and opens WhatsApp.</p>
+
+    <div class="card">
+      <div class="row2"><input id="ft_name" class="input" placeholder="Full name / Company" type="text"/><input id="ft_phone" class="input" placeholder="Phone (WhatsApp)" type="text"/></div>
+      <div class="row2" style="margin-top:12px;"><select id="ft_type" class="input"><option value="Property documents">Property documents</option><option value="Vehicle documents">Vehicle documents</option><option value="Agreement / contract">Agreement / contract</option><option value="Other">Other</option></select><input id="ft_subject" class="input" placeholder="Subject / reference (optional)" type="text"/></div>
+      <textarea id="ft_notes" class="input" placeholder="Describe what you want to verify" style="margin-top:12px;"></textarea>
+      <div class="actions" style="margin-top:12px;">
+        <button class="btn solid" onclick="sendRequest()"><i class="fa-brands fa-whatsapp"></i> Send</button>
+        <button class="btn" onclick="clearForm()"><i class="fa-solid fa-eraser"></i> Clear</button>
+      </div>
+      <div class="small" style="margin-top:10px;">Database + WhatsApp.</div>
+    </div>
+  </section>
+
+</main>
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="brandline">
+          <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+        </div>
+        <div class="small">Real Estate • Logistics • FinTech • Insights</div>
+        <div class="small" style="margin-top:8px;">WhatsApp-first support for Nigeria community.</div>
+      </div>
+
+      <div>
+        <b>Contact</b>
+        <div class="small" style="margin-top:8px;">WhatsApp: +234 706 308 0605</div>
+        <div class="small">Email: business@heylarmah.tech</div>
+        <div class="small">Lagos, Nigeria</div>
+      </div>
+
+      <div>
+        <b>Admin</b>
+        <div class="small" style="margin-top:8px;"><a href="auth.html">Sign in</a></div>
+        <div class="small"><a href="admin.html">Command Center</a></div>
+      </div>
+    </div>
+
+    <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
+  </div>
+</footer>
+<div id="toast" class="toast"></div>
+<script>
+document.addEventListener("DOMContentLoaded", async function(){
+  await LARMAH.renderCatalog("fintech", "catalogMount", function(item){
+    if(!item) return;
+    const msg = LARMAH.buildMessage("FinTech Enquiry", {
+      "Item": item.title,
+      "Price": item.price || "",
+      "Phone": "",
+      "Notes": ""
+    });
+    LARMAH.openWhatsApp(msg);
+  });
+});
+
+async function sendRequest(){
+  const fields = {};
+  fields["Name"]=document.getElementById("ft_name").value;
+  fields["Phone"]=document.getElementById("ft_phone").value;
+  fields["Type"]=document.getElementById("ft_type").value;
+  fields["Subject"]=document.getElementById("ft_subject").value;
+  fields["Details"]=document.getElementById("ft_notes").value;
+  if(!String(fields["Phone"]||"").trim()){ LARMAH.toast("Please enter your phone"); return; }
+  const res = await LARMAH.submitRequest({
+    category: "fintech",
+    name: fields["Name"] || "",
+    phone: fields["Phone"] || "",
+    details: fields
+  });
+  if(!res.ok){ LARMAH.toast("Could not save. Check Supabase config."); }
+  const msg = LARMAH.buildMessage("FinTech Request", fields);
+  LARMAH.openWhatsApp(msg);
+}
+
+function clearForm(){
+  document.getElementById("ft_name").value="";
+  document.getElementById("ft_phone").value="";
+  document.getElementById("ft_subject").value="";
+  document.getElementById("ft_notes").value="";
+}
+</script>
+</body>
+</html>
