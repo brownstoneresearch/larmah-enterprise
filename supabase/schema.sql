@@ -94,3 +94,16 @@ for insert with check (
 
 -- Storage:
 -- Create bucket 'catalog' (public read). Add policies for admin upload.
+
+
+-- Allow admin to update/delete insights posts too
+drop policy if exists "insights_admin_manage" on public.insights_posts;
+create policy "insights_admin_manage"
+on public.insights_posts
+for all
+using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+)
+with check (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+);
