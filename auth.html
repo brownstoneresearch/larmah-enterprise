@@ -1,4 +1,3 @@
-<!-- auth.html (UPGRADED to match current assets/css/style.css) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +7,6 @@
 
   <meta name="description" content="Secure sign-in for Larmah Enterprise. Password login or magic link access." />
   <meta name="theme-color" content="#070A12" />
-  <link rel="canonical" href="./auth.html" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
@@ -42,8 +40,8 @@
         <ul>
           <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-          <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
           <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+          <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
         </ul>
       </nav>
 
@@ -121,7 +119,7 @@
           </div>
 
           <div class="notice" style="margin-top:12px">
-            <strong>Note:</strong> If you’re on GitHub Pages, magic links redirect correctly with this setup.
+            <strong>Note:</strong> Magic link redirects are GitHub Pages-safe.
           </div>
         </div>
       </div>
@@ -135,35 +133,24 @@
           <div class="brandline">
             <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
             <div>
-              <div class="small">Real Estate • Logistics • FinTech</div>
+              <div style="font-weight:950">Larmah Enterprise</div>
+              <div class="small">Secure Access</div>
             </div>
           </div>
-          <div class="small" style="margin-top:8px">
-            Elevating Nigerian commerce through trust, verified data, and seamless WhatsApp integration.
-          </div>
-
-          <div class="social-row" aria-label="Social links">
-            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-            <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
+          <div class="small" style="margin-top:8px">Authorized staff access only.</div>
         </div>
 
         <div>
-          <b>Navigation</b>
-          <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
-          <div class="small"><a href="logistics.html">Logistics</a></div>
-          <div class="small"><a href="fintech.html">FinTech</a></div>
-          <div class="small"><a href="insights.html">Insights</a></div>
-          <div class="small"><a href="premium.html">Premium</a></div>
-        </div>
-
-        <div>
-          <b>Contact Hub</b>
+          <b>Support</b>
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
           <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
-          <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
+        </div>
+
+        <div>
+          <b>Links</b>
+          <div class="small" style="margin-top:10px"><a href="index.html">Home</a></div>
+          <div class="small"><a href="exchange.html">Exchange</a></div>
+          <div class="small"><a href="admin.html">Admin</a></div>
         </div>
       </div>
 
@@ -171,7 +158,7 @@
     </div>
   </footer>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast"></div>
 
   <script>
     async function signIn(){
@@ -204,13 +191,8 @@
       const email = document.getElementById("otpEmail").value.trim();
       if(!email){ LARMAH.toast("Please enter your email"); return; }
 
-      // GitHub Pages-safe redirect
       const redirectUrl = new URL("index.html", window.location.href).toString();
-
-      const r = await sb.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: redirectUrl }
-      });
+      const r = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl } });
       if(r.error){ LARMAH.toast(r.error.message); return; }
       LARMAH.toast("Login link sent to your email.");
     }
@@ -218,11 +200,9 @@
     async function resetPassword(){
       const sb = await LARMAH.initSupabase();
       const email = (document.getElementById("otpEmail").value.trim() || document.getElementById("email").value.trim());
-      if(!email){ LARMAH.toast("Enter your email address first"); return; }
+      if(!email){ LARMAH.toast("Enter your email first"); return; }
 
-      // GitHub Pages-safe redirect back to auth page
       const redirectUrl = new URL("auth.html", window.location.href).toString();
-
       const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: redirectUrl });
       if(r.error){ LARMAH.toast(r.error.message); return; }
       LARMAH.toast("Password reset instructions sent.");
