@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Live Exchange | USD/GBP/EUR • Crypto to Naira | Larmah Enterprise</title>
+
   <meta name="description" content="Exchange USD, GBP, EUR and crypto (BTC, ETH, USDT) to NGN with WhatsApp-first support and fast settlement." />
   <meta name="theme-color" content="#070A12" />
 
@@ -18,12 +19,9 @@
 </head>
 
 <body data-page="exchange">
-  <!-- Live ticker -->
   <div class="live-ticker">
     <div class="container">
-      <div id="liveRatesTicker" class="ticker-content">
-        <span>Loading live rates…</span>
-      </div>
+      <div id="liveRatesTicker" class="ticker-content"><span>Loading live rates…</span></div>
     </div>
   </div>
 
@@ -41,7 +39,6 @@
         <ul>
           <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-          <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
           <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
           <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
         </ul>
@@ -61,7 +58,7 @@
             <div class="hero-kicker">
               <span class="kicker-pill">
                 <i class="fa-solid fa-money-bill-transfer"></i>
-                Live Currency Exchange
+                Live Exchange Desk
               </span>
               <span class="kicker-dot">•</span>
               <span class="kicker-sub">Fast settlement • WhatsApp-first support</span>
@@ -69,7 +66,7 @@
 
             <h1>Exchange with Confidence.</h1>
             <p class="lead">
-              Convert <b>USD, GBP, EUR</b> to Naira and trade <b>BTC, ETH, USDT</b> with a secure, verified workflow.
+              Convert <b>USD, GBP, EUR</b> to NGN and trade <b>BTC, ETH, USDT</b> with a secure, verified workflow.
             </p>
 
             <div class="exchange-quick-calc">
@@ -106,7 +103,7 @@
                 <button class="btn solid" onclick="quickExchange()">
                   <i class="fa-brands fa-whatsapp"></i> Get This Rate
                 </button>
-                <a class="btn" href="#calculator"><i class="fa-solid fa-calculator"></i> Advanced Calculator</a>
+                <a class="btn" href="#calculator"><i class="fa-solid fa-calculator"></i> Advanced</a>
               </div>
             </div>
 
@@ -129,9 +126,9 @@
               <div class="card-actions"><a class="btn small" href="#rates">Trade Crypto</a></div>
             </div>
             <div class="hero-card">
-              <h3><i class="fa-solid fa-file-shield" style="color:var(--brand)"></i> Verification</h3>
-              <p>Need verification? Use FinTech verification services.</p>
-              <div class="card-actions"><a class="btn small" href="fintech.html">Verify</a></div>
+              <h3><i class="fa-solid fa-chart-line" style="color:var(--brand)"></i> Insights</h3>
+              <p>See community updates and live signals.</p>
+              <div class="card-actions"><a class="btn small" href="insights.html">Open Insights</a></div>
             </div>
           </div>
         </div>
@@ -143,7 +140,7 @@
       <div class="section-head-split">
         <div>
           <h2>Live Exchange Rates</h2>
-          <p class="lead">Display updates every minute (demo). Replace with real API anytime.</p>
+          <p class="lead">Updates every minute (demo). Replace with real API anytime.</p>
         </div>
         <div class="notice" id="rateUpdateTime" style="max-width:max-content">Updated: —</div>
       </div>
@@ -295,11 +292,11 @@
             <img src="assets/images/larmah-header.jpeg" alt="Larmah Exchange" />
             <div>
               <div style="font-weight:950">Larmah Exchange Desk</div>
-              <div class="small">USD/GBP/EUR • BTC/ETH/USDT • Verification</div>
+              <div class="small">USD/GBP/EUR • BTC/ETH/USDT</div>
             </div>
           </div>
           <div class="small" style="margin-top:8px">
-            Best-rate coordination for exchange. WhatsApp-first support and fast settlement.
+            WhatsApp-first support and fast settlement coordination.
           </div>
         </div>
 
@@ -322,10 +319,9 @@
     </div>
   </footer>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast"></div>
 
   <script>
-    // Demo rates (replace later with real provider if needed)
     const EXCHANGE_CONFIG = {
       baseRates: {
         USD: { buy: 1450, sell: 1480, fee: 0.005, min: 100, max: 50000 },
@@ -340,7 +336,6 @@
 
     class LarmahExchange {
       constructor(){
-        // deep copy so baseRates stays stable for comparison
         this.base = JSON.parse(JSON.stringify(EXCHANGE_CONFIG.baseRates));
         this.rates = JSON.parse(JSON.stringify(EXCHANGE_CONFIG.baseRates));
         this.lastUpdate = new Date();
@@ -365,9 +360,8 @@
       }
 
       updateLiveRates(){
-        // small simulated drift
         Object.keys(this.rates).forEach(cur => {
-          const drift = (Math.random() - 0.5) * 0.25; // +/- 0.25%
+          const drift = (Math.random() - 0.5) * 0.25;
           this.rates[cur].buy = this.rates[cur].buy * (1 + drift/100);
           this.rates[cur].sell = this.rates[cur].sell * (1 + drift/100);
         });
@@ -399,7 +393,7 @@
         const minTxt = isCrypto ? `${r.min} ${currency}` : `$${r.min}`;
         const maxTxt = isCrypto ? `${r.max} ${currency}` : `$${Number(r.max).toLocaleString()}`;
 
-        const price = currency === "BTC" || currency === "ETH"
+        const price = (currency === "BTC" || currency === "ETH")
           ? `₦${Math.round(r.buy).toLocaleString()}`
           : `₦${r.buy.toFixed(2).toLocaleString()}`;
 
@@ -459,38 +453,29 @@
       calculate(from, to, amount){
         const amt = Number(amount || 0);
         if(!amt) return { converted: 0, rate: 0, fee: 0, feePct: 0 };
+        if(from === to) return { converted: amt, rate: 1, fee: 0, feePct: 0 };
 
-        let rate = 0;
-        let feePct = 0;
-
-        if(from === to){
-          return { converted: amt, rate: 1, fee: 0, feePct: 0 };
-        }
-
-        // If receiving NGN
         if(to === "NGN" && this.rates[from]){
-          rate = this.rates[from].buy;
-          feePct = this.rates[from].fee;
+          const rate = this.rates[from].buy;
+          const feePct = this.rates[from].fee;
           const converted = amt * rate;
           const fee = converted * feePct;
           return { converted: converted - fee, rate, fee, feePct: feePct*100 };
         }
 
-        // If sending NGN
         if(from === "NGN" && this.rates[to]){
-          rate = 1 / this.rates[to].sell;
-          feePct = this.rates[to].fee;
+          const rate = 1 / this.rates[to].sell;
+          const feePct = this.rates[to].fee;
           const converted = amt * rate;
           const fee = converted * feePct;
           return { converted: converted - fee, rate, fee, feePct: feePct*100 };
         }
 
-        // Cross conversion via NGN
         if(this.rates[from] && this.rates[to]){
-          const toNgn = this.rates[from].buy;     // from → NGN
-          const ngnTo = 1 / this.rates[to].sell;  // NGN → to
-          rate = toNgn * ngnTo;
-          feePct = Math.max(this.rates[from].fee, this.rates[to].fee);
+          const toNgn = this.rates[from].buy;
+          const ngnTo = 1 / this.rates[to].sell;
+          const rate = toNgn * ngnTo;
+          const feePct = Math.max(this.rates[from].fee, this.rates[to].fee);
           const converted = amt * rate;
           const fee = converted * feePct;
           return { converted: converted - fee, rate, fee, feePct: feePct*100 };
@@ -563,28 +548,14 @@
               return;
             }
 
-            const fields = {
-              "Name": name,
-              "Phone": phone,
-              "Exchange": type,
-              "Amount": amount,
-              "Notes": notes || "-"
-            };
+            const fields = { Name: name, Phone: phone, Exchange: type, Amount: amount, Notes: notes || "-" };
 
-            // ✅ log to Supabase (same requests table)
-            const res = await LARMAH.submitRequest({
-              category: "exchange",
-              name,
-              phone,
-              details: fields
-            });
+            const res = await LARMAH.submitRequest({ category: "exchange", name, phone, details: fields });
             if(!res.ok) LARMAH.toast("Logging request...");
 
-            const msg = LARMAH.buildMessage("Exchange Request", fields);
-            LARMAH.openWhatsApp(msg);
-
+            LARMAH.openWhatsApp(LARMAH.buildMessage("Exchange Request", fields));
             form.reset();
-            LARMAH.toast("Request prepared — opening WhatsApp");
+            LARMAH.toast("Opening WhatsApp…");
           });
         }
       }
