@@ -1,157 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sign in | Larmah</title>
-<link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg"/>
-<meta name="description" content="Secure sign in with Supabase: password or magic link."/>
-<link rel="stylesheet" href="assets/css/style.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script defer src="assets/js/app.js"></script>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Account | Larmah</title>
+    <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg"/>
+    <meta name="description" content="Secure access to Larmah Enterprise. Management and Premium member portal."/>
+    
+    <link rel="stylesheet" href="assets/css/style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="assets/js/app.js"></script>
 
+    <style>
+        :root {
+            --primary: #00a86b; /* Emerald Green */
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        .auth-container {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .auth-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 35px;
+            height: 100%;
+            transition: 0.3s;
+        }
+
+        .auth-card:hover {
+            border-color: var(--primary);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .auth-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .auth-divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .social-links-footer {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .social-link {
+            width: 35px; height: 35px;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; text-decoration: none; transition: 0.3s;
+        }
+
+        .social-link:hover { background: var(--primary); transform: scale(1.1); color: #000;}
+    </style>
 </head>
 <body data-page="auth">
+
 <header>
-  <div class="container header-inner">
-    <a class="brand" href="index.html" aria-label="Home">
-      <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
-    </a>
+    <div class="container header-inner">
+        <a class="brand" href="index.html">
+            <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+        </a>
 
-    <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Menu">
-      <i class="fa-solid fa-bars"></i>
-    </button>
+        <button class="menu-btn" onclick="LARMAH.toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
 
-    <nav id="nav" aria-label="Navigation">
-      <ul>
-        <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
-        <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-        <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
-        <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
-      </ul>
-    </nav>
+        <nav id="nav">
+            <ul>
+                <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+                <li><a class="nav-link" href="logistics.html">Logistics</a></li>
+                <li><a class="nav-link" href="fintech.html">FinTech</a></li>
+                <li><a class="nav-link" href="insights.html">Insights</a></li>
+            </ul>
+        </nav>
 
-    <div class="header-actions" id="authPill">
-      <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+        <div class="header-actions">
+            <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+        </div>
     </div>
-  </div>
 </header>
+
 <main class="container">
-
-  <section class="hero">
-    <div class="hero-shell">
-      <div class="hero-inner" style="grid-template-columns:1fr;">
-        <div>
-          <h1>Sign in</h1>
-          <p>Use email + password or request a magic link. Powered by Supabase Auth.</p>
-        </div>
-      </div>
+    <div class="auth-header">
+        <h1>Secure Access</h1>
+        <p class="lead">Manage your requests and explore exclusive catalogs.</p>
     </div>
-  </section>
 
-  <section class="section">
-    <div class="grid">
-      <div class="card">
-        <h3>Email + Password</h3>
-        <div class="row2" style="margin-top:12px;">
-          <input id="email" class="input" type="email" placeholder="Email"/>
-          <input id="password" class="input" type="password" placeholder="Password"/>
-        </div>
-        <div class="actions" style="margin-top:12px;">
-          <button class="btn solid" onclick="signIn()"><i class="fa-solid fa-right-to-bracket"></i> Sign in</button>
-          <button class="btn" onclick="signUp()"><i class="fa-solid fa-user-plus"></i> Sign up</button>
-        </div>
-        <div class="small" style="margin-top:10px;">Admin role is assigned in the database (profiles.role).</div>
-      </div>
+    <div class="auth-container">
+        <div class="grid">
+            <div class="auth-card">
+                <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-lock" style="color: var(--primary);"></i> Standard Login</h3>
+                <div class="input-group">
+                    <input id="email" class="input" type="email" placeholder="Email Address"/>
+                </div>
+                <div class="input-group">
+                    <input id="password" class="input" type="password" placeholder="Password"/>
+                </div>
+                
+                <div class="actions" style="margin-top:20px;">
+                    <button class="btn primary" style="width: 100%;" onclick="signIn()">
+                        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+                    </button>
+                </div>
+                
+                <div class="auth-divider">Or</div>
+                
+                <button class="btn outline" style="width: 100%;" onclick="signUp()">
+                    <i class="fa-solid fa-user-plus"></i> Create New Account
+                </button>
+            </div>
 
-      <div class="card">
-        <h3>Magic link</h3>
-        <p class="small">We send a login link to your email.</p>
-        <input id="otpEmail" class="input" type="email" placeholder="Email" style="margin-top:12px;"/>
-        <div class="actions" style="margin-top:12px;">
-          <button class="btn solid" onclick="magicLink()"><i class="fa-solid fa-envelope"></i> Send link</button>
-          <button class="btn" onclick="resetPassword()"><i class="fa-solid fa-key"></i> Reset password</button>
+            <div class="auth-card">
+                <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-wand-magic-sparkles" style="color: var(--primary);"></i> Passwordless</h3>
+                <p class="small" style="margin-bottom: 20px;">We'll send a secure login link directly to your inbox. No password needed.</p>
+                
+                <div class="input-group">
+                    <input id="otpEmail" class="input" type="email" placeholder="Email Address"/>
+                </div>
+                
+                <div class="actions" style="margin-top:20px;">
+                    <button class="btn solid" style="width: 100%;" onclick="magicLink()">
+                        <i class="fa-solid fa-paper-plane"></i> Send Magic Link
+                    </button>
+                </div>
+
+                <div style="margin-top: 25px; text-align: center;">
+                    <a href="#" onclick="resetPassword()" class="small" style="color: var(--primary); text-decoration: none;">
+                        Forgot Password? Reset it here
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="notice" style="margin-top:12px;">
-          <strong>Tip:</strong> Configure Auth redirect URLs in Supabase to your domain.
-        </div>
-      </div>
     </div>
-  </section>
-
 </main>
+
 <footer>
-  <div class="container">
-    <div class="footer-grid">
-      <div>
-        <div class="brandline">
-          <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <img src="assets/images/larmah-header.jpeg" alt="Larmah" style="height:40px; margin-bottom:15px;"/>
+                <p class="small">Larmah Enterprise: Nigeria's most trusted hub for Real Estate, Logistics and Verification.</p>
+                <div class="social-links-footer">
+                    <a href="https://instagram.com/hey_larmah" class="social-link" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://x.com/heylarmah_tech" class="social-link" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="https://t.me/heylarmah_tech" class="social-link" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="https://youtube.com/@heylarmah" class="social-link" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <b>Support</b>
+                <div class="small" style="margin-top:10px;"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
+                <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
+                <div class="small">Lagos, Nigeria</div>
+            </div>
+
+            <div>
+                <b>Quick Links</b>
+                <div class="small" style="margin-top:10px;"><a href="index.html">Home</a></div>
+                <div class="small"><a href="admin.html">Command Center</a></div>
+                <div class="small"><a href="premium.html">Premium Access</a></div>
+            </div>
         </div>
-        <div class="small">Real Estate • Logistics • FinTech • Insights</div>
-        <div class="small" style="margin-top:8px;">WhatsApp-first support for Nigeria community.</div>
-      </div>
-
-      <div>
-        <b>Contact</b>
-        <div class="small" style="margin-top:8px;">WhatsApp: +234 706 308 0605</div>
-        <div class="small">Email: business@heylarmah.tech</div>
-        <div class="small">Lagos, Nigeria</div>
-      </div>
-
-      <div>
-        <b>Admin</b>
-        <div class="small" style="margin-top:8px;"><a href="auth.html">Sign in</a></div>
-        <div class="small"><a href="admin.html">Command Center</a></div>
-      </div>
+        <div style="text-align: center; margin-top: 40px; font-size: 0.8rem; opacity: 0.6; border-top: 1px solid var(--border); padding-top: 20px;">
+            © <span id="year"></span> Larmah Enterprise. 
+        </div>
     </div>
-
-    <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
-  </div>
 </footer>
+
 <div id="toast" class="toast"></div>
+
 <script>
-async function signIn(){
-  const sb = await LARMAH.initSupabase();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-  if(!email || !password){ LARMAH.toast("Enter email and password"); return; }
-  const r = await sb.auth.signInWithPassword({ email: email, password: password });
-  if(r.error){ LARMAH.toast(r.error.message); return; }
-  LARMAH.toast("Signed in");
-  setTimeout(()=> location.href="index.html", 600);
-}
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-async function signUp(){
-  const sb = await LARMAH.initSupabase();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value.trim();
-  if(!email || !password){ LARMAH.toast("Enter email and password"); return; }
-  const r = await sb.auth.signUp({ email: email, password: password });
-  if(r.error){ LARMAH.toast(r.error.message); return; }
-  LARMAH.toast("Check your email to confirm");
-}
+    async function signIn(){
+        const sb = await LARMAH.initSupabase();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        if(!email || !password){ LARMAH.toast("Enter email and password"); return; }
+        
+        LARMAH.toast("Verifying credentials...");
+        const r = await sb.auth.signInWithPassword({ email: email, password: password });
+        if(r.error){ LARMAH.toast(r.error.message); return; }
+        
+        LARMAH.toast("Welcome back!");
+        setTimeout(()=> location.href="index.html", 800);
+    }
 
-async function magicLink(){
-  const sb = await LARMAH.initSupabase();
-  const email = document.getElementById("otpEmail").value.trim();
-  if(!email){ LARMAH.toast("Enter email"); return; }
-  const r = await sb.auth.signInWithOtp({
-    email: email,
-    options: { emailRedirectTo: window.location.origin + "/index.html" }
-  });
-  if(r.error){ LARMAH.toast(r.error.message); return; }
-  LARMAH.toast("Link sent. Check email.");
-}
+    async function signUp(){
+        const sb = await LARMAH.initSupabase();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        if(!email || !password){ LARMAH.toast("Provide email and a strong password"); return; }
+        
+        const r = await sb.auth.signUp({ email: email, password: password });
+        if(r.error){ LARMAH.toast(r.error.message); return; }
+        LARMAH.toast("Success! Check your email to confirm.");
+    }
 
-async function resetPassword(){
-  const sb = await LARMAH.initSupabase();
-  const email = document.getElementById("otpEmail").value.trim();
-  if(!email){ LARMAH.toast("Enter email"); return; }
-  const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + "/auth.html" });
-  if(r.error){ LARMAH.toast(r.error.message); return; }
-  LARMAH.toast("Password reset email sent");
-}
+    async function magicLink(){
+        const sb = await LARMAH.initSupabase();
+        const email = document.getElementById("otpEmail").value.trim();
+        if(!email){ LARMAH.toast("Please enter your email"); return; }
+        
+        const r = await sb.auth.signInWithOtp({
+            email: email,
+            options: { emailRedirectTo: window.location.origin + "/index.html" }
+        });
+        if(r.error){ LARMAH.toast(r.error.message); return; }
+        LARMAH.toast("Login link sent to your email.");
+    }
+
+    async function resetPassword(){
+        const sb = await LARMAH.initSupabase();
+        const email = document.getElementById("otpEmail").value.trim() || document.getElementById("email").value.trim();
+        if(!email){ LARMAH.toast("Enter your email address first"); return; }
+        
+        const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + "/auth.html" });
+        if(r.error){ LARMAH.toast(r.error.message); return; }
+        LARMAH.toast("Password reset instructions sent.");
+    }
 </script>
 </body>
 </html>
