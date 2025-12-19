@@ -1,249 +1,249 @@
+<!-- premium.html (UPGRADED to match current assets/css/style.css) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Premium Membership | Larmah</title>
-    <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg"/>
-    <meta name="description" content="Unlock priority access, private listings, and expert verification guidance with Larmah Premium."/>
-    
-    <link rel="stylesheet" href="assets/css/style.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://js.paystack.co/v2/inline.js"></script>
-    <script defer src="assets/js/app.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premium | Larmah Enterprise</title>
 
-    <style>
-        :root {
-            --primary: #00a86b;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
-        }
+  <meta name="description" content="Unlock priority access, private listings, and concierge support with Larmah Premium." />
+  <meta name="theme-color" content="#070A12" />
+  <link rel="canonical" href="./premium.html" />
 
-        /* Pricing Cards */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Premium | Larmah Enterprise" />
+  <meta property="og:description" content="Unlock priority access, private listings, and concierge support with Larmah Premium." />
+  <meta property="og:image" content="assets/images/larmah-header.jpeg" />
+  <meta property="og:url" content="./premium.html" />
 
-        .price-card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px 30px;
-            text-align: center;
-            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
+  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
+  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
 
-        .price-card.featured {
-            border-color: var(--primary);
-            background: rgba(0, 168, 107, 0.03);
-            transform: scale(1.05);
-        }
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-        .price-card:hover { transform: translateY(-10px); }
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/js/app.js"></script>
 
-        .price-val { font-size: 2.5rem; font-weight: 800; margin: 20px 0; color: #fff; }
-        .price-val span { font-size: 1rem; color: #777; }
-
-        .feature-list { list-style: none; padding: 0; margin: 20px 0; text-align: left; }
-        .feature-list li { margin-bottom: 12px; font-size: 0.9rem; color: #ccc; }
-        .feature-list li i { color: var(--primary); margin-right: 10px; }
-
-        .badge {
-            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
-            background: var(--primary); color: #000; padding: 5px 15px;
-            border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
-        }
-
-        /* Form Styling */
-        .details-card {
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 800px;
-            margin: 50px auto 0;
-        }
-
-        .social-box { display: flex; gap: 12px; margin-top: 15px; }
-        .social-link {
-            width: 38px; height: 38px;
-            background: var(--glass);
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; transition: 0.3s;
-        }
-        .social-link:hover { background: var(--primary); color: #000; transform: scale(1.1); }
-    </style>
+  <style>
+    .price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+    .featured{
+      border-color: rgba(0,217,129,.22) !important;
+      background: linear-gradient(180deg, rgba(0,217,129,.08), rgba(255,255,255,.02)) !important;
+      box-shadow: 0 18px 60px rgba(0,0,0,.50);
+      position:relative;
+      overflow:hidden;
+    }
+    .badge-top{
+      position:absolute;top:12px;right:12px;
+      border:1px solid rgba(0,217,129,.25);
+      background: rgba(0,217,129,.12);
+      padding:6px 10px;border-radius:999px;
+      font-size:.78rem;font-weight:950;
+    }
+    .price{
+      font-size:2.1rem;font-weight:950;letter-spacing:-.02em;margin-top:6px
+    }
+    .price small{font-size:.95rem;color:var(--muted);font-weight:900}
+    .list{margin-top:10px;display:grid;gap:8px}
+    .list div{display:flex;gap:10px;align-items:flex-start;color:var(--muted)}
+    .list i{color:var(--brand);margin-top:3px}
+  </style>
 </head>
+
 <body data-page="premium">
-
-<header>
+  <header>
     <div class="container header-inner">
-        <a class="brand" href="index.html">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah"/>
-        </a>
+      <a class="brand" href="index.html" aria-label="Home">
+        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+      </a>
 
-        <button class="menu-btn" onclick="LARMAH.toggleMenu()">
-            <i class="fa-solid fa-bars"></i>
-        </button>
+      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
 
-        <nav id="nav">
-            <ul>
-                <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
-                <li><a class="nav-link" href="logistics.html">Logistics</a></li>
-                <li><a class="nav-link" href="fintech.html">FinTech</a></li>
-                <li><a class="nav-link" href="insights.html">Insights</a></li>
-            </ul>
-        </nav>
+      <nav id="nav" aria-label="Primary navigation">
+        <ul>
+          <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
+          <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
+          <li><a class="nav-link" href="fintech.html" data-link="fintech">FinTech</a></li>
+          <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+        </ul>
+      </nav>
 
-        <div class="header-actions">
-            <a class="pill primary active" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
-        </div>
+      <div class="header-actions">
+        <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+      </div>
     </div>
-</header>
+  </header>
 
-<main class="container">
+  <main class="container">
     <section class="hero">
-        <div class="hero-shell">
-            <div class="hero-inner" style="text-align: center;">
-                <div>
-                    <span style="color: var(--primary); font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">Elevate Your Experience</span>
-                    <h1 style="font-size: 3rem; margin-top: 10px;">Larmah Premium.</h1>
-                    <p class="lead">Skip the queue with priority responses, exclusive property listings, and private concierge logistics.</p>
-                </div>
+      <div class="hero-shell">
+        <div class="hero-inner" style="grid-template-columns:1fr">
+          <div>
+            <div class="hero-kicker">
+              <span class="kicker-pill"><i class="fa-solid fa-crown"></i> Larmah Premium</span>
+              <span class="kicker-dot">•</span>
+              <span class="kicker-sub">Priority access • Concierge support • Private inventory</span>
             </div>
+
+            <h1>Upgrade Your Experience.</h1>
+            <p class="lead">Skip the queue with priority responses, exclusive listings, and a faster sourcing pipeline.</p>
+          </div>
         </div>
+      </div>
     </section>
 
     <section class="section">
-        <div class="pricing-grid">
-            <div class="price-card">
-                <h3>Monthly</h3>
-                <p class="small">Flexible Access</p>
-                <div class="price-val">₦5,000<span>/mo</span></div>
-                <ul class="feature-list">
-                    <li><i class="fa-solid fa-check"></i> Priority WhatsApp Support</li>
-                    <li><i class="fa-solid fa-check"></i> Early Access to Listings</li>
-                    <li><i class="fa-solid fa-check"></i> Standard Verification Tips</li>
-                </ul>
-                <button class="btn solid" style="width:100%" onclick="pay('Monthly', 5000)">Get Started</button>
-            </div>
+      <h2>Choose a plan</h2>
+      <p class="lead">Payments can be processed via Paystack when configured, or via WhatsApp hand-off.</p>
 
-            <div class="price-card featured">
-                <div class="badge">Most Popular</div>
-                <h3>Quarterly</h3>
-                <p class="small">Value Sourcing</p>
-                <div class="price-val">₦12,000<span>/3mo</span></div>
-                <ul class="feature-list">
-                    <li><i class="fa-solid fa-check"></i> All Monthly Features</li>
-                    <li><i class="fa-solid fa-check"></i> Private Inventory Access</li>
-                    <li><i class="fa-solid fa-check"></i> 1-on-1 Document Review</li>
-                </ul>
-                <button class="btn primary" style="width:100%" onclick="pay('Quarterly', 12000)">Upgrade Now</button>
-            </div>
-
-            <div class="price-card">
-                <h3>Yearly</h3>
-                <p class="small">Full Partnership</p>
-                <div class="price-val">₦40,000<span>/yr</span></div>
-                <ul class="feature-list">
-                    <li><i class="fa-solid fa-check"></i> All Quarterly Features</li>
-                    <li><i class="fa-solid fa-check"></i> 24/7 Priority Concierge</li>
-                    <li><i class="fa-solid fa-check"></i> Discounted Verification Fees</li>
-                </ul>
-                <button class="btn solid" style="width:100%" onclick="pay('Yearly', 40000)">Best Value</button>
-            </div>
+      <div class="price-grid">
+        <div class="card">
+          <h3>Monthly</h3>
+          <div class="price">₦5,000 <small>/mo</small></div>
+          <div class="list">
+            <div><i class="fa-solid fa-check"></i><span>Priority WhatsApp support</span></div>
+            <div><i class="fa-solid fa-check"></i><span>Early access to listings</span></div>
+            <div><i class="fa-solid fa-check"></i><span>Standard verification tips</span></div>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn solid" style="width:100%" onclick="pay('Monthly', 5000)">
+              <i class="fa-solid fa-bolt"></i> Get Started
+            </button>
+          </div>
         </div>
 
-        <div class="details-card">
-            <h3 style="margin-bottom:20px; text-align: center;">Membership Onboarding</h3>
-            <div class="row2">
-                <input id="pm_name" class="input" placeholder="Full Name"/>
-                <input id="pm_phone" class="input" placeholder="WhatsApp Number"/>
-            </div>
-            <div class="row2" style="margin-top:15px;">
-                <input id="pm_email" class="input" placeholder="Email Address"/>
-                <input id="pm_city" class="input" placeholder="Current City"/>
-            </div>
-            <p class="small" style="margin-top: 15px; text-align: center; color: #777;">
-                Payments are securely processed via Paystack. Your membership activates immediately after confirmation.
-            </p>
+        <div class="card featured">
+          <div class="badge-top">Most Popular</div>
+          <h3>Quarterly</h3>
+          <div class="price">₦12,000 <small>/3mo</small></div>
+          <div class="list">
+            <div><i class="fa-solid fa-check"></i><span>All monthly features</span></div>
+            <div><i class="fa-solid fa-check"></i><span>Private inventory access</span></div>
+            <div><i class="fa-solid fa-check"></i><span>1-on-1 document review guidance</span></div>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn solid" style="width:100%" onclick="pay('Quarterly', 12000)">
+              <i class="fa-solid fa-star"></i> Upgrade Now
+            </button>
+          </div>
         </div>
+
+        <div class="card">
+          <h3>Yearly</h3>
+          <div class="price">₦40,000 <small>/yr</small></div>
+          <div class="list">
+            <div><i class="fa-solid fa-check"></i><span>All quarterly features</span></div>
+            <div><i class="fa-solid fa-check"></i><span>24/7 priority concierge</span></div>
+            <div><i class="fa-solid fa-check"></i><span>Discounted verification fees</span></div>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn solid" style="width:100%" onclick="pay('Yearly', 40000)">
+              <i class="fa-solid fa-gem"></i> Best Value
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h3>Membership onboarding</h3>
+        <p class="small">Enter your details for receipts and activation.</p>
+
+        <div class="row2" style="margin-top:12px">
+          <div>
+            <label class="small">Full Name</label>
+            <input id="pm_name" class="input" placeholder="Full name" />
+          </div>
+          <div>
+            <label class="small">WhatsApp Number</label>
+            <input id="pm_phone" class="input" placeholder="+234..." />
+          </div>
+        </div>
+
+        <div class="row2" style="margin-top:12px">
+          <div>
+            <label class="small">Email Address</label>
+            <input id="pm_email" class="input" placeholder="name@email.com" />
+          </div>
+          <div>
+            <label class="small">Current City</label>
+            <input id="pm_city" class="input" placeholder="Lagos, Abuja..." />
+          </div>
+        </div>
+
+        <div class="small" style="margin-top:10px;opacity:.75">
+          Payments are securely processed via Paystack when configured. Otherwise we’ll confirm via WhatsApp.
+        </div>
+      </div>
     </section>
-</main>
+  </main>
 
-<footer>
+  <footer>
     <div class="container">
-        <div class="footer-grid">
+      <div class="footer-grid">
+        <div>
+          <div class="brandline">
+            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
             <div>
-                <img src="assets/images/larmah-header.jpeg" alt="Larmah" style="height:40px; margin-bottom:15px;"/>
-                <p class="small">Connecting the Nigerian community to verified luxury and essential commerce.</p>
-                <div class="social-box">
-                    <a href="https://instagram.com/hey_larmah" class="social-link"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://x.com/heylarmah_tech" class="social-link"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="https://t.me/heylarmah_tech" class="social-link"><i class="fa-brands fa-telegram"></i></a>
-                    <a href="https://youtube.com/@heylarmah" class="social-link"><i class="fa-brands fa-youtube"></i></a>
-                </div>
+              <div style="font-weight:950">Larmah Enterprise</div>
+              <div class="small">Premium membership</div>
             </div>
-
-            <div>
-                <b>Concierge</b>
-                <div class="small" style="margin-top:10px;"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-                <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
-                <div class="small">Lagos, Nigeria</div>
-            </div>
-
-            <div>
-                <b>Business</b>
-                <div class="small" style="margin-top:10px;"><a href="admin.html">Staff Sign-in</a></div>
-                <div class="small"><a href="insights.html">Insights</a></div>
-                <div class="small"><a href="index.html">Home</a></div>
-            </div>
+          </div>
+          <div class="small" style="margin-top:8px">Connecting the Nigerian community to verified commerce — faster.</div>
         </div>
-        <div style="text-align: center; margin-top: 40px; font-size: 0.8rem; opacity: 0.6; border-top: 1px solid var(--border); padding-top: 20px;">
-            © <span id="year"></span> Larmah Enterprise. 
+
+        <div>
+          <b>Concierge</b>
+          <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
+          <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
         </div>
+
+        <div>
+          <b>Links</b>
+          <div class="small" style="margin-top:10px"><a href="index.html">Home</a></div>
+          <div class="small"><a href="insights.html">Insights</a></div>
+          <div class="small"><a href="admin.html">Admin</a></div>
+        </div>
+      </div>
+
+      <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
     </div>
-</footer>
+  </footer>
 
-<div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script>
-document.getElementById('year').textContent = new Date().getFullYear();
+  <script>
+    function pay(plan, amountNaira){
+      const name = document.getElementById("pm_name").value.trim();
+      const phone = document.getElementById("pm_phone").value.trim();
+      const email = document.getElementById("pm_email").value.trim();
+      const city = document.getElementById("pm_city").value.trim();
 
-function pay(plan, amountNaira){
-    const name = document.getElementById("pm_name").value;
-    const phone = document.getElementById("pm_phone").value;
-    const email = document.getElementById("pm_email").value;
+      if(!name){ LARMAH.toast("Full name required"); return; }
+      if(!phone || phone.length < 10){ LARMAH.toast("WhatsApp number required"); return; }
+      if(!email || !email.includes("@")){ LARMAH.toast("Valid email required"); return; }
 
-    if(!email || !email.includes("@")){ LARMAH.toast("Valid email required for receipt"); return; }
-    if(!phone || phone.length < 10){ LARMAH.toast("WhatsApp number required"); return; }
-    if(!name){ LARMAH.toast("Full name required"); return; }
-
-    // If Paystack key is missing
-    if(!LARMAH.PAYSTACK_PUBLIC_KEY || LARMAH.PAYSTACK_PUBLIC_KEY.includes("PUT_YOUR")){
-        LARMAH.toast("Technical setup required: Add Paystack Key");
-        return;
-    }
-
-    // Logic for Paystack Pop-up or WhatsApp Hand-off
-    const msg = LARMAH.buildMessage("Premium Subscription Intent", {
+      const msg = LARMAH.buildMessage("Premium Subscription Intent", {
         "Plan": plan,
         "Price": "₦" + amountNaira,
         "Subscriber": name,
         "Phone": phone,
-        "Email": email
-    });
+        "Email": email,
+        "City": city || "-"
+      });
 
-    LARMAH.openWhatsApp(msg);
-}
-</script>
+      // If Paystack not configured, keep WhatsApp handoff (safe default)
+      if(!LARMAH.PAYSTACK_PUBLIC_KEY || String(LARMAH.PAYSTACK_PUBLIC_KEY).includes("PUT_YOUR")){
+        LARMAH.toast("Paystack not configured — continuing via WhatsApp");
+        LARMAH.openWhatsApp(msg);
+        return;
+      }
+
+      // Optional: if you later add Paystack inline, you can replace this block.
+      LARMAH.openWhatsApp(msg);
+    }
+  </script>
 </body>
 </html>
