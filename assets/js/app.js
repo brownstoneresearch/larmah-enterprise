@@ -1,4 +1,4 @@
-// assets/js/app.js (FULL UPDATED — pro mobile nav overlay control + dynamic exchange rates + pinned insights)
+// assets/js/app.js (FULL UPDATED — robust nav overlay + dynamic exchange rates + pinned insights)
 
 (() => {
   const LARMAH = (window.LARMAH = window.LARMAH || {});
@@ -11,16 +11,24 @@
 
   LARMAH.PAYSTACK_PUBLIC_KEY = "PUT_YOUR_PAYSTACK_PUBLIC_KEY_HERE";
 
+  // Helpers to find nav element (supports nav#nav OR .mobile-nav)
+  function getNavEl(){
+    return document.getElementById("nav") || document.querySelector(".mobile-nav");
+  }
+  function getNavPanel(nav){
+    return nav ? nav.querySelector(".nav-panel") : null;
+  }
+
   // NAV
   LARMAH.toggleMenu = function () {
-    const nav = document.getElementById("nav");
+    const nav = getNavEl();
     if (!nav) return;
     nav.classList.toggle("active");
     document.body.classList.toggle("nav-open", nav.classList.contains("active"));
   };
 
   LARMAH.closeMenu = function () {
-    const nav = document.getElementById("nav");
+    const nav = getNavEl();
     if (!nav) return;
     nav.classList.remove("active");
     document.body.classList.remove("nav-open");
@@ -322,8 +330,8 @@
     await LARMAH.initSupabase();
     await LARMAH.renderAuthPill();
 
-    // Close nav when clicking any link
-    document.querySelectorAll("#nav a").forEach((a) => {
+    // Close menu on any nav link click
+    document.querySelectorAll(".nav-link").forEach((a) => {
       a.addEventListener("click", () => LARMAH.closeMenu());
     });
 
@@ -332,12 +340,12 @@
       if (e.key === "Escape") LARMAH.closeMenu();
     });
 
-    // Close when clicking outside panel (overlay)
+    // Close when clicking outside nav panel
     document.addEventListener("click", (e) => {
-      const nav = document.getElementById("nav");
+      const nav = getNavEl();
       if (!nav || !nav.classList.contains("active")) return;
 
-      const panel = nav.querySelector(".nav-panel");
+      const panel = getNavPanel(nav);
       const menuBtn = e.target.closest && e.target.closest(".menu-btn");
       if (menuBtn) return;
 
