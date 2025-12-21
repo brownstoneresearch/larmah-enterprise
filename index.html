@@ -37,34 +37,13 @@
 
       <!-- NAV (Desktop list + Mobile overlay panel styles handled by style.css) -->
       <nav id="nav" aria-label="Primary navigation">
-        <div class="nav-panel">
-          <div class="nav-panel-head">
-            <div class="nav-brand">
-              <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-            </div>
-            <button class="nav-close" onclick="LARMAH.closeMenu()" aria-label="Close menu">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-
-          <div class="nav-panel-body">
-            <ul>
-              <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
-              <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
-              <li><a class="nav-link" href="insights.html" data-link="insights">Insights <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
-              <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
-            </ul>
-
-            <div class="nav-panel-footer">
-              <div class="nav-hint">Tip: Tap a section to open. Press ESC to close.</div>
-              <a class="btn solid" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
-              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Quick Help', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+  <ul>
+    <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
+    <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
+    <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+    <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
+  </ul>
+</nav>
 
       <div class="header-actions" id="authPill">
         <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
