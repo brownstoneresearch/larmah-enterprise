@@ -82,8 +82,8 @@
         </div>
         <div class="msheet-footer">
             <div class="msheet-hint">Menu</div>
-            <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-                <span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span>
+            <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
+                <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
             </a>
         </div>
       </div>
@@ -108,6 +108,17 @@
           <li><a class="nav-link" href="exchange.html">Exchange</a></li>
         </ul>
       </nav>
+      
+      <div class="header-actions" style="margin-left:auto; display:none;">
+          <a href="dashboard.html" class="pill primary">Dashboard</a>
+      </div>
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+             if(localStorage.getItem('sb-'+SUPABASE_URL+'-auth-token')) {
+                 document.querySelector('.header-actions').style.display = 'flex';
+             }
+        });
+      </script>
     </div>
   </header>
 
@@ -434,6 +445,7 @@
       LARMAH.bindGalleries(mount);
     }
 
+    // REAL-TIME FETCH
     async function loadLogistics(){
       const mount = document.getElementById("catalogMount");
       // Initial Skeleton
@@ -443,9 +455,23 @@
              <div class="card" style="height:300px;opacity:0.5"></div>
         </div>`;
         
-      __LG_ITEMS = await LARMAH.fetchCatalog("logistics");
+      // Fetch from Supabase
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('category', 'logistics')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+         console.error(error);
+         mount.innerHTML = `<div class="notice">Error loading fleet data. Please refresh.</div>`;
+         return;
+      }
       
-      if(!__LG_ITEMS || !__LG_ITEMS.length){
+      __LG_ITEMS = data || [];
+      
+      if(!__LG_ITEMS.length){
         mount.innerHTML = `<div class="notice"><strong>No services listed currently.</strong> Please submit a booking request below.</div>`;
         return;
       }
@@ -476,15 +502,9 @@
 
       if(!fields.Phone || !fields.Pickup){ LARMAH.toast("Phone and Pickup location required"); return; }
 
-      const res = await LARMAH.submitRequest({
-        category: "logistics",
-        name: fields.Name,
-        phone: fields.Phone,
-        details: fields
-      });
+      // Example DB log
+      // const res = await LARMAH.submitRequest({ ... }); 
       
-      if(!res.ok) LARMAH.toast("Logging request...");
-
       LARMAH.openWhatsApp(LARMAH.buildMessage("New Logistics Booking", fields));
     }
 
