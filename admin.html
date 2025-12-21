@@ -1,10 +1,11 @@
+<!-- admin.html (FULL UPDATED — SAVE WORKS: admin/super_admin gate + catalog 1–3 images + insights links + rates + requests) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Command Center | Larmah Enterprise</title>
-  <meta name="description" content="Larmah internal management: catalog items, exchange rates, insights posts." />
+  <meta name="description" content="Larmah Admin: Catalog (1–3 images), Exchange Rates, Requests Inbox, Insights (links + pinned)." />
   <meta name="theme-color" content="#070A12" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
@@ -22,6 +23,18 @@
     .status-active{color:var(--ok);font-weight:950}
     .status-hidden{color:var(--bad);font-weight:950}
 
+    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+      font-weight: 900;
+      font-size:.85rem;
+    }
+    .chip.ok{border-color:rgba(0,217,129,.20);background:rgba(0,217,129,.10);color:rgba(245,245,245,.92)}
+
     .rates-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
     .rates-toolbar .left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .rates-toolbar .right{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -35,30 +48,25 @@
       padding: 10px 10px;
       outline: none;
     }
-    .rate-input:focus{
-      border-color: rgba(212,175,55,.35);
-      box-shadow: 0 0 0 4px rgba(212,175,55,.10);
-      background: rgba(255,255,255,.03);
-    }
     .rate-code{font-weight:950;letter-spacing:.08em;text-transform:uppercase}
     .rate-mini{font-size:.85rem;color:var(--muted);font-weight:900}
-    .muted-chip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-      font-weight: 900;
-      font-size:.85rem;
-    }
-    .pill-ok{border-color: rgba(0,217,129,.20);background: rgba(0,217,129,.10);color: rgba(245,245,245,.92);}
+
+    .img3-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    @media(max-width:980px){.img3-grid{grid-template-columns:1fr}}
+    .img-preview{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.02);border-radius:14px;overflow:hidden;height:120px}
+    .img-preview img{width:100%;height:100%;object-fit:cover}
+
+    .link-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media(max-width:980px){.link-grid{grid-template-columns:1fr}}
+
+    .req-note{min-height:80px}
   </style>
 </head>
 
 <body data-page="admin">
   <header>
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Home">
+      <a class="brand" href="index.html" aria-label="Home">
         <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
       </a>
 
@@ -66,15 +74,17 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
+      <!-- Simple desktop nav (mobile uses the sheet menu built by app.js) -->
       <nav id="nav" aria-label="Primary navigation">
-  <ul>
-    <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
-    <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-    <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
-    <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
-  </ul>
-</nav>
-       <div class="header-actions">
+        <ul>
+          <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
+          <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
+          <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+          <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
         <button class="pill" onclick="LARMAH.signOut()"><i class="fa-solid fa-power-off"></i> Logout</button>
       </div>
     </div>
@@ -88,7 +98,7 @@
             <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-terminal"></i> Internal Terminal</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Catalog • Exchange Rates • Insights</span>
+              <span class="kicker-sub">Catalog • Rates • Requests • Insights</span>
             </div>
 
             <h1>Command Center</h1>
@@ -96,6 +106,13 @@
             <div id="adminStatus" class="notice" style="margin-top:12px;display:none;border-color:rgba(0,217,129,.30)"></div>
             <div id="adminGate" class="notice" style="margin-top:12px;display:none;border-color:rgba(255,90,103,.35);background:rgba(255,90,103,.08)"></div>
             <div id="adminError" class="notice" style="margin-top:12px;display:none;border-color:rgba(255,90,103,.35);background:rgba(255,90,103,.08)"></div>
+
+            <div class="chips">
+              <span class="chip ok"><i class="fa-solid fa-shield-halved"></i> Admin Writes Enabled</span>
+              <span class="chip"><i class="fa-solid fa-database"></i> RLS Protected</span>
+              <span class="chip"><i class="fa-solid fa-images"></i> Catalog 1–3 Images</span>
+              <span class="chip"><i class="fa-solid fa-link"></i> Insights Links</span>
+            </div>
           </div>
         </div>
       </div>
@@ -105,21 +122,23 @@
       <div class="card">
         <div class="small">Session</div>
         <div id="user_email" style="font-weight:950;color:var(--brand)">Admin User</div>
-        <div class="small" style="opacity:.8">Role-gated access</div>
+        <div class="small" id="user_role" style="opacity:.8">Role</div>
       </div>
       <div class="card">
-        <div class="small">Connection</div>
+        <div class="small">Status</div>
         <div style="font-weight:950">Live</div>
-        <div class="small" style="opacity:.8">Supabase enabled</div>
+        <div class="small" style="opacity:.8">Supabase connected</div>
       </div>
     </div>
 
-    <!-- CATALOG MANAGER -->
+    <!-- =======================
+         CATALOG MANAGER
+         ======================= -->
     <section class="section" id="catalogAdmin">
       <div class="section-head-split">
         <div>
           <h2>Catalogue Manager</h2>
-          <p class="lead">Manage inventory for Real Estate, Logistics, and Exchange.</p>
+          <p class="lead">Create/edit items. Supports 1–3 images (URLs + Uploads).</p>
         </div>
         <button class="btn solid" onclick="openEditor()"><i class="fa-solid fa-plus"></i> New Item</button>
       </div>
@@ -136,7 +155,7 @@
           </div>
           <div>
             <label class="small">Search</label>
-            <input id="catSearch" class="input" placeholder="Filter by title / description..." oninput="loadCatalog()" />
+            <input id="catSearch" class="input" placeholder="Filter by title / description / tags..." oninput="loadCatalog()" />
           </div>
         </div>
 
@@ -146,14 +165,57 @@
       </div>
     </section>
 
-    <!-- EXCHANGE RATES MANAGER -->
+    <!-- =======================
+         REQUESTS INBOX
+         ======================= -->
+    <section class="section" id="requestsAdmin" style="margin-top:24px">
+      <div class="section-head-split">
+        <div>
+          <h2>Requests Inbox</h2>
+          <p class="lead">Update status + admin note. (Make sure requests_staff_all policy is enabled.)</p>
+        </div>
+        <button class="btn solid" onclick="loadRequests()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
+
+      <div class="card">
+        <div class="row2">
+          <div>
+            <label class="small">Category</label>
+            <select id="reqFilterCat" class="input" onchange="loadRequests()">
+              <option value="">All</option>
+              <option value="real-estate">Real Estate</option>
+              <option value="logistics">Logistics</option>
+              <option value="exchange">Exchange</option>
+            </select>
+          </div>
+          <div>
+            <label class="small">Status</label>
+            <select id="reqFilterStatus" class="input" onchange="loadRequests()">
+              <option value="">All</option>
+              <option value="new">New</option>
+              <option value="in_progress">In progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap" style="margin-top:12px">
+          <div id="reqTable"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================
+         EXCHANGE RATES MANAGER
+         ======================= -->
     <section class="section" id="exchangeRatesAdmin" style="margin-top:24px">
       <div class="section-head-split">
         <div>
           <h2>Exchange Rates Manager</h2>
-          <p class="lead">Live rates for Exchange page (public read). Admin updates apply immediately.</p>
+          <p class="lead">Upserts rates into <b>exchange_rates</b>. Works with Exchange page.</p>
         </div>
-        <span class="muted-chip pill-ok"><i class="fa-solid fa-bolt"></i> Realtime-ready</span>
+        <span class="chip ok"><i class="fa-solid fa-bolt"></i> Live rates</span>
       </div>
 
       <div class="card">
@@ -170,14 +232,8 @@
         <div style="height:1px;background:rgba(255,255,255,.08);margin:12px 0"></div>
 
         <div class="row2">
-          <div>
-            <label class="small">Add / Update Currency Code</label>
-            <input id="new_code" class="input" placeholder="e.g., USD" />
-          </div>
-          <div>
-            <label class="small">Name</label>
-            <input id="new_name" class="input" placeholder="US Dollar (USD)" />
-          </div>
+          <div><label class="small">Code</label><input id="new_code" class="input" placeholder="USD" /></div>
+          <div><label class="small">Name</label><input id="new_name" class="input" placeholder="US Dollar (USD)" /></div>
         </div>
 
         <div class="row2" style="margin-top:12px">
@@ -186,7 +242,7 @@
         </div>
 
         <div class="row2" style="margin-top:12px">
-          <div><label class="small">Fee Rate (0.005 = 0.5%)</label><input id="new_fee" class="input" placeholder="0.005" /></div>
+          <div><label class="small">Fee Rate</label><input id="new_fee" class="input" placeholder="0.005" /></div>
           <div>
             <label class="small">Min / Max</label>
             <div class="row2" style="gap:10px">
@@ -201,20 +257,25 @@
         </div>
 
         <div style="height:1px;background:rgba(255,255,255,.08);margin:12px 0"></div>
-
-        <div class="table-wrap">
-          <div id="ratesTableMount"></div>
-        </div>
+        <div class="table-wrap"><div id="ratesTableMount"></div></div>
       </div>
     </section>
 
-    <!-- INSIGHTS PUBLISHER -->
+    <!-- =======================
+         INSIGHTS PUBLISHER
+         ======================= -->
     <section class="section" id="insightsAdmin" style="margin-top:24px">
-      <h2>Insights Publisher</h2>
-      <p class="lead">Create and edit community updates.</p>
+      <div class="section-head-split">
+        <div>
+          <h2>Insights Publisher</h2>
+          <p class="lead">Supports links (0–5) + pinned. Visible on Insights page.</p>
+        </div>
+        <button class="btn solid" onclick="loadInsightsAdmin()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
 
       <div class="card">
         <input id="ip_id" class="input" style="display:none" disabled />
+
         <div class="notice" id="ip_mode" style="display:none;margin-bottom:12px;border-color:rgba(0,217,129,.30)">
           <i class="fa-solid fa-pen-to-square"></i> <strong>Editing Post Mode</strong>
         </div>
@@ -227,9 +288,27 @@
           <textarea id="ip_body" class="input" placeholder="What's the update for the community?"></textarea>
         </div>
 
+        <div style="margin-top:12px">
+          <label class="small">Links (optional)</label>
+          <div class="link-grid">
+            <input id="ip_link1" class="input" placeholder="https://..." />
+            <input id="ip_link2" class="input" placeholder="https://..." />
+            <input id="ip_link3" class="input" placeholder="https://..." />
+            <input id="ip_link4" class="input" placeholder="https://..." />
+            <input id="ip_link5" class="input" placeholder="https://..." />
+          </div>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <label class="small" style="display:flex;gap:10px;align-items:center">
+            <input type="checkbox" id="ip_pinned" />
+            Pin this post
+          </label>
+        </div>
+
         <div class="actions" style="margin-top:12px">
-          <button class="btn solid" id="ip_publish_btn" onclick="publishInsight()"><i class="fa-solid fa-paper-plane"></i> Publish Now</button>
-          <button class="btn solid" id="ip_update_btn" onclick="updateInsight()" style="display:none"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
+          <button class="btn solid" id="ip_publish_btn" onclick="publishInsight()"><i class="fa-solid fa-paper-plane"></i> Publish</button>
+          <button class="btn solid" id="ip_update_btn" onclick="updateInsight()" style="display:none"><i class="fa-solid fa-floppy-disk"></i> Save</button>
           <button class="btn" id="ip_cancel_btn" onclick="cancelInsightEdit()" style="display:none">Cancel</button>
         </div>
       </div>
@@ -237,13 +316,15 @@
       <div id="insightsAdminList" style="margin-top:12px"></div>
     </section>
 
-    <!-- MODAL OVERLAY -->
+    <!-- =======================
+         CATALOG EDITOR MODAL
+         ======================= -->
     <div id="editorOverlay" class="modal-overlay" onclick="closeEditor()">
       <div class="modal" onclick="event.stopPropagation()">
         <div class="modal-head">
           <div>
             <h3 id="modalTitle" style="margin:0">Item Editor</h3>
-            <div class="small">Upload images to Supabase Storage bucket: <b>catalog</b></div>
+            <div class="small">Uploads go to Storage bucket: <b>catalog</b> (must be public).</div>
           </div>
           <button class="btn small" onclick="closeEditor()"><i class="fa-solid fa-xmark"></i></button>
         </div>
@@ -264,7 +345,7 @@
           </div>
 
           <div class="row2" style="margin-top:12px">
-            <div><label class="small">Title</label><input id="e_title" class="input" placeholder="Luxury 2 Bed Flat / Exchange Offer" /></div>
+            <div><label class="small">Title</label><input id="e_title" class="input" placeholder="Luxury 2 Bed Flat / VIP SUV" /></div>
             <div><label class="small">Price</label><input id="e_price" class="input" placeholder="₦150,000 / Day" /></div>
           </div>
 
@@ -273,14 +354,43 @@
             <textarea id="e_desc" class="input" placeholder="Key features, location, offer details..."></textarea>
           </div>
 
-          <div class="row2" style="margin-top:12px">
-            <div><label class="small">Image URL (External)</label><input id="e_image_url" class="input" placeholder="https://..." /></div>
-            <div><label class="small">Upload Image</label><input id="e_image_file" class="input" type="file" accept="image/*" /></div>
+          <div style="margin-top:12px">
+            <label class="small">Tags (comma separated)</label>
+            <input id="e_tags" class="input" placeholder="Lekki, VIP, Security, SUV" />
           </div>
 
           <div style="margin-top:12px">
-            <label class="small">Tags (comma separated)</label>
-            <input id="e_tags" class="input" placeholder="Lekki, VIP, Security, Rate" />
+            <label class="small">Images (Up to 3)</label>
+            <div class="img3-grid">
+              <div>
+                <div class="small" style="opacity:.8;margin-bottom:6px">Image 1 URL</div>
+                <input id="e_img_url1" class="input" placeholder="https://..." />
+                <div class="small" style="opacity:.8;margin:10px 0 6px">Upload 1</div>
+                <input id="e_img_file1" class="input" type="file" accept="image/*" />
+              </div>
+              <div>
+                <div class="small" style="opacity:.8;margin-bottom:6px">Image 2 URL</div>
+                <input id="e_img_url2" class="input" placeholder="https://..." />
+                <div class="small" style="opacity:.8;margin:10px 0 6px">Upload 2</div>
+                <input id="e_img_file2" class="input" type="file" accept="image/*" />
+              </div>
+              <div>
+                <div class="small" style="opacity:.8;margin-bottom:6px">Image 3 URL</div>
+                <input id="e_img_url3" class="input" placeholder="https://..." />
+                <div class="small" style="opacity:.8;margin:10px 0 6px">Upload 3</div>
+                <input id="e_img_file3" class="input" type="file" accept="image/*" />
+              </div>
+            </div>
+
+            <div style="margin-top:12px" class="img3-grid">
+              <div class="img-preview" id="prev1"></div>
+              <div class="img-preview" id="prev2"></div>
+              <div class="img-preview" id="prev3"></div>
+            </div>
+
+            <div class="small" style="margin-top:10px;opacity:.75">
+              Primary image = first available image. Saved into <code>image_url</code> and <code>image_urls</code>.
+            </div>
           </div>
         </div>
 
@@ -290,6 +400,7 @@
         </div>
       </div>
     </div>
+
   </main>
 
   <!-- Standard Footer -->
@@ -352,344 +463,667 @@
 
   <script>
     let editing = null;
-let __ratesRows = [];
+    let __ratesRows = [];
+    let __reqCache = [];
 
-/* =========================
-   Admin Helpers
-   ========================= */
-function showAdminError(msg){
-  const el = document.getElementById("adminError");
-  if(!el) return;
-  el.style.display = "block";
-  el.innerHTML = "<strong>Operation Error:</strong> " + (msg || "Unknown failure");
-}
-function clearAdminError(){
-  const el = document.getElementById("adminError");
-  if(el){ el.style.display = "none"; el.textContent = ""; }
-}
+    function showAdminError(msg){
+      const el = document.getElementById("adminError");
+      if(!el) return;
+      el.style.display = "block";
+      el.innerHTML = "<strong>Operation Error:</strong> " + (msg || "Unknown failure");
+    }
+    function clearAdminError(){
+      const el = document.getElementById("adminError");
+      if(el){ el.style.display = "none"; el.textContent = ""; }
+    }
 
-/* =========================
-   Admin Gate (admin OR super_admin)
-   ========================= */
-async function requireAdmin(){
-  const sb = await LARMAH.initSupabase();
-  const session = await LARMAH.getSession();
+    async function requireAdmin(){
+      const sb = await LARMAH.initSupabase();
+      const session = await LARMAH.getSession();
 
-  if(!session){
-    const g = document.getElementById("adminGate");
-    g.style.display = "block";
-    g.innerHTML = "<strong>Access Required.</strong> Redirecting to login...";
-    setTimeout(()=> location.href="auth.html", 1200);
-    return false;
-  }
+      if(!session){
+        const g = document.getElementById("adminGate");
+        g.style.display = "block";
+        g.innerHTML = "<strong>Access Required.</strong> Redirecting to login...";
+        setTimeout(()=> location.href="auth.html", 1200);
+        return false;
+      }
 
-  document.getElementById("user_email").textContent = session.user.email;
+      document.getElementById("user_email").textContent = session.user.email;
 
-  const r = await sb.from("profiles").select("role").eq("id", session.user.id).single();
+      const r = await sb.from("profiles").select("role").eq("id", session.user.id).single();
+      const role = (r.data && r.data.role) ? String(r.data.role).toLowerCase() : "";
+      const allowed = (role === "admin" || role === "super_admin");
 
-  const role = (r.data && r.data.role) ? String(r.data.role).toLowerCase() : "";
-  const allowed = (role === "admin" || role === "super_admin");
+      if(r.error || !r.data || !allowed){
+        const g = document.getElementById("adminGate");
+        g.style.display = "block";
+        g.innerHTML = "<strong>Unauthorized.</strong> This account does not have Admin permissions.";
+        return false;
+      }
 
-  if(r.error || !r.data || !allowed){
-    const g = document.getElementById("adminGate");
-    g.style.display = "block";
-    g.innerHTML = "<strong>Unauthorized.</strong> This account does not have Admin permissions.";
-    return false;
-  }
+      document.getElementById("user_role").textContent = "Role: " + role;
 
-  const st = document.getElementById("adminStatus");
-  st.style.display = "block";
-  st.innerHTML = "<strong>Verified Admin Session:</strong> " + session.user.email + ` <span class="small" style="opacity:.75">(${role})</span>`;
-  return true;
-}
+      const st = document.getElementById("adminStatus");
+      st.style.display = "block";
+      st.innerHTML = "<strong>Verified Admin Session:</strong> " + session.user.email + ` <span class="small" style="opacity:.75">(${role})</span>`;
+      return true;
+    }
 
-/* =========================
-   Catalog: 1–3 images support
-   - Uses columns: image_url (primary) + image_urls (array)
-   ========================= */
+    function normalizeImageUrls(row){
+      const urls = [];
+      if(row && Array.isArray(row.image_urls)){
+        row.image_urls.forEach(u => { if(u && String(u).trim()) urls.push(String(u).trim()); });
+      }
+      if(row && row.image_url && String(row.image_url).trim()){
+        const u = String(row.image_url).trim();
+        if(!urls.includes(u)) urls.unshift(u);
+      }
+      return urls.slice(0,3);
+    }
 
-function normalizeImageUrls(row){
-  const urls = [];
-  if(row && Array.isArray(row.image_urls)){
-    row.image_urls.forEach(u => { if(u && String(u).trim()) urls.push(String(u).trim()); });
-  }
-  if(row && row.image_url && String(row.image_url).trim()){
-    const u = String(row.image_url).trim();
-    if(!urls.includes(u)) urls.unshift(u);
-  }
-  return urls.slice(0,3);
-}
+    function setPreviewBox(id, url){
+      const box = document.getElementById(id);
+      if(!box) return;
+      box.innerHTML = url ? `<img src="${LARMAH.escapeHtml(url)}" alt="">` : "";
+    }
+    function renderEditorPreviews(){
+      setPreviewBox("prev1", (document.getElementById("e_img_url1").value||"").trim());
+      setPreviewBox("prev2", (document.getElementById("e_img_url2").value||"").trim());
+      setPreviewBox("prev3", (document.getElementById("e_img_url3").value||"").trim());
+    }
 
-function setPreviewBox(id, url){
-  const box = document.getElementById(id);
-  if(!box) return;
-  box.innerHTML = url ? `<img src="${LARMAH.escapeHtml(url)}" alt="">` : "";
-}
+    async function uploadFileToCatalogBucket(file){
+      const sb = await LARMAH.initSupabase();
+      const safeName = String(file.name || "image").replace(/[^\w.\-]+/g, "_");
+      const path = "catalog/" + Date.now() + "_" + safeName;
+      const up = await sb.storage.from("catalog").upload(path, file, { upsert: false });
+      if(up.error) throw up.error;
+      const pub = sb.storage.from("catalog").getPublicUrl(path);
+      return pub.data.publicUrl;
+    }
 
-function renderEditorPreviews(){
-  const u1 = (document.getElementById("e_img_url1")?.value || "").trim();
-  const u2 = (document.getElementById("e_img_url2")?.value || "").trim();
-  const u3 = (document.getElementById("e_img_url3")?.value || "").trim();
-  setPreviewBox("prev1", u1);
-  setPreviewBox("prev2", u2);
-  setPreviewBox("prev3", u3);
-}
+    async function loadCatalog(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const category = document.getElementById("catCategory").value;
+      const q = (document.getElementById("catSearch").value || "").toLowerCase();
 
-async function uploadFileToCatalogBucket(file){
-  const sb = await LARMAH.initSupabase();
-  const safeName = String(file.name || "image").replace(/[^\w.\-]+/g, "_");
-  const path = "catalog/" + Date.now() + "_" + safeName;
+      const r = await sb.from("catalog_items").select("*").eq("category", category).order("updated_at", {ascending:false});
+      if(r.error){ showAdminError(r.error.message); return; }
 
-  const up = await sb.storage.from("catalog").upload(path, file, { upsert: false });
-  if(up.error) throw up.error;
+      const items = (r.data || []).filter(it => {
+        const hay = (it.title + " " + (it.description || "") + " " + (it.tags || []).join(" ")).toLowerCase();
+        return !q || hay.includes(q);
+      });
 
-  const pub = sb.storage.from("catalog").getPublicUrl(path);
-  return pub.data.publicUrl;
-}
+      const mount = document.getElementById("catTable");
+      if(!items.length){
+        mount.innerHTML = `<div class="notice"><strong>No items found.</strong> Add a new item above.</div>`;
+        return;
+      }
 
-/* =========================
-   CATALOG TABLE
-   ========================= */
-async function loadCatalog(){
-  clearAdminError();
-  const sb = await LARMAH.initSupabase();
-  const category = document.getElementById("catCategory").value;
-  const q = (document.getElementById("catSearch").value || "").toLowerCase();
+      mount.innerHTML = `
+        <table class="table">
+          <thead><tr><th>Asset</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${items.map(it => {
+              const statusText = it.active ? "Active" : "Hidden";
+              const statusClass = it.active ? "status-active" : "status-hidden";
 
-  const r = await sb.from("catalog_items")
-    .select("*")
-    .eq("category", category)
-    .order("updated_at", {ascending:false});
+              const imgs = normalizeImageUrls(it);
+              const primary = imgs[0] || "";
+              const extra = imgs.length > 1 ? `<span class="small" style="opacity:.7"> (+${imgs.length-1})</span>` : "";
 
-  if(r.error){ showAdminError(r.error.message); return; }
+              return `
+                <tr>
+                  <td>
+                    ${primary ? `<span class="thumb-mini"><img src="${LARMAH.escapeHtml(primary)}" alt=""></span>` : ""}
+                    <div style="display:inline-block;vertical-align:middle">
+                      <b>${LARMAH.escapeHtml(it.title)}</b>${extra}
+                      <div class="small" style="max-width:520px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                        ${LARMAH.escapeHtml(it.description || "")}
+                      </div>
+                    </div>
+                  </td>
+                  <td><b>${LARMAH.escapeHtml(it.price || "-")}</b></td>
+                  <td><span class="${statusClass}">${statusText}</span></td>
+                  <td><button class="btn small" onclick="editItem('${it.id}')">Edit</button></td>
+                </tr>
+              `;
+            }).join("")}
+          </tbody>
+        </table>
+      `;
+    }
 
-  const items = (r.data || []).filter(it => {
-    const hay = (it.title + " " + (it.description || "") + " " + (it.tags || []).join(" ")).toLowerCase();
-    return !q || hay.includes(q);
-  });
+    function openEditor(id){
+      document.getElementById("editorOverlay").style.display = "flex";
+      document.getElementById("btnDelete").style.display = id ? "inline-flex" : "none";
+      document.getElementById("modalTitle").textContent = id ? "Modify Asset" : "Register New Asset";
+      document.getElementById("e_id").value = id || "System Generated";
 
-  const mount = document.getElementById("catTable");
-  if(!items.length){
-    mount.innerHTML = `<div class="notice"><strong>No items found.</strong> Add a new item above.</div>`;
-    return;
-  }
+      document.getElementById("e_title").value = "";
+      document.getElementById("e_price").value = "";
+      document.getElementById("e_desc").value = "";
+      document.getElementById("e_tags").value = "";
+      document.getElementById("e_active").value = "true";
 
-  mount.innerHTML = `
-    <table class="table">
-      <thead><tr><th>Asset</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
-      <tbody>
-        ${items.map(it => {
-          const statusText = it.active ? "Active" : "Hidden";
-          const statusClass = it.active ? "status-active" : "status-hidden";
+      ["e_img_url1","e_img_url2","e_img_url3"].forEach(x => document.getElementById(x).value = "");
+      ["e_img_file1","e_img_file2","e_img_file3"].forEach(x => document.getElementById(x).value = "");
+      ["prev1","prev2","prev3"].forEach(x => document.getElementById(x).innerHTML = "");
 
-          const imgs = normalizeImageUrls(it);
-          const primary = imgs[0] || "";
-          const extra = imgs.length > 1 ? `<span class="small" style="opacity:.7"> (+${imgs.length-1})</span>` : "";
+      editing = id ? { id } : null;
+    }
+    function closeEditor(){ document.getElementById("editorOverlay").style.display = "none"; }
 
-          return `
-            <tr>
-              <td>
-                ${primary ? `<span class="thumb-mini"><img src="${LARMAH.escapeHtml(primary)}" alt=""></span>` : ""}
-                <div style="display:inline-block;vertical-align:middle">
-                  <b>${LARMAH.escapeHtml(it.title)}</b>${extra}
-                  <div class="small" style="max-width:520px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-                    ${LARMAH.escapeHtml(it.description || "")}
-                  </div>
-                </div>
-              </td>
-              <td><b>${LARMAH.escapeHtml(it.price || "-")}</b></td>
-              <td><span class="${statusClass}">${statusText}</span></td>
-              <td><button class="btn small" onclick="editItem('${it.id}')">Edit</button></td>
-            </tr>
-          `;
-        }).join("")}
-      </tbody>
-    </table>
-  `;
-}
+    async function editItem(id){
+      const sb = await LARMAH.initSupabase();
+      const r = await sb.from("catalog_items").select("*").eq("id", id).single();
+      if(r.error){ showAdminError(r.error.message); return; }
 
-/* =========================
-   EDITOR (supports 3 urls + 3 files)
-   Requires these IDs in your modal:
-   e_img_url1/e_img_url2/e_img_url3
-   e_img_file1/e_img_file2/e_img_file3
-   prev1/prev2/prev3 (preview divs)
-   ========================= */
-function openEditor(id){
-  document.getElementById("editorOverlay").style.display = "flex";
-  document.getElementById("btnDelete").style.display = id ? "inline-flex" : "none";
-  document.getElementById("modalTitle").textContent = id ? "Modify Asset" : "Register New Asset";
-  document.getElementById("e_id").value = id || "System Generated";
+      editing = r.data;
+      openEditor(id);
 
-  document.getElementById("e_title").value = "";
-  document.getElementById("e_price").value = "";
-  document.getElementById("e_desc").value = "";
-  document.getElementById("e_tags").value = "";
-  document.getElementById("e_active").value = "true";
+      document.getElementById("e_title").value = r.data.title || "";
+      document.getElementById("e_price").value = r.data.price || "";
+      document.getElementById("e_desc").value = r.data.description || "";
+      document.getElementById("e_tags").value = (r.data.tags || []).join(", ");
+      document.getElementById("e_active").value = String(r.data.active);
 
-  // new fields
-  if(document.getElementById("e_img_url1")) document.getElementById("e_img_url1").value = "";
-  if(document.getElementById("e_img_url2")) document.getElementById("e_img_url2").value = "";
-  if(document.getElementById("e_img_url3")) document.getElementById("e_img_url3").value = "";
+      const imgs = normalizeImageUrls(r.data);
+      document.getElementById("e_img_url1").value = imgs[0] || "";
+      document.getElementById("e_img_url2").value = imgs[1] || "";
+      document.getElementById("e_img_url3").value = imgs[2] || "";
+      renderEditorPreviews();
+    }
 
-  if(document.getElementById("e_img_file1")) document.getElementById("e_img_file1").value = "";
-  if(document.getElementById("e_img_file2")) document.getElementById("e_img_file2").value = "";
-  if(document.getElementById("e_img_file3")) document.getElementById("e_img_file3").value = "";
+    ["e_img_url1","e_img_url2","e_img_url3"].forEach(id=>{
+      document.addEventListener("input", (e)=>{ if(e.target && e.target.id === id) renderEditorPreviews(); });
+    });
 
-  if(document.getElementById("prev1")) document.getElementById("prev1").innerHTML = "";
-  if(document.getElementById("prev2")) document.getElementById("prev2").innerHTML = "";
-  if(document.getElementById("prev3")) document.getElementById("prev3").innerHTML = "";
+    async function saveItem(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const category = document.getElementById("catCategory").value;
 
-  editing = id ? { id } : null;
-}
+      const title = document.getElementById("e_title").value.trim();
+      if(!title){ LARMAH.toast("Title is required"); return; }
 
-function closeEditor(){ document.getElementById("editorOverlay").style.display = "none"; }
+      // URL fields
+      const urls = [];
+      ["e_img_url1","e_img_url2","e_img_url3"].forEach(id=>{
+        const u = (document.getElementById(id).value || "").trim();
+        if(u && urls.length < 3) urls.push(u);
+      });
 
-async function editItem(id){
-  const sb = await LARMAH.initSupabase();
-  const r = await sb.from("catalog_items").select("*").eq("id", id).single();
-  if(r.error) return;
+      // File uploads
+      const files = [
+        document.getElementById("e_img_file1").files[0],
+        document.getElementById("e_img_file2").files[0],
+        document.getElementById("e_img_file3").files[0]
+      ].filter(Boolean);
 
-  editing = r.data;
-  openEditor(id);
+      try{
+        if(files.length){
+          LARMAH.toast("Uploading image(s)...");
+          for(const f of files){
+            if(urls.length >= 3) break;
+            const u = await uploadFileToCatalogBucket(f);
+            urls.push(u);
+          }
+        }
 
-  document.getElementById("e_title").value = r.data.title || "";
-  document.getElementById("e_price").value = r.data.price || "";
-  document.getElementById("e_desc").value = r.data.description || "";
-  document.getElementById("e_tags").value = (r.data.tags || []).join(", ");
-  document.getElementById("e_active").value = String(r.data.active);
+        const image_urls = urls.slice(0,3);
+        const image_url = image_urls[0] || null;
 
-  const imgs = normalizeImageUrls(r.data);
-  // put existing in URL fields
-  if(document.getElementById("e_img_url1")) document.getElementById("e_img_url1").value = imgs[0] || "";
-  if(document.getElementById("e_img_url2")) document.getElementById("e_img_url2").value = imgs[1] || "";
-  if(document.getElementById("e_img_url3")) document.getElementById("e_img_url3").value = imgs[2] || "";
-  renderEditorPreviews();
-}
+        const payload = {
+          category,
+          title,
+          price: document.getElementById("e_price").value.trim(),
+          description: document.getElementById("e_desc").value.trim(),
+          tags: document.getElementById("e_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
+          active: (document.getElementById("e_active").value === "true"),
+          image_url,
+          image_urls,
+          updated_at: new Date().toISOString()
+        };
 
-// live preview when changing URL fields
-["e_img_url1","e_img_url2","e_img_url3"].forEach(id=>{
-  document.addEventListener("input", (e)=>{
-    if(e.target && e.target.id === id) renderEditorPreviews();
-  });
-});
+        let res;
+        if(editing && editing.id){
+          res = await sb.from("catalog_items").update(payload).eq("id", editing.id);
+        } else {
+          res = await sb.from("catalog_items").insert([payload]);
+        }
+        if(res.error) throw res.error;
 
-async function saveItem(){
-  clearAdminError();
-  const sb = await LARMAH.initSupabase();
-  const category = document.getElementById("catCategory").value;
-  const title = document.getElementById("e_title").value.trim();
-  if(!title){ LARMAH.toast("Title is required"); return; }
-
-  // build image urls (up to 3) from URL inputs
-  const urls = [];
-  const u1 = (document.getElementById("e_img_url1")?.value || "").trim();
-  const u2 = (document.getElementById("e_img_url2")?.value || "").trim();
-  const u3 = (document.getElementById("e_img_url3")?.value || "").trim();
-  [u1,u2,u3].forEach(u => { if(u && urls.length<3) urls.push(u); });
-
-  // append uploads in order, if present (up to 3 total)
-  const files = [
-    document.getElementById("e_img_file1")?.files?.[0],
-    document.getElementById("e_img_file2")?.files?.[0],
-    document.getElementById("e_img_file3")?.files?.[0],
-  ].filter(Boolean);
-
-  try{
-    if(files.length){
-      LARMAH.toast("Uploading image(s)...");
-      for(const f of files){
-        if(urls.length >= 3) break;
-        const pubUrl = await uploadFileToCatalogBucket(f);
-        urls.push(pubUrl);
+        LARMAH.toast("Saved");
+        closeEditor();
+        loadCatalog();
+      }catch(err){
+        showAdminError(err.message || String(err));
       }
     }
 
-    const image_urls = urls.slice(0,3);
-    const image_url = image_urls[0] || null; // primary (compat)
-
-    const payload = {
-      category,
-      title,
-      price: document.getElementById("e_price").value.trim(),
-      description: document.getElementById("e_desc").value.trim(),
-      tags: document.getElementById("e_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
-      active: (document.getElementById("e_active").value === "true"),
-      image_url,
-      image_urls,
-      updated_at: new Date().toISOString()
-    };
-
-    let res;
-    if(editing && editing.id){
-      res = await sb.from("catalog_items").update(payload).eq("id", editing.id);
-    }else{
-      res = await sb.from("catalog_items").insert([payload]);
+    async function deleteItem(){
+      if(!confirm("Delete this asset forever?")) return;
+      const sb = await LARMAH.initSupabase();
+      const d = await sb.from("catalog_items").delete().eq("id", editing.id);
+      if(d.error){ showAdminError(d.error.message); return; }
+      LARMAH.toast("Deleted");
+      closeEditor();
+      loadCatalog();
     }
-    if(res.error) throw res.error;
 
-    LARMAH.toast("Saved");
-    closeEditor();
-    loadCatalog();
-  }catch(err){
-    showAdminError(err.message);
-  }
-}
+    // -----------------------
+    // Requests Inbox
+    // -----------------------
+    async function loadRequests(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const cat = document.getElementById("reqFilterCat").value;
+      const st = document.getElementById("reqFilterStatus").value;
 
-async function deleteItem(){
-  if(!confirm("Delete this asset forever?")) return;
-  const sb = await LARMAH.initSupabase();
-  const d = await sb.from("catalog_items").delete().eq("id", editing.id);
-  if(d.error){ showAdminError(d.error.message); return; }
-  LARMAH.toast("Deleted");
-  closeEditor();
-  loadCatalog();
-}
+      let q = sb.from("requests").select("*").order("created_at", { ascending:false }).limit(50);
+      if(cat) q = q.eq("category", cat);
+      if(st) q = q.eq("status", st);
 
-/* =========================
-   EXCHANGE RATES MANAGER
-   (unchanged below this point)
-   ========================= */
-function parseNum(v){
-  const n = Number(String(v || "").replace(/,/g,"").trim());
-  return Number.isFinite(n) ? n : null;
-}
-function normalizeCode(v){
-  return String(v || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
-}
+      const r = await q;
+      if(r.error){ showAdminError(r.error.message); return; }
 
-function renderRatesTable(rows){
-  const mount = document.getElementById("ratesTableMount");
-  if(!rows || !rows.length){
-    mount.innerHTML = `<div class="notice"><strong>No rates found.</strong> Add a new currency above.</div>`;
-    return;
-  }
+      __reqCache = r.data || [];
+      const mount = document.getElementById("reqTable");
 
-  mount.innerHTML = `
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Code</th><th>Name</th><th>Buy NGN</th><th>Sell NGN</th><th>Fee</th><th>Min</th><th>Max</th><th>Updated</th><th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows.map(r => `
-          <tr data-code="${LARMAH.escapeHtml(r.code)}">
-            <td class="rate-code">${LARMAH.escapeHtml(r.code)}</td>
-            <td><input class="rate-input" data-field="name" value="${LARMAH.escapeHtml(r.name || "")}"></td>
-            <td><input class="rate-input" data-field="buy_ngn" value="${LARMAH.escapeHtml(String(r.buy_ngn ?? ""))}"></td>
-            <td><input class="rate-input" data-field="sell_ngn" value="${LARMAH.escapeHtml(String(r.sell_ngn ?? ""))}"></td>
-            <td><input class="rate-input" data-field="fee_rate" value="${LARMAH.escapeHtml(String(r.fee_rate ?? ""))}"></td>
-            <td><input class="rate-input" data-field="min_amount" value="${LARMAH.escapeHtml(String(r.min_amount ?? ""))}"></td>
-            <td><input class="rate-input" data-field="max_amount" value="${LARMAH.escapeHtml(String(r.max_amount ?? ""))}"></td>
-            <td class="rate-mini">${r.updated_at ? new Date(r.updated_at).toLocaleString() : "-"}</td>
-            <td><button class="btn small primary" onclick="saveRateRow('${LARMAH.escapeHtml(r.code)}')"><i class="fa-solid fa-floppy-disk"></i> Save</button></td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
-  `;
-}
+      if(!__reqCache.length){
+        mount.innerHTML = `<div class="notice"><strong>No requests found.</strong></div>`;
+        return;
+      }
+
+      mount.innerHTML = `
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Created</th>
+              <th>Category</th>
+              <th>Name / Phone</th>
+              <th>Status</th>
+              <th>Admin Note</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${__reqCache.map(rw => `
+              <tr data-req="${rw.id}">
+                <td>${new Date(rw.created_at).toLocaleString()}</td>
+                <td><b>${LARMAH.escapeHtml(rw.category || "-")}</b></td>
+                <td>
+                  <div><b>${LARMAH.escapeHtml(rw.name || "-")}</b></div>
+                  <div class="small">${LARMAH.escapeHtml(rw.phone || "-")}</div>
+                </td>
+                <td>
+                  <select class="input" data-field="status">
+                    ${["new","in_progress","resolved","closed"].map(s=>`
+                      <option value="${s}" ${String(rw.status||"new")===s?"selected":""}>${s}</option>
+                    `).join("")}
+                  </select>
+                </td>
+                <td>
+                  <textarea class="input req-note" data-field="admin_note">${LARMAH.escapeHtml(rw.admin_note||"")}</textarea>
+                </td>
+                <td>
+                  <div class="actions">
+                    <button class="btn small primary" onclick="saveRequest('${rw.id}')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                    <button class="btn small" onclick="openReqWhatsApp('${rw.id}')"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+                  </div>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function saveRequest(id){
+      const sb = await LARMAH.initSupabase();
+      const tr = document.querySelector(`tr[data-req="${CSS.escape(id)}"]`);
+      if(!tr) return;
+
+      const status = tr.querySelector(`[data-field="status"]`).value;
+      const admin_note = tr.querySelector(`[data-field="admin_note"]`).value;
+
+      const u = await sb.from("requests").update({
+        status,
+        admin_note,
+        updated_at: new Date().toISOString()
+      }).eq("id", id);
+
+      if(u.error){ showAdminError(u.error.message); return; }
+      LARMAH.toast("Request updated");
+    }
+
+    function openReqWhatsApp(id){
+      const rw = (__reqCache || []).find(x=>String(x.id)===String(id));
+      if(!rw) return;
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Admin Follow-up", {
+        Category: rw.category,
+        Name: rw.name || "",
+        Phone: rw.phone || "",
+        Status: rw.status || "new",
+        Message: "Hello, this is Larmah support. We’re following up on your request."
+      }));
+    }
+
+    // -----------------------
+    // Exchange Rates Manager
+    // -----------------------
+    function parseNum(v){
+      const n = Number(String(v || "").replace(/,/g,"").trim());
+      return Number.isFinite(n) ? n : null;
+    }
+    function normalizeCode(v){
+      return String(v || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+    }
+
+    function renderRatesTable(rows){
+      const mount = document.getElementById("ratesTableMount");
+      if(!rows || !rows.length){
+        mount.innerHTML = `<div class="notice"><strong>No rates found.</strong> Add a new currency above.</div>`;
+        return;
+      }
+
+      mount.innerHTML = `
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Code</th><th>Name</th><th>Buy NGN</th><th>Sell NGN</th><th>Fee</th><th>Min</th><th>Max</th><th>Updated</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr data-code="${LARMAH.escapeHtml(r.code)}">
+                <td class="rate-code">${LARMAH.escapeHtml(r.code)}</td>
+                <td><input class="rate-input" data-field="name" value="${LARMAH.escapeHtml(r.name || "")}"></td>
+                <td><input class="rate-input" data-field="buy_ngn" value="${LARMAH.escapeHtml(String(r.buy_ngn ?? ""))}"></td>
+                <td><input class="rate-input" data-field="sell_ngn" value="${LARMAH.escapeHtml(String(r.sell_ngn ?? ""))}"></td>
+                <td><input class="rate-input" data-field="fee_rate" value="${LARMAH.escapeHtml(String(r.fee_rate ?? ""))}"></td>
+                <td><input class="rate-input" data-field="min_amount" value="${LARMAH.escapeHtml(String(r.min_amount ?? ""))}"></td>
+                <td><input class="rate-input" data-field="max_amount" value="${LARMAH.escapeHtml(String(r.max_amount ?? ""))}"></td>
+                <td class="rate-mini">${r.updated_at ? new Date(r.updated_at).toLocaleString() : "-"}</td>
+                <td><button class="btn small primary" onclick="saveRateRow('${LARMAH.escapeHtml(r.code)}')"><i class="fa-solid fa-floppy-disk"></i> Save</button></td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    async function loadExchangeRates(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const r = await sb.from("exchange_rates")
+        .select("code,name,buy_ngn,sell_ngn,fee_rate,min_amount,max_amount,updated_at")
+        .order("code", { ascending: true });
+
+      if(r.error){ showAdminError(r.error.message); return; }
+
+      __ratesRows = r.data || [];
+      renderRatesTable(__ratesRows);
+
+      const latest = (__ratesRows || [])
+        .map(x => x.updated_at ? new Date(x.updated_at).getTime() : 0)
+        .reduce((a,b)=> Math.max(a,b), 0);
+      document.getElementById("ratesUpdatedAt").textContent = latest ? ("Updated: " + new Date(latest).toLocaleString()) : "Updated: —";
+    }
+
+    function readRowFromDOM(code){
+      const tr = document.querySelector(`tr[data-code="${CSS.escape(code)}"]`);
+      if(!tr) return null;
+      const get = (field) => tr.querySelector(`[data-field="${field}"]`)?.value ?? "";
+
+      const payload = {
+        code: normalizeCode(code),
+        name: String(get("name")).trim() || `${code}`,
+        buy_ngn: parseNum(get("buy_ngn")),
+        sell_ngn: parseNum(get("sell_ngn")),
+        fee_rate: parseNum(get("fee_rate")),
+        min_amount: parseNum(get("min_amount")),
+        max_amount: parseNum(get("max_amount")),
+        updated_at: new Date().toISOString()
+      };
+
+      const required = ["buy_ngn","sell_ngn","fee_rate","min_amount","max_amount"];
+      for(const k of required){ if(payload[k] === null) return { error:`Invalid number in ${k} for ${code}` }; }
+      if(!payload.code) return { error:"Invalid code" };
+      return payload;
+    }
+
+    async function saveRateRow(code){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const payloadOrErr = readRowFromDOM(code);
+      if(payloadOrErr?.error){ showAdminError(payloadOrErr.error); return; }
+      const u = await sb.from("exchange_rates").upsert([payloadOrErr], { onConflict: "code" });
+      if(u.error){ showAdminError(u.error.message); return; }
+      LARMAH.toast("Rate saved: " + code);
+      loadExchangeRates();
+    }
+
+    async function saveAllRates(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+
+      const rows = [];
+      for(const r of (__ratesRows || [])){
+        const payloadOrErr = readRowFromDOM(r.code);
+        if(payloadOrErr?.error){ showAdminError(payloadOrErr.error); return; }
+        rows.push(payloadOrErr);
+      }
+      if(!rows.length){ LARMAH.toast("No rows to save"); return; }
+
+      const u = await sb.from("exchange_rates").upsert(rows, { onConflict: "code" });
+      if(u.error){ showAdminError(u.error.message); return; }
+
+      LARMAH.toast("All rates saved");
+      loadExchangeRates();
+    }
+
+    async function upsertNewRate(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+
+      const code = normalizeCode(document.getElementById("new_code").value);
+      const name = String(document.getElementById("new_name").value || "").trim() || code;
+      const buy = parseNum(document.getElementById("new_buy").value);
+      const sell = parseNum(document.getElementById("new_sell").value);
+      const fee = parseNum(document.getElementById("new_fee").value);
+      const min = parseNum(document.getElementById("new_min").value);
+      const max = parseNum(document.getElementById("new_max").value);
+
+      if(!code){ showAdminError("Currency code required (e.g., USD)"); return; }
+      if([buy,sell,fee,min,max].some(v => v === null)){ showAdminError("Enter valid numbers for Buy/Sell/Fee/Min/Max"); return; }
+
+      const payload = { code, name, buy_ngn: buy, sell_ngn: sell, fee_rate: fee, min_amount: min, max_amount: max, updated_at: new Date().toISOString() };
+      const u = await sb.from("exchange_rates").upsert([payload], { onConflict: "code" });
+      if(u.error){ showAdminError(u.error.message); return; }
+
+      ["new_code","new_name","new_buy","new_sell","new_fee","new_min","new_max"].forEach(id => document.getElementById(id).value = "");
+      LARMAH.toast("Rate added/updated: " + code);
+      loadExchangeRates();
+    }
+
+    // -----------------------
+    // Insights Publisher (links + pinned)
+    // -----------------------
+    function getInsightLinks(){
+      return ["ip_link1","ip_link2","ip_link3","ip_link4","ip_link5"]
+        .map(id=>document.getElementById(id).value.trim())
+        .filter(Boolean)
+        .slice(0,5);
+    }
+
+    async function publishInsight(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const title = document.getElementById("ip_title").value.trim();
+      const body = document.getElementById("ip_body").value.trim();
+      const pinned = !!document.getElementById("ip_pinned").checked;
+      const links = getInsightLinks();
+
+      if(!title || !body){ LARMAH.toast("Both title and body required"); return; }
+
+      const ins = await sb.from("insights_posts").insert([{
+        title, body, pinned, links,
+        created_at: new Date().toISOString()
+      }]);
+
+      if(ins.error){ showAdminError(ins.error.message); return; }
+
+      document.getElementById("ip_title").value = "";
+      document.getElementById("ip_body").value = "";
+      document.getElementById("ip_pinned").checked = false;
+      ["ip_link1","ip_link2","ip_link3","ip_link4","ip_link5"].forEach(id=>document.getElementById(id).value="");
+
+      LARMAH.toast("Published");
+      loadInsightsAdmin();
+    }
+
+    async function loadInsightsAdmin(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const r = await sb.from("insights_posts").select("*").order("pinned",{ascending:false}).order("created_at",{ascending:false});
+      if(r.error){ showAdminError(r.error.message); return; }
+      const mount = document.getElementById("insightsAdminList");
+      const posts = r.data || [];
+
+      if(!posts.length){
+        mount.innerHTML = `<div class="notice"><strong>No insights yet.</strong></div>`;
+        return;
+      }
+
+      const renderLinks = (arr) => {
+        const links = Array.isArray(arr) ? arr.filter(Boolean).slice(0,5) : [];
+        if(!links.length) return "";
+        return `
+          <div class="small" style="margin-top:10px;opacity:.9">
+            ${links.map(u => `
+              <div style="margin-top:6px">
+                <i class="fa-solid fa-link" style="opacity:.7"></i>
+                <a href="${LARMAH.escapeHtml(u)}" target="_blank" rel="noopener noreferrer">${LARMAH.escapeHtml(u)}</a>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      };
+
+      mount.innerHTML = `
+        <div class="grid">
+          ${posts.map(p => `
+            <div class="card">
+              <h3 style="font-size:1rem">
+                ${LARMAH.escapeHtml(p.title)}
+                ${p.pinned ? '<span class="small" style="opacity:.7">• Pinned</span>' : ''}
+              </h3>
+              <p class="small" style="opacity:.9;margin-top:8px">${LARMAH.escapeHtml(p.body||"")}</p>
+              ${renderLinks(p.links)}
+              <div class="meta">Created: ${new Date(p.created_at).toLocaleString()}</div>
+              <div class="actions">
+                <button class="btn small" onclick="startInsightEditFromId('${p.id}')">Edit</button>
+                <button class="btn small primary" onclick="togglePin('${p.id}', ${p.pinned ? "false":"true"})">
+                  <i class="fa-solid fa-thumbtack"></i> ${p.pinned ? "Unpin":"Pin"}
+                </button>
+                <button class="btn small danger" onclick="deleteInsight('${p.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    async function togglePin(id, pin){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const u = await sb.from("insights_posts").update({ pinned: !!pin }).eq("id", id);
+      if(u.error){ showAdminError(u.error.message); return; }
+      LARMAH.toast(pin ? "Pinned" : "Unpinned");
+      loadInsightsAdmin();
+    }
+
+    async function startInsightEditFromId(id){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const r = await sb.from("insights_posts").select("*").eq("id", id).single();
+      if(r.error){ showAdminError(r.error.message); return; }
+
+      document.getElementById("ip_id").value = r.data.id;
+      document.getElementById("ip_mode").style.display = "block";
+      document.getElementById("ip_title").value = r.data.title || "";
+      document.getElementById("ip_body").value = r.data.body || "";
+      document.getElementById("ip_pinned").checked = !!r.data.pinned;
+
+      const links = (Array.isArray(r.data.links) ? r.data.links : []).slice(0,5);
+      ["ip_link1","ip_link2","ip_link3","ip_link4","ip_link5"].forEach((fid, idx)=>{
+        document.getElementById(fid).value = links[idx] || "";
+      });
+
+      document.getElementById("ip_publish_btn").style.display = "none";
+      document.getElementById("ip_update_btn").style.display = "inline-flex";
+      document.getElementById("ip_cancel_btn").style.display = "inline-flex";
+
+      window.scrollTo({ top: document.getElementById("insightsAdmin").offsetTop - 90, behavior: "smooth" });
+    }
+
+    function cancelInsightEdit(){
+      document.getElementById("ip_mode").style.display = "none";
+      document.getElementById("ip_id").value = "";
+      document.getElementById("ip_title").value = "";
+      document.getElementById("ip_body").value = "";
+      document.getElementById("ip_pinned").checked = false;
+      ["ip_link1","ip_link2","ip_link3","ip_link4","ip_link5"].forEach(id=>document.getElementById(id).value="");
+
+      document.getElementById("ip_publish_btn").style.display = "inline-flex";
+      document.getElementById("ip_update_btn").style.display = "none";
+      document.getElementById("ip_cancel_btn").style.display = "none";
+    }
+
+    async function updateInsight(){
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const id = document.getElementById("ip_id").value;
+      const title = document.getElementById("ip_title").value.trim();
+      const body = document.getElementById("ip_body").value.trim();
+      const pinned = !!document.getElementById("ip_pinned").checked;
+      const links = getInsightLinks();
+
+      if(!title || !body){ LARMAH.toast("Both title and body required"); return; }
+
+      const u = await sb.from("insights_posts").update({ title, body, pinned, links }).eq("id", id);
+      if(u.error){ showAdminError(u.error.message); return; }
+
+      LARMAH.toast("Updated");
+      cancelInsightEdit();
+      loadInsightsAdmin();
+    }
+
+    async function deleteInsight(id){
+      if(!confirm("Delete this insight forever?")) return;
+      clearAdminError();
+      const sb = await LARMAH.initSupabase();
+      const d = await sb.from("insights_posts").delete().eq("id", id);
+      if(d.error){ showAdminError(d.error.message); return; }
+      LARMAH.toast("Deleted");
+      loadInsightsAdmin();
+    }
+
+    // Boot
+    document.addEventListener("DOMContentLoaded", async () => {
+      const ok = await requireAdmin();
+      if(!ok) return;
+
+      loadCatalog();
+      loadRequests();
+      loadExchangeRates();
+      loadInsightsAdmin();
+    });
   </script>
 </body>
 </html>
