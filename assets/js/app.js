@@ -1,4 +1,4 @@
-// assets/js/app.js (FULL UPDATED — builds a separate mobile drawer overlay, fixes nav errors)
+// assets/js/app.js (FULL — mobile drawer ALWAYS overlays hero + fixes nav issues + dynamic exchange + insights)
 
 (() => {
   const LARMAH = (window.LARMAH = window.LARMAH || {});
@@ -8,14 +8,14 @@
   LARMAH.SUPABASE_URL = "https://drchjifufpsvvlzgpaiy.supabase.co";
   LARMAH.SUPABASE_ANON_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyY2hqaWZ1ZnBzdnZsemdwYWl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwOTMwNDEsImV4cCI6MjA4MTY2OTA0MX0.MLr1iCF4gjz0wnT1IFISCV9eJtnbq96_W_i7wAMOSbY";
+
   LARMAH.PAYSTACK_PUBLIC_KEY = "PUT_YOUR_PAYSTACK_PUBLIC_KEY_HERE";
 
-  // -------- Helpers --------
-  LARMAH.escapeHtml = function (s) {
-    return String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
-  };
+  // Utilities
+  LARMAH.escapeHtml = (s) =>
+    String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
 
-  LARMAH.toast = function (msg, ms = 2400) {
+  LARMAH.toast = (msg, ms = 2400) => {
     const t = document.getElementById("toast");
     if (!t) return;
     t.textContent = msg;
@@ -25,7 +25,7 @@
   };
 
   // WhatsApp
-  LARMAH.buildMessage = function (title, fields = {}) {
+  LARMAH.buildMessage = (title, fields = {}) => {
     const lines = [];
     lines.push(`LARMAH — ${title}`);
     lines.push(`Time: ${new Date().toLocaleString()}`);
@@ -39,15 +39,15 @@
     return lines.join("\n");
   };
 
-  LARMAH.openWhatsApp = function (message) {
+  LARMAH.openWhatsApp = (message) => {
     const url = "https://wa.me/" + LARMAH.WHATSAPP_NUMBER + "?text=" + encodeURIComponent(String(message || ""));
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // -------- Supabase --------
+  // Supabase
   LARMAH.sb = null;
 
-  LARMAH.initSupabase = async function () {
+  LARMAH.initSupabase = async () => {
     if (!window.supabase) return null;
     if (LARMAH.sb) return LARMAH.sb;
 
@@ -59,14 +59,14 @@
     return LARMAH.sb;
   };
 
-  LARMAH.getSession = async function () {
+  LARMAH.getSession = async () => {
     const sb = await LARMAH.initSupabase();
     if (!sb) return null;
     const { data } = await sb.auth.getSession();
     return data?.session || null;
   };
 
-  LARMAH.signOut = async function () {
+  LARMAH.signOut = async () => {
     const sb = await LARMAH.initSupabase();
     if (!sb) return;
     await sb.auth.signOut();
@@ -74,7 +74,7 @@
     setTimeout(() => (location.href = "index.html"), 600);
   };
 
-  LARMAH.renderAuthPill = async function () {
+  LARMAH.renderAuthPill = async () => {
     const mount = document.getElementById("authPill");
     if (!mount) return;
 
@@ -94,8 +94,8 @@
       '<button class="pill" onclick="LARMAH.signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign out</button>';
   };
 
-  // -------- Data: Catalog --------
-  LARMAH.fetchCatalog = async function (category) {
+  // Data: Catalog
+  LARMAH.fetchCatalog = async (category) => {
     const sb = await LARMAH.initSupabase();
     if (!sb) return [];
     const { data, error } = await sb
@@ -108,8 +108,8 @@
     return data || [];
   };
 
-  // -------- Data: Requests --------
-  LARMAH.submitRequest = async function (payload) {
+  // Data: Requests
+  LARMAH.submitRequest = async (payload) => {
     const sb = await LARMAH.initSupabase();
     if (!sb) return { ok: false, error: "Supabase not configured" };
 
@@ -127,7 +127,6 @@
 
     let { error } = await sb.from("requests").insert([record]);
 
-    // fallback if your requests table doesn't have user_id column
     if (error && /column "user_id".*does not exist/i.test(error.message)) {
       const record2 = { ...record };
       delete record2.user_id;
@@ -139,8 +138,8 @@
     return { ok: true };
   };
 
-  // -------- Insights --------
-  LARMAH.fetchInsights = async function (limit = 12) {
+  // Insights
+  LARMAH.fetchInsights = async (limit = 12) => {
     const sb = await LARMAH.initSupabase();
     if (!sb) return [];
     const { data, error } = await sb
@@ -153,7 +152,7 @@
     return data || [];
   };
 
-  LARMAH.renderInsights = async function (mountId) {
+  LARMAH.renderInsights = async (mountId) => {
     const mount = document.getElementById(mountId);
     if (!mount) return;
     mount.innerHTML = '<div class="notice"><strong>Loading…</strong></div>';
@@ -191,7 +190,7 @@
       '</div>';
   };
 
-  LARMAH.subscribeInsights = async function (mountId) {
+  LARMAH.subscribeInsights = async (mountId) => {
     const sb = await LARMAH.initSupabase();
     if (!sb) return;
     if (LARMAH.__insightsChan) return;
@@ -204,37 +203,8 @@
       .subscribe();
   };
 
-  // Crypto (NGN)
-  LARMAH.loadCrypto = async function (mountId) {
-    const el = document.getElementById(mountId);
-    if (!el) return;
-    el.innerHTML = "<strong>Loading…</strong>";
-
-    try {
-      const res = await fetch(
-        "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether&vs_currencies=ngn&include_last_updated_at=true",
-        { cache: "no-store" }
-      );
-      if (!res.ok) throw new Error("Price feed unavailable");
-      const data = await res.json();
-
-      const fmt = (n) => (typeof n === "number" ? n.toLocaleString() : "-");
-      const last = data.bitcoin?.last_updated_at ? new Date(data.bitcoin.last_updated_at * 1000).toLocaleTimeString() : "";
-
-      el.innerHTML =
-        '<div class="grid">' +
-        '<div class="card"><h3>BTC (₦)</h3><p class="small">' + fmt(data.bitcoin?.ngn) + "</p></div>" +
-        '<div class="card"><h3>ETH (₦)</h3><p class="small">' + fmt(data.ethereum?.ngn) + "</p></div>" +
-        '<div class="card"><h3>USDT (₦)</h3><p class="small">' + fmt(data.tether?.ngn) + "</p></div>" +
-        "</div>" +
-        '<div class="small" style="margin-top:10px;">Updated: ' + (last || "now") + "</div>";
-    } catch (e) {
-      el.innerHTML = '<div class="notice"><strong>Live prices unavailable.</strong> Please refresh.</div>';
-    }
-  };
-
-  // Exchange rates (dynamic)
-  LARMAH.fetchExchangeRates = async function () {
+  // Exchange rates
+  LARMAH.fetchExchangeRates = async () => {
     const sb = await LARMAH.initSupabase();
     if (!sb) return [];
     const { data, error } = await sb
@@ -245,7 +215,7 @@
     return data || [];
   };
 
-  LARMAH.subscribeExchangeRates = async function (onChange) {
+  LARMAH.subscribeExchangeRates = async (onChange) => {
     const sb = await LARMAH.initSupabase();
     if (!sb) return;
     if (LARMAH.__exchangeChan) return;
@@ -258,45 +228,33 @@
       .subscribe();
   };
 
-  // -------- Active nav --------
-  LARMAH.setActiveNav = function () {
+  // Active nav on desktop links
+  LARMAH.setActiveNav = () => {
     const links = Array.from(document.querySelectorAll(".nav-link"));
     if (!links.length) return;
-
     const page = (document.body.getAttribute("data-page") || "").trim();
-    links.forEach(a => {
-      if (!a.dataset || !a.dataset.link) return;
-      a.classList.toggle("active", a.dataset.link === page);
-    });
+    links.forEach(a => a.classList.toggle("active", (a.dataset?.link || "") === page));
   };
 
-  // -------- Mobile Drawer Builder --------
-  function buildMobileDrawerIfNeeded(){
+  // -------- Mobile Drawer (always overlays hero) --------
+  function isMobile(){ return window.matchMedia && window.matchMedia("(max-width: 980px)").matches; }
+
+  function buildDrawer(){
     if (document.getElementById("mobileNavOverlay")) return;
 
-    // Gather links from desktop nav (nav#nav) - use .nav-link if present, else any <a>
+    // Collect nav links from desktop nav
     const nav = document.getElementById("nav");
     const linkEls = nav ? Array.from(nav.querySelectorAll("a.nav-link")) : [];
+
     const uniq = new Map();
     linkEls.forEach(a => {
       const href = (a.getAttribute("href") || "").trim();
       const text = (a.textContent || "").trim();
       if (!href || href.startsWith("#")) return;
-      if (!uniq.has(href)) uniq.set(href, { href, text, dataLink: a.dataset ? a.dataset.link : "" });
+      if (!uniq.has(href)) uniq.set(href, { href, text, dataLink: a.dataset?.link || "" });
     });
 
-    // fallback: if nav has no .nav-link, scan header for any links
-    if (uniq.size === 0) {
-      const headerLinks = Array.from(document.querySelectorAll("header a[href]"));
-      headerLinks.forEach(a => {
-        const href = (a.getAttribute("href") || "").trim();
-        const text = (a.textContent || "").trim();
-        if (!href || href.startsWith("#") || href.includes(".jpeg")) return;
-        if (!uniq.has(href) && text) uniq.set(href, { href, text, dataLink: "" });
-      });
-    }
-
-    // Logo src from header brand
+    // Logo source
     const logo = document.querySelector(".brand img");
     const logoSrc = logo ? logo.getAttribute("src") : "assets/images/larmah-header.jpeg";
 
@@ -305,9 +263,7 @@
     overlay.innerHTML = `
       <div class="mnav-panel" role="dialog" aria-modal="true" aria-label="Menu">
         <div class="mnav-head">
-          <div class="mnav-brand">
-            <img src="${logoSrc}" alt="Larmah Enterprise">
-          </div>
+          <div class="mnav-brand"><img src="${logoSrc}" alt="Larmah Enterprise"></div>
           <button class="mnav-close" type="button" aria-label="Close menu">
             <i class="fa-solid fa-xmark"></i>
           </button>
@@ -316,7 +272,7 @@
         <div class="mnav-body">
           <div class="mnav-links">
             ${Array.from(uniq.values()).map(item => `
-              <a class="mnav-link" href="${item.href}" ${item.dataLink ? `data-link="${item.dataLink}"` : ""}>
+              <a class="mnav-link" href="${item.href}" data-link="${item.dataLink}">
                 <span>${LARMAH.escapeHtml(item.text)}</span>
                 <i class="fa-solid fa-chevron-right" style="opacity:.55"></i>
               </a>
@@ -335,19 +291,21 @@
     `;
     document.body.appendChild(overlay);
 
-    // Close handlers
+    // Close button
     overlay.querySelector(".mnav-close").addEventListener("click", () => LARMAH.closeMenu());
+
+    // Click outside panel closes
     overlay.addEventListener("click", (e) => {
       const panel = overlay.querySelector(".mnav-panel");
       if (panel && !panel.contains(e.target)) LARMAH.closeMenu();
     });
 
-    // Close on link click
+    // Clicking a link closes
     overlay.querySelectorAll(".mnav-link").forEach(a => {
       a.addEventListener("click", () => LARMAH.closeMenu());
     });
 
-    // WhatsApp button
+    // WhatsApp CTA
     const waBtn = overlay.querySelector("[data-whatsapp]");
     if (waBtn){
       waBtn.addEventListener("click", () => {
@@ -356,48 +314,47 @@
     }
   }
 
-  // Open/close menu using overlay on mobile
-  function isMobile(){
-    return window.matchMedia && window.matchMedia("(max-width: 980px)").matches;
-  }
-
-  LARMAH.openMenu = function(){
+  // Public controls
+  LARMAH.openMenu = () => {
     if (!isMobile()) return;
-    buildMobileDrawerIfNeeded();
+    buildDrawer();
     const overlay = document.getElementById("mobileNavOverlay");
     if (!overlay) return;
+
     overlay.classList.add("active");
+    overlay.style.display = "block";
     document.body.classList.add("nav-open");
 
-    // set active in overlay
     const page = (document.body.getAttribute("data-page") || "").trim();
     overlay.querySelectorAll(".mnav-link").forEach(a => {
-      const dl = a.getAttribute("data-link") || "";
-      a.classList.toggle("active", dl && dl === page);
+      a.classList.toggle("active", (a.getAttribute("data-link") || "") === page);
     });
 
-    // focus close
     const closeBtn = overlay.querySelector(".mnav-close");
     closeBtn && closeBtn.focus();
   };
 
-  // Override toggle to use overlay on mobile
-  LARMAH.toggleMenu = function(){
+  LARMAH.closeMenu = () => {
+    const overlay = document.getElementById("mobileNavOverlay");
+    if (overlay){
+      overlay.classList.remove("active");
+      overlay.style.display = "none";
+    }
+    document.body.classList.remove("nav-open");
+  };
+
+  // Menu button toggles drawer on mobile
+  const oldToggle = LARMAH.toggleMenu;
+  LARMAH.toggleMenu = () => {
     if (!isMobile()) return;
-    buildMobileDrawerIfNeeded();
+    buildDrawer();
     const overlay = document.getElementById("mobileNavOverlay");
     if (!overlay) return;
     if (overlay.classList.contains("active")) LARMAH.closeMenu();
     else LARMAH.openMenu();
   };
 
-  LARMAH.closeMenu = function(){
-    const overlay = document.getElementById("mobileNavOverlay");
-    if (overlay) overlay.classList.remove("active");
-    document.body.classList.remove("nav-open");
-  };
-
-  // -------- Boot --------
+  // Boot
   document.addEventListener("DOMContentLoaded", async () => {
     const y = document.getElementById("year");
     if (y) y.textContent = new Date().getFullYear();
@@ -406,12 +363,12 @@
     await LARMAH.initSupabase();
     await LARMAH.renderAuthPill();
 
-    // ESC closes drawer
+    // ESC closes
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") LARMAH.closeMenu();
     });
 
-    // If window resized to desktop, close overlay
+    // if resized to desktop, close drawer
     window.addEventListener("resize", () => {
       if (!isMobile()) LARMAH.closeMenu();
     });
