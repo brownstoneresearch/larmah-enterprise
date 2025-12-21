@@ -1,5 +1,3 @@
-// assets/js/app.js (FULL UPDATED — robust nav overlay + dynamic exchange rates + pinned insights)
-
 (() => {
   const LARMAH = (window.LARMAH = window.LARMAH || {});
 
@@ -11,27 +9,85 @@
 
   LARMAH.PAYSTACK_PUBLIC_KEY = "PUT_YOUR_PAYSTACK_PUBLIC_KEY_HERE";
 
+  // State for scroll lock
+  let scrollPosition = 0;
+  let scrollLockEnabled = false;
+
   // Helpers to find nav element (supports nav#nav OR .mobile-nav)
-  function getNavEl(){
+  function getNavEl() {
     return document.getElementById("nav") || document.querySelector(".mobile-nav");
   }
-  function getNavPanel(nav){
+  function getNavPanel(nav) {
     return nav ? nav.querySelector(".nav-panel") : null;
   }
+
+  // Scroll lock functions
+  LARMAH.lockScroll = function () {
+    if (scrollLockEnabled) return;
+    
+    scrollPosition = window.pageYOffset;
+    const body = document.body;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    
+    body.style.position = "fixed";
+    body.style.top = `-${scrollPosition}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.overflow = "hidden";
+    body.style.paddingRight = `${scrollbarWidth}px`;
+    
+    // Also fix any fixed elements that might shift
+    document.querySelectorAll("header").forEach(el => {
+      el.style.paddingRight = `${scrollbarWidth}px`;
+    });
+    
+    scrollLockEnabled = true;
+  };
+
+  LARMAH.unlockScroll = function () {
+    if (!scrollLockEnabled) return;
+    
+    const body = document.body;
+    
+    body.style.position = "";
+    body.style.top = "";
+    body.style.left = "";
+    body.style.right = "";
+    body.style.overflow = "";
+    body.style.paddingRight = "";
+    
+    // Reset header padding
+    document.querySelectorAll("header").forEach(el => {
+      el.style.paddingRight = "";
+    });
+    
+    window.scrollTo(0, scrollPosition);
+    scrollLockEnabled = false;
+  };
 
   // NAV
   LARMAH.toggleMenu = function () {
     const nav = getNavEl();
     if (!nav) return;
+    
+    const isOpening = !nav.classList.contains("active");
     nav.classList.toggle("active");
     document.body.classList.toggle("nav-open", nav.classList.contains("active"));
+    
+    if (isOpening) {
+      LARMAH.lockScroll();
+    } else {
+      LARMAH.unlockScroll();
+    }
   };
 
   LARMAH.closeMenu = function () {
     const nav = getNavEl();
-    if (!nav) return;
+    if (!nav || !nav.classList.contains("active")) return;
+    
     nav.classList.remove("active");
     document.body.classList.remove("nav-open");
+    LARMAH.unlockScroll();
   };
 
   LARMAH.setActiveNav = function () {
@@ -350,6 +406,18 @@
       if (menuBtn) return;
 
       if (panel && !panel.contains(e.target)) LARMAH.closeMenu();
+    });
+
+    // Handle window resize - close menu on large screens
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 980) {
+        LARMAH.closeMenu();
+      }
+    });
+
+    // Ensure scroll is unlocked if user navigates away
+    window.addEventListener("beforeunload", () => {
+      LARMAH.unlockScroll();
     });
   });
 })();
