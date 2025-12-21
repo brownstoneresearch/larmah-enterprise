@@ -22,6 +22,11 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
+
+  <!-- Page-only helpers (menu + accessibility) -->
+  <style>
+    /* Optional: hide desktop actions on mobile if you ever add them */
+  </style>
 </head>
 
 <body data-page="home">
@@ -31,11 +36,17 @@
         <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
       </a>
 
-      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
+      <!-- Toggle button: updates aria + closes properly -->
+      <button class="menu-btn" id="menuBtn" type="button" onclick="LARMAH.toggleMenu()" aria-label="Open menu" aria-controls="nav" aria-expanded="false">
         <i class="fa-solid fa-bars"></i>
       </button>
 
       <nav id="nav" aria-label="Primary navigation">
+        <!-- Close button inside overlay (mobile only) -->
+        <button class="menu-btn" id="navCloseBtn" type="button" onclick="LARMAH.closeMenu()" aria-label="Close menu" style="display:none">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
         <ul>
           <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
@@ -43,6 +54,7 @@
           <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
         </ul>
       </nav>
+    </div>
   </header>
 
   <main class="container">
@@ -57,8 +69,6 @@
               </span>
               <span class="kicker-sub">• WhatsApp-first support</span>
             </div>
-            <p></p>
-            <p></p>
 
             <h1>Seamless Commerce.<br/>Verified Standards.</h1>
             <p class="lead">
@@ -67,7 +77,8 @@
 
             <div class="actions">
               <a class="btn solid" href="#latest"><i class="fa-solid fa-sparkles"></i> Browse Latest</a>
-              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { 'Name':'', 'Phone':'', 'Topic':'Real Estate / Logistics / Exchange', 'Message':'Hello Larmah, I need assistance.' }))">
+              <button class="btn" type="button"
+                onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { 'Name':'', 'Phone':'', 'Topic':'Real Estate / Logistics / Exchange', 'Message':'Hello Larmah, I need assistance.' }))">
                 <i class="fa-brands fa-whatsapp"></i> Quick WhatsApp
               </button>
             </div>
@@ -137,7 +148,8 @@
           <h2 style="margin:0">Need something specific?</h2>
           <p class="lead" style="margin:6px 0 0">Tell us your budget, location, and timeline — we’ll respond via WhatsApp.</p>
         </div>
-        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { 'Name':'', 'Phone':'', 'Category':'Real Estate / Logistics / Exchange', 'Details':'Describe what you need…' }))">
+        <button class="btn solid" type="button"
+          onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { 'Name':'', 'Phone':'', 'Category':'Real Estate / Logistics / Exchange', 'Details':'Describe what you need…' }))">
           <i class="fa-brands fa-whatsapp"></i> Start Request
         </button>
       </div>
@@ -151,7 +163,7 @@
           <div class="brandline">
             <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
             <div>
-             <div class="small">Real Estate • Logistics • Insights • Exchange</div>
+              <div class="small">Real Estate • Logistics • Insights • Exchange</div>
             </div>
           </div>
 
@@ -181,7 +193,7 @@
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
           <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-          <div class="small" style="margin-top:10px;opacity:.75"><a href="admin.html">Admin Terminal</a></div>
+          <div class="small" style="margin-top:10px;opacity:.75"><a href="admin.html" rel="nofollow">Admin Terminal</a></div>
         </div>
       </div>
 
@@ -249,7 +261,7 @@
                       <span class="dot">•</span>
                       <span class="small">Verified</span>
                     </div>
-                    <button class="btn small primary" onclick="enquireFromIndex('${category}','${it.id}')">
+                    <button class="btn small primary" type="button" onclick="enquireFromIndex('${category}','${it.id}')">
                       <i class="fa-brands fa-whatsapp"></i> Enquire
                     </button>
                   </div>
@@ -278,6 +290,77 @@
       });
       LARMAH.openWhatsApp(msg);
     }
+
+    // ---- Mobile Nav Overlay: robust toggle + body lock + close on link / Esc / backdrop ----
+    (function(){
+      const nav = document.getElementById("nav");
+      const btn = document.getElementById("menuBtn");
+      const closeBtn = document.getElementById("navCloseBtn");
+
+      function isMobile(){
+        return window.matchMedia("(max-width: 980px)").matches;
+      }
+
+      function setExpanded(v){
+        if(btn) btn.setAttribute("aria-expanded", v ? "true" : "false");
+      }
+
+      // Ensure global object exists
+      window.LARMAH = window.LARMAH || {};
+
+      window.LARMAH.openMenu = function(){
+        if(!nav) return;
+        nav.classList.add("active");
+        document.body.classList.add("nav-open");
+        setExpanded(true);
+
+        // show close button only on mobile overlay
+        if(closeBtn) closeBtn.style.display = isMobile() ? "inline-flex" : "none";
+
+        // focus first link for accessibility (mobile)
+        const firstLink = nav.querySelector("a.nav-link");
+        if(firstLink) firstLink.focus({ preventScroll:true });
+      };
+
+      window.LARMAH.closeMenu = function(){
+        if(!nav) return;
+        nav.classList.remove("active");
+        document.body.classList.remove("nav-open");
+        setExpanded(false);
+        if(closeBtn) closeBtn.style.display = "none";
+      };
+
+      window.LARMAH.toggleMenu = function(){
+        if(!nav) return;
+        if(nav.classList.contains("active")) window.LARMAH.closeMenu();
+        else window.LARMAH.openMenu();
+      };
+
+      // Close when clicking a nav link (mobile only)
+      nav?.addEventListener("click", (e) => {
+        const a = e.target.closest("a");
+        if(a && isMobile()) window.LARMAH.closeMenu();
+      });
+
+      // Close on ESC
+      document.addEventListener("keydown", (e) => {
+        if(e.key === "Escape" && nav?.classList.contains("active")) window.LARMAH.closeMenu();
+      });
+
+      // If screen resized to desktop, remove overlay lock
+      window.addEventListener("resize", () => {
+        if(!isMobile()){
+          document.body.classList.remove("nav-open");
+          if(closeBtn) closeBtn.style.display = "none";
+          setExpanded(false);
+          nav?.classList.remove("active");
+        }
+      });
+
+      // Year
+      const y = document.getElementById("year");
+      if(y) y.textContent = new Date().getFullYear();
+    })();
 
     document.addEventListener("DOMContentLoaded", () => {
       renderPreview("real-estate", "latestRE");
