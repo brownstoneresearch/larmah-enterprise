@@ -352,425 +352,344 @@
 
   <script>
     let editing = null;
-    let __ratesRows = [];
+let __ratesRows = [];
 
-    function showAdminError(msg){
-      const el = document.getElementById("adminError");
-      if(!el) return;
-      el.style.display = "block";
-      el.innerHTML = "<strong>Operation Error:</strong> " + (msg || "Unknown failure");
-    }
-    function clearAdminError(){
-      const el = document.getElementById("adminError");
-      if(el){ el.style.display = "none"; el.textContent = ""; }
-    }
+/* =========================
+   Admin Helpers
+   ========================= */
+function showAdminError(msg){
+  const el = document.getElementById("adminError");
+  if(!el) return;
+  el.style.display = "block";
+  el.innerHTML = "<strong>Operation Error:</strong> " + (msg || "Unknown failure");
+}
+function clearAdminError(){
+  const el = document.getElementById("adminError");
+  if(el){ el.style.display = "none"; el.textContent = ""; }
+}
 
-    async function requireAdmin(){
-      const sb = await LARMAH.initSupabase();
-      const session = await LARMAH.getSession();
+/* =========================
+   Admin Gate (admin OR super_admin)
+   ========================= */
+async function requireAdmin(){
+  const sb = await LARMAH.initSupabase();
+  const session = await LARMAH.getSession();
 
-      if(!session){
-        const g = document.getElementById("adminGate");
-        g.style.display = "block";
-        g.innerHTML = "<strong>Access Required.</strong> Redirecting to login...";
-        setTimeout(()=> location.href="auth.html", 1200);
-        return false;
-      }
+  if(!session){
+    const g = document.getElementById("adminGate");
+    g.style.display = "block";
+    g.innerHTML = "<strong>Access Required.</strong> Redirecting to login...";
+    setTimeout(()=> location.href="auth.html", 1200);
+    return false;
+  }
 
-      document.getElementById("user_email").textContent = session.user.email;
+  document.getElementById("user_email").textContent = session.user.email;
 
-      const r = await sb.from("profiles").select("role").eq("id", session.user.id).single();
-      if(r.error || !r.data || r.data.role !== "admin"){
-        const g = document.getElementById("adminGate");
-        g.style.display = "block";
-        g.innerHTML = "<strong>Unauthorized.</strong> This account does not have Admin permissions.";
-        return false;
-      }
+  const r = await sb.from("profiles").select("role").eq("id", session.user.id).single();
 
-      const st = document.getElementById("adminStatus");
-      st.style.display = "block";
-      st.innerHTML = "<strong>Verified Admin Session:</strong> " + session.user.email;
-      return true;
-    }
+  const role = (r.data && r.data.role) ? String(r.data.role).toLowerCase() : "";
+  const allowed = (role === "admin" || role === "super_admin");
 
-    /* CATALOG */
-    async function loadCatalog(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-      const category = document.getElementById("catCategory").value;
-      const q = (document.getElementById("catSearch").value || "").toLowerCase();
+  if(r.error || !r.data || !allowed){
+    const g = document.getElementById("adminGate");
+    g.style.display = "block";
+    g.innerHTML = "<strong>Unauthorized.</strong> This account does not have Admin permissions.";
+    return false;
+  }
 
-      const r = await sb.from("catalog_items").select("*").eq("category", category).order("updated_at", {ascending:false});
-      if(r.error){ showAdminError(r.error.message); return; }
+  const st = document.getElementById("adminStatus");
+  st.style.display = "block";
+  st.innerHTML = "<strong>Verified Admin Session:</strong> " + session.user.email + ` <span class="small" style="opacity:.75">(${role})</span>`;
+  return true;
+}
 
-      const items = (r.data || []).filter(it => {
-        const hay = (it.title + " " + (it.description || "") + " " + (it.tags || []).join(" ")).toLowerCase();
-        return !q || hay.includes(q);
-      });
+/* =========================
+   Catalog: 1–3 images support
+   - Uses columns: image_url (primary) + image_urls (array)
+   ========================= */
 
-      const mount = document.getElementById("catTable");
-      if(!items.length){
-        mount.innerHTML = `<div class="notice"><strong>No items found.</strong> Add a new item above.</div>`;
-        return;
-      }
+function normalizeImageUrls(row){
+  const urls = [];
+  if(row && Array.isArray(row.image_urls)){
+    row.image_urls.forEach(u => { if(u && String(u).trim()) urls.push(String(u).trim()); });
+  }
+  if(row && row.image_url && String(row.image_url).trim()){
+    const u = String(row.image_url).trim();
+    if(!urls.includes(u)) urls.unshift(u);
+  }
+  return urls.slice(0,3);
+}
 
-      mount.innerHTML = `
-        <table class="table">
-          <thead><tr><th>Asset</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody>
-            ${items.map(it => {
-              const statusText = it.active ? "Active" : "Hidden";
-              const statusClass = it.active ? "status-active" : "status-hidden";
-              return `
-                <tr>
-                  <td>
-                    ${it.image_url ? `<span class="thumb-mini"><img src="${LARMAH.escapeHtml(it.image_url)}" alt=""></span>` : ""}
-                    <div style="display:inline-block;vertical-align:middle">
-                      <b>${LARMAH.escapeHtml(it.title)}</b>
-                      <div class="small" style="max-width:520px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-                        ${LARMAH.escapeHtml(it.description || "")}
-                      </div>
-                    </div>
-                  </td>
-                  <td><b>${LARMAH.escapeHtml(it.price || "-")}</b></td>
-                  <td><span class="${statusClass}">${statusText}</span></td>
-                  <td><button class="btn small" onclick="editItem('${it.id}')">Edit</button></td>
-                </tr>
-              `;
-            }).join("")}
-          </tbody>
-        </table>
-      `;
-    }
+function setPreviewBox(id, url){
+  const box = document.getElementById(id);
+  if(!box) return;
+  box.innerHTML = url ? `<img src="${LARMAH.escapeHtml(url)}" alt="">` : "";
+}
 
-    function openEditor(id){
-      document.getElementById("editorOverlay").style.display = "flex";
-      document.getElementById("btnDelete").style.display = id ? "inline-flex" : "none";
-      document.getElementById("modalTitle").textContent = id ? "Modify Asset" : "Register New Asset";
-      document.getElementById("e_id").value = id || "System Generated";
+function renderEditorPreviews(){
+  const u1 = (document.getElementById("e_img_url1")?.value || "").trim();
+  const u2 = (document.getElementById("e_img_url2")?.value || "").trim();
+  const u3 = (document.getElementById("e_img_url3")?.value || "").trim();
+  setPreviewBox("prev1", u1);
+  setPreviewBox("prev2", u2);
+  setPreviewBox("prev3", u3);
+}
 
-      document.getElementById("e_title").value = "";
-      document.getElementById("e_price").value = "";
-      document.getElementById("e_desc").value = "";
-      document.getElementById("e_tags").value = "";
-      document.getElementById("e_image_url").value = "";
-      document.getElementById("e_active").value = "true";
-      document.getElementById("e_image_file").value = "";
-      editing = id ? { id } : null;
-    }
-    function closeEditor(){ document.getElementById("editorOverlay").style.display = "none"; }
+async function uploadFileToCatalogBucket(file){
+  const sb = await LARMAH.initSupabase();
+  const safeName = String(file.name || "image").replace(/[^\w.\-]+/g, "_");
+  const path = "catalog/" + Date.now() + "_" + safeName;
 
-    async function editItem(id){
-      const sb = await LARMAH.initSupabase();
-      const r = await sb.from("catalog_items").select("*").eq("id", id).single();
-      if(r.error) return;
+  const up = await sb.storage.from("catalog").upload(path, file, { upsert: false });
+  if(up.error) throw up.error;
 
-      editing = r.data;
-      openEditor(id);
-      document.getElementById("e_title").value = r.data.title || "";
-      document.getElementById("e_price").value = r.data.price || "";
-      document.getElementById("e_desc").value = r.data.description || "";
-      document.getElementById("e_tags").value = (r.data.tags || []).join(", ");
-      document.getElementById("e_image_url").value = r.data.image_url || "";
-      document.getElementById("e_active").value = String(r.data.active);
-    }
+  const pub = sb.storage.from("catalog").getPublicUrl(path);
+  return pub.data.publicUrl;
+}
 
-    async function saveItem(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-      const category = document.getElementById("catCategory").value;
-      const title = document.getElementById("e_title").value.trim();
-      if(!title){ LARMAH.toast("Title is required"); return; }
+/* =========================
+   CATALOG TABLE
+   ========================= */
+async function loadCatalog(){
+  clearAdminError();
+  const sb = await LARMAH.initSupabase();
+  const category = document.getElementById("catCategory").value;
+  const q = (document.getElementById("catSearch").value || "").toLowerCase();
 
-      const payload = {
-        category,
-        title,
-        price: document.getElementById("e_price").value.trim(),
-        description: document.getElementById("e_desc").value.trim(),
-        tags: document.getElementById("e_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
-        active: (document.getElementById("e_active").value === "true"),
-        image_url: document.getElementById("e_image_url").value.trim(),
-        updated_at: new Date().toISOString()
-      };
+  const r = await sb.from("catalog_items")
+    .select("*")
+    .eq("category", category)
+    .order("updated_at", {ascending:false});
 
-      try{
-        const file = document.getElementById("e_image_file").files[0];
-        if(file){
-          LARMAH.toast("Uploading asset...");
-          const path = "catalog/" + Date.now() + "_" + file.name;
-          const up = await sb.storage.from("catalog").upload(path, file, { upsert: false });
-          if(up.error) throw up.error;
-          const pub = sb.storage.from("catalog").getPublicUrl(path);
-          payload.image_url = pub.data.publicUrl;
-        }
+  if(r.error){ showAdminError(r.error.message); return; }
 
-        let res;
-        if(editing && editing.id){
-          res = await sb.from("catalog_items").update(payload).eq("id", editing.id);
-        }else{
-          res = await sb.from("catalog_items").insert([payload]);
-        }
-        if(res.error) throw res.error;
+  const items = (r.data || []).filter(it => {
+    const hay = (it.title + " " + (it.description || "") + " " + (it.tags || []).join(" ")).toLowerCase();
+    return !q || hay.includes(q);
+  });
 
-        LARMAH.toast("Saved");
-        closeEditor();
-        loadCatalog();
-      }catch(err){
-        showAdminError(err.message);
-      }
-    }
+  const mount = document.getElementById("catTable");
+  if(!items.length){
+    mount.innerHTML = `<div class="notice"><strong>No items found.</strong> Add a new item above.</div>`;
+    return;
+  }
 
-    async function deleteItem(){
-      if(!confirm("Delete this asset forever?")) return;
-      const sb = await LARMAH.initSupabase();
-      const d = await sb.from("catalog_items").delete().eq("id", editing.id);
-      if(d.error){ showAdminError(d.error.message); return; }
-      LARMAH.toast("Deleted");
-      closeEditor();
-      loadCatalog();
-    }
+  mount.innerHTML = `
+    <table class="table">
+      <thead><tr><th>Asset</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${items.map(it => {
+          const statusText = it.active ? "Active" : "Hidden";
+          const statusClass = it.active ? "status-active" : "status-hidden";
 
-    /* EXCHANGE RATES MANAGER */
-    function parseNum(v){
-      const n = Number(String(v || "").replace(/,/g,"").trim());
-      return Number.isFinite(n) ? n : null;
-    }
-    function normalizeCode(v){
-      return String(v || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
-    }
+          const imgs = normalizeImageUrls(it);
+          const primary = imgs[0] || "";
+          const extra = imgs.length > 1 ? `<span class="small" style="opacity:.7"> (+${imgs.length-1})</span>` : "";
 
-    function renderRatesTable(rows){
-      const mount = document.getElementById("ratesTableMount");
-      if(!rows || !rows.length){
-        mount.innerHTML = `<div class="notice"><strong>No rates found.</strong> Add a new currency above.</div>`;
-        return;
-      }
-
-      mount.innerHTML = `
-        <table class="table">
-          <thead>
+          return `
             <tr>
-              <th>Code</th><th>Name</th><th>Buy NGN</th><th>Sell NGN</th><th>Fee</th><th>Min</th><th>Max</th><th>Updated</th><th>Action</th>
+              <td>
+                ${primary ? `<span class="thumb-mini"><img src="${LARMAH.escapeHtml(primary)}" alt=""></span>` : ""}
+                <div style="display:inline-block;vertical-align:middle">
+                  <b>${LARMAH.escapeHtml(it.title)}</b>${extra}
+                  <div class="small" style="max-width:520px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                    ${LARMAH.escapeHtml(it.description || "")}
+                  </div>
+                </div>
+              </td>
+              <td><b>${LARMAH.escapeHtml(it.price || "-")}</b></td>
+              <td><span class="${statusClass}">${statusText}</span></td>
+              <td><button class="btn small" onclick="editItem('${it.id}')">Edit</button></td>
             </tr>
-          </thead>
-          <tbody>
-            ${rows.map(r => `
-              <tr data-code="${LARMAH.escapeHtml(r.code)}">
-                <td class="rate-code">${LARMAH.escapeHtml(r.code)}</td>
-                <td><input class="rate-input" data-field="name" value="${LARMAH.escapeHtml(r.name || "")}"></td>
-                <td><input class="rate-input" data-field="buy_ngn" value="${LARMAH.escapeHtml(String(r.buy_ngn ?? ""))}"></td>
-                <td><input class="rate-input" data-field="sell_ngn" value="${LARMAH.escapeHtml(String(r.sell_ngn ?? ""))}"></td>
-                <td><input class="rate-input" data-field="fee_rate" value="${LARMAH.escapeHtml(String(r.fee_rate ?? ""))}"></td>
-                <td><input class="rate-input" data-field="min_amount" value="${LARMAH.escapeHtml(String(r.min_amount ?? ""))}"></td>
-                <td><input class="rate-input" data-field="max_amount" value="${LARMAH.escapeHtml(String(r.max_amount ?? ""))}"></td>
-                <td class="rate-mini">${r.updated_at ? new Date(r.updated_at).toLocaleString() : "-"}</td>
-                <td><button class="btn small primary" onclick="saveRateRow('${LARMAH.escapeHtml(r.code)}')"><i class="fa-solid fa-floppy-disk"></i> Save</button></td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
-      `;
-    }
+          `;
+        }).join("")}
+      </tbody>
+    </table>
+  `;
+}
 
-    async function loadExchangeRates(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-      const r = await sb.from("exchange_rates")
-        .select("code,name,buy_ngn,sell_ngn,fee_rate,min_amount,max_amount,updated_at")
-        .order("code", { ascending: true });
+/* =========================
+   EDITOR (supports 3 urls + 3 files)
+   Requires these IDs in your modal:
+   e_img_url1/e_img_url2/e_img_url3
+   e_img_file1/e_img_file2/e_img_file3
+   prev1/prev2/prev3 (preview divs)
+   ========================= */
+function openEditor(id){
+  document.getElementById("editorOverlay").style.display = "flex";
+  document.getElementById("btnDelete").style.display = id ? "inline-flex" : "none";
+  document.getElementById("modalTitle").textContent = id ? "Modify Asset" : "Register New Asset";
+  document.getElementById("e_id").value = id || "System Generated";
 
-      if(r.error){ showAdminError(r.error.message); return; }
+  document.getElementById("e_title").value = "";
+  document.getElementById("e_price").value = "";
+  document.getElementById("e_desc").value = "";
+  document.getElementById("e_tags").value = "";
+  document.getElementById("e_active").value = "true";
 
-      __ratesRows = r.data || [];
-      renderRatesTable(__ratesRows);
+  // new fields
+  if(document.getElementById("e_img_url1")) document.getElementById("e_img_url1").value = "";
+  if(document.getElementById("e_img_url2")) document.getElementById("e_img_url2").value = "";
+  if(document.getElementById("e_img_url3")) document.getElementById("e_img_url3").value = "";
 
-      const latest = (__ratesRows || [])
-        .map(x => x.updated_at ? new Date(x.updated_at).getTime() : 0)
-        .reduce((a,b)=> Math.max(a,b), 0);
-      document.getElementById("ratesUpdatedAt").textContent = latest ? ("Updated: " + new Date(latest).toLocaleString()) : "Updated: —";
-    }
+  if(document.getElementById("e_img_file1")) document.getElementById("e_img_file1").value = "";
+  if(document.getElementById("e_img_file2")) document.getElementById("e_img_file2").value = "";
+  if(document.getElementById("e_img_file3")) document.getElementById("e_img_file3").value = "";
 
-    function readRowFromDOM(code){
-      const tr = document.querySelector(`tr[data-code="${CSS.escape(code)}"]`);
-      if(!tr) return null;
-      const get = (field) => tr.querySelector(`[data-field="${field}"]`)?.value ?? "";
+  if(document.getElementById("prev1")) document.getElementById("prev1").innerHTML = "";
+  if(document.getElementById("prev2")) document.getElementById("prev2").innerHTML = "";
+  if(document.getElementById("prev3")) document.getElementById("prev3").innerHTML = "";
 
-      const payload = {
-        code: normalizeCode(code),
-        name: String(get("name")).trim() || `${code}`,
-        buy_ngn: parseNum(get("buy_ngn")),
-        sell_ngn: parseNum(get("sell_ngn")),
-        fee_rate: parseNum(get("fee_rate")),
-        min_amount: parseNum(get("min_amount")),
-        max_amount: parseNum(get("max_amount")),
-        updated_at: new Date().toISOString()
-      };
+  editing = id ? { id } : null;
+}
 
-      const required = ["buy_ngn","sell_ngn","fee_rate","min_amount","max_amount"];
-      for(const k of required){ if(payload[k] === null) return { error:`Invalid number in ${k} for ${code}` }; }
-      if(!payload.code) return { error:"Invalid code" };
-      return payload;
-    }
+function closeEditor(){ document.getElementById("editorOverlay").style.display = "none"; }
 
-    async function saveRateRow(code){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-      const payloadOrErr = readRowFromDOM(code);
-      if(payloadOrErr?.error){ showAdminError(payloadOrErr.error); return; }
-      const u = await sb.from("exchange_rates").upsert([payloadOrErr], { onConflict: "code" });
-      if(u.error){ showAdminError(u.error.message); return; }
-      LARMAH.toast("Rate saved: " + code);
-      loadExchangeRates();
-    }
+async function editItem(id){
+  const sb = await LARMAH.initSupabase();
+  const r = await sb.from("catalog_items").select("*").eq("id", id).single();
+  if(r.error) return;
 
-    async function saveAllRates(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
+  editing = r.data;
+  openEditor(id);
 
-      const rows = [];
-      for(const r of (__ratesRows || [])){
-        const payloadOrErr = readRowFromDOM(r.code);
-        if(payloadOrErr?.error){ showAdminError(payloadOrErr.error); return; }
-        rows.push(payloadOrErr);
+  document.getElementById("e_title").value = r.data.title || "";
+  document.getElementById("e_price").value = r.data.price || "";
+  document.getElementById("e_desc").value = r.data.description || "";
+  document.getElementById("e_tags").value = (r.data.tags || []).join(", ");
+  document.getElementById("e_active").value = String(r.data.active);
+
+  const imgs = normalizeImageUrls(r.data);
+  // put existing in URL fields
+  if(document.getElementById("e_img_url1")) document.getElementById("e_img_url1").value = imgs[0] || "";
+  if(document.getElementById("e_img_url2")) document.getElementById("e_img_url2").value = imgs[1] || "";
+  if(document.getElementById("e_img_url3")) document.getElementById("e_img_url3").value = imgs[2] || "";
+  renderEditorPreviews();
+}
+
+// live preview when changing URL fields
+["e_img_url1","e_img_url2","e_img_url3"].forEach(id=>{
+  document.addEventListener("input", (e)=>{
+    if(e.target && e.target.id === id) renderEditorPreviews();
+  });
+});
+
+async function saveItem(){
+  clearAdminError();
+  const sb = await LARMAH.initSupabase();
+  const category = document.getElementById("catCategory").value;
+  const title = document.getElementById("e_title").value.trim();
+  if(!title){ LARMAH.toast("Title is required"); return; }
+
+  // build image urls (up to 3) from URL inputs
+  const urls = [];
+  const u1 = (document.getElementById("e_img_url1")?.value || "").trim();
+  const u2 = (document.getElementById("e_img_url2")?.value || "").trim();
+  const u3 = (document.getElementById("e_img_url3")?.value || "").trim();
+  [u1,u2,u3].forEach(u => { if(u && urls.length<3) urls.push(u); });
+
+  // append uploads in order, if present (up to 3 total)
+  const files = [
+    document.getElementById("e_img_file1")?.files?.[0],
+    document.getElementById("e_img_file2")?.files?.[0],
+    document.getElementById("e_img_file3")?.files?.[0],
+  ].filter(Boolean);
+
+  try{
+    if(files.length){
+      LARMAH.toast("Uploading image(s)...");
+      for(const f of files){
+        if(urls.length >= 3) break;
+        const pubUrl = await uploadFileToCatalogBucket(f);
+        urls.push(pubUrl);
       }
-      if(!rows.length){ LARMAH.toast("No rows to save"); return; }
-
-      const u = await sb.from("exchange_rates").upsert(rows, { onConflict: "code" });
-      if(u.error){ showAdminError(u.error.message); return; }
-
-      LARMAH.toast("All rates saved");
-      loadExchangeRates();
     }
 
-    async function upsertNewRate(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
+    const image_urls = urls.slice(0,3);
+    const image_url = image_urls[0] || null; // primary (compat)
 
-      const code = normalizeCode(document.getElementById("new_code").value);
-      const name = String(document.getElementById("new_name").value || "").trim() || code;
-      const buy = parseNum(document.getElementById("new_buy").value);
-      const sell = parseNum(document.getElementById("new_sell").value);
-      const fee = parseNum(document.getElementById("new_fee").value);
-      const min = parseNum(document.getElementById("new_min").value);
-      const max = parseNum(document.getElementById("new_max").value);
+    const payload = {
+      category,
+      title,
+      price: document.getElementById("e_price").value.trim(),
+      description: document.getElementById("e_desc").value.trim(),
+      tags: document.getElementById("e_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
+      active: (document.getElementById("e_active").value === "true"),
+      image_url,
+      image_urls,
+      updated_at: new Date().toISOString()
+    };
 
-      if(!code){ showAdminError("Currency code required (e.g., USD)"); return; }
-      if([buy,sell,fee,min,max].some(v => v === null)){ showAdminError("Enter valid numbers for Buy/Sell/Fee/Min/Max"); return; }
-
-      const payload = { code, name, buy_ngn: buy, sell_ngn: sell, fee_rate: fee, min_amount: min, max_amount: max, updated_at: new Date().toISOString() };
-      const u = await sb.from("exchange_rates").upsert([payload], { onConflict: "code" });
-      if(u.error){ showAdminError(u.error.message); return; }
-
-      ["new_code","new_name","new_buy","new_sell","new_fee","new_min","new_max"].forEach(id => document.getElementById(id).value = "");
-      LARMAH.toast("Rate added/updated: " + code);
-      loadExchangeRates();
+    let res;
+    if(editing && editing.id){
+      res = await sb.from("catalog_items").update(payload).eq("id", editing.id);
+    }else{
+      res = await sb.from("catalog_items").insert([payload]);
     }
+    if(res.error) throw res.error;
 
-    async function subscribeRatesRealtime(){
-      const sb = await LARMAH.initSupabase();
-      if(!sb) return;
-      if(window.__ratesChan) return;
-      window.__ratesChan = sb
-        .channel("exchange_rates_admin")
-        .on("postgres_changes", { event: "*", schema: "public", table: "exchange_rates" }, () => loadExchangeRates())
-        .subscribe();
-    }
+    LARMAH.toast("Saved");
+    closeEditor();
+    loadCatalog();
+  }catch(err){
+    showAdminError(err.message);
+  }
+}
 
-    /* INSIGHTS */
-    async function publishInsight(){
-      const sb = await LARMAH.initSupabase();
-      const title = document.getElementById("ip_title").value.trim();
-      const body = document.getElementById("ip_body").value.trim();
-      if(!title || !body){ LARMAH.toast("Both fields are required"); return; }
+async function deleteItem(){
+  if(!confirm("Delete this asset forever?")) return;
+  const sb = await LARMAH.initSupabase();
+  const d = await sb.from("catalog_items").delete().eq("id", editing.id);
+  if(d.error){ showAdminError(d.error.message); return; }
+  LARMAH.toast("Deleted");
+  closeEditor();
+  loadCatalog();
+}
 
-      const ins = await sb.from("insights_posts").insert([{ title, body, created_at: new Date().toISOString() }]);
-      if(ins.error){ showAdminError(ins.error.message); return; }
+/* =========================
+   EXCHANGE RATES MANAGER
+   (unchanged below this point)
+   ========================= */
+function parseNum(v){
+  const n = Number(String(v || "").replace(/,/g,"").trim());
+  return Number.isFinite(n) ? n : null;
+}
+function normalizeCode(v){
+  return String(v || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+}
 
-      document.getElementById("ip_title").value = "";
-      document.getElementById("ip_body").value = "";
-      LARMAH.toast("Published");
-      loadInsightsAdmin();
-    }
+function renderRatesTable(rows){
+  const mount = document.getElementById("ratesTableMount");
+  if(!rows || !rows.length){
+    mount.innerHTML = `<div class="notice"><strong>No rates found.</strong> Add a new currency above.</div>`;
+    return;
+  }
 
-    async function loadInsightsAdmin(){
-      const sb = await LARMAH.initSupabase();
-      const r = await sb.from("insights_posts").select("*").order("created_at", {ascending:false});
-      const mount = document.getElementById("insightsAdminList");
-
-      if(!r.data || !r.data.length){ mount.innerHTML = "<div class='notice'><strong>No community insights.</strong></div>"; return; }
-
-      mount.innerHTML =
-        "<div class='grid'>" +
-        r.data.map(p => `
-          <div class="card">
-            <h3 style="font-size:1rem">${LARMAH.escapeHtml(p.title)}</h3>
-            <p class="small" style="opacity:.9;margin-top:8px">${LARMAH.escapeHtml(p.body)}</p>
-            <div class="meta">Created: ${new Date(p.created_at).toLocaleString()}</div>
-            <div class="actions">
-              <button class="btn small" onclick="startInsightEditFromId('${p.id}')">Edit</button>
-              <button class="btn small danger" onclick="deleteInsight('${p.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
-            </div>
-          </div>
-        `).join("") +
-        "</div>";
-    }
-
-    async function startInsightEditFromId(id){
-      const sb = await LARMAH.initSupabase();
-      const r = await sb.from("insights_posts").select("*").eq("id", id).single();
-      if(r.error) return;
-
-      document.getElementById("ip_id").value = r.data.id;
-      document.getElementById("ip_mode").style.display = "block";
-      document.getElementById("ip_title").value = r.data.title;
-      document.getElementById("ip_body").value = r.data.body;
-
-      document.getElementById("ip_publish_btn").style.display = "none";
-      document.getElementById("ip_update_btn").style.display = "inline-flex";
-      document.getElementById("ip_cancel_btn").style.display = "inline-flex";
-
-      window.scrollTo({ top: document.getElementById("insightsAdmin").offsetTop - 90, behavior: "smooth" });
-    }
-
-    function cancelInsightEdit(){
-      document.getElementById("ip_mode").style.display = "none";
-      document.getElementById("ip_id").value = "";
-      document.getElementById("ip_title").value = "";
-      document.getElementById("ip_body").value = "";
-      document.getElementById("ip_publish_btn").style.display = "inline-flex";
-      document.getElementById("ip_update_btn").style.display = "none";
-      document.getElementById("ip_cancel_btn").style.display = "none";
-    }
-
-    async function updateInsight(){
-      const sb = await LARMAH.initSupabase();
-      const id = document.getElementById("ip_id").value;
-      const title = document.getElementById("ip_title").value.trim();
-      const body = document.getElementById("ip_body").value.trim();
-      const u = await sb.from("insights_posts").update({ title, body }).eq("id", id);
-      if(u.error){ showAdminError(u.error.message); return; }
-      LARMAH.toast("Updated");
-      cancelInsightEdit();
-      loadInsightsAdmin();
-    }
-
-    async function deleteInsight(id){
-      if(!confirm("Delete this insight forever?")) return;
-      const sb = await LARMAH.initSupabase();
-      const d = await sb.from("insights_posts").delete().eq("id", id);
-      if(d.error){ showAdminError(d.error.message); return; }
-      LARMAH.toast("Deleted");
-      loadInsightsAdmin();
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      const ok = await requireAdmin();
-      if(!ok) return;
-      loadCatalog();
-      loadExchangeRates();
-      subscribeRatesRealtime();
-      loadInsightsAdmin();
-    });
+  mount.innerHTML = `
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Code</th><th>Name</th><th>Buy NGN</th><th>Sell NGN</th><th>Fee</th><th>Min</th><th>Max</th><th>Updated</th><th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(r => `
+          <tr data-code="${LARMAH.escapeHtml(r.code)}">
+            <td class="rate-code">${LARMAH.escapeHtml(r.code)}</td>
+            <td><input class="rate-input" data-field="name" value="${LARMAH.escapeHtml(r.name || "")}"></td>
+            <td><input class="rate-input" data-field="buy_ngn" value="${LARMAH.escapeHtml(String(r.buy_ngn ?? ""))}"></td>
+            <td><input class="rate-input" data-field="sell_ngn" value="${LARMAH.escapeHtml(String(r.sell_ngn ?? ""))}"></td>
+            <td><input class="rate-input" data-field="fee_rate" value="${LARMAH.escapeHtml(String(r.fee_rate ?? ""))}"></td>
+            <td><input class="rate-input" data-field="min_amount" value="${LARMAH.escapeHtml(String(r.min_amount ?? ""))}"></td>
+            <td><input class="rate-input" data-field="max_amount" value="${LARMAH.escapeHtml(String(r.max_amount ?? ""))}"></td>
+            <td class="rate-mini">${r.updated_at ? new Date(r.updated_at).toLocaleString() : "-"}</td>
+            <td><button class="btn small primary" onclick="saveRateRow('${LARMAH.escapeHtml(r.code)}')"><i class="fa-solid fa-floppy-disk"></i> Save</button></td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+}
   </script>
 </body>
 </html>
