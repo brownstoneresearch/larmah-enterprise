@@ -1,11 +1,12 @@
+<!-- exchange.html (FULL — dynamic rates from Supabase + realtime + logs requests + WhatsApp) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Command Center | Larmah Enterprise</title>
+  <title>Exchange | Larmah Enterprise</title>
 
-  <meta name="description" content="Larmah internal management: catalog items, exchange rates, insights posts." />
+  <meta name="description" content="Live Exchange Desk: USD/GBP/EUR and BTC/ETH/USDT to NGN. Rates are managed in Admin and update in real time." />
   <meta name="theme-color" content="#070A12" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
@@ -16,64 +17,21 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
-
-  <style>
-    .statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
-    .table-wrap{overflow:auto}
-    .status-active{color:var(--ok);font-weight:950}
-    .status-hidden{color:var(--bad);font-weight:950}
-
-    /* Exchange Rates UI */
-    .rates-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-    .rates-toolbar .left{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-    .rates-toolbar .right{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-
-    .rate-input{
-      width: 100%;
-      min-width: 120px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
-      color: var(--text);
-      padding: 10px 10px;
-      outline: none;
-    }
-    .rate-input:focus{
-      border-color: rgba(212,175,55,.35);
-      box-shadow: 0 0 0 4px rgba(212,175,55,.10);
-      background: rgba(255,255,255,.03);
-    }
-    .rate-code{
-      font-weight: 950;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-    .rate-mini{
-      font-size: .85rem;
-      color: var(--muted);
-      font-weight: 900;
-    }
-    .muted-chip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-      font-weight: 900;
-      font-size:.85rem;
-    }
-    .pill-ok{
-      border-color: rgba(0,217,129,.20);
-      background: rgba(0,217,129,.10);
-      color: rgba(245,245,245,.92);
-    }
-  </style>
 </head>
 
-<body data-page="admin">
+<body data-page="exchange">
+  <!-- Live ticker -->
+  <div class="live-ticker">
+    <div class="container">
+      <div id="liveRatesTicker" class="ticker-content">
+        <span>Loading live rates…</span>
+      </div>
+    </div>
+  </div>
+
   <header>
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Home">
+      <a class="brand" href="index.html" aria-label="Larmah Home">
         <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
       </a>
 
@@ -90,8 +48,8 @@
         </ul>
       </nav>
 
-      <div class="header-actions">
-        <button class="pill" onclick="LARMAH.signOut()"><i class="fa-solid fa-power-off"></i> Logout</button>
+      <div class="header-actions" id="authPill">
+        <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
       </div>
     </div>
   </header>
@@ -100,247 +58,230 @@
     <!-- HERO -->
     <section class="hero">
       <div class="hero-shell">
-        <div class="hero-inner" style="grid-template-columns:1fr">
+        <div class="hero-inner">
           <div>
             <div class="hero-kicker">
-              <span class="kicker-pill"><i class="fa-solid fa-terminal"></i> Internal Terminal</span>
+              <span class="kicker-pill">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+                Live Exchange Desk
+              </span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Catalog • Exchange Rates • Insights</span>
+              <span class="kicker-sub">Dynamic rates • Admin-managed • WhatsApp-first</span>
             </div>
 
-            <h1>Command Center</h1>
+            <h1>Exchange with Confidence.</h1>
+            <p class="lead">
+              Rates are pulled from our verified desk and update instantly when Admin changes them.
+              Use quick calc for estimates, then request a quote on WhatsApp.
+            </p>
 
-            <div id="adminStatus" class="notice" style="margin-top:12px;display:none;border-color:rgba(0,217,129,.30)"></div>
-            <div id="adminGate" class="notice" style="margin-top:12px;display:none;border-color:rgba(255,90,103,.35);background:rgba(255,90,103,.08)"></div>
-            <div id="adminError" class="notice" style="margin-top:12px;display:none;border-color:rgba(255,90,103,.35);background:rgba(255,90,103,.08)"></div>
+            <!-- Quick Calculator -->
+            <div class="exchange-quick-calc" aria-label="Quick exchange calculator">
+              <div class="calc-inputs">
+                <div class="input-group">
+                  <input type="number" value="100" id="quickAmount" class="input" min="0" step="0.0001" />
+                  <select class="input" id="quickFrom">
+                    <option value="USD">🇺🇸 USD</option>
+                    <option value="GBP">🇬🇧 GBP</option>
+                    <option value="EUR">🇪🇺 EUR</option>
+                    <option value="BTC">₿ BTC</option>
+                    <option value="ETH">Ξ ETH</option>
+                    <option value="USDT">💵 USDT</option>
+                    <option value="NGN">🇳🇬 NGN</option>
+                  </select>
+                </div>
+
+                <div class="calc-arrow">→</div>
+
+                <div class="input-group">
+                  <div class="result-display" id="quickResult">—</div>
+                  <select class="input" id="quickTo">
+                    <option value="NGN">🇳🇬 NGN</option>
+                    <option value="USD">🇺🇸 USD</option>
+                    <option value="GBP">🇬🇧 GBP</option>
+                    <option value="EUR">🇪🇺 EUR</option>
+                    <option value="BTC">₿ BTC</option>
+                    <option value="ETH">Ξ ETH</option>
+                    <option value="USDT">💵 USDT</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="actions" style="margin-top:12px">
+                <button class="btn solid" onclick="quickExchange()">
+                  <i class="fa-brands fa-whatsapp"></i> Get This Rate
+                </button>
+                <a class="btn" href="#calculator"><i class="fa-solid fa-calculator"></i> Advanced</a>
+                <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
+              </div>
+            </div>
+
+            <div class="trust-row">
+              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Reference IDs</div>
+              <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Confirm-first process</div>
+              <div class="trust-badge"><i class="fa-solid fa-bolt"></i> Fast coordination</div>
+            </div>
+          </div>
+
+          <div class="hero-badges">
+            <div class="hero-card">
+              <h3><i class="fa-solid fa-dollar-sign" style="color:var(--brand)"></i> FX Desk</h3>
+              <p>USD/GBP/EUR ↔ NGN. Admin-managed live rates.</p>
+              <div class="card-actions"><a class="btn small" href="#rates">View Rates</a></div>
+            </div>
+            <div class="hero-card">
+              <h3><i class="fa-solid fa-coins" style="color:var(--brand)"></i> Crypto Desk</h3>
+              <p>BTC/ETH/USDT ↔ NGN with clear confirmation steps.</p>
+              <div class="card-actions"><a class="btn small" href="#rates">Trade Crypto</a></div>
+            </div>
+            <div class="hero-card">
+              <h3><i class="fa-solid fa-chart-line" style="color:var(--brand)"></i> Insights</h3>
+              <p>See community updates and market signals.</p>
+              <div class="card-actions"><a class="btn small" href="insights.html">Open Insights</a></div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <div class="statbar">
-      <div class="card">
-        <div class="small">Session</div>
-        <div id="user_email" style="font-weight:950;color:var(--brand)">Admin User</div>
-        <div class="small" style="opacity:.8">Role-gated access</div>
-      </div>
-      <div class="card">
-        <div class="small">Connection</div>
-        <div style="font-weight:950">Live</div>
-        <div class="small" style="opacity:.8">Supabase enabled</div>
-      </div>
-    </div>
-
-    <!-- =========================
-         CATALOG MANAGER
-         ========================= -->
-    <section class="section" id="catalogAdmin">
+    <!-- Rates -->
+    <section class="section" id="rates">
       <div class="section-head-split">
         <div>
-          <h2>Catalogue Manager</h2>
-          <p class="lead">Manage inventory for Real Estate, Logistics, and Exchange.</p>
+          <h2>Live Exchange Rates</h2>
+          <p class="lead">These are loaded from Supabase <b>exchange_rates</b> and update in real time.</p>
         </div>
-        <button class="btn solid" onclick="openEditor()"><i class="fa-solid fa-plus"></i> New Item</button>
+        <div class="notice" id="rateUpdateTime" style="max-width:max-content">Updated: —</div>
       </div>
 
-      <div class="card">
-        <div class="row2">
-          <div>
-            <label class="small">Category</label>
-            <select id="catCategory" class="input" onchange="loadCatalog()">
-              <option value="real-estate">Real Estate</option>
-              <option value="logistics">Logistics</option>
-              <option value="exchange">Exchange</option>
-            </select>
-          </div>
+      <div id="forexRatesGrid" class="grid"></div>
 
-          <div>
-            <label class="small">Search</label>
-            <input id="catSearch" class="input" placeholder="Filter by title / description..." oninput="loadCatalog()" />
-          </div>
-        </div>
-
-        <div class="table-wrap" style="margin-top:12px">
-          <div id="catTable"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================
-         EXCHANGE RATES MANAGER
-         ========================= -->
-    <section class="section" id="exchangeRatesAdmin" style="margin-top:24px">
-      <div class="section-head-split">
+      <div class="section-head-split" style="margin-top:20px">
         <div>
-          <h2>Exchange Rates Manager</h2>
-          <p class="lead">Live rates for Exchange page (public read). Admin updates apply immediately.</p>
-        </div>
-        <span class="muted-chip pill-ok"><i class="fa-solid fa-bolt"></i> Realtime-ready</span>
-      </div>
-
-      <div class="card">
-        <div class="rates-toolbar">
-          <div class="left">
-            <button class="btn solid" onclick="loadExchangeRates()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-            <button class="btn primary" onclick="saveAllRates()"><i class="fa-solid fa-floppy-disk"></i> Save All</button>
-          </div>
-          <div class="right">
-            <span class="small" id="ratesUpdatedAt" style="opacity:.75">Updated: —</span>
-          </div>
-        </div>
-
-        <div class="hr" style="height:1px;background:rgba(255,255,255,.08);border:0;margin:12px 0"></div>
-
-        <!-- Add new -->
-        <div class="row2">
-          <div>
-            <label class="small">Add / Update Currency Code</label>
-            <input id="new_code" class="input" placeholder="e.g., USD" />
-          </div>
-          <div>
-            <label class="small">Name</label>
-            <input id="new_name" class="input" placeholder="US Dollar (USD)" />
-          </div>
-        </div>
-
-        <div class="row2" style="margin-top:12px">
-          <div>
-            <label class="small">Buy NGN</label>
-            <input id="new_buy" class="input" placeholder="1450" />
-          </div>
-          <div>
-            <label class="small">Sell NGN</label>
-            <input id="new_sell" class="input" placeholder="1480" />
-          </div>
-        </div>
-
-        <div class="row2" style="margin-top:12px">
-          <div>
-            <label class="small">Fee Rate (e.g., 0.005 = 0.5%)</label>
-            <input id="new_fee" class="input" placeholder="0.005" />
-          </div>
-          <div>
-            <label class="small">Min Amount / Max Amount</label>
-            <div class="row2" style="gap:10px">
-              <input id="new_min" class="input" placeholder="100" />
-              <input id="new_max" class="input" placeholder="50000" />
-            </div>
-          </div>
-        </div>
-
-        <div class="actions" style="margin-top:12px">
-          <button class="btn solid" onclick="upsertNewRate()">
-            <i class="fa-solid fa-plus"></i> Add / Update
-          </button>
-        </div>
-
-        <div class="hr" style="height:1px;background:rgba(255,255,255,.08);border:0;margin:12px 0"></div>
-
-        <div class="table-wrap">
-          <div id="ratesTableMount"></div>
+          <h2>Crypto Rates</h2>
+          <p class="lead">BTC • ETH • USDT</p>
         </div>
       </div>
+
+      <div id="cryptoRatesGrid" class="grid"></div>
     </section>
 
-    <!-- =========================
-         INSIGHTS PUBLISHER
-         ========================= -->
-    <section class="section" id="insightsAdmin" style="margin-top:24px">
-      <h2>Insights Publisher</h2>
-      <p class="lead">Create and edit real-time community updates. (Pinned supported in DB.)</p>
-
+    <!-- Advanced calculator -->
+    <section class="section" id="calculator">
       <div class="card">
-        <input id="ip_id" class="input" style="display:none" disabled />
+        <h2><i class="fa-solid fa-calculator"></i> Advanced Exchange Calculator</h2>
+        <p class="lead">Estimate conversion and fee using the current live desk rates.</p>
 
-        <div class="notice" id="ip_mode" style="display:none;margin-bottom:12px;border-color:rgba(0,217,129,.30)">
-          <i class="fa-solid fa-pen-to-square"></i> <strong>Editing Post Mode</strong>
-        </div>
-
-        <label class="small">Post Title</label>
-        <input id="ip_title" class="input" placeholder="Post headline" />
-
-        <div style="margin-top:12px">
-          <label class="small">Body</label>
-          <textarea id="ip_body" class="input" placeholder="What's the update for the community?"></textarea>
-        </div>
-
-        <div class="actions" style="margin-top:12px">
-          <button class="btn solid" id="ip_publish_btn" onclick="publishInsight()"><i class="fa-solid fa-paper-plane"></i> Publish Now</button>
-          <button class="btn solid" id="ip_update_btn" onclick="updateInsight()" style="display:none"><i class="fa-solid fa-floppy-disk"></i> Save Changes</button>
-          <button class="btn" id="ip_cancel_btn" onclick="cancelInsightEdit()" style="display:none">Cancel</button>
-        </div>
-      </div>
-
-      <div id="insightsAdminList" style="margin-top:12px"></div>
-    </section>
-
-    <!-- =========================
-         CATALOG EDITOR MODAL
-         ========================= -->
-    <div id="editorOverlay" class="modal-overlay" onclick="closeEditor()">
-      <div class="modal" onclick="event.stopPropagation()">
-        <div class="modal-head">
-          <div>
-            <h3 id="modalTitle" style="margin:0">Item Editor</h3>
-            <div class="small">Upload images to Supabase Storage bucket: <b>catalog</b></div>
-          </div>
-          <button class="btn small" onclick="closeEditor()"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-
-        <div class="modal-body">
-          <div class="row2">
+        <div class="calc-container">
+          <div class="calc-row">
             <div>
-              <label class="small">Item ID</label>
-              <input id="e_id" class="input" disabled value="new" />
+              <label class="small">You Send</label>
+              <input type="number" class="input" id="sendAmount" value="100" min="0" step="0.0001" />
             </div>
             <div>
-              <label class="small">Visibility</label>
-              <select id="e_active" class="input">
-                <option value="true">Active (Visible)</option>
-                <option value="false">Disabled (Hidden)</option>
+              <label class="small">Currency</label>
+              <select class="input" id="sendCurrency">
+                <option value="USD">🇺🇸 USD</option>
+                <option value="GBP">🇬🇧 GBP</option>
+                <option value="EUR">🇪🇺 EUR</option>
+                <option value="BTC">₿ BTC</option>
+                <option value="ETH">Ξ ETH</option>
+                <option value="USDT">💵 USDT</option>
+                <option value="NGN">🇳🇬 NGN</option>
               </select>
             </div>
           </div>
 
-          <div class="row2" style="margin-top:12px">
-            <div>
-              <label class="small">Title</label>
-              <input id="e_title" class="input" placeholder="Luxury 2 Bed Flat / Exchange Offer" />
-            </div>
-            <div>
-              <label class="small">Price</label>
-              <input id="e_price" class="input" placeholder="₦150,000 / Day" />
-            </div>
+          <div class="calc-swap">
+            <button class="swap-btn" onclick="swapCurrencies()">
+              <i class="fa-solid fa-right-left"></i>
+            </button>
           </div>
 
-          <div style="margin-top:12px">
-            <label class="small">Description</label>
-            <textarea id="e_desc" class="input" placeholder="Key features, location, offer details..."></textarea>
-          </div>
-
-          <div class="row2" style="margin-top:12px">
+          <div class="calc-row">
             <div>
-              <label class="small">Image URL (External)</label>
-              <input id="e_image_url" class="input" placeholder="https://..." />
+              <label class="small">You Receive</label>
+              <div class="result-box" id="receiveAmount">—</div>
             </div>
             <div>
-              <label class="small">Upload Image</label>
-              <input id="e_image_file" class="input" type="file" accept="image/*" />
+              <label class="small">Currency</label>
+              <select class="input" id="receiveCurrency">
+                <option value="NGN">🇳🇬 NGN</option>
+                <option value="USD">🇺🇸 USD</option>
+                <option value="GBP">🇬🇧 GBP</option>
+                <option value="EUR">🇪🇺 EUR</option>
+                <option value="BTC">₿ BTC</option>
+                <option value="ETH">Ξ ETH</option>
+                <option value="USDT">💵 USDT</option>
+              </select>
             </div>
           </div>
 
-          <div style="margin-top:12px">
-            <label class="small">Tags (comma separated)</label>
-            <input id="e_tags" class="input" placeholder="Lekki, VIP, Security, Rate" />
+          <div class="calc-details">
+            <div class="detail-row"><span>Rate:</span><span id="calcRate">—</span></div>
+            <div class="detail-row"><span>Fee:</span><span id="calcFee">—</span></div>
+            <div class="detail-row"><span>ETA:</span><span id="calcTime">—</span></div>
           </div>
-        </div>
 
-        <div class="modal-actions">
-          <button class="btn danger" id="btnDelete" onclick="deleteItem()"><i class="fa-solid fa-trash"></i> Delete</button>
-          <button class="btn solid" onclick="saveItem()"><i class="fa-solid fa-check"></i> Save Record</button>
+          <button class="btn solid" style="width:100%;margin-top:14px" onclick="initiateExchange()">
+            <i class="fa-brands fa-whatsapp"></i> Proceed with Exchange
+          </button>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Request form -->
+    <section class="section" id="exchange-form">
+      <div class="card">
+        <h2>Start Exchange Now</h2>
+        <p class="lead">Submit request — logs to Supabase + opens WhatsApp with a reference.</p>
+
+        <form id="exchangeRequestForm">
+          <div class="row2">
+            <div>
+              <label class="small">Full Name *</label>
+              <input type="text" class="input" id="exName" required />
+            </div>
+            <div>
+              <label class="small">WhatsApp Number *</label>
+              <input type="tel" class="input" id="exPhone" required />
+            </div>
+          </div>
+
+          <div class="row2" style="margin-top:12px">
+            <div>
+              <label class="small">Exchange Type *</label>
+              <select class="input" id="exType" required>
+                <option value="">Select exchange type</option>
+                <option value="USD to NGN">USD → NGN</option>
+                <option value="GBP to NGN">GBP → NGN</option>
+                <option value="EUR to NGN">EUR → NGN</option>
+                <option value="BTC to NGN">BTC → NGN</option>
+                <option value="ETH to NGN">ETH → NGN</option>
+                <option value="USDT to NGN">USDT → NGN</option>
+                <option value="NGN to USD">NGN → USD</option>
+                <option value="NGN to USDT">NGN → USDT</option>
+              </select>
+            </div>
+            <div>
+              <label class="small">Amount *</label>
+              <input type="number" class="input" id="exAmount" required min="0" step="0.0001" />
+            </div>
+          </div>
+
+          <div style="margin-top:12px">
+            <label class="small">Additional Notes</label>
+            <textarea class="input" id="exNotes" rows="3" placeholder="Any special instructions..."></textarea>
+          </div>
+
+          <div class="actions" style="margin-top:12px">
+            <button type="submit" class="btn solid" style="flex:1">
+              <i class="fa-brands fa-whatsapp"></i> Submit Exchange Request
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -348,524 +289,321 @@
       <div class="footer-grid">
         <div>
           <div class="brandline">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+            <img src="assets/images/larmah-header.jpeg" alt="Larmah Exchange" />
             <div>
               <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Administration</div>
+              <div class="small">Exchange Desk</div>
             </div>
           </div>
-          <div class="small" style="margin-top:8px">Authorized staff access only.</div>
+          <div class="small" style="margin-top:8px">Rates are admin-managed and update instantly.</div>
         </div>
 
         <div>
-          <b>Operations</b>
-          <div class="small" style="margin-top:10px"><a href="index.html">Main Site</a></div>
-          <div class="small"><a href="insights.html">Public Insights</a></div>
-          <div class="small"><a href="exchange.html">Exchange</a></div>
+          <b>Links</b>
+          <div class="small" style="margin-top:10px"><a href="#rates">Live rates</a></div>
+          <div class="small"><a href="#calculator">Calculator</a></div>
+          <div class="small"><a href="premium.html">Premium</a></div>
+        </div>
+
+        <div>
+          <b>Contact Desk</b>
+          <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
+          <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
         </div>
       </div>
 
-      <div class="small">© <span id="year"></span> Larmah Enterprise Administration.</div>
+      <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
     </div>
   </footer>
 
   <div id="toast" class="toast"></div>
 
+  <!-- Dynamic Exchange Script (Supabase-backed) -->
   <script>
-    let editing = null;
-    let __ratesRows = []; // current loaded exchange_rates rows
+    let RATES = {}; // keyed by code
 
-    function showAdminError(msg){
-      const el = document.getElementById("adminError");
-      if(!el) return;
-      el.style.display = "block";
-      el.innerHTML = "<strong>Operation Error:</strong> " + (msg || "Unknown failure");
-    }
-    function clearAdminError(){
-      const el = document.getElementById("adminError");
-      if(el){ el.style.display = "none"; el.textContent = ""; }
+    function toNum(x){ return x === null || x === undefined ? 0 : Number(x); }
+
+    function fmtNGN(n){
+      return "₦" + Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
     }
 
-    async function requireAdmin(){
-      const sb = await LARMAH.initSupabase();
-      const session = await LARMAH.getSession();
-
-      if(!session){
-        const g = document.getElementById("adminGate");
-        g.style.display = "block";
-        g.innerHTML = "<strong>Access Required.</strong> Redirecting to login...";
-        setTimeout(()=> location.href="auth.html", 1200);
-        return false;
-      }
-
-      document.getElementById("user_email").textContent = session.user.email;
-
-      const r = await sb.from("profiles").select("role").eq("id", session.user.id).single();
-      if(r.error || !r.data || r.data.role !== "admin"){
-        const g = document.getElementById("adminGate");
-        g.style.display = "block";
-        g.innerHTML = "<strong>Unauthorized.</strong> This account does not have Admin permissions.";
-        return false;
-      }
-
-      const st = document.getElementById("adminStatus");
-      st.style.display = "block";
-      st.innerHTML = "<strong>Verified Admin Session:</strong> " + session.user.email;
-      return true;
-    }
-
-    /* ======================
-       CATALOG MANAGER
-       ====================== */
-    async function loadCatalog(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-      const category = document.getElementById("catCategory").value;
-      const q = (document.getElementById("catSearch").value || "").toLowerCase();
-
-      const r = await sb.from("catalog_items").select("*").eq("category", category).order("updated_at", {ascending:false});
-      if(r.error){ showAdminError(r.error.message); return; }
-
-      const items = (r.data || []).filter(it => {
-        const hay = (it.title + " " + (it.description || "") + " " + (it.tags || []).join(" ")).toLowerCase();
-        return !q || hay.includes(q);
+    function buildRatesMap(rows){
+      const m = {};
+      (rows || []).forEach(r => {
+        m[r.code] = {
+          code: r.code,
+          name: r.name,
+          buy: toNum(r.buy_ngn),
+          sell: toNum(r.sell_ngn),
+          fee: toNum(r.fee_rate),
+          min: toNum(r.min_amount),
+          max: toNum(r.max_amount),
+          updated_at: r.updated_at
+        };
       });
+      return m;
+    }
 
-      const mount = document.getElementById("catTable");
-      if(!items.length){
-        mount.innerHTML = `<div class="notice"><strong>No items found.</strong> Add a new item above.</div>`;
-        return;
-      }
+    function renderTicker(){
+      const t = document.getElementById("liveRatesTicker");
+      if(!t) return;
 
-      mount.innerHTML = `
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Asset</th>
-              <th>Price</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${items.map(it => {
-              const statusText = it.active ? "Active" : "Hidden";
-              const statusClass = it.active ? "status-active" : "status-hidden";
-              return `
-                <tr>
-                  <td>
-                    ${it.image_url ? `<span class="thumb-mini"><img src="${LARMAH.escapeHtml(it.image_url)}" alt=""></span>` : ""}
-                    <div style="display:inline-block;vertical-align:middle">
-                      <b>${LARMAH.escapeHtml(it.title)}</b>
-                      <div class="small" style="max-width:520px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-                        ${LARMAH.escapeHtml(it.description || "")}
-                      </div>
-                    </div>
-                  </td>
-                  <td><b>${LARMAH.escapeHtml(it.price || "-")}</b></td>
-                  <td><span class="${statusClass}">${statusText}</span></td>
-                  <td><button class="btn small" onclick="editItem('${it.id}')">Edit</button></td>
-                </tr>
-              `;
-            }).join("")}
-          </tbody>
-        </table>
+      const usd = RATES.USD?.buy || 0;
+      const gbp = RATES.GBP?.buy || 0;
+      const eur = RATES.EUR?.buy || 0;
+      const btc = RATES.BTC?.buy || 0;
+
+      t.innerHTML = `
+        <span>
+          📈 LIVE: USD/NGN ${fmtNGN(usd)} • GBP/NGN ${fmtNGN(gbp)} • EUR/NGN ${fmtNGN(eur)} • BTC/NGN ${fmtNGN(btc)}
+        </span>
       `;
     }
 
-    function openEditor(id){
-      document.getElementById("editorOverlay").style.display = "flex";
-      document.getElementById("btnDelete").style.display = id ? "inline-flex" : "none";
-      document.getElementById("modalTitle").textContent = id ? "Modify Asset" : "Register New Asset";
-      document.getElementById("e_id").value = id || "System Generated";
+    function rateCard(code, isCrypto=false){
+      const r = RATES[code];
+      if(!r) return "";
 
-      document.getElementById("e_title").value = "";
-      document.getElementById("e_price").value = "";
-      document.getElementById("e_desc").value = "";
-      document.getElementById("e_tags").value = "";
-      document.getElementById("e_image_url").value = "";
-      document.getElementById("e_active").value = "true";
-      document.getElementById("e_image_file").value = "";
+      const updated = r.updated_at ? new Date(r.updated_at).toLocaleString() : "-";
 
-      editing = id ? { id } : null;
-    }
-    function closeEditor(){ document.getElementById("editorOverlay").style.display = "none"; }
-
-    async function editItem(id){
-      const sb = await LARMAH.initSupabase();
-      const r = await sb.from("catalog_items").select("*").eq("id", id).single();
-      if(r.error) return;
-
-      editing = r.data;
-      openEditor(id);
-
-      document.getElementById("e_title").value = r.data.title || "";
-      document.getElementById("e_price").value = r.data.price || "";
-      document.getElementById("e_desc").value = r.data.description || "";
-      document.getElementById("e_tags").value = (r.data.tags || []).join(", ");
-      document.getElementById("e_image_url").value = r.data.image_url || "";
-      document.getElementById("e_active").value = String(r.data.active);
-    }
-
-    async function saveItem(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-      const category = document.getElementById("catCategory").value;
-      const title = document.getElementById("e_title").value.trim();
-      if(!title){ LARMAH.toast("Title is required"); return; }
-
-      const payload = {
-        category,
-        title,
-        price: document.getElementById("e_price").value.trim(),
-        description: document.getElementById("e_desc").value.trim(),
-        tags: document.getElementById("e_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
-        active: (document.getElementById("e_active").value === "true"),
-        image_url: document.getElementById("e_image_url").value.trim(),
-        updated_at: new Date().toISOString()
-      };
-
-      try{
-        const file = document.getElementById("e_image_file").files[0];
-        if(file){
-          LARMAH.toast("Uploading asset...");
-          const path = "catalog/" + Date.now() + "_" + file.name;
-          const up = await sb.storage.from("catalog").upload(path, file, { upsert: false });
-          if(up.error) throw up.error;
-
-          const pub = sb.storage.from("catalog").getPublicUrl(path);
-          payload.image_url = pub.data.publicUrl;
-        }
-
-        let res;
-        if(editing && editing.id){
-          res = await sb.from("catalog_items").update(payload).eq("id", editing.id);
-        }else{
-          res = await sb.from("catalog_items").insert([payload]);
-        }
-        if(res.error) throw res.error;
-
-        LARMAH.toast("Saved");
-        closeEditor();
-        loadCatalog();
-      }catch(err){
-        showAdminError(err.message);
-      }
-    }
-
-    async function deleteItem(){
-      if(!confirm("Delete this asset forever?")) return;
-      const sb = await LARMAH.initSupabase();
-      const d = await sb.from("catalog_items").delete().eq("id", editing.id);
-      if(d.error){ showAdminError(d.error.message); return; }
-      LARMAH.toast("Deleted");
-      closeEditor();
-      loadCatalog();
-    }
-
-    /* ======================
-       EXCHANGE RATES MANAGER
-       ====================== */
-    function parseNum(v){
-      const n = Number(String(v || "").replace(/,/g,"").trim());
-      return Number.isFinite(n) ? n : null;
-    }
-
-    function normalizeCode(v){
-      return String(v || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
-    }
-
-    function renderRatesTable(rows){
-      const mount = document.getElementById("ratesTableMount");
-      if(!mount) return;
-
-      if(!rows || !rows.length){
-        mount.innerHTML = `<div class="notice"><strong>No rates found.</strong> Add a new currency above.</div>`;
-        return;
-      }
-
-      mount.innerHTML = `
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Code</th>
-              <th>Name</th>
-              <th>Buy NGN</th>
-              <th>Sell NGN</th>
-              <th>Fee</th>
-              <th>Min</th>
-              <th>Max</th>
-              <th>Updated</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${rows.map(r => `
-              <tr data-code="${LARMAH.escapeHtml(r.code)}">
-                <td class="rate-code">${LARMAH.escapeHtml(r.code)}</td>
-                <td><input class="rate-input" data-field="name" value="${LARMAH.escapeHtml(r.name || "")}"></td>
-                <td><input class="rate-input" data-field="buy_ngn" value="${LARMAH.escapeHtml(String(r.buy_ngn ?? ""))}"></td>
-                <td><input class="rate-input" data-field="sell_ngn" value="${LARMAH.escapeHtml(String(r.sell_ngn ?? ""))}"></td>
-                <td><input class="rate-input" data-field="fee_rate" value="${LARMAH.escapeHtml(String(r.fee_rate ?? ""))}"></td>
-                <td><input class="rate-input" data-field="min_amount" value="${LARMAH.escapeHtml(String(r.min_amount ?? ""))}"></td>
-                <td><input class="rate-input" data-field="max_amount" value="${LARMAH.escapeHtml(String(r.max_amount ?? ""))}"></td>
-                <td class="rate-mini">${r.updated_at ? new Date(r.updated_at).toLocaleString() : "-"}</td>
-                <td>
-                  <button class="btn small primary" onclick="saveRateRow('${LARMAH.escapeHtml(r.code)}')">
-                    <i class="fa-solid fa-floppy-disk"></i> Save
-                  </button>
-                </td>
-              </tr>
-            `).join("")}
-          </tbody>
-        </table>
-      `;
-    }
-
-    async function loadExchangeRates(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-      const r = await sb.from("exchange_rates")
-        .select("code,name,buy_ngn,sell_ngn,fee_rate,min_amount,max_amount,updated_at")
-        .order("code", { ascending: true });
-
-      if(r.error){ showAdminError(r.error.message); return; }
-
-      __ratesRows = r.data || [];
-      renderRatesTable(__ratesRows);
-
-      // show newest updated_at
-      const latest = (__ratesRows || [])
-        .map(x => x.updated_at ? new Date(x.updated_at).getTime() : 0)
-        .reduce((a,b)=> Math.max(a,b), 0);
-      document.getElementById("ratesUpdatedAt").textContent = latest ? ("Updated: " + new Date(latest).toLocaleString()) : "Updated: —";
-    }
-
-    function readRowFromDOM(code){
-      const tr = document.querySelector(`tr[data-code="${CSS.escape(code)}"]`);
-      if(!tr) return null;
-
-      const get = (field) => tr.querySelector(`[data-field="${field}"]`)?.value ?? "";
-
-      const payload = {
-        code: normalizeCode(code),
-        name: String(get("name")).trim() || `${code}`,
-        buy_ngn: parseNum(get("buy_ngn")),
-        sell_ngn: parseNum(get("sell_ngn")),
-        fee_rate: parseNum(get("fee_rate")),
-        min_amount: parseNum(get("min_amount")),
-        max_amount: parseNum(get("max_amount")),
-        updated_at: new Date().toISOString()
-      };
-
-      // validate required
-      const required = ["buy_ngn","sell_ngn","fee_rate","min_amount","max_amount"];
-      for(const k of required){
-        if(payload[k] === null){
-          return { error: `Invalid number in ${k} for ${code}` };
-        }
-      }
-      if(!payload.code) return { error: "Invalid code" };
-      return payload;
-    }
-
-    async function saveRateRow(code){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-
-      const payloadOrErr = readRowFromDOM(code);
-      if(!payloadOrErr) return;
-      if(payloadOrErr.error){ showAdminError(payloadOrErr.error); return; }
-
-      const u = await sb.from("exchange_rates").upsert([payloadOrErr], { onConflict: "code" });
-      if(u.error){ showAdminError(u.error.message); return; }
-
-      LARMAH.toast("Rate saved: " + code);
-      loadExchangeRates();
-    }
-
-    async function saveAllRates(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-
-      const rows = [];
-      for(const r of (__ratesRows || [])){
-        const payloadOrErr = readRowFromDOM(r.code);
-        if(payloadOrErr?.error){
-          showAdminError(payloadOrErr.error);
-          return;
-        }
-        rows.push(payloadOrErr);
-      }
-
-      if(!rows.length){
-        LARMAH.toast("No rows to save");
-        return;
-      }
-
-      const u = await sb.from("exchange_rates").upsert(rows, { onConflict: "code" });
-      if(u.error){ showAdminError(u.error.message); return; }
-
-      LARMAH.toast("All rates saved");
-      loadExchangeRates();
-    }
-
-    async function upsertNewRate(){
-      clearAdminError();
-      const sb = await LARMAH.initSupabase();
-
-      const code = normalizeCode(document.getElementById("new_code").value);
-      const name = String(document.getElementById("new_name").value || "").trim() || code;
-
-      const buy = parseNum(document.getElementById("new_buy").value);
-      const sell = parseNum(document.getElementById("new_sell").value);
-      const fee = parseNum(document.getElementById("new_fee").value);
-      const min = parseNum(document.getElementById("new_min").value);
-      const max = parseNum(document.getElementById("new_max").value);
-
-      if(!code){ showAdminError("Currency code required (e.g., USD)"); return; }
-      if([buy,sell,fee,min,max].some(v => v === null)){
-        showAdminError("Please enter valid numbers for Buy/Sell/Fee/Min/Max");
-        return;
-      }
-
-      const payload = {
-        code,
-        name,
-        buy_ngn: buy,
-        sell_ngn: sell,
-        fee_rate: fee,
-        min_amount: min,
-        max_amount: max,
-        updated_at: new Date().toISOString()
-      };
-
-      const u = await sb.from("exchange_rates").upsert([payload], { onConflict: "code" });
-      if(u.error){ showAdminError(u.error.message); return; }
-
-      // clear inputs
-      ["new_code","new_name","new_buy","new_sell","new_fee","new_min","new_max"].forEach(id => {
-        document.getElementById(id).value = "";
-      });
-
-      LARMAH.toast("Rate added/updated: " + code);
-      loadExchangeRates();
-    }
-
-    async function subscribeRatesRealtime(){
-      const sb = await LARMAH.initSupabase();
-      if(!sb) return;
-
-      if(window.__ratesChan) return;
-      window.__ratesChan = sb
-        .channel("exchange_rates_admin")
-        .on("postgres_changes", { event: "*", schema: "public", table: "exchange_rates" }, () => {
-          // refresh view on any change
-          loadExchangeRates();
-        })
-        .subscribe();
-    }
-
-    /* ======================
-       INSIGHTS PUBLISHER
-       ====================== */
-    async function publishInsight(){
-      const sb = await LARMAH.initSupabase();
-      const title = document.getElementById("ip_title").value.trim();
-      const body = document.getElementById("ip_body").value.trim();
-      if(!title || !body){ LARMAH.toast("Both fields are required"); return; }
-
-      const ins = await sb.from("insights_posts").insert([{ title, body, created_at: new Date().toISOString() }]);
-      if(ins.error){ showAdminError(ins.error.message); return; }
-
-      document.getElementById("ip_title").value = "";
-      document.getElementById("ip_body").value = "";
-      LARMAH.toast("Published");
-      loadInsightsAdmin();
-    }
-
-    async function loadInsightsAdmin(){
-      const sb = await LARMAH.initSupabase();
-      const r = await sb.from("insights_posts").select("*").order("created_at", {ascending:false});
-      const mount = document.getElementById("insightsAdminList");
-
-      if(!r.data || !r.data.length){
-        mount.innerHTML = "<div class='notice'><strong>No community insights.</strong></div>";
-        return;
-      }
-
-      mount.innerHTML =
-        "<div class='grid'>" +
-        r.data.map(p => `
-          <div class="card">
-            <h3 style="font-size:1rem">${LARMAH.escapeHtml(p.title)}</h3>
-            <p class="small" style="opacity:.9;margin-top:8px">${LARMAH.escapeHtml(p.body)}</p>
-            <div class="meta">Created: ${new Date(p.created_at).toLocaleString()}</div>
-            <div class="actions">
-              <button class="btn small" onclick="startInsightEditFromId('${p.id}')">Edit</button>
-              <button class="btn small danger" onclick="deleteInsight('${p.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
-            </div>
+      return `
+        <div class="card rate-card">
+          ${isCrypto ? `<div class="rate-badge">CRYPTO</div>` : ``}
+          <h3>${LARMAH.escapeHtml(r.name || code)}</h3>
+          <div class="rate-main">${fmtNGN(r.buy)}</div>
+          <div class="meta" style="margin-top:6px">
+            <span>Min: ${r.min} ${code}</span>
+            <span class="dot">•</span>
+            <span>Max: ${r.max} ${code}</span>
           </div>
-        `).join("") +
-        "</div>";
+          <div class="small" style="margin-top:6px;opacity:.85">
+            Fee: ${(r.fee*100).toFixed(2)}% • Sell: ${fmtNGN(r.sell)}
+          </div>
+          <div class="small" style="margin-top:6px;opacity:.70">
+            Updated: ${updated}
+          </div>
+          <div class="actions" style="margin-top:10px">
+            <button class="btn small primary" onclick="requestQuote('${code}')">
+              <i class="fa-brands fa-whatsapp"></i> Exchange ${code}
+            </button>
+          </div>
+        </div>
+      `;
     }
 
-    async function startInsightEditFromId(id){
-      const sb = await LARMAH.initSupabase();
-      const r = await sb.from("insights_posts").select("*").eq("id", id).single();
-      if(r.error) return;
+    function renderRates(){
+      const forex = document.getElementById("forexRatesGrid");
+      const crypto = document.getElementById("cryptoRatesGrid");
+      const time = document.getElementById("rateUpdateTime");
 
-      document.getElementById("ip_id").value = r.data.id;
-      document.getElementById("ip_mode").style.display = "block";
-      document.getElementById("ip_title").value = r.data.title;
-      document.getElementById("ip_body").value = r.data.body;
+      const stamp = RATES.USD?.updated_at || RATES.GBP?.updated_at || RATES.EUR?.updated_at || new Date().toISOString();
+      if(time) time.textContent = "Updated: " + new Date(stamp).toLocaleTimeString();
 
-      document.getElementById("ip_publish_btn").style.display = "none";
-      document.getElementById("ip_update_btn").style.display = "inline-flex";
-      document.getElementById("ip_cancel_btn").style.display = "inline-flex";
+      if(forex){
+        forex.innerHTML =
+          rateCard("USD") +
+          rateCard("GBP") +
+          rateCard("EUR");
+      }
 
-      window.scrollTo({ top: document.getElementById("insightsAdmin").offsetTop - 90, behavior: "smooth" });
+      if(crypto){
+        crypto.innerHTML =
+          rateCard("BTC", true) +
+          rateCard("ETH", true) +
+          rateCard("USDT", true);
+      }
     }
 
-    function cancelInsightEdit(){
-      document.getElementById("ip_mode").style.display = "none";
-      document.getElementById("ip_id").value = "";
-      document.getElementById("ip_title").value = "";
-      document.getElementById("ip_body").value = "";
-      document.getElementById("ip_publish_btn").style.display = "inline-flex";
-      document.getElementById("ip_update_btn").style.display = "none";
-      document.getElementById("ip_cancel_btn").style.display = "none";
+    function calc(from, to, amount){
+      const amt = Number(amount || 0);
+      if(!amt) return { converted: 0, rate: 0, fee: 0, feePct: 0 };
+      if(from === to) return { converted: amt, rate: 1, fee: 0, feePct: 0 };
+
+      // Receive NGN: use buy_ngn
+      if(to === "NGN" && RATES[from]){
+        const rate = RATES[from].buy;
+        const feePct = RATES[from].fee;
+        const converted = amt * rate;
+        const fee = converted * feePct;
+        return { converted: converted - fee, rate, fee, feePct: feePct*100 };
+      }
+
+      // Send NGN: use sell_ngn
+      if(from === "NGN" && RATES[to]){
+        const rate = 1 / RATES[to].sell;
+        const feePct = RATES[to].fee;
+        const converted = amt * rate;
+        const fee = converted * feePct;
+        return { converted: converted - fee, rate, fee, feePct: feePct*100 };
+      }
+
+      // Cross via NGN
+      if(RATES[from] && RATES[to]){
+        const toNgn = RATES[from].buy;
+        const ngnTo = 1 / RATES[to].sell;
+        const rate = toNgn * ngnTo;
+        const feePct = Math.max(RATES[from].fee, RATES[to].fee);
+        const converted = amt * rate;
+        const fee = converted * feePct;
+        return { converted: converted - fee, rate, fee, feePct: feePct*100 };
+      }
+
+      return { converted: 0, rate: 0, fee: 0, feePct: 0 };
     }
 
-    async function updateInsight(){
-      const sb = await LARMAH.initSupabase();
-      const id = document.getElementById("ip_id").value;
-      const title = document.getElementById("ip_title").value.trim();
-      const body = document.getElementById("ip_body").value.trim();
-      const u = await sb.from("insights_posts").update({ title, body }).eq("id", id);
-      if(u.error){ showAdminError(u.error.message); return; }
-      LARMAH.toast("Updated");
-      cancelInsightEdit();
-      loadInsightsAdmin();
+    function format(amount, currency){
+      const n = Number(amount || 0);
+      if(currency === "NGN") return "₦" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if(currency === "BTC") return n.toFixed(6) + " BTC";
+      if(currency === "ETH") return n.toFixed(4) + " ETH";
+      if(currency === "USDT") return n.toFixed(2) + " USDT";
+      return n.toFixed(2) + " " + currency;
     }
 
-    async function deleteInsight(id){
-      if(!confirm("Delete this insight forever?")) return;
-      const sb = await LARMAH.initSupabase();
-      const d = await sb.from("insights_posts").delete().eq("id", id);
-      if(d.error){ showAdminError(d.error.message); return; }
-      LARMAH.toast("Deleted");
-      loadInsightsAdmin();
+    function updateQuick(){
+      const amount = document.getElementById("quickAmount").value;
+      const from = document.getElementById("quickFrom").value;
+      const to = document.getElementById("quickTo").value;
+      const res = calc(from, to, amount);
+      document.getElementById("quickResult").textContent = format(res.converted, to);
+    }
+
+    function updateAdvanced(){
+      const amount = document.getElementById("sendAmount").value;
+      const from = document.getElementById("sendCurrency").value;
+      const to = document.getElementById("receiveCurrency").value;
+
+      const res = calc(from, to, amount);
+      document.getElementById("receiveAmount").textContent = format(res.converted, to);
+      document.getElementById("calcRate").textContent = `1 ${from} ≈ ${format(res.rate, to)}`;
+      document.getElementById("calcFee").textContent = `${res.feePct.toFixed(1)}% • ${format(res.fee, to)}`;
+
+      const eta = (from === "BTC" || from === "ETH" || to === "BTC" || to === "ETH") ? "45–120 minutes" : "15–30 minutes";
+      document.getElementById("calcTime").textContent = eta;
+    }
+
+    function requestQuote(code){
+      const r = RATES[code];
+      if(!r){ LARMAH.toast("Rate not available"); return; }
+
+      const msg = LARMAH.buildMessage("Exchange Quote Request", {
+        Pair: `${code} → NGN`,
+        BuyRate: fmtNGN(r.buy),
+        SellRate: fmtNGN(r.sell),
+        Fee: (r.fee*100).toFixed(2) + "%",
+        Name: "",
+        Phone: ""
+      });
+      LARMAH.openWhatsApp(msg);
+    }
+
+    function swapCurrencies(){
+      const from = document.getElementById("sendCurrency");
+      const to = document.getElementById("receiveCurrency");
+      const tmp = from.value;
+      from.value = to.value;
+      to.value = tmp;
+      updateAdvanced();
+    }
+
+    function quickExchange(){
+      const msg = LARMAH.buildMessage("Quick Exchange Quote", {
+        From: `${document.getElementById("quickAmount").value} ${document.getElementById("quickFrom").value}`,
+        To: document.getElementById("quickTo").value,
+        Expected: document.getElementById("quickResult").textContent
+      });
+      LARMAH.openWhatsApp(msg);
+    }
+
+    function initiateExchange(){
+      const msg = LARMAH.buildMessage("Exchange Initiation", {
+        Send: `${document.getElementById("sendAmount").value} ${document.getElementById("sendCurrency").value}`,
+        Receive: document.getElementById("receiveAmount").textContent,
+        Rate: document.getElementById("calcRate").textContent,
+        Name: "",
+        Phone: ""
+      });
+      LARMAH.openWhatsApp(msg);
+    }
+
+    async function loadRates(){
+      const rows = await LARMAH.fetchExchangeRates();
+      RATES = buildRatesMap(rows);
+
+      if(!Object.keys(RATES).length){
+        document.getElementById("forexRatesGrid").innerHTML =
+          `<div class="notice"><strong>No rates configured.</strong> Admin must set exchange_rates.</div>`;
+        document.getElementById("cryptoRatesGrid").innerHTML = "";
+        document.getElementById("liveRatesTicker").innerHTML = `<span>Rates not configured (admin).</span>`;
+        return;
+      }
+
+      renderTicker();
+      renderRates();
+      updateQuick();
+      updateAdvanced();
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
-      const ok = await requireAdmin();
-      if(!ok) return;
+      await loadRates();
 
-      loadCatalog();
-      loadExchangeRates();
-      subscribeRatesRealtime();
-      loadInsightsAdmin();
+      // realtime updates (requires Supabase Realtime enabled for exchange_rates)
+      await LARMAH.subscribeExchangeRates(async () => {
+        await loadRates();
+      });
+
+      // wire calculator inputs
+      ["quickAmount","quickFrom","quickTo"].forEach(id => {
+        const el = document.getElementById(id);
+        if(el){ el.addEventListener("input", updateQuick); el.addEventListener("change", updateQuick); }
+      });
+      ["sendAmount","sendCurrency","receiveCurrency"].forEach(id => {
+        const el = document.getElementById(id);
+        if(el){ el.addEventListener("input", updateAdvanced); el.addEventListener("change", updateAdvanced); }
+      });
+
+      // form submission: logs request + WhatsApp
+      const form = document.getElementById("exchangeRequestForm");
+      if(form){
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const fields = {
+            Name: document.getElementById("exName").value.trim(),
+            Phone: document.getElementById("exPhone").value.trim(),
+            Exchange: document.getElementById("exType").value.trim(),
+            Amount: document.getElementById("exAmount").value.trim(),
+            Notes: document.getElementById("exNotes").value.trim() || "-"
+          };
+
+          if(!fields.Name || !fields.Phone || !fields.Exchange || !fields.Amount){
+            LARMAH.toast("Please fill all required fields");
+            return;
+          }
+
+          const ref = "WEB-EX-" + Math.random().toString(16).slice(2,10).toUpperCase();
+          fields.Ref = ref;
+
+          const res = await LARMAH.submitRequest({
+            category: "exchange",
+            name: fields.Name,
+            phone: fields.Phone,
+            details: fields
+          });
+          if(!res.ok) LARMAH.toast("Logging request...");
+
+          LARMAH.openWhatsApp(LARMAH.buildMessage("Exchange Request", fields));
+          form.reset();
+          LARMAH.toast("Opening WhatsApp…");
+        });
+      }
+
+      // expose globals for buttons
+      window.swapCurrencies = swapCurrencies;
+      window.quickExchange = quickExchange;
+      window.initiateExchange = initiateExchange;
+      window.requestQuote = requestQuote;
     });
   </script>
 </body>
