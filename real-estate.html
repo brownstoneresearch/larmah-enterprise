@@ -295,33 +295,34 @@
     }
 
     function renderCards(items){
-      const mount = document.getElementById("catalogMount");
-      if(!items.length){
-        mount.innerHTML = `<div class="notice"><strong>No matches.</strong> Adjust filters or submit a request below.</div>`;
-        return;
-      }
+  const mount = document.getElementById("catalogMount");
+  if(!items.length){
+    mount.innerHTML = `<div class="notice"><strong>No matches.</strong> Adjust filters or submit a request below.</div>`;
+    return;
+  }
 
-      mount.innerHTML = `
-        <div class="grid">
-          ${items.map(it => `
-            <div class="card">
-              ${(() => {
-  const urls = LARMAH.normalizeImageUrls(it);
-  return urls.length ? LARMAH.galleryHtml(urls, it.title, "re-" + it.id) : "";
-})()}
-
-              <h3>${LARMAH.escapeHtml(it.title)}</h3>
-              <p>${LARMAH.escapeHtml(it.description || "")}</p>
-              ${it.price ? `<div class="price">${LARMAH.escapeHtml(it.price)}</div>` : ``}
-              <div class="meta">Verified • Ref: WEB-RE-${it.id}</div>
-              <div class="actions">
-                <button class="btn small primary" onclick="enquireProperty('${it.id}')"><i class="fa-brands fa-whatsapp"></i> Enquire</button>
-              </div>
-            </div>
-          `).join("")}
+  mount.innerHTML = `
+    <div class="grid">
+      ${items.map(it => `
+        <div class="card">
+          ${(() => {
+            const urls = LARMAH.normalizeImageUrls(it);
+            return urls.length ? LARMAH.galleryHtml(urls, it.title, "re-" + it.id) : "";
+          })()}
+          <h3>${LARMAH.escapeHtml(it.title)}</h3>
+          <p>${LARMAH.escapeHtml(it.description || "")}</p>
+          ${it.price ? `<div class="price">${LARMAH.escapeHtml(it.price)}</div>` : ``}
+          <div class="meta">Verified • Ref: WEB-RE-${it.id}</div>
+          <div class="actions">
+            <button class="btn small primary" onclick="enquireProperty('${it.id}')"><i class="fa-brands fa-whatsapp"></i> Enquire</button>
+          </div>
         </div>
-      `;
-    }
+      `).join("")}
+    </div>
+  `;
+
+  LARMAH.bindGalleries(mount);
+}
 
     function renderRE(){
       const q = norm(document.getElementById("re_q").value);
