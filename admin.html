@@ -1,346 +1,512 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Command Center | Larmah Enterprise</title>
-  <meta name="description" content="Larmah Admin: Catalog, Exchange Rates, Requests, and Insights." />
-  <meta name="theme-color" content="#070A12" />
-
-  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Command | Larmah Enterprise</title>
+  
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    :root {
-      --brand: #00d981;
-      --ok: #00d981;
-      --bad: #ff5a67;
-      --muted: #888;
-      --bg-card: rgba(255, 255, 255, 0.03);
+    /* --- ADMIN SPECIFIC STYLES --- */
+    body { padding-bottom: 0; overflow: hidden; }
+    
+    .admin-layout { 
+      display: grid; grid-template-columns: 240px 1fr; 
+      height: 100vh; 
     }
-    .statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
-    .table-wrap{overflow-x:auto; background: var(--bg-card); border-radius: 12px; border: 1px solid rgba(255,255,255,.05);}
-    .status-active{color:var(--ok);font-weight:700}
-    .status-hidden{color:var(--bad);font-weight:700}
-    .chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .chip{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background: var(--bg-card);
-      color: var(--muted);
-      font-weight: 600;
-      font-size:.8rem;
+
+    /* Sidebar */
+    .admin-sidebar {
+      background: #050810; 
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      padding: 20px; z-index: 10;
     }
-    .chip.ok{border-color:rgba(0,217,129,.3);background:rgba(0,217,129,.1);color:#fff}
-    .rate-input{
-      width: 100%; min-width: 80px;
-      border-radius: 8px; border: 1px solid rgba(255,255,255,.1);
-      background: rgba(0,0,0,.2); color: #fff; padding: 8px;
+    .admin-nav { list-style: none; margin-top: 40px; display: grid; gap: 8px; }
+    .nav-item {
+      padding: 12px 16px; border-radius: 12px;
+      color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; gap: 12px;
+      font-weight: 600; font-size: 0.95rem;
+      transition: all 0.2s ease;
     }
-    .img3-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    @media(max-width:768px){.img3-grid{grid-template-columns:1fr}}
-    .img-preview{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.02);border-radius:12px;overflow:hidden;height:100px;display:flex;align-items:center;justify-content:center}
-    .img-preview img{width:100%;height:100%;object-fit:cover}
-    .req-note{min-height:60px; font-size: 0.85rem;}
-    .modal { max-height: 90vh; overflow-y: auto; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .nav-item.active { 
+      background: rgba(0, 217, 129, 0.1); 
+      color: var(--brand); 
+      border: 1px solid rgba(0, 217, 129, 0.2); 
+    }
+
+    /* Main Content */
+    .admin-main { 
+      position: relative; overflow-y: auto; 
+      padding: 30px; background: var(--bg);
+    }
+    .admin-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 30px; padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Data Tables */
+    .data-table-wrapper {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th { 
+      text-align: left; padding: 16px; 
+      background: rgba(255,255,255,0.03); 
+      color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;
+    }
+    td { 
+      padding: 16px; border-top: 1px solid rgba(255,255,255,0.05); 
+      font-size: 0.95rem; vertical-align: middle;
+    }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* Thumbnails */
+    .tbl-thumb {
+      width: 48px; height: 48px; border-radius: 8px; 
+      object-fit: cover; background: #000;
+    }
+    .badge {
+      padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+    }
+    .badge.active { background: rgba(67, 209, 125, 0.2); color: var(--ok); }
+    .badge.draft { background: rgba(255, 176, 32, 0.2); color: var(--warn); }
+
+    /* Action Buttons */
+    .action-btn {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05); color: var(--text);
+      transition: 0.2s;
+    }
+    .action-btn:hover { background: #fff; color: #000; }
+    .action-btn.danger:hover { background: var(--bad); color: #fff; border-color: var(--bad); }
+
+    /* Editor Modal */
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
+      z-index: 9999; display: none; align-items: center; justify-content: center;
+    }
+    .modal.active { display: flex; }
+    .editor-box {
+      width: 600px; max-width: 90vw; background: #0f1218; 
+      border: 1px solid var(--border); border-radius: 20px;
+      padding: 30px; box-shadow: 0 50px 100px rgba(0,0,0,0.6);
+      max-height: 90vh; overflow-y: auto;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 6px; font-weight: 700; }
+
+    @media(max-width: 900px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .admin-sidebar { display: none; } /* Mobile menu needed logic in app.js or simple hide */
+    }
   </style>
 </head>
-
 <body data-page="admin">
-  <header>
-    <div class="container header-inner">
-      <a class="brand" href="index.html">
-        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-      </a>
-      <div class="header-actions">
-        <button class="pill" onclick="LARMAH.signOut()"><i class="fa-solid fa-power-off"></i> Logout</button>
-      </div>
-    </div>
-  </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-shell">
-        <h1>Command Center</h1>
-        <div id="adminStatus" class="notice" style="display:none; border-color:var(--ok)"></div>
-        <div id="adminGate" class="notice" style="display:none; border-color:var(--bad); background:rgba(255,90,103,.1)"></div>
-        <div id="adminError" class="notice" style="display:none; border-color:var(--bad)"></div>
-        
-        <div class="chips">
-          <span class="chip ok"><i class="fa-solid fa-shield-halved"></i> Admin Mode</span>
-          <span id="user_email" class="chip"><i class="fa-solid fa-user"></i> Loading user...</span>
-          <span id="user_role" class="chip"><i class="fa-solid fa-key"></i> Role</span>
-        </div>
-      </div>
-    </section>
-
-    <div class="statbar">
-      <div class="card">
-        <div class="small">System Status</div>
-        <div style="font-weight:900; color:var(--ok)">Operational</div>
-        <div class="small">Supabase Live</div>
-      </div>
-    </div>
-
-    <section class="section" id="catalogAdmin">
-      <div class="section-head-split">
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">
+        <img src="assets/images/larmah-header.jpeg" style="width:40px; border-radius:10px">
         <div>
-          <h2>Catalogue Manager</h2>
-          <p class="lead">Manage listings with up to 3 images.</p>
+           <div style="font-weight:800; font-size:1rem;">Larmah Admin</div>
+           <div style="font-size:0.75rem; color:var(--muted)">Master Control</div>
         </div>
-        <button class="btn solid" onclick="openEditor()"><i class="fa-solid fa-plus"></i> New Item</button>
       </div>
 
-      <div class="card">
+      <ul class="admin-nav">
+        <li class="nav-item active" onclick="switchView('overview')">
+           <i class="fa-solid fa-gauge-high"></i> Overview
+        </li>
+        <li class="nav-item" onclick="switchView('real-estate')">
+           <i class="fa-solid fa-building"></i> Real Estate
+        </li>
+        <li class="nav-item" onclick="switchView('logistics')">
+           <i class="fa-solid fa-truck-fast"></i> Logistics
+        </li>
+        <li class="nav-item" onclick="switchView('users')">
+           <i class="fa-solid fa-users"></i> User Profiles
+        </li>
+      </ul>
+
+      <div style="margin-top:auto">
+         <button class="btn small" style="width:100%" onclick="window.location.href='index.html'">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Exit Console
+         </button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      
+      <div id="view-overview" class="view-section">
+        <div class="admin-header">
+          <h1>System Overview</h1>
+          <div class="small" style="color:var(--ok)">● System Operational</div>
+        </div>
+        
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:30px">
+          <div class="card">
+             <div class="small" style="color:var(--muted)">Total Users</div>
+             <div style="font-size:2rem; font-weight:800; margin-top:5px" id="stat_users">--</div>
+          </div>
+          <div class="card">
+             <div class="small" style="color:var(--muted)">Active Listings</div>
+             <div style="font-size:2rem; font-weight:800; margin-top:5px" id="stat_listings">--</div>
+          </div>
+          <div class="card">
+             <div class="small" style="color:var(--muted)">Pending KYCs</div>
+             <div style="font-size:2rem; font-weight:800; margin-top:5px; color:var(--warn)">0</div>
+          </div>
+        </div>
+        
+        <h3>Recent Activity</h3>
+        <div class="data-table-wrapper" style="margin-top:10px; min-height:200px; display:flex; align-items:center; justify-content:center; color:var(--muted)">
+           No recent system alerts.
+        </div>
+      </div>
+
+      <div id="view-real-estate" class="view-section" style="display:none">
+        <div class="admin-header">
+          <h1>Real Estate Catalog</h1>
+          <button class="btn solid small" onclick="openEditor('real-estate')">
+             <i class="fa-solid fa-plus"></i> Add Property
+          </button>
+        </div>
+        
+        <div class="data-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th width="60">Img</th>
+                <th>Title / Location</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th width="100">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-real-estate">
+               </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="view-logistics" class="view-section" style="display:none">
+        <div class="admin-header">
+          <h1>Logistics Fleet</h1>
+          <button class="btn solid small" onclick="openEditor('logistics')">
+             <i class="fa-solid fa-plus"></i> Add Vehicle/Service
+          </button>
+        </div>
+        
+        <div class="data-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th width="60">Img</th>
+                <th>Service Name</th>
+                <th>Rate</th>
+                <th>Tags</th>
+                <th width="100">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-logistics">
+               </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="view-users" class="view-section" style="display:none">
+        <div class="admin-header">
+          <h1>User Profiles</h1>
+          <div class="small">View-only access to client data</div>
+        </div>
+        
+        <div class="data-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Email / ID</th>
+                <th>Full Name</th>
+                <th>Joined</th>
+                <th>Verification</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-users">
+               </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="editorModal" class="modal">
+    <div class="editor-box">
+      <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center">
+         <h2 id="editorTitle" style="margin:0">Edit Item</h2>
+         <button class="action-btn" onclick="closeEditor()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="editorForm" onsubmit="handleSave(event)">
+        <input type="hidden" id="edit_id">
+        <input type="hidden" id="edit_category">
+
+        <div class="form-group">
+           <label class="form-label">Title / Name</label>
+           <input type="text" id="edit_title" class="input" required placeholder="e.g. 4 Bedroom Duplex">
+        </div>
+
         <div class="row2">
-          <select id="catCategory" class="input" onchange="loadCatalog()">
-            <option value="real-estate">Real Estate</option>
-            <option value="logistics">Logistics</option>
-            <option value="exchange">Exchange</option>
-          </select>
-          <input id="catSearch" class="input" placeholder="Search title or tags..." oninput="loadCatalog()" />
+           <div class="form-group">
+              <label class="form-label">Price</label>
+              <input type="text" id="edit_price" class="input" placeholder="e.g. ₦120,000/night">
+           </div>
+           <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="edit_status" class="input">
+                 <option value="active">Active</option>
+                 <option value="draft">Draft (Hidden)</option>
+                 <option value="sold">Sold / Unavailable</option>
+              </select>
+           </div>
         </div>
-        <div class="table-wrap" style="margin-top:16px" id="catTable">
-          <div class="notice">Loading catalog...</div>
-        </div>
-      </div>
-    </section>
 
-    <section class="section" id="requestsAdmin" style="margin-top:32px">
-      <div class="section-head-split">
-        <h2>Requests Inbox</h2>
-        <button class="btn" onclick="loadRequests()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-      </div>
-      <div class="card">
-        <div class="table-wrap" id="reqTable">
-          <div class="notice">Loading requests...</div>
+        <div class="form-group">
+           <label class="form-label">Image URL</label>
+           <input type="text" id="edit_image" class="input" placeholder="https://...">
+           <div class="small" style="margin-top:4px; opacity:0.6">Paste a direct image link.</div>
         </div>
-      </div>
-    </section>
 
-    <section class="section" id="exchangeRatesAdmin" style="margin-top:32px">
-      <div class="section-head-split">
-        <h2>Exchange Rates</h2>
-        <span class="small" id="ratesUpdatedAt">Last Updated: —</span>
-      </div>
-      <div class="card">
-        <div class="table-wrap" id="ratesTableMount"></div>
-        <hr style="opacity:0.1; margin:20px 0">
-        <h3>Add New Currency</h3>
-        <div class="row2">
-          <input id="new_code" class="input" placeholder="USD" />
-          <input id="new_name" class="input" placeholder="US Dollar" />
-          <input id="new_buy" class="input" placeholder="Buy NGN" />
-          <input id="new_sell" class="input" placeholder="Sell NGN" />
+        <div class="form-group">
+           <label class="form-label">Tags (comma separated)</label>
+           <input type="text" id="edit_tags" class="input" placeholder="e.g. Pool, Lekki, Shortlet">
         </div>
-        <button class="btn solid" style="margin-top:12px" onclick="upsertNewRate()">Add Currency</button>
-      </div>
-    </section>
 
-    <section class="section" id="insightsAdmin" style="margin-top:32px">
-      <div class="section-head-split">
-        <h2>Insights Publisher</h2>
-      </div>
-      <div class="card">
-        <input id="ip_id" type="hidden" />
-        <input id="ip_title" class="input" placeholder="Headline" style="margin-bottom:10px" />
-        <textarea id="ip_body" class="input" placeholder="Content..."></textarea>
-        <div class="actions" style="margin-top:10px">
-          <button class="btn solid" id="ip_publish_btn" onclick="publishInsight()">Publish</button>
-          <button class="btn primary" id="ip_update_btn" style="display:none" onclick="updateInsight()">Save Changes</button>
-          <button class="btn" id="ip_cancel_btn" style="display:none" onclick="cancelInsightEdit()">Cancel</button>
+        <div class="form-group">
+           <label class="form-label">Description</label>
+           <textarea id="edit_desc" class="input" rows="4"></textarea>
         </div>
-      </div>
-      <div id="insightsAdminList" style="margin-top:16px"></div>
-    </section>
 
-    <div id="editorOverlay" class="modal-overlay" style="display:none" onclick="closeEditor()">
-      <div class="modal" onclick="event.stopPropagation()">
-        <div class="modal-head">
-          <h3 id="modalTitle">Item Editor</h3>
-          <button class="btn small" onclick="closeEditor()"><i class="fa-solid fa-xmark"></i></button>
+        <div style="margin-top:20px; display:flex; gap:10px">
+           <button type="submit" class="btn solid" style="flex:1" id="saveBtn">Save Changes</button>
+           <button type="button" class="btn" onclick="closeEditor()">Cancel</button>
         </div>
-        <div class="modal-body">
-          <div class="row2">
-            <input id="e_title" class="input" placeholder="Title" />
-            <input id="e_price" class="input" placeholder="Price (e.g. ₦100k)" />
-          </div>
-          <textarea id="e_desc" class="input" style="margin-top:12px" placeholder="Description"></textarea>
-          <input id="e_tags" class="input" style="margin-top:12px" placeholder="Tags (comma separated)" />
-          
-          <div style="margin-top:12px">
-            <label class="small">Visibility</label>
-            <select id="e_active" class="input">
-              <option value="true">Active</option>
-              <option value="false">Hidden</option>
-            </select>
-          </div>
-
-          <div class="img3-grid" style="margin-top:12px">
-            <div>
-              <input id="e_img_url1" class="input small" placeholder="Image 1 URL" />
-              <input id="e_img_file1" type="file" class="small" style="margin-top:5px" />
-              <div class="img-preview" id="prev1"></div>
-            </div>
-            <div>
-              <input id="e_img_url2" class="input small" placeholder="Image 2 URL" />
-              <input id="e_img_file2" type="file" class="small" style="margin-top:5px" />
-              <div class="img-preview" id="prev2"></div>
-            </div>
-            <div>
-              <input id="e_img_url3" class="input small" placeholder="Image 3 URL" />
-              <input id="e_img_file3" type="file" class="small" style="margin-top:5px" />
-              <div class="img-preview" id="prev3"></div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-actions">
-          <button class="btn danger" id="btnDelete" onclick="deleteItem()">Delete</button>
-          <button class="btn solid" onclick="saveItem()">Save Record</button>
-        </div>
-      </div>
+      </form>
     </div>
-  </main>
+  </div>
+
+  <div id="toast" class="toast"></div>
 
   <script>
-    let editing = null;
+    // --- STATE ---
+    let currentView = 'overview';
 
-    async function requireAdmin() {
-      const sb = await LARMAH.initSupabase();
-      const { data: { session } } = await sb.auth.getSession();
-
-      if (!session) {
-        window.location.href = "auth.html";
-        return false;
-      }
-
-      const { data: profile } = await sb.from("profiles").select("role").eq("id", session.user.id).single();
-      const role = profile?.role?.toLowerCase();
+    // --- NAVIGATION ---
+    function switchView(viewId) {
+      currentView = viewId;
+      // UI Toggle
+      document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
+      document.getElementById('view-' + viewId).style.display = 'block';
       
-      if (role !== "admin" && role !== "super_admin") {
-        document.getElementById("adminGate").style.display = "block";
-        document.getElementById("adminGate").innerHTML = "Access Denied: Admin role required.";
-        return false;
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      // Data Load
+      if (viewId === 'real-estate') fetchAdminListings('real-estate');
+      if (viewId === 'logistics') fetchAdminListings('logistics');
+      if (viewId === 'users') fetchAdminUsers();
+      if (viewId === 'overview') loadStats();
+    }
+
+    // --- DATA FETCHING ---
+    async function fetchAdminListings(category) {
+      const tbody = document.getElementById('tbody-' + category);
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Loading data...</td></tr>';
+
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('category', category)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--bad)">Error: ${error.message}</td></tr>`;
+        return;
       }
 
-      document.getElementById("user_email").textContent = session.user.email;
-      document.getElementById("user_role").textContent = "Role: " + role;
-      return true;
-    }
-
-    // CATALOG LOGIC
-    async function loadCatalog() {
-      const sb = await LARMAH.initSupabase();
-      const cat = document.getElementById("catCategory").value;
-      const search = document.getElementById("catSearch").value.toLowerCase();
-
-      const { data, error } = await sb.from("catalog_items").select("*").eq("category", cat).order("created_at", { ascending: false });
-      if (error) return;
-
-      const filtered = data.filter(it => it.title.toLowerCase().includes(search));
-      const mount = document.getElementById("catTable");
-
-      mount.innerHTML = `
-        <table class="table">
-          <thead><tr><th>Item</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
-          <tbody>
-            ${filtered.map(it => `
-              <tr>
-                <td><b>${it.title}</b></td>
-                <td>${it.price || '-'}</td>
-                <td class="${it.active ? 'status-active' : 'status-hidden'}">${it.active ? 'Active' : 'Hidden'}</td>
-                <td><button class="btn small" onclick="editItem('${it.id}')">Edit</button></td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>`;
-    }
-
-    function openEditor(id = null) {
-      editing = id;
-      document.getElementById("editorOverlay").style.display = "flex";
-      document.getElementById("btnDelete").style.display = id ? "block" : "none";
-      if(!id) {
-        document.getElementById("e_title").value = "";
-        document.getElementById("e_price").value = "";
-        document.getElementById("e_desc").value = "";
-        document.getElementById("e_tags").value = "";
-        ["1","2","3"].forEach(n => {
-           document.getElementById(`e_img_url${n}`).value = "";
-           document.getElementById(`prev${n}`).innerHTML = "";
-        });
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">No items found. Add one!</td></tr>';
+        return;
       }
+
+      // Render Rows
+      tbody.innerHTML = data.map(item => `
+        <tr>
+          <td>
+            <img src="${item.image_url || 'assets/images/larmah-header.jpeg'}" class="tbl-thumb" onerror="this.src='assets/images/placeholder-home.jpg'">
+          </td>
+          <td>
+            <div style="font-weight:700">${LARMAH.escapeHtml(item.title)}</div>
+            <div style="font-size:0.8rem; color:var(--muted)">${item.id}</div>
+          </td>
+          <td style="color:var(--accent); font-weight:600">${LARMAH.escapeHtml(item.price)}</td>
+          <td><span class="badge ${item.status === 'active' ? 'active' : 'draft'}">${item.status}</span></td>
+          <td>
+            <div style="display:flex; gap:6px">
+               <button class="action-btn" onclick="editItem('${item.id}', '${category}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+               <button class="action-btn danger" onclick="deleteItem('${item.id}', '${category}')" title="Delete"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
     }
 
-    function closeEditor() { document.getElementById("editorOverlay").style.display = "none"; }
-
-    async function editItem(id) {
-      const sb = await LARMAH.initSupabase();
-      const { data } = await sb.from("catalog_items").select("*").eq("id", id).single();
-      if (!data) return;
+    async function fetchAdminUsers() {
+      const tbody = document.getElementById('tbody-users');
+      // Note: Accessing auth.users requires Service Role key usually, 
+      // but we can access 'profiles' table if we set that up.
+      // Falling back to profiles table.
+      const { data, error } = await supabase.from('profiles').select('*');
       
-      openEditor(id);
-      document.getElementById("e_title").value = data.title;
-      document.getElementById("e_price").value = data.price;
-      document.getElementById("e_desc").value = data.description;
-      document.getElementById("e_tags").value = (data.tags || []).join(", ");
-      document.getElementById("e_active").value = String(data.active);
-      
-      const urls = data.image_urls || [];
-      ["1","2","3"].forEach((n, i) => {
-        const val = urls[i] || "";
-        document.getElementById(`e_img_url${n}`).value = val;
-        document.getElementById(`prev${n}`).innerHTML = val ? `<img src="${val}">` : "";
-      });
-    }
-
-    async function saveItem() {
-      const sb = await LARMAH.initSupabase();
-      const title = document.getElementById("e_title").value;
-      if (!title) return LARMAH.toast("Title required");
-
-      const category = document.getElementById("catCategory").value;
-      const image_urls = [
-        document.getElementById("e_img_url1").value.trim(),
-        document.getElementById("e_img_url2").value.trim(),
-        document.getElementById("e_img_url3").value.trim()
-      ].filter(Boolean);
-
-      const payload = {
-        title,
-        category,
-        price: document.getElementById("e_price").value,
-        description: document.getElementById("e_desc").value,
-        tags: document.getElementById("e_tags").value.split(",").map(t => t.trim()),
-        active: document.getElementById("e_active").value === "true",
-        image_urls,
-        image_url: image_urls[0] || null,
-        updated_at: new Date()
-      };
-
-      const { error } = editing 
-        ? await sb.from("catalog_items").update(payload).eq("id", editing)
-        : await sb.from("catalog_items").insert([payload]);
-
-      if (error) return alert(error.message);
-      LARMAH.toast("Success");
-      closeEditor();
-      loadCatalog();
-    }
-
-    // Initial Load
-    document.addEventListener("DOMContentLoaded", async () => {
-      const ok = await requireAdmin();
-      if (ok) {
-        loadCatalog();
-        // Add other loaders here (loadRequests, etc.)
+      if(error || !data) {
+         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">No profiles accessible or empty.</td></tr>';
+         return;
       }
+
+      tbody.innerHTML = data.map(u => `
+         <tr>
+           <td>
+              <div>${LARMAH.escapeHtml(u.email || 'No Email')}</div>
+              <div style="font-size:0.8rem;opacity:0.5;font-family:monospace">${u.id}</div>
+           </td>
+           <td>${LARMAH.escapeHtml(u.full_name || 'User')}</td>
+           <td>${new Date(u.created_at || Date.now()).toLocaleDateString()}</td>
+           <td><span class="badge active">Verified</span></td>
+           <td>
+              <button class="action-btn" onclick="LARMAH.toast('User management is read-only in this demo.')"><i class="fa-solid fa-ban"></i></button>
+           </td>
+         </tr>
+      `).join('');
+    }
+
+    async function loadStats() {
+       // Quick counts
+       const { count: cListings } = await supabase.from('listings').select('*', { count: 'exact', head: true });
+       const { count: cUsers } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+       
+       document.getElementById('stat_listings').textContent = cListings || 0;
+       document.getElementById('stat_users').textContent = cUsers || 0;
+    }
+
+    // --- CRUD OPERATIONS ---
+    
+    // OPEN EDITOR
+    function openEditor(category, item = null) {
+      document.getElementById('editorModal').classList.add('active');
+      document.getElementById('edit_category').value = category;
+      
+      if (item) {
+         document.getElementById('editorTitle').textContent = "Edit Property / Item";
+         document.getElementById('edit_id').value = item.id;
+         document.getElementById('edit_title').value = item.title;
+         document.getElementById('edit_price').value = item.price;
+         document.getElementById('edit_image').value = item.image_url;
+         document.getElementById('edit_desc').value = item.description;
+         document.getElementById('edit_status').value = item.status;
+         document.getElementById('edit_tags').value = (item.tags || []).join(', ');
+      } else {
+         document.getElementById('editorTitle').textContent = "New Listing";
+         document.getElementById('editForm').reset();
+         document.getElementById('edit_id').value = ""; // Empty ID means create
+         document.getElementById('edit_status').value = "active";
+      }
+    }
+
+    // PREPARE EDIT
+    async function editItem(id, category) {
+       // Fetch single item details
+       const { data } = await supabase.from('listings').select('*').eq('id', id).single();
+       if(data) openEditor(category, data);
+    }
+
+    // DELETE
+    async function deleteItem(id, category) {
+       if(!confirm("Are you sure you want to delete this listing?")) return;
+       
+       const { error } = await supabase.from('listings').delete().eq('id', id);
+       if(error) {
+          LARMAH.toast("Delete failed: " + error.message, 'error');
+       } else {
+          LARMAH.toast("Item deleted.", 'success');
+          fetchAdminListings(category);
+       }
+    }
+
+    // SAVE (Create or Update)
+    async function handleSave(e) {
+       e.preventDefault();
+       const btn = document.getElementById('saveBtn');
+       btn.textContent = "Saving...";
+       btn.disabled = true;
+
+       const id = document.getElementById('edit_id').value;
+       const category = document.getElementById('edit_category').value;
+       
+       const payload = {
+          title: document.getElementById('edit_title').value,
+          price: document.getElementById('edit_price').value,
+          category: category,
+          image_url: document.getElementById('edit_image').value,
+          description: document.getElementById('edit_desc').value,
+          status: document.getElementById('edit_status').value,
+          tags: document.getElementById('edit_tags').value.split(',').map(s => s.trim()).filter(s => s)
+       };
+
+       let error;
+       if (id) {
+          // Update
+          const res = await supabase.from('listings').update(payload).eq('id', id);
+          error = res.error;
+       } else {
+          // Create
+          const res = await supabase.from('listings').insert([payload]);
+          error = res.error;
+       }
+
+       btn.textContent = "Save Changes";
+       btn.disabled = false;
+
+       if (error) {
+          LARMAH.toast("Error: " + error.message, 'error');
+       } else {
+          LARMAH.toast("Saved successfully!", 'success');
+          closeEditor();
+          fetchAdminListings(category);
+       }
+    }
+
+    function closeEditor() {
+       document.getElementById('editorModal').classList.remove('active');
+       document.getElementById('editorForm').reset();
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', () => {
+       loadStats();
     });
+
   </script>
 </body>
 </html>
