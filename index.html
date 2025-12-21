@@ -1,294 +1,764 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Larmah Enterprise | Nigeria’s Trust-First Commerce Hub</title>
-  <meta name="description" content="Verified Real Estate, reliable Logistics, live Insights, and Exchange — WhatsApp-first support across Nigeria." />
-  <meta name="theme-color" content="#070A12" />
+:root{
+  /* Core */
+  --bg:#070A12;
+  --bg2:#050810;
 
-  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
-  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
+  /* Surfaces */
+  --panel: rgba(255,255,255,.045);
+  --panel2: rgba(255,255,255,.03);
 
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="assets/js/app.js"></script>
-</head>
+  /* Borders */
+  --border: rgba(255,255,255,.10);
+  --border2: rgba(255,255,255,.14);
 
-<body data-page="home">
-  <header>
-    <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Home">
-        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-      </a>
+  /* Text */
+  --text:#F6F7FB;
+  --muted:#B6BCCB;
+  --muted2:#8D94A6;
 
-      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+  /* Brand */
+  --accent:#D4AF37; /* gold */
+  --brand:#00d981;  /* emerald */
+  --brand2:#007AFF; /* blue */
 
-      <!-- MOBILE/DESKTOP NAV (same markup) -->
-      <nav id="nav" aria-label="Primary navigation">
-        <div class="nav-panel">
-          <div class="nav-panel-head">
-            <div class="nav-brand">
-              <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-            </div>
-            <button class="nav-close" onclick="LARMAH.closeMenu()" aria-label="Close menu">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
+  /* Status */
+  --ok:#43d17d;
+  --warn:#ffb020;
+  --bad:#ff5a67;
 
-          <div class="nav-panel-body">
-            <ul>
-              <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
-              <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
-              <li><a class="nav-link" href="insights.html" data-link="insights">Insights <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
-              <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
-            </ul>
+  /* Layout */
+  --max:1180px;
 
-            <div class="nav-panel-footer">
-              <div class="nav-hint">Tip: Tap any section to open. Press ESC to close.</div>
-              <a class="btn solid" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
-              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Quick Help', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+  /* Radii + shadows */
+  --radius:18px;
+  --radius2:28px;
+  --shadow: 0 18px 60px rgba(0,0,0,.45);
 
-      <div class="header-actions" id="authPill">
-        <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
-      </div>
-    </div>
-  </header>
+  /* Type + motion */
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --ease:cubic-bezier(.2,.9,.2,1);
+  --t:.18s var(--ease);
+}
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-shell">
-        <div class="hero-inner">
-          <div>
-            <div class="hero-kicker">
-              <span class="kicker-pill"><i class="fa-solid fa-bolt"></i> Nigeria’s Trust-First Hub</span>
-              <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Verified Standards • WhatsApp-first support</span>
-            </div>
+/* Reset */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit}
 
-            <h1>Seamless Commerce.<br/>Verified Standards.</h1>
-            <p class="lead">
-              Verified Real Estate, reliable Logistics, live Insights, and Exchange support — built for Nigeria.
-            </p>
+body{
+  font-family:var(--font);
+  background:
+    radial-gradient(1200px 700px at 14% 0%, rgba(212,175,55,.10), transparent 40%),
+    radial-gradient(900px 700px at 92% 10%, rgba(108,168,255,.12), transparent 45%),
+    radial-gradient(900px 700px at 50% 95%, rgba(67,209,125,.09), transparent 55%),
+    radial-gradient(900px 700px at 55% 30%, rgba(0,217,129,.07), transparent 45%),
+    var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+.container{max-width:var(--max);margin:auto;padding:0 18px}
 
-            <div class="actions">
-              <a class="btn solid" href="#latest"><i class="fa-solid fa-sparkles"></i> Browse Latest</a>
-              <a class="btn" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
-              <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
-              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { Name:'', Phone:'', Topic:'Real Estate / Logistics / Exchange', Message:'Hello Larmah, I need assistance.' }))">
-                <i class="fa-brands fa-whatsapp"></i> Quick WhatsApp
-              </button>
-            </div>
+/* Focus */
+:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 4px rgba(212,175,55,.18), 0 0 0 1px rgba(212,175,55,.35) inset;
+  border-color:rgba(212,175,55,.35)!important;
+}
+::selection{background:rgba(212,175,55,.22);color:var(--text)}
 
-            <div class="trust-row">
-              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Verified listings only</div>
-              <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Scam-resistant workflow</div>
-              <div class="trust-badge"><i class="fa-solid fa-headset"></i> Priority options available</div>
-            </div>
-          </div>
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *{animation:none!important;transition:none!important}
+}
 
-          <div class="hero-badges">
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-building-circle-check" style="color:var(--brand)"></i> Real Estate</h3>
-              <p>Shortlets, rentals, and verified purchase listings.</p>
-              <div class="card-actions"><a class="btn small" href="real-estate.html">Explore</a></div>
-            </div>
+/* Header */
+header{
+  position:sticky;top:0;z-index:1000;
+  background:rgba(7,10,18,.74);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 12px 30px rgba(0,0,0,.25);
+}
+.header-inner{
+  height:74px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+}
 
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-route" style="color:var(--brand)"></i> Logistics</h3>
-              <p>Dispatch, pickups, escort-ready movement, haulage.</p>
-              <div class="card-actions"><a class="btn small" href="logistics.html">Book</a></div>
-            </div>
+/* Brand plate + full banner logo */
+.brand{
+  display:flex;align-items:center;gap:12px;
+  padding:8px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.10));
+  box-shadow:0 14px 42px rgba(0,0,0,.35);
+  transition:transform var(--t), border-color var(--t), background var(--t);
+}
+.brand:hover{transform:translateY(-1px);border-color:rgba(0,217,129,.22)}
+.brand img{
+  height:48px;
+  width:auto;
+  max-width:min(380px, 45vw);
+  object-fit:contain;
+  object-position:center;
+  border-radius:12px;
+  background:transparent;
+  box-shadow:none;
+  filter:none;
+}
 
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-money-bill-transfer" style="color:var(--brand)"></i> Exchange</h3>
-              <p>Admin-managed FX + crypto rates, realtime updates.</p>
-              <div class="card-actions"><a class="btn small" href="exchange.html">Get Rates</a></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+/* Menu button */
+.menu-btn{
+  display:none;
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border);
+  color:var(--text);
+  padding:10px 12px;border-radius:14px;
+  cursor:pointer;
+  transition:background var(--t), transform var(--t), border-color var(--t);
+}
+.menu-btn:hover{background:rgba(255,255,255,.06);transform:translateY(-1px)}
+.menu-btn:active{transform:translateY(0)}
 
-    <!-- Latest previews -->
-    <section class="section" id="latest">
-      <div class="section-head-split">
-        <div>
-          <h2>Latest Catalogues</h2>
-          <p class="lead">Live preview from verified inventory — shows posted images automatically.</p>
-        </div>
-        <a class="btn small" href="insights.html"><i class="fa-solid fa-chart-line"></i> Insights</a>
-      </div>
+/* Desktop nav - FIXED: Always visible on desktop */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+}
 
-      <div class="grid home-grid">
-        <div class="card">
-          <div class="section-titleline">
-            <h3 style="margin:0"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</h3>
-            <a class="mini-link small" href="real-estate.html">View all →</a>
-          </div>
-          <div id="latestRE"></div>
-        </div>
+.desktop-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 10px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
 
-        <div class="card">
-          <div class="section-titleline">
-            <h3 style="margin:0"><i class="fa-solid fa-truck" style="color:var(--brand)"></i> Logistics</h3>
-            <a class="mini-link small" href="logistics.html">View all →</a>
-          </div>
-          <div id="latestLG"></div>
-        </div>
-      </div>
-    </section>
+.desktop-nav a {
+  color: var(--muted);
+  font-weight: 950;
+  font-size: .95rem;
+  padding: 10px 12px;
+  border-radius: 14px;
+  transition: background var(--t), color var(--t), transform var(--t), border-color var(--t);
+  white-space: nowrap;
+}
 
-    <section class="section">
-      <div class="cta-strip">
-        <div>
-          <h2 style="margin:0">Need something specific?</h2>
-          <p class="lead" style="margin:6px 0 0">Tell us your budget, location, and timeline — we’ll respond via WhatsApp.</p>
-        </div>
-        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { Name:'', Phone:'', Category:'Real Estate / Logistics / Exchange', Details:'Describe what you need…' }))">
-          <i class="fa-brands fa-whatsapp"></i> Start Request
-        </button>
-      </div>
-    </section>
-  </main>
+.desktop-nav a:hover {
+  color: var(--text);
+  background: rgba(255,255,255,.06);
+}
 
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="brandline">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-            <div>
-              <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Real Estate • Logistics • Insights • Exchange</div>
-            </div>
-          </div>
-          <div class="small" style="margin-top:8px">Trust-first commerce for Nigeria — WhatsApp-first support.</div>
-        </div>
+.desktop-nav a.active {
+  color: var(--text);
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.10);
+}
 
-        <div>
-          <b>Navigation</b>
-          <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
-          <div class="small"><a href="logistics.html">Logistics</a></div>
-          <div class="small"><a href="insights.html">Insights</a></div>
-          <div class="small"><a href="exchange.html">Exchange</a></div>
-          <div class="small"><a href="premium.html">Premium</a></div>
-        </div>
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
 
-        <div>
-          <b>Contact</b>
-          <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
-          <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-        </div>
-      </div>
+.pill{
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.02);
+  padding:10px 12px;border-radius:14px;
+  font-weight:950;
+  color:var(--text);
+  cursor:pointer;
+  transition:background var(--t), transform var(--t), border-color var(--t);
+}
+.pill:hover{background:rgba(255,255,255,.06);transform:translateY(-1px)}
+.pill.primary{
+  border-color:rgba(212,175,55,.35);
+  background:rgba(212,175,55,.12);
+}
+.pill.primary:hover{background:rgba(212,175,55,.18)}
 
-      <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
-    </div>
-  </footer>
+/* ==========================
+   PRO MOBILE NAV OVERLAY - FIXED
+   ========================== */
+body.nav-open{overflow:hidden}
 
-  <div id="toast" class="toast"></div>
+.mobile-nav {
+  display: none;
+}
 
-  <script>
-    const __INDEX_CACHE = { "real-estate": [], "logistics": [] };
+@media (max-width: 980px){
+  .menu-btn{display:block}
+  
+  /* Hide desktop nav on mobile */
+  .desktop-nav { display: none; }
+  
+  /* Show mobile nav overlay when active */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background:
+      radial-gradient(1200px 700px at 20% 0%, rgba(212,175,55,.10), transparent 45%),
+      radial-gradient(900px 700px at 85% 20%, rgba(0,217,129,.10), transparent 45%),
+      rgba(0,0,0,.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .mobile-nav.active {
+    display: block;
+  }
 
-    function skel(mount){
-      mount.innerHTML = `
-        <div class="latest-skel">
-          <div class="skel-line"></div><div class="skel-line short"></div>
-          <div class="skel-line"></div><div class="skel-line short"></div>
-        </div>
-      `;
+  .nav-panel{
+    height:100%;
+    max-width:520px;
+    width:92vw;
+    background: rgba(10,14,22,.86);
+    border-right: 1px solid rgba(255,255,255,.10);
+    box-shadow:0 30px 120px rgba(0,0,0,.75);
+    display:flex;
+    flex-direction:column;
+    animation:navIn .22s var(--ease);
+  }
+  
+  @keyframes navIn{
+    from{transform:translateX(-12px);opacity:.6}
+    to{transform:translateX(0);opacity:1}
+  }
+
+  .nav-panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:14px 14px 12px;
+    border-bottom:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.02);
+  }
+
+  .nav-brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+  }
+  
+  .nav-brand img{
+    height:40px;
+    width:auto;
+    max-width:62vw;
+    object-fit:contain;
+    border-radius:12px;
+  }
+
+  .nav-close{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.04);
+    color:var(--text);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  
+  .nav-close:hover{background:rgba(255,255,255,.08)}
+
+  .nav-panel-body{
+    padding:12px 14px 18px;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    flex:1;
+  }
+
+  .mobile-nav ul{
+    display:flex;
+    flex-direction:column;
+    align-items:stretch;
+    gap:10px;
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+
+  .mobile-nav a{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 14px;
+    border-radius:16px;
+    font-size:1rem;
+    font-weight:950;
+    color:rgba(255,255,255,.90);
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.10);
+  }
+
+  .mobile-nav a:hover{
+    background:rgba(255,255,255,.08);
+    border-color:rgba(255,255,255,.16);
+    color:#fff;
+  }
+
+  .mobile-nav a.active{
+    background:rgba(0,217,129,.12);
+    border-color:rgba(0,217,129,.28);
+    color:#fff;
+  }
+
+  .nav-panel-footer{
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,.10);
+    display:grid;
+    gap:10px;
+  }
+
+  .nav-hint{
+    color:var(--muted);
+    font-weight:900;
+    font-size:.92rem;
+    opacity:.9;
+  }
+}
+
+/* Safe area */
+@supports (padding: max(0px)){
+  @media (max-width:980px){
+    .nav-panel-body{
+      padding-bottom: max(18px, env(safe-area-inset-bottom));
     }
+  }
+}
 
-    function resolveCatalogImage(it, category){
-      const u = it?.image_url ? String(it.image_url).trim() : "";
-      if(u) return u;
-      if(category === "real-estate") return "assets/images/placeholder-home.jpg";
-      if(category === "logistics") return "assets/images/placeholder-car.jpg";
-      return "assets/images/larmah-header.jpeg";
-    }
+/* Hero */
+.hero{padding:34px 0 16px}
+.hero-shell{
+  border:1px solid var(--border);
+  background:linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
+  border-radius:var(--radius2);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  position:relative;
+}
+.hero-shell:before{
+  content:"";
+  position:absolute;inset:-180px;
+  background:
+    radial-gradient(circle at 18% 10%, rgba(212,175,55,.24), transparent 42%),
+    radial-gradient(circle at 75% 0%, rgba(255,255,255,.08), transparent 45%),
+    radial-gradient(circle at 80% 72%, rgba(108,168,255,.18), transparent 46%),
+    radial-gradient(circle at 25% 80%, rgba(67,209,125,.14), transparent 48%);
+  pointer-events:none;
+  filter:saturate(1.05);
+}
+.hero-inner{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:16px;
+  padding:22px;
+  position:relative;
+  z-index:1;
+}
+@media(max-width:980px){.hero-inner{grid-template-columns:1fr}}
+.hero h1{
+  font-size:clamp(2.0rem, 3.9vw, 3.05rem);
+  line-height:1.08;
+  letter-spacing:-.35px;
+}
+.lead{color:var(--muted);margin-top:10px;max-width:920px}
+.hero .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}
 
-    async function renderPreview(category, mountId){
-      const mount = document.getElementById(mountId);
-      if(!mount) return;
-      skel(mount);
+.hero-badges{display:grid;gap:10px}
+.hero-card{
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.16);
+  border-radius:18px;
+  padding:14px;
+  transition:transform var(--t), background var(--t), border-color var(--t);
+}
+.hero-card:hover{transform:translateY(-2px);background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.16)}
+.hero-card h3{font-size:1.05rem;margin-bottom:6px}
+.hero-card p{color:var(--muted);font-size:.95rem}
+.card-actions{margin-top:10px}
 
-      try{
-        const items = (await LARMAH.fetchCatalog(category)) || [];
-        __INDEX_CACHE[category] = items;
+.hero-kicker{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.kicker-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 12px;border-radius:999px;
+  border:1px solid rgba(0,217,129,.25);
+  background:rgba(0,217,129,.08);
+  color:var(--text);
+  font-weight:950;
+}
+.kicker-dot{opacity:.55}
+.kicker-sub{color:var(--muted);font-weight:900}
 
-        const top = items.slice(0,2);
-        if(!top.length){
-          mount.innerHTML = `<div class="notice"><strong>No items yet.</strong> Check back soon.</div>`;
-          return;
-        }
+.trust-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.trust-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 10px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.03);
+  color:var(--muted);
+  font-weight:900;
+}
+.trust-badge i{color:rgba(0,217,129,.95)}
 
-        mount.innerHTML = `
-          <div class="latest-list">
-            ${top.map(it => {
-              const img = resolveCatalogImage(it, category);
-              const fallback = category === "real-estate"
-                ? "assets/images/placeholder-home.jpg"
-                : "assets/images/placeholder-car.jpg";
-              return `
-                <div class="latest-item">
-                  <div class="latest-thumb">
-                    <img src="${LARMAH.escapeHtml(img)}"
-                         alt="${LARMAH.escapeHtml(it.title)}"
-                         loading="lazy"
-                         referrerpolicy="no-referrer"
-                         onerror="this.onerror=null; this.src='${fallback}'">
-                  </div>
-                  <div class="latest-body">
-                    <div class="latest-title">${LARMAH.escapeHtml(it.title)}</div>
-                    <div class="latest-meta">
-                      <span class="latest-price">${LARMAH.escapeHtml(it.price || 'Contact for quote')}</span>
-                      <span class="dot">•</span>
-                      <span class="small">Verified</span>
-                    </div>
-                    <button class="btn small primary" onclick="enquireFromIndex('${category}','${it.id}')">
-                      <i class="fa-brands fa-whatsapp"></i> Enquire
-                    </button>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        `;
-      }catch(e){
-        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)">
-          <strong>System link unavailable.</strong> Please refresh.
-        </div>`;
-      }
-    }
+/* Sections */
+.section{padding:18px 0 42px}
+.section h2{font-size:1.25rem;margin-bottom:8px}
+.section p.lead{margin-bottom:12px}
 
-    function enquireFromIndex(category, id){
-      const items = __INDEX_CACHE[category] || [];
-      const item = items.find(x => String(x.id) === String(id));
-      if(!item) return;
+.section-head-split{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:12px;margin-bottom:12px;
+}
+@media(max-width:720px){
+  .section-head-split{align-items:flex-start;flex-direction:column}
+}
 
-      LARMAH.openWhatsApp(LARMAH.buildMessage("Enquiry", {
-        Sector: category.toUpperCase(),
-        Asset: item.title,
-        Price: item.price || "Negotiable",
-        Ref: "WEB-INDEX-" + id
-      }));
-    }
+/* Grid + Cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fit, minmax(260px,1fr));gap:12px}
 
-    document.addEventListener("DOMContentLoaded", () => {
-      renderPreview("real-estate", "latestRE");
-      renderPreview("logistics", "latestLG");
-    });
-  </script>
-</body>
-</html>
+.card{
+  border:1px solid var(--border);
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:14px;
+  box-shadow:0 10px 26px rgba(0,0,0,.25);
+  transition:transform var(--t), background var(--t), border-color var(--t), box-shadow var(--t);
+}
+.card:hover{
+  transform:translateY(-2px);
+  background:rgba(255,255,255,.055);
+  border-color:rgba(255,255,255,.16);
+  box-shadow:0 16px 46px rgba(0,0,0,.35);
+}
+.card h3{font-size:1.05rem;margin-bottom:6px}
+.card p{color:var(--muted);font-size:.95rem}
+.meta{color:var(--muted2);font-weight:900;font-size:.9rem;margin-top:8px}
+.price{color:rgba(212,175,55,.95);font-weight:950;margin-top:8px}
+.actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+
+/* Media */
+.thumb{
+  width:100%;height:160px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.02);
+  overflow:hidden;margin-bottom:10px;
+}
+.thumb img{width:100%;height:100%;object-fit:cover}
+
+/* Notices */
+.notice{
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.02);
+  border-radius:16px;
+  padding:12px;
+  color:var(--muted);
+}
+.notice strong{color:var(--text)}
+.small{font-size:.92rem;color:var(--muted)}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:8px;
+  border-radius:16px;
+  padding:12px 14px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.02);
+  color:var(--text);
+  font-weight:950;
+  cursor:pointer;
+  transition:transform var(--t), background var(--t), border-color var(--t), filter var(--t);
+}
+.btn:hover{background:rgba(255,255,255,.06);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+
+.btn.primary{
+  border-color:rgba(212,175,55,.35);
+  background:rgba(212,175,55,.14);
+}
+.btn.primary:hover{background:rgba(212,175,55,.20)}
+
+.btn.solid{
+  border-color:rgba(212,175,55,.55);
+  background:linear-gradient(135deg, rgba(212,175,55,.95), rgba(212,175,55,.55));
+  color:#0b0d12;
+}
+.btn.solid:hover{filter:brightness(.98)}
+.btn.small{padding:10px 12px;border-radius:14px;font-size:.92rem}
+.btn.danger{border-color:rgba(255,90,103,.35);background:rgba(255,90,103,.10)}
+.btn.danger:hover{background:rgba(255,90,103,.16)}
+
+/* Forms */
+.input, textarea, select{
+  width:100%;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.02);
+  color:var(--text);
+  padding:12px 12px;
+  outline:none;
+  transition:background var(--t), border-color var(--t), box-shadow var(--t);
+}
+.input::placeholder, textarea::placeholder{color:rgba(182,188,203,.72)}
+.input:focus, textarea:focus, select:focus{
+  border-color:rgba(212,175,55,.35);
+  box-shadow:0 0 0 4px rgba(212,175,55,.10);
+  background:rgba(255,255,255,.03);
+}
+textarea{min-height:110px;resize:vertical}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:720px){.row2{grid-template-columns:1fr}}
+label.small{display:block;margin:0 0 6px;color:var(--muted);font-weight:900}
+
+/* Tables */
+.table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  border:1px solid var(--border);
+  background:var(--panel2);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.table th,.table td{
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  text-align:left;
+  vertical-align:top;
+  font-size:.95rem;
+}
+.table th{
+  color:rgba(246,247,251,.92);
+  font-weight:950;
+  text-transform:uppercase;
+  font-size:.78rem;
+  letter-spacing:.08em;
+  background:rgba(255,255,255,.02);
+}
+.table tr:last-child td{border-bottom:0}
+.table tr:hover td{background:rgba(255,255,255,.02)}
+.thumb-mini{
+  width:56px;height:40px;border-radius:10px;
+  border:1px solid rgba(255,255,255,.10);
+  overflow:hidden;display:inline-block;margin-right:10px;vertical-align:middle;
+}
+.thumb-mini img{width:100%;height:100%;object-fit:cover}
+
+/* Footer */
+footer{
+  margin-top:28px;
+  padding:34px 0 28px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(212,175,55,.10), transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(255,255,255,.06), transparent 45%),
+    rgba(255,255,255,.02);
+  border-top:1px solid rgba(255,255,255,.10);
+}
+.footer-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;margin-bottom:14px;
+}
+.footer-grid > div{
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(0,0,0,.10);
+  border-radius:18px;
+  padding:14px;
+}
+footer a{color:rgba(245,245,245,.84);font-weight:900}
+footer a:hover{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+
+/* Footer brand plate (full banner logo, no crop) */
+.brandline{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:10px;
+  padding:10px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.12));
+}
+.brandline img{
+  height:56px;
+  width:auto;
+  max-width:min(520px, 70vw);
+  object-fit:contain;
+  object-position:center;
+  border-radius:14px;
+  background:transparent;
+  box-shadow:none;
+  filter:none;
+}
+
+/* Modal + Toast */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;z-index:9999}
+.modal{width:min(940px,96vw);max-height:86vh;overflow:auto;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(10,14,22,.92);box-shadow:0 30px 120px rgba(0,0,0,.7)}
+.modal-head{position:sticky;top:0;background:rgba(10,14,22,.96);border-bottom:1px solid rgba(255,255,255,.08);padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-body{padding:14px}
+.modal-actions{position:sticky;bottom:0;background:rgba(10,14,22,.96);border-top:1px solid rgba(255,255,255,.08);padding:14px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+@media(max-width:720px){.modal-actions{justify-content:stretch}.modal-actions .btn{width:100%}}
+
+.toast{
+  position:fixed;left:50%;bottom:18px;
+  transform:translateX(-50%);
+  border:1px solid var(--border);
+  background:rgba(0,0,0,.65);
+  padding:10px 12px;border-radius:14px;
+  display:none;max-width:92vw;
+  box-shadow:0 18px 60px rgba(0,0,0,.45);
+}
+
+/* Index preview utilities */
+.home-grid{grid-template-columns:1fr 1fr}
+@media(max-width:980px){.home-grid{grid-template-columns:1fr}}
+.section-titleline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.mini-link{font-weight:950;color:rgba(245,245,245,.84)}
+.mini-link:hover{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
+
+.latest-list{display:grid;gap:12px}
+.latest-item{
+  display:grid;grid-template-columns:110px 1fr;gap:12px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.03);
+  border-radius:18px;
+  padding:10px;
+  transition:transform var(--t), background var(--t), border-color var(--t);
+}
+.latest-item:hover{transform:translateY(-2px);background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.16)}
+@media(max-width:520px){.latest-item{grid-template-columns:1fr}}
+.latest-thumb{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.02)}
+.latest-thumb img{width:100%;height:100%;object-fit:cover;aspect-ratio:16/12}
+.latest-body{display:flex;flex-direction:column;gap:8px}
+.latest-title{font-weight:950;font-size:1rem}
+.latest-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.latest-meta .dot{opacity:.5}
+.latest-price{color:rgba(0,217,129,.95);font-weight:950}
+
+/* Skeleton */
+.latest-skel{display:grid;gap:10px}
+.skel-line{
+  height:12px;border-radius:999px;
+  background:linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,255,255,.12), rgba(255,255,255,.06));
+  background-size:200% 100%;
+  animation:skel 1.1s infinite linear;
+}
+.skel-line.short{width:70%}
+@keyframes skel{0%{background-position:0% 50%}100%{background-position:200% 50%}}
+
+/* CTA strip */
+.cta-strip{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;
+  border:1px solid rgba(255,255,255,.10);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border-radius:22px;
+  padding:16px;
+  box-shadow:0 16px 50px rgba(0,0,0,.35);
+}
+
+/* Exchange styles */
+.live-ticker{
+  background:linear-gradient(90deg, var(--brand) 0%, var(--brand2) 100%);
+  color:#fff;
+  padding:10px 0;
+  font-weight:950;
+  border-bottom:1px solid rgba(255,255,255,.12);
+}
+.ticker-content{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.exchange-quick-calc{
+  margin-top:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.03);
+  border-radius:18px;
+  padding:12px;
+}
+.calc-inputs{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:10px;
+  align-items:center;
+}
+@media(max-width:820px){.calc-inputs{grid-template-columns:1fr}.calc-arrow{display:none}}
+.input-group{display:grid;gap:8px}
+.calc-arrow{font-weight:950;opacity:.7;text-align:center}
+.result-display{
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  border-radius:16px;
+  padding:12px;
+  font-weight:950;
+}
+.calc-container{margin-top:12px}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:720px){.calc-row{grid-template-columns:1fr}}
+.calc-swap{display:flex;justify-content:center;margin:10px 0}
+.swap-btn{
+  width:44px;height:44px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.03);
+  color:var(--text);
+  cursor:pointer;
+}
+.swap-btn:hover{background:rgba(255,255,255,.06)}
+.result-box{
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.18);
+  border-radius:16px;
+  padding:12px;
+  font-weight:950;
+}
+.calc-details{margin-top:12px;border-top:1px solid rgba(255,255,255,.08);padding-top:12px;display:grid;gap:8px}
+.detail-row{display:flex;justify-content:space-between;gap:10px;color:var(--muted)}
+.detail-row span:last-child{color:var(--text);font-weight:900}
+
+.rate-card{position:relative;overflow:hidden}
+.rate-badge{
+  position:absolute;top:12px;right:12px;
+  background:rgba(212,175,55,.92);
+  color:#0b0d12;
+  border-radius:999px;
+  padding:6px 10px;
+  font-size:.78rem;
+  font-weight:950;
+  border:1px solid rgba(0,0,0,.18);
+}
+.rate-main{
+  font-size:1.25rem;
+  font-weight:950;
+  color:rgba(0,217,129,.95);
+  margin-top:6px;
+}
+.rate-change{margin-top:8px;font-weight:950;font-size:.92rem}
+.rate-change.pos{color:var(--ok)}
+.rate-change.neg{color:var(--bad)}
+
+/* Mobile hero spacing */
+@media (max-width:720px){
+  .hero{padding:22px 0 12px}
+  .hero-inner{padding:16px}
+  .hero .actions .btn{width:100%}
+}
+
+/* Mobile logo tuning */
+@media (max-width:520px){
+  .brand img{height:42px;max-width:78vw}
+  .brandline img{height:48px;max-width:84vw}
+}
