@@ -1,3 +1,5 @@
+/* assets/css/style.css (FULL UPDATED — includes premium social icons styling + robust nav styles) */
+
 :root{
   /* Core */
   --bg:#070A12;
@@ -126,48 +128,39 @@ header{
 .menu-btn:hover{background:rgba(255,255,255,.06);transform:translateY(-1px)}
 .menu-btn:active{transform:translateY(0)}
 
-/* Desktop nav - FIXED: Always visible on desktop */
-.desktop-nav {
-  display: flex;
-  align-items: center;
+/* Desktop nav (default: nav#nav is normal horizontal list) */
+nav ul{display:flex;list-style:none;gap:10px;align-items:center}
+nav a{
+  color:var(--muted);
+  font-weight:950;
+  font-size:.95rem;
+  padding:10px 12px;border-radius:14px;
+  transition:background var(--t), color var(--t), transform var(--t), border-color var(--t);
+  white-space:nowrap;
+}
+nav a:hover{color:var(--text);background:rgba(255,255,255,.06)}
+nav a.active{
+  color:var(--text);
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.10);
 }
 
-.desktop-nav ul {
-  display: flex;
-  list-style: none;
-  gap: 10px;
-  align-items: center;
-  margin: 0;
-  padding: 0;
+/* Compatibility (if you use desktop-nav/mobile-nav class split) */
+.desktop-nav{display:flex;align-items:center}
+.desktop-nav ul{display:flex;list-style:none;gap:10px;align-items:center;margin:0;padding:0}
+.desktop-nav a{
+  color:var(--muted);
+  font-weight:950;
+  font-size:.95rem;
+  padding:10px 12px;border-radius:14px;
+  transition:background var(--t), color var(--t), transform var(--t), border-color var(--t);
+  white-space:nowrap;
 }
+.desktop-nav a:hover{color:var(--text);background:rgba(255,255,255,.06)}
+.desktop-nav a.active{color:var(--text);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10)}
 
-.desktop-nav a {
-  color: var(--muted);
-  font-weight: 950;
-  font-size: .95rem;
-  padding: 10px 12px;
-  border-radius: 14px;
-  transition: background var(--t), color var(--t), transform var(--t), border-color var(--t);
-  white-space: nowrap;
-}
-
-.desktop-nav a:hover {
-  color: var(--text);
-  background: rgba(255,255,255,.06);
-}
-
-.desktop-nav a.active {
-  color: var(--text);
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.10);
-}
-
-.header-actions {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
+/* Header actions */
+.header-actions{display:flex;gap:10px;align-items:center}
 .pill{
   border:1px solid rgba(255,255,255,.10);
   background:rgba(255,255,255,.02);
@@ -185,40 +178,51 @@ header{
 .pill.primary:hover{background:rgba(212,175,55,.18)}
 
 /* ==========================
-   PRO MOBILE NAV OVERLAY - FIXED
+   PRO MOBILE NAV OVERLAY
+   (works for nav#nav OR .mobile-nav)
    ========================== */
 body.nav-open{overflow:hidden}
-
-.mobile-nav {
-  display: none;
-}
+.mobile-nav{display:none}
 
 @media (max-width: 980px){
   .menu-btn{display:block}
-  
-  /* Hide desktop nav on mobile */
-  .desktop-nav { display: none; }
-  
-  /* Show mobile nav overlay when active */
-  .mobile-nav {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
+  .desktop-nav{display:none}
+
+  /* If you use nav#nav as overlay */
+  nav#nav{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
     background:
       radial-gradient(1200px 700px at 20% 0%, rgba(212,175,55,.10), transparent 45%),
       radial-gradient(900px 700px at 85% 20%, rgba(0,217,129,.10), transparent 45%),
       rgba(0,0,0,.92);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: 0;
-    overflow: hidden;
+    padding:0;
+    overflow:hidden;
   }
-  
-  .mobile-nav.active {
-    display: block;
-  }
+  nav#nav.active{display:block}
 
+  /* If you use .mobile-nav as overlay */
+  .mobile-nav{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    background:
+      radial-gradient(1200px 700px at 20% 0%, rgba(212,175,55,.10), transparent 45%),
+      radial-gradient(900px 700px at 85% 20%, rgba(0,217,129,.10), transparent 45%),
+      rgba(0,0,0,.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding:0;
+    overflow:hidden;
+  }
+  .mobile-nav.active{display:block}
+
+  /* Panel */
   .nav-panel{
     height:100%;
     max-width:520px;
@@ -230,7 +234,6 @@ body.nav-open{overflow:hidden}
     flex-direction:column;
     animation:navIn .22s var(--ease);
   }
-  
   @keyframes navIn{
     from{transform:translateX(-12px);opacity:.6}
     to{transform:translateX(0);opacity:1}
@@ -246,13 +249,7 @@ body.nav-open{overflow:hidden}
     background:rgba(255,255,255,.02);
   }
 
-  .nav-brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    min-width:0;
-  }
-  
+  .nav-brand{display:flex;align-items:center;gap:10px;min-width:0}
   .nav-brand img{
     height:40px;
     width:auto;
@@ -262,8 +259,7 @@ body.nav-open{overflow:hidden}
   }
 
   .nav-close{
-    width:44px;
-    height:44px;
+    width:44px;height:44px;
     border-radius:14px;
     border:1px solid rgba(255,255,255,.12);
     background:rgba(255,255,255,.04);
@@ -273,7 +269,6 @@ body.nav-open{overflow:hidden}
     align-items:center;
     justify-content:center;
   }
-  
   .nav-close:hover{background:rgba(255,255,255,.08)}
 
   .nav-panel-body{
@@ -283,7 +278,8 @@ body.nav-open{overflow:hidden}
     flex:1;
   }
 
-  .mobile-nav ul{
+  /* In overlay, links should be blocky */
+  nav#nav ul, .mobile-nav ul{
     display:flex;
     flex-direction:column;
     align-items:stretch;
@@ -293,7 +289,7 @@ body.nav-open{overflow:hidden}
     padding:0;
   }
 
-  .mobile-nav a{
+  nav#nav a, .mobile-nav a{
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -306,13 +302,13 @@ body.nav-open{overflow:hidden}
     border:1px solid rgba(255,255,255,.10);
   }
 
-  .mobile-nav a:hover{
+  nav#nav a:hover, .mobile-nav a:hover{
     background:rgba(255,255,255,.08);
     border-color:rgba(255,255,255,.16);
     color:#fff;
   }
 
-  .mobile-nav a.active{
+  nav#nav a.active, .mobile-nav a.active{
     background:rgba(0,217,129,.12);
     border-color:rgba(0,217,129,.28);
     color:#fff;
@@ -337,9 +333,7 @@ body.nav-open{overflow:hidden}
 /* Safe area */
 @supports (padding: max(0px)){
   @media (max-width:980px){
-    .nav-panel-body{
-      padding-bottom: max(18px, env(safe-area-inset-bottom));
-    }
+    .nav-panel-body{ padding-bottom: max(18px, env(safe-area-inset-bottom)); }
   }
 }
 
@@ -528,7 +522,7 @@ textarea{min-height:110px;resize:vertical}
 @media(max-width:720px){.row2{grid-template-columns:1fr}}
 label.small{display:block;margin:0 0 6px;color:var(--muted);font-weight:900}
 
-/* Tables */
+/* Table */
 .table{
   width:100%;
   border-collapse:separate;
@@ -558,7 +552,7 @@ label.small{display:block;margin:0 0 6px;color:var(--muted);font-weight:900}
 .thumb-mini{
   width:56px;height:40px;border-radius:10px;
   border:1px solid rgba(255,255,255,.10);
-  overflow:hidden;display:inline-block;margin-right:10px;vertical-align:middle;
+  overflow:hidden;display:inline-block;margin-right:10px;vertical-align:middle
 }
 .thumb-mini img{width:100%;height:100%;object-fit:cover}
 
@@ -586,7 +580,6 @@ footer{
 footer a{color:rgba(245,245,245,.84);font-weight:900}
 footer a:hover{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:2px}
 
-/* Footer brand plate (full banner logo, no crop) */
 .brandline{
   display:flex;align-items:center;gap:12px;
   margin-bottom:10px;
@@ -607,6 +600,73 @@ footer a:hover{text-decoration:underline;text-underline-offset:4px;text-decorati
   filter:none;
 }
 
+/* ==========================
+   SOCIAL ICONS (PRO STYLING)
+   Supports:
+   - .social-row .social-btn (current)
+   - .social-box .social-link (older)
+   - .social-links .social-link (older)
+   - .social-links-footer .social-link (older)
+   ========================== */
+
+/* Row container(s) */
+.social-row,
+.social-box,
+.social-links,
+.social-links-footer{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  margin-top:12px;
+}
+
+/* Unified social button base */
+.social-btn,
+.social-link{
+  width:42px;
+  height:42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(255,255,255,.08), transparent 45%),
+    rgba(255,255,255,.03);
+  color: rgba(255,255,255,.92);
+  transition: transform var(--t), background var(--t), border-color var(--t), box-shadow var(--t), filter var(--t);
+  text-decoration:none;
+}
+
+.social-btn i,
+.social-link i{
+  font-size:1.05rem;
+}
+
+/* Hover / Active */
+.social-btn:hover,
+.social-link:hover{
+  transform: translateY(-2px);
+  border-color: rgba(0,217,129,.28);
+  background:
+    radial-gradient(circle at 30% 20%, rgba(0,217,129,.22), transparent 55%),
+    rgba(0,217,129,.10);
+  box-shadow: 0 18px 50px rgba(0,0,0,.45);
+  color: #ffffff;
+}
+
+/* Focus */
+.social-btn:focus-visible,
+.social-link:focus-visible{
+  box-shadow: 0 0 0 4px rgba(0,217,129,.18), 0 0 0 1px rgba(0,217,129,.35) inset;
+}
+
+/* Optional: compact mode on very small screens */
+@media(max-width:520px){
+  .social-btn, .social-link{ width:40px; height:40px; border-radius:13px; }
+}
+
 /* Modal + Toast */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:16px;z-index:9999}
 .modal{width:min(940px,96vw);max-height:86vh;overflow:auto;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(10,14,22,.92);box-shadow:0 30px 120px rgba(0,0,0,.7)}
@@ -625,7 +685,7 @@ footer a:hover{text-decoration:underline;text-underline-offset:4px;text-decorati
   box-shadow:0 18px 60px rgba(0,0,0,.45);
 }
 
-/* Index preview utilities */
+/* Index preview */
 .home-grid{grid-template-columns:1fr 1fr}
 @media(max-width:980px){.home-grid{grid-template-columns:1fr}}
 .section-titleline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
@@ -746,9 +806,6 @@ footer a:hover{text-decoration:underline;text-underline-offset:4px;text-decorati
   color:rgba(0,217,129,.95);
   margin-top:6px;
 }
-.rate-change{margin-top:8px;font-weight:950;font-size:.92rem}
-.rate-change.pos{color:var(--ok)}
-.rate-change.neg{color:var(--bad)}
 
 /* Mobile hero spacing */
 @media (max-width:720px){
