@@ -1,10 +1,10 @@
+<!-- premium.html (UPDATED — pro + smart + 100% mobile responsive + new nav overlay) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Premium | Larmah Enterprise</title>
-
   <meta name="description" content="Unlock priority access, private listings, and concierge support with Larmah Premium." />
   <meta name="theme-color" content="#070A12" />
 
@@ -22,7 +22,6 @@
     .featured{
       border-color: rgba(0,217,129,.22) !important;
       background: linear-gradient(180deg, rgba(0,217,129,.08), rgba(255,255,255,.02)) !important;
-      box-shadow: 0 18px 60px rgba(0,0,0,.50);
       position:relative;
       overflow:hidden;
     }
@@ -46,7 +45,7 @@
 <body data-page="premium">
   <header>
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Home">
+      <a class="brand" href="index.html" aria-label="Larmah Home">
         <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
       </a>
 
@@ -54,13 +53,35 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
+      <!-- BEAUTIFUL MOBILE OVERLAY NAV -->
       <nav id="nav" aria-label="Primary navigation">
-        <ul>
-          <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
-          <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-          <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
-          <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
-        </ul>
+        <div class="nav-panel">
+          <div class="nav-panel-head">
+            <div class="nav-brand">
+              <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+            </div>
+            <button class="nav-close" onclick="LARMAH.closeMenu()" aria-label="Close menu">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="nav-panel-body">
+            <ul>
+              <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
+              <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
+              <li><a class="nav-link" href="insights.html" data-link="insights">Insights <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
+              <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
+            </ul>
+
+            <div class="nav-panel-footer">
+              <div class="nav-hint">Tip: Tap a section to open. Press ESC to close.</div>
+              <a class="btn solid" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Premium Help', { Name:'', Phone:'', Message:'Hello Larmah, I want Premium.' }))">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+              </button>
+            </div>
+          </div>
+        </div>
       </nav>
 
       <div class="header-actions">
@@ -77,11 +98,11 @@
             <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-crown"></i> Larmah Premium</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Priority access • Concierge support • Faster sourcing</span>
+              <span class="kicker-sub">Priority access • Concierge support</span>
             </div>
 
             <h1>Upgrade Your Experience.</h1>
-            <p class="lead">Skip the queue with priority responses and a faster sourcing pipeline across Real Estate, Logistics, and Exchange.</p>
+            <p class="lead">Skip the queue with faster responses, premium sourcing, and priority exchange desk support.</p>
           </div>
         </div>
       </div>
@@ -89,7 +110,7 @@
 
     <section class="section">
       <h2>Choose a plan</h2>
-      <p class="lead">Payments are via WhatsApp by default. If you later add Paystack inline, you can wire it in.</p>
+      <p class="lead">Payments are coordinated via WhatsApp for now.</p>
 
       <div class="price-grid">
         <div class="card">
@@ -98,12 +119,10 @@
           <div class="list">
             <div><i class="fa-solid fa-check"></i><span>Priority WhatsApp support</span></div>
             <div><i class="fa-solid fa-check"></i><span>Early access to listings</span></div>
-            <div><i class="fa-solid fa-check"></i><span>Standard assistance</span></div>
+            <div><i class="fa-solid fa-check"></i><span>Faster confirmations</span></div>
           </div>
           <div class="actions" style="margin-top:12px">
-            <button class="btn solid" style="width:100%" onclick="pay('Monthly', 5000)">
-              <i class="fa-solid fa-bolt"></i> Get Started
-            </button>
+            <button class="btn solid" style="width:100%" onclick="pay('Monthly', 5000)"><i class="fa-solid fa-bolt"></i> Get Started</button>
           </div>
         </div>
 
@@ -114,12 +133,10 @@
           <div class="list">
             <div><i class="fa-solid fa-check"></i><span>All monthly features</span></div>
             <div><i class="fa-solid fa-check"></i><span>Private inventory access</span></div>
-            <div><i class="fa-solid fa-check"></i><span>Faster sourcing pipeline</span></div>
+            <div><i class="fa-solid fa-check"></i><span>Priority exchange desk</span></div>
           </div>
           <div class="actions" style="margin-top:12px">
-            <button class="btn solid" style="width:100%" onclick="pay('Quarterly', 12000)">
-              <i class="fa-solid fa-star"></i> Upgrade Now
-            </button>
+            <button class="btn solid" style="width:100%" onclick="pay('Quarterly', 12000)"><i class="fa-solid fa-star"></i> Upgrade Now</button>
           </div>
         </div>
 
@@ -129,12 +146,10 @@
           <div class="list">
             <div><i class="fa-solid fa-check"></i><span>All quarterly features</span></div>
             <div><i class="fa-solid fa-check"></i><span>24/7 priority concierge</span></div>
-            <div><i class="fa-solid fa-check"></i><span>Priority exchange desk</span></div>
+            <div><i class="fa-solid fa-check"></i><span>Best priority routing</span></div>
           </div>
           <div class="actions" style="margin-top:12px">
-            <button class="btn solid" style="width:100%" onclick="pay('Yearly', 40000)">
-              <i class="fa-solid fa-gem"></i> Best Value
-            </button>
+            <button class="btn solid" style="width:100%" onclick="pay('Yearly', 40000)"><i class="fa-solid fa-gem"></i> Best Value</button>
           </div>
         </div>
       </div>
@@ -144,29 +159,13 @@
         <p class="small">Enter your details for confirmation and activation.</p>
 
         <div class="row2" style="margin-top:12px">
-          <div>
-            <label class="small">Full Name</label>
-            <input id="pm_name" class="input" placeholder="Full name" />
-          </div>
-          <div>
-            <label class="small">WhatsApp Number</label>
-            <input id="pm_phone" class="input" placeholder="+234..." />
-          </div>
+          <div><label class="small">Full Name</label><input id="pm_name" class="input" placeholder="Full name" /></div>
+          <div><label class="small">WhatsApp Number</label><input id="pm_phone" class="input" placeholder="+234..." /></div>
         </div>
 
         <div class="row2" style="margin-top:12px">
-          <div>
-            <label class="small">Email Address</label>
-            <input id="pm_email" class="input" placeholder="name@email.com" />
-          </div>
-          <div>
-            <label class="small">Current City</label>
-            <input id="pm_city" class="input" placeholder="Lagos, Abuja..." />
-          </div>
-        </div>
-
-        <div class="small" style="margin-top:10px;opacity:.75">
-          We’ll confirm your plan on WhatsApp and activate priority support.
+          <div><label class="small">Email Address</label><input id="pm_email" class="input" placeholder="name@email.com" /></div>
+          <div><label class="small">Current City</label><input id="pm_city" class="input" placeholder="Lagos, Abuja..." /></div>
         </div>
       </div>
     </section>
@@ -195,8 +194,8 @@
         <div>
           <b>Links</b>
           <div class="small" style="margin-top:10px"><a href="index.html">Home</a></div>
-          <div class="small"><a href="insights.html">Insights</a></div>
           <div class="small"><a href="exchange.html">Exchange</a></div>
+          <div class="small"><a href="insights.html">Insights</a></div>
         </div>
       </div>
 
@@ -217,16 +216,14 @@
       if(!phone || phone.length < 10){ LARMAH.toast("WhatsApp number required"); return; }
       if(!email || !email.includes("@")){ LARMAH.toast("Valid email required"); return; }
 
-      const msg = LARMAH.buildMessage("Premium Subscription Intent", {
-        "Plan": plan,
-        "Price": "₦" + amountNaira,
-        "Subscriber": name,
-        "Phone": phone,
-        "Email": email,
-        "City": city || "-"
-      });
-
-      LARMAH.openWhatsApp(msg);
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Premium Subscription Intent", {
+        Plan: plan,
+        Price: "₦" + amountNaira,
+        Subscriber: name,
+        Phone: phone,
+        Email: email,
+        City: city || "-"
+      }));
     }
   </script>
 </body>
