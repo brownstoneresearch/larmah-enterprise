@@ -331,7 +331,10 @@
         <div class="grid">
           ${items.map(it => `
             <div class="card">
-              ${it.image_url ? `<div class="thumb"><img loading="lazy" src="${LARMAH.escapeHtml(it.image_url)}" alt=""></div>` : ``}
+              ${(() => {
+  const urls = LARMAH.normalizeImageUrls(it);
+  return urls.length ? LARMAH.galleryHtml(urls, it.title, "lg-" + it.id) : "";
+})()}
               <h3>${LARMAH.escapeHtml(it.title)}</h3>
               <p>${LARMAH.escapeHtml(it.description || "")}</p>
               ${it.price ? `<div class="price">${LARMAH.escapeHtml(it.price)}</div>` : ``}
@@ -343,6 +346,7 @@
           `).join("")}
         </div>
       `;
+      LARMAH.bindGalleries(mount);
     }
 
     async function loadLogistics(){
