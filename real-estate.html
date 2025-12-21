@@ -82,8 +82,8 @@
         </div>
         <div class="msheet-footer">
             <div class="msheet-hint">Menu</div>
-            <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-                <span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span>
+            <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
+                <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
             </a>
         </div>
       </div>
@@ -108,6 +108,18 @@
           <li><a class="nav-link" href="exchange.html">Exchange</a></li>
         </ul>
       </nav>
+      
+      <div class="header-actions" style="margin-left:auto; display:none;">
+          <a href="dashboard.html" class="pill primary">Dashboard</a>
+      </div>
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+             // Basic check if user is logged in to show button
+             if(localStorage.getItem('sb-'+SUPABASE_URL+'-auth-token')) {
+                 document.querySelector('.header-actions').style.display = 'flex';
+             }
+        });
+      </script>
     </div>
   </header>
 
@@ -390,7 +402,6 @@
           ${items.map(it => `
             <div class="card">
               ${(() => {
-                // Gallery handling matching style.css
                 const urls = LARMAH.normalizeImageUrls(it);
                 return urls.length ? LARMAH.galleryHtml(urls, it.title, "re-" + it.id) : "";
               })()}
@@ -411,7 +422,7 @@
         </div>
       `;
 
-      // Activate galleries after render
+      // Activate galleries
       LARMAH.bindGalleries(mount);
     }
 
@@ -437,6 +448,7 @@
       renderCards(items);
     }
 
+    // REAL-TIME FETCH FUNCTION
     async function loadRealEstate(){
       const mount = document.getElementById("catalogMount");
       // Initial Skeleton
@@ -447,9 +459,23 @@
              <div class="card" style="height:300px;opacity:0.5"></div>
         </div>`;
         
-      __RE_ITEMS = await LARMAH.fetchCatalog("real-estate");
+      // Fetch from Supabase
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('category', 'real-estate')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+         console.error(error);
+         mount.innerHTML = `<div class="notice">Error loading listings. Please refresh.</div>`;
+         return;
+      }
       
-      if(!__RE_ITEMS || !__RE_ITEMS.length){
+      __RE_ITEMS = data || [];
+      
+      if(!__RE_ITEMS.length){
         mount.innerHTML = `<div class="notice"><strong>No active listings currently.</strong> Please submit a custom request below.</div>`;
         return;
       }
@@ -480,15 +506,9 @@
 
       if(!fields.Name || !fields.Phone){ LARMAH.toast("Name and WhatsApp phone required"); return; }
 
-      const res = await LARMAH.submitRequest({
-        category: "real-estate",
-        name: fields.Name,
-        phone: fields.Phone,
-        details: fields
-      });
+      // In a full app, you might save this to a 'requests' table here
+      // const res = await LARMAH.submitRequest({...}); 
       
-      if(!res.ok) LARMAH.toast("Opening WhatsApp...");
-
       LARMAH.openWhatsApp(LARMAH.buildMessage("New Property Sourcing Request", fields));
     }
 
