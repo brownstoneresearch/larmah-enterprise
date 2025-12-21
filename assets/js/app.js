@@ -1,4 +1,4 @@
-// assets/js/app.js (FULL — mobile drawer ALWAYS overlays hero + fixes nav issues + dynamic exchange + insights)
+// assets/js/app.js (FULL — mobile drop-down sheet to 50vh + black overlay; closes ONLY by X)
 
 (() => {
   const LARMAH = (window.LARMAH = window.LARMAH || {});
@@ -9,9 +9,7 @@
   LARMAH.SUPABASE_ANON_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyY2hqaWZ1ZnBzdnZsemdwYWl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwOTMwNDEsImV4cCI6MjA4MTY2OTA0MX0.MLr1iCF4gjz0wnT1IFISCV9eJtnbq96_W_i7wAMOSbY";
 
-  LARMAH.PAYSTACK_PUBLIC_KEY = "PUT_YOUR_PAYSTACK_PUBLIC_KEY_HERE";
-
-  // Utilities
+  // Utils
   LARMAH.escapeHtml = (s) =>
     String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
 
@@ -46,15 +44,12 @@
 
   // Supabase
   LARMAH.sb = null;
-
   LARMAH.initSupabase = async () => {
     if (!window.supabase) return null;
     if (LARMAH.sb) return LARMAH.sb;
-
     LARMAH.sb = window.supabase.createClient(LARMAH.SUPABASE_URL, LARMAH.SUPABASE_ANON_KEY, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
     });
-
     try { LARMAH.sb.auth.onAuthStateChange(() => LARMAH.renderAuthPill()); } catch (_) {}
     return LARMAH.sb;
   };
@@ -94,7 +89,7 @@
       '<button class="pill" onclick="LARMAH.signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign out</button>';
   };
 
-  // Data: Catalog
+  // Data helpers (used by pages)
   LARMAH.fetchCatalog = async (category) => {
     const sb = await LARMAH.initSupabase();
     if (!sb) return [];
@@ -108,10 +103,9 @@
     return data || [];
   };
 
-  // Data: Requests
   LARMAH.submitRequest = async (payload) => {
     const sb = await LARMAH.initSupabase();
-    if (!sb) return { ok: false, error: "Supabase not configured" };
+    if (!sb) return { ok:false, error:"Supabase not configured" };
 
     const sess = await LARMAH.getSession();
     const user_id = sess?.user?.id || null;
@@ -128,14 +122,13 @@
     let { error } = await sb.from("requests").insert([record]);
 
     if (error && /column "user_id".*does not exist/i.test(error.message)) {
-      const record2 = { ...record };
-      delete record2.user_id;
+      const record2 = { ...record }; delete record2.user_id;
       const r2 = await sb.from("requests").insert([record2]);
       error = r2.error;
     }
 
-    if (error) { console.error(error); return { ok: false, error: error.message }; }
-    return { ok: true };
+    if (error) { console.error(error); return { ok:false, error:error.message }; }
+    return { ok:true };
   };
 
   // Insights
@@ -145,8 +138,8 @@
     const { data, error } = await sb
       .from("insights_posts")
       .select("id,title,body,pinned,created_at")
-      .order("pinned", { ascending: false })
-      .order("created_at", { ascending: false })
+      .order("pinned", { ascending:false })
+      .order("created_at", { ascending:false })
       .limit(limit);
     if (error) { console.error(error); return []; }
     return data || [];
@@ -197,7 +190,7 @@
 
     LARMAH.__insightsChan = sb
       .channel("insights_posts_changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "insights_posts" }, async () => {
+      .on("postgres_changes", { event:"*", schema:"public", table:"insights_posts" }, async () => {
         await LARMAH.renderInsights(mountId);
       })
       .subscribe();
@@ -210,7 +203,7 @@
     const { data, error } = await sb
       .from("exchange_rates")
       .select("code,name,buy_ngn,sell_ngn,fee_rate,min_amount,max_amount,updated_at")
-      .order("code", { ascending: true });
+      .order("code", { ascending:true });
     if (error) { console.error(error); return []; }
     return data || [];
   };
@@ -222,13 +215,13 @@
 
     LARMAH.__exchangeChan = sb
       .channel("exchange_rates_changes")
-      .on("postgres_changes", { event: "*", schema: "public", table: "exchange_rates" }, () => {
+      .on("postgres_changes", { event:"*", schema:"public", table:"exchange_rates" }, () => {
         if (typeof onChange === "function") onChange();
       })
       .subscribe();
   };
 
-  // Active nav on desktop links
+  // Active nav (desktop)
   LARMAH.setActiveNav = () => {
     const links = Array.from(document.querySelectorAll(".nav-link"));
     if (!links.length) return;
@@ -236,16 +229,18 @@
     links.forEach(a => a.classList.toggle("active", (a.dataset?.link || "") === page));
   };
 
-  // -------- Mobile Drawer (always overlays hero) --------
-  function isMobile(){ return window.matchMedia && window.matchMedia("(max-width: 980px)").matches; }
+  // ==========================
+  // MOBILE SHEET MENU (CLOSE ONLY WITH X)
+  // ==========================
+  function isMobile(){
+    return window.matchMedia && window.matchMedia("(max-width: 980px)").matches;
+  }
 
-  function buildDrawer(){
+  function ensureSheet(){
     if (document.getElementById("mobileNavOverlay")) return;
 
-    // Collect nav links from desktop nav
     const nav = document.getElementById("nav");
     const linkEls = nav ? Array.from(nav.querySelectorAll("a.nav-link")) : [];
-
     const uniq = new Map();
     linkEls.forEach(a => {
       const href = (a.getAttribute("href") || "").trim();
@@ -254,33 +249,33 @@
       if (!uniq.has(href)) uniq.set(href, { href, text, dataLink: a.dataset?.link || "" });
     });
 
-    // Logo source
     const logo = document.querySelector(".brand img");
     const logoSrc = logo ? logo.getAttribute("src") : "assets/images/larmah-header.jpeg";
 
     const overlay = document.createElement("div");
     overlay.id = "mobileNavOverlay";
     overlay.innerHTML = `
-      <div class="mnav-panel" role="dialog" aria-modal="true" aria-label="Menu">
-        <div class="mnav-head">
-          <div class="mnav-brand"><img src="${logoSrc}" alt="Larmah Enterprise"></div>
-          <button class="mnav-close" type="button" aria-label="Close menu">
+      <div class="msheet" role="dialog" aria-modal="true" aria-label="Menu">
+        <div class="msheet-head">
+          <div class="msheet-brand">
+            <img src="${logoSrc}" alt="Larmah Enterprise">
+          </div>
+          <button class="msheet-close" type="button" aria-label="Close menu">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
-
-        <div class="mnav-body">
-          <div class="mnav-links">
+        <div class="msheet-body">
+          <div class="msheet-links">
             ${Array.from(uniq.values()).map(item => `
-              <a class="mnav-link" href="${item.href}" data-link="${item.dataLink}">
+              <a class="msheet-link" href="${item.href}" data-link="${item.dataLink}">
                 <span>${LARMAH.escapeHtml(item.text)}</span>
                 <i class="fa-solid fa-chevron-right" style="opacity:.55"></i>
               </a>
             `).join("")}
           </div>
 
-          <div class="mnav-footer">
-            <div class="mnav-hint">Tip: Tap a section to open. Press ESC to close.</div>
+          <div class="msheet-footer">
+            <div class="msheet-hint">Menu closes only by tapping the X.</div>
             <a class="btn solid" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
             <button class="btn" type="button" data-whatsapp>
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
@@ -291,46 +286,38 @@
     `;
     document.body.appendChild(overlay);
 
-    // Close button
-    overlay.querySelector(".mnav-close").addEventListener("click", () => LARMAH.closeMenu());
+    // CLOSE ONLY WITH X
+    overlay.querySelector(".msheet-close").addEventListener("click", () => LARMAH.closeMenu());
 
-    // Click outside panel closes
-    overlay.addEventListener("click", (e) => {
-      const panel = overlay.querySelector(".mnav-panel");
-      if (panel && !panel.contains(e.target)) LARMAH.closeMenu();
+    // Links do NOT auto-close (since you requested close only with X).
+    // But you can enable auto-close by uncommenting:
+    // overlay.querySelectorAll(".msheet-link").forEach(a => a.addEventListener("click", () => LARMAH.closeMenu()));
+
+    // WhatsApp button
+    const wa = overlay.querySelector("[data-whatsapp]");
+    wa && wa.addEventListener("click", () => {
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Quick Help", { Name:"", Phone:"", Message:"Hello Larmah, I need help." }));
     });
-
-    // Clicking a link closes
-    overlay.querySelectorAll(".mnav-link").forEach(a => {
-      a.addEventListener("click", () => LARMAH.closeMenu());
-    });
-
-    // WhatsApp CTA
-    const waBtn = overlay.querySelector("[data-whatsapp]");
-    if (waBtn){
-      waBtn.addEventListener("click", () => {
-        LARMAH.openWhatsApp(LARMAH.buildMessage("Quick Help", { Name:"", Phone:"", Message:"Hello Larmah, I need help." }));
-      });
-    }
   }
 
-  // Public controls
   LARMAH.openMenu = () => {
     if (!isMobile()) return;
-    buildDrawer();
+    ensureSheet();
     const overlay = document.getElementById("mobileNavOverlay");
     if (!overlay) return;
 
-    overlay.classList.add("active");
     overlay.style.display = "block";
+    overlay.classList.add("active");
     document.body.classList.add("nav-open");
 
+    // set active in sheet
     const page = (document.body.getAttribute("data-page") || "").trim();
-    overlay.querySelectorAll(".mnav-link").forEach(a => {
+    overlay.querySelectorAll(".msheet-link").forEach(a => {
       a.classList.toggle("active", (a.getAttribute("data-link") || "") === page);
     });
 
-    const closeBtn = overlay.querySelector(".mnav-close");
+    // focus close
+    const closeBtn = overlay.querySelector(".msheet-close");
     closeBtn && closeBtn.focus();
   };
 
@@ -343,11 +330,9 @@
     document.body.classList.remove("nav-open");
   };
 
-  // Menu button toggles drawer on mobile
-  const oldToggle = LARMAH.toggleMenu;
   LARMAH.toggleMenu = () => {
     if (!isMobile()) return;
-    buildDrawer();
+    ensureSheet();
     const overlay = document.getElementById("mobileNavOverlay");
     if (!overlay) return;
     if (overlay.classList.contains("active")) LARMAH.closeMenu();
@@ -363,12 +348,9 @@
     await LARMAH.initSupabase();
     await LARMAH.renderAuthPill();
 
-    // ESC closes
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") LARMAH.closeMenu();
-    });
+    // If you want ESC to close, uncomment (currently not requested):
+    // document.addEventListener("keydown", (e) => { if (e.key === "Escape") LARMAH.closeMenu(); });
 
-    // if resized to desktop, close drawer
     window.addEventListener("resize", () => {
       if (!isMobile()) LARMAH.closeMenu();
     });
