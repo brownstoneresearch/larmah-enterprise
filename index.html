@@ -2,639 +2,174 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Larmah Enterprise | Nigeria's Trust-First Commerce Hub</title>
-  <meta name="description" content="Verified Real Estate listings, reliable Logistics services, live market Insights, and secure Exchange services across Nigeria with WhatsApp-first support." />
-  <meta name="theme-color" content="#070A12" />
-  <meta name="color-scheme" content="dark" />
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Larmah Enterprise | Trust-First Commerce in Nigeria" />
-  <meta property="og:description" content="Real Estate • Logistics • Insights • Exchange — Verified Standards with WhatsApp-First Support" />
-  <meta property="og:image" content="https://larmah.tech/assets/images/og-image.jpg" />
-  <meta property="og:url" content="https://larmah.tech" />
-  <meta property="og:site_name" content="Larmah Enterprise" />
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Larmah Enterprise | Nigeria's Trust-First Hub" />
-  <meta name="twitter:description" content="Verified commerce services with scam-resistant workflows across Nigeria" />
-  <meta name="twitter:image" content="https://larmah.tech/assets/images/twitter-card.jpg" />
-
-  <!-- Icons & Preloads -->
-  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
-  <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
-  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <meta name="description" content="Verified Real Estate, Logistics, and Secure Exchange. Build on trust, powered by heylarmah.tech" />
   
- 
+  <link rel="icon" href="assets/images/larmah-favicon.jpeg" />
   <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="assets/js/app.js" defer></script>
 </head>
+<body data-page="home">
 
-<body data-page="home" itemscope itemtype="https://schema.org/Organization">
-  <a href="#main-content" class="skip-link">Skip to main content</a>
-
-  <header role="banner" aria-label="Main header">
+  <header>
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Enterprise Home">
-        <img 
-          src="assets/images/larmah-header.jpeg" 
-          alt="Larmah Enterprise Logo" 
-          width="120" 
-          height="48"
-          loading="eager"
-        />
-        <span class="visually-hidden">Larmah Enterprise</span>
+      <a class="brand" href="index.html">
+        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
       </a>
 
-      <button 
-        class="menu-btn" 
-        onclick="LARMAH.toggleMenu()" 
-        aria-label="Open navigation menu"
-        aria-expanded="false"
-        aria-controls="mobileNavOverlay"
-      >
-        <span class="menu-icon" aria-hidden="true">
-          <i class="fa-solid fa-bars"></i>
-        </span>
-        <span class="visually-hidden">Menu</span>
-      </button>
-
-      <!-- Desktop Navigation -->
-      <nav id="nav" aria-label="Primary navigation">
-        <ul role="menubar">
-          <li role="none">
-            <a class="nav-link" href="real-estate.html" data-link="real-estate" role="menuitem">
-              <i class="fa-solid fa-building" aria-hidden="true"></i>
-              <span>Real Estate</span>
-            </a>
-          </li>
-          <li role="none">
-            <a class="nav-link" href="logistics.html" data-link="logistics" role="menuitem">
-              <i class="fa-solid fa-truck" aria-hidden="true"></i>
-              <span>Logistics</span>
-            </a>
-          </li>
-          <li role="none">
-            <a class="nav-link" href="insights.html" data-link="insights" role="menuitem">
-              <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
-              <span>Insights</span>
-            </a>
-          </li>
-          <li role="none">
-            <a class="nav-link" href="exchange.html" data-link="exchange" role="menuitem">
-              <i class="fa-solid fa-money-bill-transfer" aria-hidden="true"></i>
-              <span>Exchange</span>
-            </a>
-          </li>
+      <nav>
+        <ul>
+          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+          <li><a class="nav-link" href="logistics.html">Logistics</a></li>
+          <li><a class="nav-link" href="insights.html">Insights</a></li>
+          <li><a class="nav-link" href="exchange.html">Exchange</a></li>
         </ul>
       </nav>
+
+      <div class="header-actions">
+        <a href="premium.html" class="btn small"><i class="fa-solid fa-crown"></i> Premium</a>
+      </div>
     </div>
   </header>
 
-  <!-- Mobile Navigation Overlay -->
-  <div id="mobileNavOverlay" class="mobile-nav-overlay" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="msheet">
-      <div class="msheet-head">
-        <div class="msheet-brand">
-          <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" width="100" height="40" />
-        </div>
-        <button class="msheet-close" onclick="LARMAH.closeMenu()" aria-label="Close menu">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="msheet-body">
-        <div class="msheet-links">
-          <a class="msheet-link" href="real-estate.html">
-            <span><i class="fa-solid fa-building"></i> Real Estate</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </a>
-          <a class="msheet-link" href="logistics.html">
-            <span><i class="fa-solid fa-truck"></i> Logistics</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </a>
-          <a class="msheet-link" href="insights.html">
-            <span><i class="fa-solid fa-chart-line"></i> Insights</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </a>
-          <a class="msheet-link" href="exchange.html">
-            <span><i class="fa-solid fa-money-bill-transfer"></i> Exchange</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </a>
-          <a class="msheet-link" href="premium.html">
-            <span><i class="fa-solid fa-crown"></i> Premium</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </a>
-        </div>
-        <div class="msheet-footer">
-          <div class="msheet-hint">24/7 WhatsApp Support Available</div>
-          <button class="btn solid" onclick="LARMAH.openWhatsApp('Hello Larmah, I need assistance')">
-            <i class="fa-brands fa-whatsapp"></i> Quick Chat
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <main id="main-content" class="container" role="main">
-    <!-- Hero Section -->
-    <section class="hero" aria-labelledby="hero-heading">
+  <main>
+    <section class="hero container">
       <div class="hero-shell">
-        <div class="hero-inner">
-          <div class="hero-content">
-            <div class="hero-kicker">
-              <span class="kicker-pill">
-                <i class="fa-solid fa-shield-check" aria-hidden="true"></i>
-                Nigeria's Trust-First Hub
-              </span>
-              <span class="kicker-dot" aria-hidden="true">•</span>
-              <span class="kicker-sub">Verified Standards • WhatsApp-First Support</span>
-            </div>
-
-            <h1 id="hero-heading" class="hero-title">
-              Seamless Commerce.<br />
-              <span class="gradient-text">Verified Standards.</span>
-            </h1>
-            
-            <p class="lead hero-description">
-              Verified Real Estate listings, reliable Logistics services, live market Insights, 
-              and secure Exchange services — all built with Nigerian trust standards at the core.
-            </p>
-
-            <div class="actions hero-actions">
-              <a class="btn solid" href="#latest" aria-label="Browse our latest listings">
-                <i class="fa-solid fa-sparkles" aria-hidden="true"></i>
-                Browse Latest
-              </a>
-              <a class="btn" href="exchange.html" aria-label="View exchange rates">
-                <i class="fa-solid fa-money-bill-transfer" aria-hidden="true"></i>
-                Live Exchange
-              </a>
-              <a class="btn primary" href="premium.html" aria-label="Go premium for exclusive benefits">
-                <i class="fa-solid fa-crown" aria-hidden="true"></i>
-                Go Premium
-              </a>
-              <button class="btn whatsapp-btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { Name:'', Phone:'', Topic:'Real Estate / Logistics / Exchange', Message:'Hello Larmah, I need assistance.' }))">
-                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-                Quick WhatsApp
-              </button>
-            </div>
-
-            <div class="trust-row" role="list" aria-label="Trust indicators">
-              <div class="trust-badge" role="listitem">
-                <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-                Verified Listings Only
-              </div>
-              <div class="trust-badge" role="listitem">
-                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
-                Scam-Resistant Workflow
-              </div>
-              <div class="trust-badge" role="listitem">
-                <i class="fa-solid fa-headset" aria-hidden="true"></i>
-                Priority Support Available
-              </div>
-            </div>
+        <div class="hero-content">
+          <div class="hero-kicker">
+            <span class="kicker-pill"><i class="fa-solid fa-shield-check"></i> Verified Standards</span>
+            <span style="opacity: 0.5">•</span>
+            <span style="font-size: 0.85rem; font-weight: 600">WhatsApp-First Support</span>
           </div>
-
-          <div class="hero-badges" role="complementary" aria-label="Service categories">
-            <article class="hero-card">
-              <div class="card-icon">
-                <i class="fa-solid fa-building-circle-check"></i>
-              </div>
-              <h3 class="card-title">Real Estate</h3>
-              <p class="card-description">Verified shortlets, rentals, and purchase listings across Nigeria.</p>
-              <div class="card-actions">
-                <a class="btn small" href="real-estate.html" aria-label="Explore real estate listings">
-                  Explore Properties
-                </a>
-              </div>
-            </article>
-
-            <article class="hero-card">
-              <div class="card-icon">
-                <i class="fa-solid fa-route"></i>
-              </div>
-              <h3 class="card-title">Logistics</h3>
-              <p class="card-description">Secure dispatch, pickups, escort-ready movement, and haulage.</p>
-              <div class="card-actions">
-                <a class="btn small" href="logistics.html" aria-label="Book logistics services">
-                  Book Service
-                </a>
-              </div>
-            </article>
-
-            <article class="hero-card">
-              <div class="card-icon">
-                <i class="fa-solid fa-money-bill-transfer"></i>
-              </div>
-              <h3 class="card-title">Exchange</h3>
-              <p class="card-description">Live FX and crypto desk rates managed securely by our admin team.</p>
-              <div class="card-actions">
-                <a class="btn small" href="exchange.html" aria-label="Get current exchange rates">
-                  View Rates
-                </a>
-              </div>
-            </article>
+          <h1 class="hero-title">Trusted Commerce for <span class="gradient-text">Modern Nigeria.</span></h1>
+          <p class="lead" style="font-size: 1.2rem; color: var(--text-muted); margin-bottom: 32px; max-width: 600px;">
+            Secure your future with verified real estate, move assets safely with professional logistics, and exchange values on a desk you can trust.
+          </p>
+          <div class="actions" style="display: flex; gap: 16px; flex-wrap: wrap;">
+            <a href="#latest" class="btn solid">Browse Listings</a>
+            <a href="exchange.html" class="btn">Live Rates</a>
+          </div>
+        </div>
+        
+        <div class="hero-visual">
+          <div class="card-glass" style="transform: rotate(2deg); border-left: 4px solid var(--brand);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+              <span class="small">Live Exchange</span>
+              <span class="kicker-pill">Active</span>
+            </div>
+            <div style="font-size: 1.5rem; font-weight: 800;">USD / NGN</div>
+            <div id="heroRate" style="color: var(--brand); font-size: 1.2rem; font-weight: 700;">Loading...</div>
+            <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+              <div class="small" style="opacity: 0.6">Verified daily via heylarmah.tech</div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Latest Previews Section -->
-    <section class="section" id="latest" aria-labelledby="latest-heading">
-      <div class="section-header">
-        <div class="section-head-content">
-          <h2 id="latest-heading">Latest Catalogues</h2>
-          <p class="lead section-description">
-            Live preview from our verified inventory — automatically updated with posted images.
-          </p>
+    <section class="section-padding container">
+      <div class="grid-3">
+        <div class="card-glass">
+          <i class="fa-solid fa-building-circle-check" style="font-size: 2rem; color: var(--brand); margin-bottom: 20px;"></i>
+          <h3>Real Estate</h3>
+          <p class="small" style="margin: 12px 0 20px;">Rentals, shortlets, and land sales with verified documentation.</p>
+          <a href="real-estate.html" class="nav-link" style="color: var(--brand)">View Properties <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-        <a class="btn small insights-link" href="insights.html" aria-label="View market insights">
-          <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
-          Market Insights
-        </a>
-      </div>
-
-      <div class="grid home-grid">
-        <div class="card category-card" role="region" aria-labelledby="real-estate-heading">
-          <div class="card-header">
-            <h3 id="real-estate-heading" class="category-title">
-              <i class="fa-solid fa-house" aria-hidden="true"></i>
-              Real Estate
-            </h3>
-            <a class="view-all-link" href="real-estate.html" aria-label="View all real estate listings">
-              View all →
-            </a>
-          </div>
-          <div id="latestRE" class="latest-container" role="list" aria-label="Latest real estate listings">
-            <!-- Dynamic content loads here -->
-          </div>
+        <div class="card-glass">
+          <i class="fa-solid fa-truck-fast" style="font-size: 2rem; color: var(--brand); margin-bottom: 20px;"></i>
+          <h3>Logistics</h3>
+          <p class="small" style="margin: 12px 0 20px;">Inner-city dispatch, interstate haulage, and security escorts.</p>
+          <a href="logistics.html" class="nav-link" style="color: var(--brand)">Book Service <i class="fa-solid fa-arrow-right"></i></a>
         </div>
-
-        <div class="card category-card" role="region" aria-labelledby="logistics-heading">
-          <div class="card-header">
-            <h3 id="logistics-heading" class="category-title">
-              <i class="fa-solid fa-truck" aria-hidden="true"></i>
-              Logistics
-            </h3>
-            <a class="view-all-link" href="logistics.html" aria-label="View all logistics services">
-              View all →
-            </a>
-          </div>
-          <div id="latestLG" class="latest-container" role="list" aria-label="Latest logistics services">
-            <!-- Dynamic content loads here -->
-          </div>
+        <div class="card-glass">
+          <i class="fa-solid fa-money-bill-transfer" style="font-size: 2rem; color: var(--brand); margin-bottom: 20px;"></i>
+          <h3>Exchange</h3>
+          <p class="small" style="margin: 12px 0 20px;">Safe desk for USD, GBP, and Crypto at competitive market rates.</p>
+          <a href="exchange.html" class="nav-link" style="color: var(--brand)">Check Rates <i class="fa-solid fa-arrow-right"></i></a>
         </div>
       </div>
     </section>
 
-    <!-- Custom Request CTA -->
-    <section class="section cta-section" aria-labelledby="cta-heading">
-      <div class="cta-strip">
-        <div class="cta-content">
-          <h2 id="cta-heading" class="cta-title">Need something specific?</h2>
-          <p class="lead cta-description">
-            Tell us your budget, location, and timeline — we'll respond via WhatsApp within minutes.
-          </p>
+    <section id="latest" class="section-padding container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px;">
+        <div>
+          <h2>Market <span class="gradient-text">Highlights.</span></h2>
+          <p style="color: var(--text-muted)">Latest verified listings across all sectors.</p>
         </div>
-        <button class="btn solid cta-button" 
-                onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { Name:'', Phone:'', Category:'Real Estate / Logistics / Exchange', Details:'Describe what you need…' }))"
-                aria-label="Start a custom request via WhatsApp">
-          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-          Start Custom Request
-        </button>
+        <a href="insights.html" class="btn small">Read Insights</a>
       </div>
+      <div id="homeGrid" class="grid-3">
+        </div>
     </section>
   </main>
 
-  <!-- =========================
-       STANDARD FOOTER (Copy to all pages)
-       ========================= -->
-  <footer role="contentinfo" aria-label="Website footer">
+  <footer>
     <div class="container">
       <div class="footer-grid">
-        <!-- Brand & Social -->
-        <div class="footer-section" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
-          <div class="brandline">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise Logo" width="80" height="32" />
-            <div>
-              <div class="brand-name" itemprop="name">Larmah Enterprise</div>
-              <div class="brand-tagline">Real Estate • Logistics • Insights • Exchange</div>
-            </div>
-          </div>
-          
-          <p class="footer-description">
-            Trust-first commerce for Nigeria — verified listings, trackable enquiries, 
-            and WhatsApp-first support across all services.
+        <div>
+          <img src="assets/images/larmah-header.jpeg" style="height: 32px; margin-bottom: 20px;" alt="">
+          <p class="small" style="color: var(--text-muted); max-width: 300px;">
+            Larmah Enterprise is building the infrastructure for trust-based commerce in Nigeria.
           </p>
-          
-          <div class="social-row" aria-label="Follow us on social media">
-            <a class="social-btn" href="https://instagram.com/hey_larmah" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-              <i class="fa-brands fa-instagram"></i>
-            </a>
-            <a class="social-btn" href="https://x.com/heylarmah_tech" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
-              <i class="fa-brands fa-x-twitter"></i>
-            </a>
-            <a class="social-btn" href="https://t.me/heylarmah_tech" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
-              <i class="fa-brands fa-telegram"></i>
-            </a>
-            <a class="social-btn" href="https://youtube.com/@heylarmah" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-              <i class="fa-brands fa-youtube"></i>
-            </a>
+          <div style="display: flex; gap: 15px; margin-top: 20px;">
+            <a href="#" class="nav-link"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="nav-link"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" class="nav-link"><i class="fa-brands fa-whatsapp"></i></a>
           </div>
         </div>
-
-        <!-- Navigation -->
-        <div class="footer-section">
-          <h3 class="footer-heading">Navigation</h3>
-          <nav class="footer-nav" aria-label="Footer navigation">
-            <ul>
-              <li><a href="real-estate.html">Real Estate</a></li>
-              <li><a href="logistics.html">Logistics</a></li>
-              <li><a href="insights.html">Insights</a></li>
-              <li><a href="exchange.html">Exchange</a></li>
-              <li><a href="premium.html">Premium</a></li>
-            </ul>
-          </nav>
+        <div>
+          <h4 style="margin-bottom: 20px;">Quick Links</h4>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
+            <li><a href="real-estate.html" class="nav-link small">Real Estate</a></li>
+            <li><a href="logistics.html" class="nav-link small">Logistics</a></li>
+            <li><a href="exchange.html" class="nav-link small">Exchange</a></li>
+            <li><a href="auth.html" class="nav-link small">Staff Login</a></li>
+          </ul>
         </div>
-
-        <!-- Contact -->
-        <div class="footer-section">
-          <h3 class="footer-heading">Contact</h3>
-          <div class="contact-info">
-            <div class="contact-item">
-              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-              <a href="https://wa.me/2347063080605" itemprop="telephone">+234 706 308 0605</a>
-            </div>
-            <div class="contact-item">
-              <i class="fa-regular fa-envelope" aria-hidden="true"></i>
-              <a href="mailto:business@heylarmah.tech" itemprop="email">business@heylarmah.tech</a>
-            </div>
-            <div class="contact-item">
-              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
-              <span itemprop="addressLocality">Lagos</span>, <span itemprop="addressCountry">Nigeria</span>
-            </div>
-          </div>
-          
-          <div class="footer-actions">
-            <button class="btn small whatsapp-btn" 
-                    onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))"
-                    aria-label="Get WhatsApp support">
-              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-              WhatsApp Support
-            </button>
-          </div>
-          
-          <div class="admin-links">
-            <a href="auth.html">Staff Sign-in</a> • 
-            <a href="admin.html">Admin Panel</a>
-          </div>
+        <div>
+          <h4 style="margin-bottom: 20px;">Secure Enquiry</h4>
+          <p class="small" style="margin-bottom: 15px;">Need a custom quote? Reach our desk directly.</p>
+          <button class="btn solid" style="width: 100%;" onclick="LARMAH.openWhatsApp('Hello Larmah, I am enquiring from the website...')">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Desk
+          </button>
         </div>
       </div>
-
-      <div class="footer-bottom">
-        <div class="copyright">
-          © <span id="year"></span> Larmah Enterprise. All rights reserved.
-        </div>
-        <div class="legal-links">
-          <a href="privacy.html">Privacy Policy</a> • 
-          <a href="terms.html">Terms of Service</a>
-        </div>
+      <div style="text-align: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
+        <p class="small" style="opacity: 0.5">&copy; 2025 Larmah Enterprise. Verified at heylarmah.tech</p>
       </div>
     </div>
   </footer>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-
-  <!-- Homepage Previews Script -->
   <script>
-    // Enhanced cache management
-    const INDEX_CACHE = { 
-      'real-estate': { data: [], timestamp: 0 },
-      'logistics': { data: [], timestamp: 0 }
-    };
-    const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+    // Specific Home Logic for Previews
+    document.addEventListener("DOMContentLoaded", async () => {
+      // 1. Fetch current exchange rate for the hero card
+      const sb = await LARMAH.initSupabase();
+      const { data: rates } = await sb.from('exchange_rates').select('*').eq('code', 'USD').single();
+      if(rates) document.getElementById('heroRate').textContent = `₦${rates.buy_ngn.toLocaleString()} / ₦${rates.sell_ngn.toLocaleString()}`;
 
-    // Accessibility helper
-    function announceToScreenReader(message) {
-      const liveRegion = document.createElement('div');
-      liveRegion.setAttribute('aria-live', 'polite');
-      liveRegion.setAttribute('aria-atomic', 'true');
-      liveRegion.className = 'visually-hidden';
-      liveRegion.textContent = message;
-      document.body.appendChild(liveRegion);
-      setTimeout(() => liveRegion.remove(), 1000);
-    }
-
-    // Skeleton loader
-    function renderSkeleton(mount) {
-      mount.innerHTML = `
-        <div class="latest-skeleton" aria-label="Loading content">
-          <div class="skeleton-item">
-            <div class="skeleton-image"></div>
-            <div class="skeleton-content">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line short"></div>
-              <div class="skeleton-button"></div>
+      // 2. Fetch latest 3 items for catalog preview
+      const { data: items } = await sb.from('catalog_items').select('*').eq('active', true).order('updated_at', {ascending: false}).limit(3);
+      const grid = document.getElementById('homeGrid');
+      if(items) {
+        grid.innerHTML = items.map(it => `
+          <div class="card-glass" style="padding: 0; overflow: hidden;">
+            <img src="${it.image_url}" style="width: 100%; height: 200px; object-fit: cover;" alt="">
+            <div style="padding: 20px;">
+              <span class="kicker-pill" style="font-size: 0.7rem;">${it.category}</span>
+              <h4 style="margin: 10px 0;">${it.title}</h4>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 800; color: var(--brand);">${it.price}</span>
+                <button class="btn small" onclick="LARMAH.quickEnquire('${it.id}')">Enquire</button>
+              </div>
             </div>
           </div>
-          <div class="skeleton-item">
-            <div class="skeleton-image"></div>
-            <div class="skeleton-content">
-              <div class="skeleton-line"></div>
-              <div class="skeleton-line short"></div>
-              <div class="skeleton-button"></div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // Image resolver with better fallbacks
-    function resolveCatalogImage(item, category) {
-      if (!item) return '';
-      
-      // Priority order for images
-      const sources = [
-        item.image_url,
-        item.thumbnail_url,
-        item.photo_url
-      ].filter(url => url && typeof url === 'string' && url.trim());
-      
-      if (sources.length > 0) {
-        return sources[0].trim();
+        `).join('');
       }
-      
-      // Fallback images by category
-      const fallbacks = {
-        'real-estate': 'assets/images/placeholder-home.jpg',
-        'logistics': 'assets/images/placeholder-vehicle.jpg',
-        'exchange': 'assets/images/placeholder-exchange.jpg',
-        'insights': 'assets/images/placeholder-chart.jpg'
-      };
-      
-      return fallbacks[category] || 'assets/images/placeholder-default.jpg';
-    }
-
-    // Enhanced preview renderer
-    async function renderPreview(category, mountId) {
-      const mount = document.getElementById(mountId);
-      if (!mount) return;
-      
-      renderSkeleton(mount);
-      
-      try {
-        // Check cache first
-        const now = Date.now();
-        const cache = INDEX_CACHE[category];
-        
-        if (cache && cache.timestamp && (now - cache.timestamp) < CACHE_DURATION) {
-          renderPreviewItems(cache.data, category, mount);
-          return;
-        }
-        
-        // Fetch fresh data
-        const items = await LARMAH.fetchCatalog(category) || [];
-        
-        // Update cache
-        INDEX_CACHE[category] = {
-          data: items,
-          timestamp: now
-        };
-        
-        renderPreviewItems(items, category, mount);
-        
-        // Announce update to screen readers
-        announceToScreenReader(`${category} listings updated`);
-        
-      } catch (error) {
-        console.error(`Failed to load ${category}:`, error);
-        mount.innerHTML = `
-          <div class="error-state" role="alert">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <div>
-              <strong>Unable to load listings</strong>
-              <p>Please check your connection and try again.</p>
-            </div>
-            <button class="btn small" onclick="renderPreview('${category}', '${mountId}')">
-              Retry
-            </button>
-          </div>
-        `;
-      }
-    }
-
-    function renderPreviewItems(items, category, mount) {
-      const topItems = items.slice(0, 2);
-      
-      if (!topItems.length) {
-        mount.innerHTML = `
-          <div class="empty-state">
-            <i class="fa-solid fa-inbox"></i>
-            <p>No ${category} listings available yet.</p>
-            <p class="small">Check back soon for updates.</p>
-          </div>
-        `;
-        return;
-      }
-      
-      mount.innerHTML = `
-        <div class="latest-list">
-          ${topItems.map(item => {
-            const imageUrl = resolveCatalogImage(item, category);
-            const fallback = category === 'real-estate' 
-              ? 'assets/images/placeholder-home.jpg'
-              : 'assets/images/placeholder-vehicle.jpg';
-            
-            return `
-              <article class="latest-item" aria-label="${LARMAH.escapeHtml(item.title)}">
-                <div class="latest-media">
-                  <img src="${LARMAH.escapeHtml(imageUrl)}"
-                       alt="${LARMAH.escapeHtml(item.title)}"
-                       width="120"
-                       height="80"
-                       loading="lazy"
-                       decoding="async"
-                       referrerpolicy="no-referrer"
-                       onerror="this.src='${fallback}'"
-                       class="latest-image">
-                </div>
-                <div class="latest-content">
-                  <h4 class="latest-title">${LARMAH.escapeHtml(item.title)}</h4>
-                  <div class="latest-meta">
-                    <span class="latest-price">
-                      ${LARMAH.escapeHtml(item.price || 'Contact for quote')}
-                    </span>
-                    <span class="meta-separator" aria-hidden="true">•</span>
-                    <span class="verified-badge">
-                      <i class="fa-solid fa-shield-check"></i>
-                      Verified
-                    </span>
-                  </div>
-                  <button class="btn small primary enquiry-btn"
-                          onclick="enquireFromIndex('${category}', '${item.id}')"
-                          aria-label="Enquire about ${LARMAH.escapeHtml(item.title)}">
-                    <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-                    Enquire Now
-                  </button>
-                </div>
-              </article>
-            `;
-          }).join('')}
-        </div>
-      `;
-    }
-
-    function enquireFromIndex(category, itemId) {
-      const cache = INDEX_CACHE[category];
-      const item = cache?.data?.find(x => String(x.id) === String(itemId));
-      
-      if (!item) {
-        LARMAH.showToast('Item information not found. Please refresh the page.', 'error');
-        return;
-      }
-      
-      const message = LARMAH.buildMessage('Enquiry', {
-        Sector: category.toUpperCase(),
-        Asset: item.title,
-        Price: item.price || 'Negotiable',
-        Reference: 'WEB-INDEX-' + itemId
-      });
-      
-      LARMAH.openWhatsApp(message);
-    }
-
-    // Initialize on DOM ready
-    document.addEventListener('DOMContentLoaded', () => {
-      // Set current year in footer
-      document.getElementById('year').textContent = new Date().getFullYear();
-      
-      // Load previews
-      renderPreview('real-estate', 'latestRE');
-      renderPreview('logistics', 'latestLG');
-      
-      // Initialize mobile menu state
-      const menuBtn = document.querySelector('.menu-btn');
-      if (menuBtn) {
-        menuBtn.addEventListener('click', () => {
-          const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
-          menuBtn.setAttribute('aria-expanded', !isExpanded);
-        });
-      }
-      
-      // Close mobile menu on ESC key
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && document.body.classList.contains('nav-open')) {
-          LARMAH.closeMenu();
-        }
-      });
     });
   </script>
 </body>
