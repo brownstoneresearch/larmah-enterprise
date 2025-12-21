@@ -356,3 +356,100 @@
     });
   });
 })();
+// ---------- Mini gallery helpers (1–3 images) ----------
+LARMAH.normalizeImageUrls = function (item) {
+  const urls = [];
+  if (item && Array.isArray(item.image_urls)) {
+    item.image_urls.forEach(u => { if (u && String(u).trim()) urls.push(String(u).trim()); });
+  }
+  if (item && item.image_url && String(item.image_url).trim()) {
+    const u = String(item.image_url).trim();
+    if (!urls.includes(u)) urls.unshift(u);
+  }
+  return urls.slice(0, 3);
+};
+
+LARMAH.galleryHtml = function (urls, alt, id) {
+  const safeAlt = LARMAH.escapeHtml(alt || "");
+  const list = (urls || []).filter(Boolean).slice(0, 3);
+  if (!list.length) return ""; // if no images, skip
+
+  // store urls in a compact dataset string
+  const packed = list.map(encodeURIComponent).join("|");
+  const dots = list.map((_, i) => `<span class="gallery-dot ${i === 0 ? "active" : ""}"></span>`).join("");
+
+  const cls = `gallery ${list.length > 1 ? "multi" : ""}`;
+  return `
+    <div class="${cls}" data-gallery="${packed}" data-gidx="0" ${id ? `data-gid="${LARMAH.escapeHtml(id)}"` : ""}>
+      <img class="gallery-img" src="${LARMAH.escapeHtml(list[0])}" alt="${safeAlt}" loading="lazy"
+           onerror="this.onerror=null; this.src='assets/images/larmah-header.jpeg';" />
+      <div class="gallery-dots" aria-hidden="true">${dots}</div>
+      <div class="gallery-hint">Tap</div>
+    </div>
+  `;
+};
+
+LARMAH.bindGalleries = function (root) {
+  const scope = root || document;
+  const els = Array.from(scope.querySelectorAll("[data-gallery]"));
+  if (!els.length) return;
+
+  function setIndex(el, idx) {
+    const packed = el.getAttribute("data-gallery") || "";
+    const urls = packed.split("|").map(decodeURIComponent).filter(Boolean);
+    if (!urls.length) return;
+
+    const max = urls.length;
+    const next = ((idx % max) + max) % max;
+
+    el.setAttribute("data-gidx", String(next));
+    const img = el.querySelector(".gallery-img");
+    if (img) img.src = urls[next];
+
+    const dots = Array.from(el.querySelectorAll(".gallery-dot"));
+    dots.forEach((d, i) => d.classList.toggle("active", i === next));
+  }
+
+  els.forEach(el => {
+    if (el.__galleryBound) return;
+    el.__galleryBound = true;
+
+    // click/tap to next
+    el.addEventListener("click", () => {
+      const cur = Number(el.getAttribute("data-gidx") || "0");
+      setIndex(el, cur + 1);
+    });
+
+    // swipe support (left/right)
+    let sx = 0, sy = 0, tracking = false;
+    el.addEventListener("touchstart", (e) => {
+      if (!e.touches || !e.touches[0]) return;
+      tracking = true;
+      sx = e.touches[0].clientX;
+      sy = e.touches[0].clientY;
+    }, { passive: true });
+
+    el.addEventListener("touchmove", (e) => {
+      // do nothing; we only decide on end
+    }, { passive: true });
+
+    el.addEventListener("touchend", (e) => {
+      if (!tracking) return;
+      tracking = false;
+
+      const t = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0] : null;
+      if (!t) return;
+
+      const dx = t.clientX - sx;
+      const dy = t.clientY - sy;
+
+      // ignore vertical swipes
+      if (Math.abs(dy) > Math.abs(dx)) return;
+
+      const cur = Number(el.getAttribute("data-gidx") || "0");
+      if (dx < -30) setIndex(el, cur + 1);       // swipe left -> next
+      else if (dx > 30) setIndex(el, cur - 1);   // swipe right -> prev
+    }, { passive: true });
+  });
+};
+
