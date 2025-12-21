@@ -2,10 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  
   <title>Logistics | Larmah Enterprise</title>
-  <meta name="description" content="Premium dispatch, airport pickups, escort-ready movement, and haulage across Nigeria. Book instantly via WhatsApp." />
+  <meta name="description" content="Premium dispatch, airport pickups, escort-ready movement, and haulage across Nigeria. Verified fleet, instant WhatsApp booking." />
+  <meta name="keywords" content="Logistics Nigeria, Airport Pickup Lagos, Haulage Nigeria, Escort Services Lagos, Car Hire Nigeria, Dispatch Riders" />
   <meta name="theme-color" content="#070A12" />
+  <link rel="canonical" href="https://heylarmah.tech/logistics.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://heylarmah.tech/logistics.html" />
+  <meta property="og:title" content="Larmah Logistics | Premium Movement" />
+  <meta property="og:description" content="Executive Airport Pickups, Haulage, and Security-ready Dispatch. Book instantly via WhatsApp." />
+  <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Larmah Logistics" />
+  <meta name="twitter:description" content="Move with confidence. Verified fleet and trackable dispatch across Nigeria." />
+  <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
@@ -17,14 +31,65 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    .catalog-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-    .filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0 6px}
-    @media(max-width:980px){.filters{grid-template-columns:1fr}}
-    .pillbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    /* Page Specific */
+    .catalog-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+    
+    .filters-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    
+    .filters { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    @media(max-width: 768px) { .filters { grid-template-columns: 1fr; } }
+    
+    .pillbar { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
   </style>
 </head>
 
 <body data-page="logistics">
+
+  <div id="mobileNavOverlay">
+    <div class="msheet">
+      <div class="msheet-head">
+        <div class="msheet-brand">
+            <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
+        </div>
+        <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="msheet-body">
+        <div class="msheet-links">
+            <a href="real-estate.html" class="msheet-link">
+                <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+            </a>
+            <a href="logistics.html" class="msheet-link active">
+                <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
+                <i class="fa-solid fa-check" style="font-size:12px;"></i>
+            </a>
+            <a href="insights.html" class="msheet-link">
+                <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+            </a>
+            <a href="exchange.html" class="msheet-link">
+                <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+            </a>
+        </div>
+        <div class="msheet-footer">
+            <div class="msheet-hint">Menu</div>
+            <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
+                <span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span>
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <header>
     <div class="container header-inner">
       <a class="brand" href="index.html" aria-label="Larmah Home">
@@ -36,13 +101,14 @@
       </button>
 
       <nav id="nav" aria-label="Primary navigation">
-  <ul>
-    <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
-    <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-    <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
-    <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
-  </ul>
-</nav>
+        <ul>
+          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+          <li><a class="nav-link active" href="logistics.html">Logistics</a></li>
+          <li><a class="nav-link" href="insights.html">Insights</a></li>
+          <li><a class="nav-link" href="exchange.html">Exchange</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
   <main class="container">
@@ -53,35 +119,41 @@
             <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-truck-fast"></i> Premium Fleet & Dispatch</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Airport Pickups • City-to-City • Haulage</span>
+              <span class="kicker-sub">Pickups • Intercity • Haulage</span>
             </div>
 
             <h1>Move with Confidence.</h1>
             <p class="lead">
               Executive pickups, secure dispatch, escort-ready movement, and haulage across Nigeria.
-              Tap any listing to book instantly on WhatsApp.
+              Tap any listing to book instantly via WhatsApp.
             </p>
 
             <div class="actions">
               <a class="btn solid" href="#catalog"><i class="fa-solid fa-car"></i> View Fleet</a>
               <a class="btn primary" href="#request"><i class="fa-brands fa-whatsapp"></i> Book a Ride</a>
               <a class="btn" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
-              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Logistics Booking', { Name:'', Phone:'', Pickup:'', Dropoff:'', DateTime:'', Tier:'', Notes:'' }))">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp Now
-              </button>
             </div>
 
             <div class="trust-row">
               <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Ready for dispatch</div>
               <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Safety-first operations</div>
-              <div class="trust-badge"><i class="fa-solid fa-headset"></i> WhatsApp-first support</div>
+              <div class="trust-badge"><i class="fa-solid fa-headset"></i> WhatsApp support</div>
             </div>
           </div>
 
           <div class="hero-badges">
-            <div class="hero-card"><h3><i class="fa-solid fa-plane-arrival" style="color:var(--brand)"></i> Airport Pickup</h3><p>Executive pickup + drop-off with reliable timing.</p></div>
-            <div class="hero-card"><h3><i class="fa-solid fa-road" style="color:var(--brand)"></i> Intercity Dispatch</h3><p>City-to-city movement with secure handling.</p></div>
-            <div class="hero-card"><h3><i class="fa-solid fa-truck-ramp-box" style="color:var(--brand)"></i> Haulage</h3><p>Heavy logistics requests — quick quote via WhatsApp.</p></div>
+            <div class="hero-card">
+                <h3><i class="fa-solid fa-plane-arrival" style="color:var(--brand)"></i> Airport Pickup</h3>
+                <p>Executive pickup + drop-off with reliable timing.</p>
+            </div>
+            <div class="hero-card">
+                <h3><i class="fa-solid fa-road" style="color:var(--brand)"></i> Intercity Dispatch</h3>
+                <p>City-to-city movement with secure handling.</p>
+            </div>
+            <div class="hero-card">
+                <h3><i class="fa-solid fa-truck-ramp-box" style="color:var(--brand)"></i> Haulage</h3>
+                <p>Heavy logistics requests — quick quote via WhatsApp.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -99,7 +171,7 @@
         <div class="card">
           <h3><i class="fa-solid fa-shield-halved" style="color:var(--brand)"></i> Verification Proof</h3>
           <p class="small">What we confirm before dispatch.</p>
-          <div class="small" style="margin-top:10px;opacity:.9">
+          <div class="small" style="margin-top:10px;opacity:.9;line-height:1.8">
             • Driver/dispatch confirmation<br/>
             • Route & timing confirmation<br/>
             • Reference IDs per booking<br/>
@@ -110,7 +182,7 @@
         <div class="card">
           <h3><i class="fa-solid fa-diagram-project" style="color:var(--brand)"></i> How It Works</h3>
           <p class="small">Fast, trackable steps.</p>
-          <div class="small" style="margin-top:10px;opacity:.9">
+          <div class="small" style="margin-top:10px;opacity:.9;line-height:1.8">
             1) Choose a service<br/>
             2) Tap Book (auto WhatsApp message)<br/>
             3) Confirm pickup & ETA<br/>
@@ -121,10 +193,10 @@
         <div class="card">
           <h3><i class="fa-solid fa-crown" style="color:var(--brand)"></i> Priority Access</h3>
           <p class="small">Premium members get faster confirmation.</p>
-          <div class="actions" style="margin-top:10px">
-            <a class="btn solid" href="premium.html"><i class="fa-solid fa-star"></i> Go Premium</a>
-            <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Priority Logistics Request', { Name:'', Phone:'', Pickup:'', Dropoff:'', DateTime:'', Notes:'' }))">
-              <i class="fa-brands fa-whatsapp"></i> Priority WhatsApp
+          <div class="actions" style="margin-top:12px">
+            <a class="btn solid small" href="premium.html"><i class="fa-solid fa-star"></i> Go Premium</a>
+            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Priority Logistics Request', { Name:'', Phone:'', Pickup:'', Dropoff:'', DateTime:'', Notes:'' }))">
+              <i class="fa-brands fa-whatsapp"></i> Priority Chat
             </button>
           </div>
         </div>
@@ -135,16 +207,16 @@
       <div class="catalog-head">
         <div>
           <h2>Service Fleet</h2>
-          <p class="lead">Select a tier or service and book instantly on WhatsApp.</p>
+          <p class="lead">Select a tier or service and book instantly.</p>
         </div>
         <a class="btn small" href="premium.html"><i class="fa-solid fa-crown"></i> Concierge Priority</a>
       </div>
 
-      <div class="card" style="margin-bottom:12px">
+      <div class="filters-box">
         <div class="filters">
           <div>
             <label class="small">Search</label>
-            <input id="lg_q" class="input" placeholder="Search by service, vehicle, airport, escort..." />
+            <input id="lg_q" class="input" placeholder="Service, vehicle, airport..." />
           </div>
           <div>
             <label class="small">Tier</label>
@@ -171,32 +243,38 @@
           <button class="btn small" onclick="applyQuickTag('Escort')">Escort</button>
           <button class="btn small" onclick="applyQuickTag('Haulage')">Haulage</button>
           <button class="btn small" onclick="applyQuickTag('Dispatch')">Dispatch</button>
-          <button class="btn small" onclick="clearFilters()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+          <button class="btn small" onclick="clearFilters()" style="color:var(--bad);border-color:rgba(255,90,103,0.3)">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+          </button>
         </div>
       </div>
 
-      <div id="catalogMount"></div>
+      <div id="catalogMount">
+          <div class="latest-skel">
+            <div class="skel-line"></div><div class="skel-line short"></div>
+          </div>
+      </div>
     </section>
 
     <section class="section" id="request">
       <h2>Custom Logistics Request</h2>
-      <p class="lead">Provide pickup, destination, timing — we’ll confirm availability and send a quote.</p>
+      <p class="lead">Provide pickup, destination, and timing — we’ll confirm availability.</p>
 
-      <div class="card">
+      <div class="card" style="max-width:800px">
         <div class="row2">
           <div><label class="small">Full Name</label><input id="lg_name" class="input" placeholder="Full name" /></div>
           <div><label class="small">WhatsApp Number</label><input id="lg_phone" class="input" placeholder="+234..." /></div>
         </div>
 
         <div class="row2" style="margin-top:12px">
-          <div><label class="small">Pickup</label><input id="lg_pickup" class="input" placeholder="e.g., MMA2, Lekki Phase 1..." /></div>
+          <div><label class="small">Pickup Location</label><input id="lg_pickup" class="input" placeholder="e.g., MMA2, Lekki Phase 1..." /></div>
           <div><label class="small">Drop-off</label><input id="lg_drop" class="input" placeholder="e.g., VI, Ikoyi..." /></div>
         </div>
 
         <div class="row2" style="margin-top:12px">
-          <div><label class="small">Date & Time</label><input id="lg_time" class="input" placeholder="e.g., 2026-01-10 4:00pm" /></div>
+          <div><label class="small">Date & Time</label><input id="lg_time" class="input" placeholder="e.g., Tomorrow 4:00pm" /></div>
           <div>
-            <label class="small">Tier</label>
+            <label class="small">Tier Preference</label>
             <select id="lg_tier" class="input">
               <option value="Standard">Standard Dispatch / Ride</option>
               <option value="Premium SUV">Premium SUV (Executive)</option>
@@ -208,20 +286,21 @@
 
         <div style="margin-top:12px">
           <label class="small">Extra details</label>
-          <textarea id="lg_notes" class="input" placeholder="Passengers, luggage, stops, cargo details..."></textarea>
+          <textarea id="lg_notes" class="input" placeholder="Passengers, luggage count, cargo details..."></textarea>
         </div>
 
-        <div class="actions" style="margin-top:12px">
+        <div class="actions" style="margin-top:16px">
           <button class="btn solid" style="flex:1" onclick="sendLGRequest()"><i class="fa-brands fa-whatsapp"></i> Send Booking Request</button>
           <a class="btn" href="premium.html"><i class="fa-solid fa-star"></i> Go Premium</a>
         </div>
 
-        <div class="small" style="margin-top:10px;opacity:.75">Requests are logged securely for priority follow-up.</div>
+        <div class="small" style="margin-top:12px;opacity:.75;text-align:center">
+            Requests are logged securely for priority follow-up.
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- Standard Footer -->
   <footer>
     <div class="container">
       <div class="footer-grid">
@@ -280,6 +359,7 @@
   <div id="toast" class="toast"></div>
 
   <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
     let __LG_ITEMS = [];
     const norm = (s)=> String(s||"").toLowerCase();
 
@@ -323,7 +403,7 @@
       else items.sort((a,b)=> new Date(b.updated_at||0) - new Date(a.updated_at||0));
 
       if(!items.length){
-        mount.innerHTML = `<div class="notice"><strong>No matches.</strong> Adjust filters or submit a booking request below.</div>`;
+        mount.innerHTML = `<div class="notice"><strong>No matches found.</strong> Adjust filters or submit a booking request below.</div>`;
         return;
       }
 
@@ -332,15 +412,20 @@
           ${items.map(it => `
             <div class="card">
               ${(() => {
-  const urls = LARMAH.normalizeImageUrls(it);
-  return urls.length ? LARMAH.galleryHtml(urls, it.title, "lg-" + it.id) : "";
-})()}
+                const urls = LARMAH.normalizeImageUrls(it);
+                return urls.length ? LARMAH.galleryHtml(urls, it.title, "lg-" + it.id) : "";
+              })()}
+              
               <h3>${LARMAH.escapeHtml(it.title)}</h3>
               <p>${LARMAH.escapeHtml(it.description || "")}</p>
+              
               ${it.price ? `<div class="price">${LARMAH.escapeHtml(it.price)}</div>` : ``}
               <div class="meta">Ready • Ref: WEB-LG-${it.id}</div>
+              
               <div class="actions">
-                <button class="btn small primary" onclick="enquireLogistics('${it.id}')"><i class="fa-brands fa-whatsapp"></i> Book / Enquire</button>
+                <button class="btn small primary" onclick="enquireLogistics('${it.id}')">
+                    <i class="fa-brands fa-whatsapp"></i> Book / Enquire
+                </button>
               </div>
             </div>
           `).join("")}
@@ -351,10 +436,17 @@
 
     async function loadLogistics(){
       const mount = document.getElementById("catalogMount");
-      mount.innerHTML = `<div class="notice"><strong>Loading…</strong> Syncing fleet availability.</div>`;
+      // Initial Skeleton
+      mount.innerHTML = `
+        <div class="grid">
+             <div class="card" style="height:300px;opacity:0.5"></div>
+             <div class="card" style="height:300px;opacity:0.5"></div>
+        </div>`;
+        
       __LG_ITEMS = await LARMAH.fetchCatalog("logistics");
-      if(!__LG_ITEMS.length){
-        mount.innerHTML = `<div class="notice"><strong>No services listed yet.</strong> Submit a booking request below.</div>`;
+      
+      if(!__LG_ITEMS || !__LG_ITEMS.length){
+        mount.innerHTML = `<div class="notice"><strong>No services listed currently.</strong> Please submit a booking request below.</div>`;
         return;
       }
       renderLG();
@@ -390,6 +482,7 @@
         phone: fields.Phone,
         details: fields
       });
+      
       if(!res.ok) LARMAH.toast("Logging request...");
 
       LARMAH.openWhatsApp(LARMAH.buildMessage("New Logistics Booking", fields));
