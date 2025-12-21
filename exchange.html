@@ -1,31 +1,25 @@
-<!-- exchange.html (FULL — dynamic rates from Supabase + realtime + logs requests + WhatsApp) -->
+<!-- exchange.html (UPGRADED — pro + smart + 100% mobile responsive + new nav overlay + dynamic Supabase rates) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Exchange | Larmah Enterprise</title>
-
-  <meta name="description" content="Live Exchange Desk: USD/GBP/EUR and BTC/ETH/USDT to NGN. Rates are managed in Admin and update in real time." />
+  <meta name="description" content="Admin-managed live FX + crypto rates with realtime updates. WhatsApp-first exchange desk." />
   <meta name="theme-color" content="#070A12" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
-
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 </head>
 
 <body data-page="exchange">
-  <!-- Live ticker -->
   <div class="live-ticker">
     <div class="container">
-      <div id="liveRatesTicker" class="ticker-content">
-        <span>Loading live rates…</span>
-      </div>
+      <div id="liveRatesTicker" class="ticker-content"><span>Loading live rates…</span></div>
     </div>
   </div>
 
@@ -39,13 +33,35 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
+      <!-- BEAUTIFUL MOBILE OVERLAY NAV -->
       <nav id="nav" aria-label="Primary navigation">
-        <ul>
-          <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
-          <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-          <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
-          <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
-        </ul>
+        <div class="nav-panel">
+          <div class="nav-panel-head">
+            <div class="nav-brand">
+              <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+            </div>
+            <button class="nav-close" onclick="LARMAH.closeMenu()" aria-label="Close menu">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="nav-panel-body">
+            <ul>
+              <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
+              <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
+              <li><a class="nav-link" href="insights.html" data-link="insights">Insights <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
+              <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange <i class="fa-solid fa-chevron-right" style="opacity:.55"></i></a></li>
+            </ul>
+
+            <div class="nav-panel-footer">
+              <div class="nav-hint">Tip: Tap a section to open. Press ESC to close.</div>
+              <a class="btn solid" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Quick Help', { Name:'', Phone:'', Message:'Hello Larmah, I need exchange help.' }))">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+              </button>
+            </div>
+          </div>
+        </div>
       </nav>
 
       <div class="header-actions" id="authPill">
@@ -61,25 +77,18 @@
         <div class="hero-inner">
           <div>
             <div class="hero-kicker">
-              <span class="kicker-pill">
-                <i class="fa-solid fa-money-bill-transfer"></i>
-                Live Exchange Desk
-              </span>
+              <span class="kicker-pill"><i class="fa-solid fa-money-bill-transfer"></i> Live Exchange Desk</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Dynamic rates • Admin-managed • WhatsApp-first</span>
+              <span class="kicker-sub">Dynamic rates • Admin-managed • Realtime</span>
             </div>
 
             <h1>Exchange with Confidence.</h1>
-            <p class="lead">
-              Rates are pulled from our verified desk and update instantly when Admin changes them.
-              Use quick calc for estimates, then request a quote on WhatsApp.
-            </p>
+            <p class="lead">Rates load from Supabase <b>exchange_rates</b> and update instantly when Admin changes them.</p>
 
-            <!-- Quick Calculator -->
-            <div class="exchange-quick-calc" aria-label="Quick exchange calculator">
+            <div class="exchange-quick-calc">
               <div class="calc-inputs">
                 <div class="input-group">
-                  <input type="number" value="100" id="quickAmount" class="input" min="0" step="0.0001" />
+                  <input type="number" value="100" id="quickAmount" class="input" min="0" step="0.0001">
                   <select class="input" id="quickFrom">
                     <option value="USD">🇺🇸 USD</option>
                     <option value="GBP">🇬🇧 GBP</option>
@@ -112,13 +121,12 @@
                   <i class="fa-brands fa-whatsapp"></i> Get This Rate
                 </button>
                 <a class="btn" href="#calculator"><i class="fa-solid fa-calculator"></i> Advanced</a>
-                <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
               </div>
             </div>
 
             <div class="trust-row">
               <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Reference IDs</div>
-              <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Confirm-first process</div>
+              <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Confirm-first workflow</div>
               <div class="trust-badge"><i class="fa-solid fa-bolt"></i> Fast coordination</div>
             </div>
           </div>
@@ -126,30 +134,30 @@
           <div class="hero-badges">
             <div class="hero-card">
               <h3><i class="fa-solid fa-dollar-sign" style="color:var(--brand)"></i> FX Desk</h3>
-              <p>USD/GBP/EUR ↔ NGN. Admin-managed live rates.</p>
+              <p>USD/GBP/EUR ↔ NGN. Live admin rates.</p>
               <div class="card-actions"><a class="btn small" href="#rates">View Rates</a></div>
             </div>
             <div class="hero-card">
               <h3><i class="fa-solid fa-coins" style="color:var(--brand)"></i> Crypto Desk</h3>
-              <p>BTC/ETH/USDT ↔ NGN with clear confirmation steps.</p>
+              <p>BTC/ETH/USDT ↔ NGN. Live admin rates.</p>
               <div class="card-actions"><a class="btn small" href="#rates">Trade Crypto</a></div>
             </div>
             <div class="hero-card">
-              <h3><i class="fa-solid fa-chart-line" style="color:var(--brand)"></i> Insights</h3>
-              <p>See community updates and market signals.</p>
-              <div class="card-actions"><a class="btn small" href="insights.html">Open Insights</a></div>
+              <h3><i class="fa-solid fa-crown" style="color:var(--brand)"></i> Premium</h3>
+              <p>Priority desk routing and faster responses.</p>
+              <div class="card-actions"><a class="btn small" href="premium.html">Upgrade</a></div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Rates -->
+    <!-- RATES -->
     <section class="section" id="rates">
       <div class="section-head-split">
         <div>
-          <h2>Live Exchange Rates</h2>
-          <p class="lead">These are loaded from Supabase <b>exchange_rates</b> and update in real time.</p>
+          <h2>Live Rates</h2>
+          <p class="lead">Loaded from Supabase and updated in realtime.</p>
         </div>
         <div class="notice" id="rateUpdateTime" style="max-width:max-content">Updated: —</div>
       </div>
@@ -166,17 +174,17 @@
       <div id="cryptoRatesGrid" class="grid"></div>
     </section>
 
-    <!-- Advanced calculator -->
+    <!-- CALCULATOR -->
     <section class="section" id="calculator">
       <div class="card">
-        <h2><i class="fa-solid fa-calculator"></i> Advanced Exchange Calculator</h2>
-        <p class="lead">Estimate conversion and fee using the current live desk rates.</p>
+        <h2><i class="fa-solid fa-calculator"></i> Advanced Calculator</h2>
+        <p class="lead">Uses current desk rates + fees.</p>
 
         <div class="calc-container">
           <div class="calc-row">
             <div>
               <label class="small">You Send</label>
-              <input type="number" class="input" id="sendAmount" value="100" min="0" step="0.0001" />
+              <input type="number" class="input" id="sendAmount" value="100" min="0" step="0.0001">
             </div>
             <div>
               <label class="small">Currency</label>
@@ -193,9 +201,7 @@
           </div>
 
           <div class="calc-swap">
-            <button class="swap-btn" onclick="swapCurrencies()">
-              <i class="fa-solid fa-right-left"></i>
-            </button>
+            <button class="swap-btn" onclick="swapCurrencies()"><i class="fa-solid fa-right-left"></i></button>
           </div>
 
           <div class="calc-row">
@@ -230,11 +236,11 @@
       </div>
     </section>
 
-    <!-- Request form -->
+    <!-- REQUEST FORM -->
     <section class="section" id="exchange-form">
       <div class="card">
         <h2>Start Exchange Now</h2>
-        <p class="lead">Submit request — logs to Supabase + opens WhatsApp with a reference.</p>
+        <p class="lead">Logs request to Supabase + opens WhatsApp.</p>
 
         <form id="exchangeRequestForm">
           <div class="row2">
@@ -270,7 +276,7 @@
           </div>
 
           <div style="margin-top:12px">
-            <label class="small">Additional Notes</label>
+            <label class="small">Notes</label>
             <textarea class="input" id="exNotes" rows="3" placeholder="Any special instructions..."></textarea>
           </div>
 
@@ -289,7 +295,7 @@
       <div class="footer-grid">
         <div>
           <div class="brandline">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Exchange" />
+            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
             <div>
               <div style="font-weight:950">Larmah Enterprise</div>
               <div class="small">Exchange Desk</div>
@@ -318,24 +324,18 @@
 
   <div id="toast" class="toast"></div>
 
-  <!-- Dynamic Exchange Script (Supabase-backed) -->
+  <!-- Dynamic exchange logic (Supabase-backed) -->
   <script>
-    let RATES = {}; // keyed by code
+    let RATES = {};
 
     function toNum(x){ return x === null || x === undefined ? 0 : Number(x); }
-
-    function fmtNGN(n){
-      return "₦" + Number(n || 0).toLocaleString(undefined, { maximumFractionDigits: 2 });
-    }
-
+    function fmtNGN(n){ return "₦" + Number(n||0).toLocaleString(undefined,{maximumFractionDigits:2}); }
     function buildRatesMap(rows){
       const m = {};
-      (rows || []).forEach(r => {
+      (rows||[]).forEach(r=>{
         m[r.code] = {
-          code: r.code,
-          name: r.name,
-          buy: toNum(r.buy_ngn),
-          sell: toNum(r.sell_ngn),
+          code:r.code, name:r.name,
+          buy: toNum(r.buy_ngn), sell: toNum(r.sell_ngn),
           fee: toNum(r.fee_rate),
           min: toNum(r.min_amount),
           max: toNum(r.max_amount),
@@ -347,26 +347,16 @@
 
     function renderTicker(){
       const t = document.getElementById("liveRatesTicker");
-      if(!t) return;
-
       const usd = RATES.USD?.buy || 0;
       const gbp = RATES.GBP?.buy || 0;
       const eur = RATES.EUR?.buy || 0;
       const btc = RATES.BTC?.buy || 0;
-
-      t.innerHTML = `
-        <span>
-          📈 LIVE: USD/NGN ${fmtNGN(usd)} • GBP/NGN ${fmtNGN(gbp)} • EUR/NGN ${fmtNGN(eur)} • BTC/NGN ${fmtNGN(btc)}
-        </span>
-      `;
+      t.innerHTML = `<span>📈 LIVE: USD/NGN ${fmtNGN(usd)} • GBP/NGN ${fmtNGN(gbp)} • EUR/NGN ${fmtNGN(eur)} • BTC/NGN ${fmtNGN(btc)}</span>`;
     }
 
     function rateCard(code, isCrypto=false){
-      const r = RATES[code];
-      if(!r) return "";
-
+      const r = RATES[code]; if(!r) return "";
       const updated = r.updated_at ? new Date(r.updated_at).toLocaleString() : "-";
-
       return `
         <div class="card rate-card">
           ${isCrypto ? `<div class="rate-badge">CRYPTO</div>` : ``}
@@ -380,9 +370,7 @@
           <div class="small" style="margin-top:6px;opacity:.85">
             Fee: ${(r.fee*100).toFixed(2)}% • Sell: ${fmtNGN(r.sell)}
           </div>
-          <div class="small" style="margin-top:6px;opacity:.70">
-            Updated: ${updated}
-          </div>
+          <div class="small" style="margin-top:6px;opacity:.70">Updated: ${updated}</div>
           <div class="actions" style="margin-top:10px">
             <button class="btn small primary" onclick="requestQuote('${code}')">
               <i class="fa-brands fa-whatsapp"></i> Exchange ${code}
@@ -400,102 +388,86 @@
       const stamp = RATES.USD?.updated_at || RATES.GBP?.updated_at || RATES.EUR?.updated_at || new Date().toISOString();
       if(time) time.textContent = "Updated: " + new Date(stamp).toLocaleTimeString();
 
-      if(forex){
-        forex.innerHTML =
-          rateCard("USD") +
-          rateCard("GBP") +
-          rateCard("EUR");
-      }
-
-      if(crypto){
-        crypto.innerHTML =
-          rateCard("BTC", true) +
-          rateCard("ETH", true) +
-          rateCard("USDT", true);
-      }
+      forex.innerHTML = rateCard("USD") + rateCard("GBP") + rateCard("EUR");
+      crypto.innerHTML = rateCard("BTC", true) + rateCard("ETH", true) + rateCard("USDT", true);
     }
 
     function calc(from, to, amount){
-      const amt = Number(amount || 0);
-      if(!amt) return { converted: 0, rate: 0, fee: 0, feePct: 0 };
-      if(from === to) return { converted: amt, rate: 1, fee: 0, feePct: 0 };
+      const amt = Number(amount||0);
+      if(!amt) return {converted:0, rate:0, fee:0, feePct:0};
+      if(from===to) return {converted:amt, rate:1, fee:0, feePct:0};
 
-      // Receive NGN: use buy_ngn
-      if(to === "NGN" && RATES[from]){
+      if(to==="NGN" && RATES[from]){
         const rate = RATES[from].buy;
         const feePct = RATES[from].fee;
-        const converted = amt * rate;
-        const fee = converted * feePct;
-        return { converted: converted - fee, rate, fee, feePct: feePct*100 };
+        const converted = amt*rate;
+        const fee = converted*feePct;
+        return {converted: converted-fee, rate, fee, feePct: feePct*100};
       }
 
-      // Send NGN: use sell_ngn
-      if(from === "NGN" && RATES[to]){
+      if(from==="NGN" && RATES[to]){
         const rate = 1 / RATES[to].sell;
         const feePct = RATES[to].fee;
-        const converted = amt * rate;
-        const fee = converted * feePct;
-        return { converted: converted - fee, rate, fee, feePct: feePct*100 };
+        const converted = amt*rate;
+        const fee = converted*feePct;
+        return {converted: converted-fee, rate, fee, feePct: feePct*100};
       }
 
-      // Cross via NGN
       if(RATES[from] && RATES[to]){
         const toNgn = RATES[from].buy;
         const ngnTo = 1 / RATES[to].sell;
         const rate = toNgn * ngnTo;
         const feePct = Math.max(RATES[from].fee, RATES[to].fee);
-        const converted = amt * rate;
-        const fee = converted * feePct;
-        return { converted: converted - fee, rate, fee, feePct: feePct*100 };
+        const converted = amt*rate;
+        const fee = converted*feePct;
+        return {converted: converted-fee, rate, fee, feePct: feePct*100};
       }
 
-      return { converted: 0, rate: 0, fee: 0, feePct: 0 };
+      return {converted:0, rate:0, fee:0, feePct:0};
     }
 
     function format(amount, currency){
-      const n = Number(amount || 0);
-      if(currency === "NGN") return "₦" + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      if(currency === "BTC") return n.toFixed(6) + " BTC";
-      if(currency === "ETH") return n.toFixed(4) + " ETH";
-      if(currency === "USDT") return n.toFixed(2) + " USDT";
+      const n = Number(amount||0);
+      if(currency==="NGN") return "₦" + n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+      if(currency==="BTC") return n.toFixed(6) + " BTC";
+      if(currency==="ETH") return n.toFixed(4) + " ETH";
+      if(currency==="USDT") return n.toFixed(2) + " USDT";
       return n.toFixed(2) + " " + currency;
     }
 
     function updateQuick(){
-      const amount = document.getElementById("quickAmount").value;
-      const from = document.getElementById("quickFrom").value;
-      const to = document.getElementById("quickTo").value;
-      const res = calc(from, to, amount);
-      document.getElementById("quickResult").textContent = format(res.converted, to);
+      const res = calc(
+        document.getElementById("quickFrom").value,
+        document.getElementById("quickTo").value,
+        document.getElementById("quickAmount").value
+      );
+      document.getElementById("quickResult").textContent = format(res.converted, document.getElementById("quickTo").value);
     }
 
     function updateAdvanced(){
-      const amount = document.getElementById("sendAmount").value;
       const from = document.getElementById("sendCurrency").value;
       const to = document.getElementById("receiveCurrency").value;
+      const res = calc(from, to, document.getElementById("sendAmount").value);
 
-      const res = calc(from, to, amount);
       document.getElementById("receiveAmount").textContent = format(res.converted, to);
       document.getElementById("calcRate").textContent = `1 ${from} ≈ ${format(res.rate, to)}`;
       document.getElementById("calcFee").textContent = `${res.feePct.toFixed(1)}% • ${format(res.fee, to)}`;
 
-      const eta = (from === "BTC" || from === "ETH" || to === "BTC" || to === "ETH") ? "45–120 minutes" : "15–30 minutes";
+      const eta = (from==="BTC"||from==="ETH"||to==="BTC"||to==="ETH") ? "45–120 minutes" : "15–30 minutes";
       document.getElementById("calcTime").textContent = eta;
     }
 
     function requestQuote(code){
       const r = RATES[code];
       if(!r){ LARMAH.toast("Rate not available"); return; }
-
-      const msg = LARMAH.buildMessage("Exchange Quote Request", {
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Exchange Quote Request", {
         Pair: `${code} → NGN`,
         BuyRate: fmtNGN(r.buy),
         SellRate: fmtNGN(r.sell),
         Fee: (r.fee*100).toFixed(2) + "%",
         Name: "",
         Phone: ""
-      });
-      LARMAH.openWhatsApp(msg);
+      }));
     }
 
     function swapCurrencies(){
@@ -508,23 +480,21 @@
     }
 
     function quickExchange(){
-      const msg = LARMAH.buildMessage("Quick Exchange Quote", {
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Quick Exchange Quote", {
         From: `${document.getElementById("quickAmount").value} ${document.getElementById("quickFrom").value}`,
         To: document.getElementById("quickTo").value,
         Expected: document.getElementById("quickResult").textContent
-      });
-      LARMAH.openWhatsApp(msg);
+      }));
     }
 
     function initiateExchange(){
-      const msg = LARMAH.buildMessage("Exchange Initiation", {
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Exchange Initiation", {
         Send: `${document.getElementById("sendAmount").value} ${document.getElementById("sendCurrency").value}`,
         Receive: document.getElementById("receiveAmount").textContent,
         Rate: document.getElementById("calcRate").textContent,
         Name: "",
         Phone: ""
-      });
-      LARMAH.openWhatsApp(msg);
+      }));
     }
 
     async function loadRates(){
@@ -532,8 +502,7 @@
       RATES = buildRatesMap(rows);
 
       if(!Object.keys(RATES).length){
-        document.getElementById("forexRatesGrid").innerHTML =
-          `<div class="notice"><strong>No rates configured.</strong> Admin must set exchange_rates.</div>`;
+        document.getElementById("forexRatesGrid").innerHTML = `<div class="notice"><strong>No rates configured.</strong> Admin must set exchange_rates.</div>`;
         document.getElementById("cryptoRatesGrid").innerHTML = "";
         document.getElementById("liveRatesTicker").innerHTML = `<span>Rates not configured (admin).</span>`;
         return;
@@ -547,26 +516,20 @@
 
     document.addEventListener("DOMContentLoaded", async () => {
       await loadRates();
+      await LARMAH.subscribeExchangeRates(async () => loadRates());
 
-      // realtime updates (requires Supabase Realtime enabled for exchange_rates)
-      await LARMAH.subscribeExchangeRates(async () => {
-        await loadRates();
-      });
-
-      // wire calculator inputs
-      ["quickAmount","quickFrom","quickTo"].forEach(id => {
+      ["quickAmount","quickFrom","quickTo"].forEach(id=>{
         const el = document.getElementById(id);
         if(el){ el.addEventListener("input", updateQuick); el.addEventListener("change", updateQuick); }
       });
-      ["sendAmount","sendCurrency","receiveCurrency"].forEach(id => {
+      ["sendAmount","sendCurrency","receiveCurrency"].forEach(id=>{
         const el = document.getElementById(id);
         if(el){ el.addEventListener("input", updateAdvanced); el.addEventListener("change", updateAdvanced); }
       });
 
-      // form submission: logs request + WhatsApp
       const form = document.getElementById("exchangeRequestForm");
       if(form){
-        form.addEventListener("submit", async (e) => {
+        form.addEventListener("submit", async (e)=>{
           e.preventDefault();
 
           const fields = {
