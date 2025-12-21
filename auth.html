@@ -1,10 +1,11 @@
+<!-- auth.html (FULL UPDATED — registration link auto-sent via Magic Link; includes password login for staff/admin) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Account | Larmah Enterprise</title>
-  <meta name="description" content="Secure sign-in for Larmah Enterprise. Password login or magic link access." />
+  <meta name="description" content="Secure access to Larmah. Get a registration/login link by email or sign in with password (staff/admin)." />
   <meta name="theme-color" content="#070A12" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
@@ -21,6 +22,7 @@
     @media(max-width:980px){.auth-grid{grid-template-columns:1fr}}
     .divider{display:flex;align-items:center;gap:10px;margin:12px 0;color:var(--muted);font-size:.85rem;font-weight:900;text-transform:uppercase}
     .divider:before,.divider:after{content:"";height:1px;flex:1;background:rgba(255,255,255,.10)}
+    .hint{opacity:.85}
   </style>
 </head>
 
@@ -35,14 +37,20 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
+      <!-- Simple desktop nav (mobile uses the sheet menu built by app.js) -->
       <nav id="nav" aria-label="Primary navigation">
-  <ul>
-    <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
-    <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-    <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
-    <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
-  </ul>
-</nav>
+        <ul>
+          <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
+          <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
+          <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
+          <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions" id="authPill">
+        <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+      </div>
+    </div>
   </header>
 
   <main class="container">
@@ -53,10 +61,14 @@
             <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-lock"></i> Secure Access</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Staff / Admin login</span>
+              <span class="kicker-sub">Registration link • Password login (staff)</span>
             </div>
-            <h1>Sign in to Larmah.</h1>
-            <p class="lead">Use password login or a magic link sent to your inbox.</p>
+
+            <h1>Sign in / Register.</h1>
+            <p class="lead">
+              For users: enter your email to receive a secure registration/login link.
+              For staff/admin: use password login.
+            </p>
           </div>
         </div>
       </div>
@@ -64,56 +76,58 @@
 
     <section class="section">
       <div class="auth-grid">
+        <!-- Registration / Login Link -->
         <div class="card">
-          <h3><i class="fa-solid fa-right-to-bracket" style="color:var(--brand)"></i> Standard Login</h3>
-          <p class="small">Email + password access.</p>
+          <h3><i class="fa-solid fa-envelope-circle-check" style="color:var(--brand)"></i> Email Link (Recommended)</h3>
+          <p class="small hint">
+            We’ll send a secure link to your inbox. If your account doesn’t exist yet, it will be created automatically.
+          </p>
 
           <div style="margin-top:12px">
             <label class="small">Email</label>
-            <input id="email" class="input" type="email" placeholder="you@email.com" />
+            <input id="linkEmail" class="input" type="email" placeholder="you@email.com" autocomplete="email" />
+          </div>
+
+          <div class="actions" style="margin-top:12px">
+            <button class="btn solid" style="width:100%" onclick="sendRegistrationLink()">
+              <i class="fa-solid fa-paper-plane"></i> Send Registration Link
+            </button>
+          </div>
+
+          <div class="small" style="margin-top:12px;opacity:.75">
+            Check spam/junk if you don’t see it in 1–2 minutes.
+          </div>
+
+          <div class="divider">optional</div>
+
+          <button class="btn" style="width:100%" onclick="resetPassword()">
+            <i class="fa-solid fa-key"></i> Reset Password
+          </button>
+        </div>
+
+        <!-- Password Login (Staff/Admin) -->
+        <div class="card">
+          <h3><i class="fa-solid fa-user-shield" style="color:var(--brand)"></i> Password Login (Staff/Admin)</h3>
+          <p class="small hint">Use this if you already have a password set.</p>
+
+          <div style="margin-top:12px">
+            <label class="small">Email</label>
+            <input id="email" class="input" type="email" placeholder="staff@email.com" autocomplete="email" />
           </div>
 
           <div style="margin-top:12px">
             <label class="small">Password</label>
-            <input id="password" class="input" type="password" placeholder="••••••••" />
+            <input id="password" class="input" type="password" placeholder="••••••••" autocomplete="current-password" />
           </div>
 
           <div class="actions" style="margin-top:12px">
-            <button class="btn solid" style="width:100%" onclick="signIn()">
-              <i class="fa-solid fa-lock-open"></i> Sign In
+            <button class="btn solid" style="width:100%" onclick="signInPassword()">
+              <i class="fa-solid fa-right-to-bracket"></i> Sign In
             </button>
           </div>
 
-          <div class="divider">or</div>
-
-          <button class="btn primary" style="width:100%" onclick="signUp()">
-            <i class="fa-solid fa-user-plus"></i> Create New Account
-          </button>
-        </div>
-
-        <div class="card">
-          <h3><i class="fa-solid fa-wand-magic-sparkles" style="color:var(--brand)"></i> Passwordless</h3>
-          <p class="small">Send a secure login link to your email.</p>
-
-          <div style="margin-top:12px">
-            <label class="small">Email</label>
-            <input id="otpEmail" class="input" type="email" placeholder="you@email.com" />
-          </div>
-
-          <div class="actions" style="margin-top:12px">
-            <button class="btn solid" style="width:100%" onclick="magicLink()">
-              <i class="fa-solid fa-paper-plane"></i> Send Magic Link
-            </button>
-          </div>
-
-          <div class="small" style="margin-top:12px">
-            <a href="#" onclick="resetPassword(); return false;" style="color:var(--accent);font-weight:950">
-              Forgot Password? Reset it here
-            </a>
-          </div>
-
-          <div class="notice" style="margin-top:12px">
-            <strong>Note:</strong> Magic link redirects are GitHub Pages-safe.
+          <div class="small" style="margin-top:12px;opacity:.75">
+            Staff accounts can be upgraded to Admin/Super Admin in Supabase.
           </div>
         </div>
       </div>
@@ -176,16 +190,37 @@
     </div>
   </footer>
 
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    async function signIn(){
+    async function sendRegistrationLink(){
+      const sb = await LARMAH.initSupabase();
+      const email = document.getElementById("linkEmail").value.trim();
+      if(!email || !email.includes("@")){ LARMAH.toast("Enter a valid email"); return; }
+
+      const redirectUrl = new URL("index.html", window.location.href).toString();
+
+      LARMAH.toast("Sending link…");
+      const r = await sb.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: redirectUrl,
+          // shouldCreateUser defaults to true; leaving it out keeps auto-create ON.
+          // shouldCreateUser: true,
+        }
+      });
+
+      if(r.error){ LARMAH.toast(r.error.message); return; }
+      LARMAH.toast("Registration link sent. Check your email.");
+    }
+
+    async function signInPassword(){
       const sb = await LARMAH.initSupabase();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value.trim();
       if(!email || !password){ LARMAH.toast("Enter email and password"); return; }
 
-      LARMAH.toast("Verifying credentials...");
+      LARMAH.toast("Signing in…");
       const r = await sb.auth.signInWithPassword({ email, password });
       if(r.error){ LARMAH.toast(r.error.message); return; }
 
@@ -193,37 +228,20 @@
       setTimeout(()=> location.href="index.html", 700);
     }
 
-    async function signUp(){
-      const sb = await LARMAH.initSupabase();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      if(!email || !password){ LARMAH.toast("Provide email and a strong password"); return; }
-
-      const r = await sb.auth.signUp({ email, password });
-      if(r.error){ LARMAH.toast(r.error.message); return; }
-      LARMAH.toast("Success! Check your email to confirm.");
-    }
-
-    async function magicLink(){
-      const sb = await LARMAH.initSupabase();
-      const email = document.getElementById("otpEmail").value.trim();
-      if(!email){ LARMAH.toast("Please enter your email"); return; }
-
-      const redirectUrl = new URL("index.html", window.location.href).toString();
-      const r = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl } });
-      if(r.error){ LARMAH.toast(r.error.message); return; }
-      LARMAH.toast("Login link sent to your email.");
-    }
-
     async function resetPassword(){
       const sb = await LARMAH.initSupabase();
-      const email = (document.getElementById("otpEmail").value.trim() || document.getElementById("email").value.trim());
-      if(!email){ LARMAH.toast("Enter your email first"); return; }
+      const email =
+        (document.getElementById("linkEmail").value.trim() ||
+         document.getElementById("email").value.trim());
+
+      if(!email || !email.includes("@")){ LARMAH.toast("Enter a valid email first"); return; }
 
       const redirectUrl = new URL("auth.html", window.location.href).toString();
+
+      LARMAH.toast("Sending reset email…");
       const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: redirectUrl });
       if(r.error){ LARMAH.toast(r.error.message); return; }
-      LARMAH.toast("Password reset instructions sent.");
+      LARMAH.toast("Password reset email sent.");
     }
   </script>
 </body>
