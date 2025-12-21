@@ -1,247 +1,134 @@
-<!-- auth.html (FULL UPDATED — registration link auto-sent via Magic Link; includes password login for staff/admin) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Account | Larmah Enterprise</title>
-  <meta name="description" content="Secure access to Larmah. Get a registration/login link by email or sign in with password (staff/admin)." />
-  <meta name="theme-color" content="#070A12" />
-
-  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
-  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
-
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Access | Larmah Enterprise</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
-
   <style>
-    .auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    @media(max-width:980px){.auth-grid{grid-template-columns:1fr}}
-    .divider{display:flex;align-items:center;gap:10px;margin:12px 0;color:var(--muted);font-size:.85rem;font-weight:900;text-transform:uppercase}
-    .divider:before,.divider:after{content:"";height:1px;flex:1;background:rgba(255,255,255,.10)}
-    .hint{opacity:.85}
+    body { overflow: hidden; display: flex; height: 100vh; }
+    .auth-visual {
+      flex: 1; background: url('assets/images/larmah-header.jpeg') center/cover no-repeat;
+      position: relative; display: flex; align-items: flex-end; padding: 40px;
+    }
+    .auth-visual::after {
+      content:''; position: absolute; inset: 0;
+      background: linear-gradient(0deg, rgba(7,10,18,1) 0%, rgba(7,10,18,0.4) 100%);
+    }
+    .auth-visual-content { position: relative; z-index: 2; max-width: 500px; }
+    
+    .auth-panel {
+      width: 450px; background: var(--bg2); border-left: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: center; padding: 40px;
+      position: relative;
+    }
+    @media(max-width: 900px) { .auth-visual { display: none; } .auth-panel { width: 100%; } }
+    
+    .auth-tabs { display: flex; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid var(--border); }
+    .auth-tab { padding-bottom: 10px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; font-weight: 600; }
+    .auth-tab.active { color: var(--text); border-color: var(--brand); }
+    
+    .social-login { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .social-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; cursor: pointer; transition: 0.2s; }
+    .social-btn:hover { background: rgba(255,255,255,0.05); }
+    
+    .divider { display: flex; align-items: center; gap: 10px; color: var(--muted2); font-size: 0.8rem; margin: 20px 0; }
+    .divider::before, .divider::after { content:''; height: 1px; flex: 1; background: var(--border); }
   </style>
 </head>
-
 <body data-page="auth">
-  <header>
-    <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Home">
-        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+
+  <div class="auth-visual">
+    <div class="auth-visual-content">
+      <h1 style="font-size: 3rem; line-height: 1;">Access the<br>Ecosystem.</h1>
+      <p class="lead" style="margin-top: 15px;">Manage your Real Estate portfolio, track Logistics, and trade Crypto from one secure dashboard.</p>
+    </div>
+  </div>
+
+  <div class="auth-panel">
+    <div style="margin-bottom: 30px;">
+      <a href="index.html" style="display:flex;align-items:center;gap:10px;margin-bottom:20px;color:var(--muted);font-size:0.9rem">
+        <i class="fa-solid fa-arrow-left"></i> Back to Home
       </a>
+      <img src="assets/images/larmah-header.jpeg" style="height:40px;border-radius:8px">
+    </div>
 
-      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
-        <i class="fa-solid fa-bars"></i>
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchAuth('login')">Sign In</div>
+      <div class="auth-tab" onclick="switchAuth('register')">Create Account</div>
+    </div>
+
+    <form id="authForm" onsubmit="handleAuth(event)">
+      
+      <div id="signupFields" style="display:none; margin-bottom: 15px;">
+        <label class="small">Full Name</label>
+        <input type="text" id="fullName" class="input" placeholder="e.g. John Doe">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label class="small">Email Address</label>
+        <input type="email" id="email" class="input" placeholder="name@example.com" required>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label class="small">Password</label>
+        <input type="password" id="password" class="input" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn solid" style="width:100%" id="submitBtn">
+        Sign In
       </button>
+    </form>
 
-      <!-- Simple desktop nav (mobile uses the sheet menu built by app.js) -->
-      <nav id="nav" aria-label="Primary navigation">
-        <ul>
-          <li><a class="nav-link" href="real-estate.html" data-link="real-estate">Real Estate</a></li>
-          <li><a class="nav-link" href="logistics.html" data-link="logistics">Logistics</a></li>
-          <li><a class="nav-link" href="insights.html" data-link="insights">Insights</a></li>
-          <li><a class="nav-link" href="exchange.html" data-link="exchange">Exchange</a></li>
-        </ul>
-      </nav>
+    <div class="divider">OR CONTINUE WITH</div>
 
-      <div class="header-actions" id="authPill">
-        <a class="pill primary" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
-      </div>
+    <div class="social-login">
+      <div class="social-btn"><i class="fa-brands fa-google"></i> Google</div>
+      <div class="social-btn"><i class="fa-brands fa-apple"></i> Apple</div>
     </div>
-  </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-shell">
-        <div class="hero-inner" style="grid-template-columns:1fr">
-          <div>
-            <div class="hero-kicker">
-              <span class="kicker-pill"><i class="fa-solid fa-lock"></i> Secure Access</span>
-              <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Registration link • Password login (staff)</span>
-            </div>
-
-            <h1>Sign in / Register.</h1>
-            <p class="lead">
-              For users: enter your email to receive a secure registration/login link.
-              For staff/admin: use password login.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="auth-grid">
-        <!-- Registration / Login Link -->
-        <div class="card">
-          <h3><i class="fa-solid fa-envelope-circle-check" style="color:var(--brand)"></i> Email Link (Recommended)</h3>
-          <p class="small hint">
-            We’ll send a secure link to your inbox. If your account doesn’t exist yet, it will be created automatically.
-          </p>
-
-          <div style="margin-top:12px">
-            <label class="small">Email</label>
-            <input id="linkEmail" class="input" type="email" placeholder="you@email.com" autocomplete="email" />
-          </div>
-
-          <div class="actions" style="margin-top:12px">
-            <button class="btn solid" style="width:100%" onclick="sendRegistrationLink()">
-              <i class="fa-solid fa-paper-plane"></i> Send Registration Link
-            </button>
-          </div>
-
-          <div class="small" style="margin-top:12px;opacity:.75">
-            Check spam/junk if you don’t see it in 1–2 minutes.
-          </div>
-
-          <div class="divider">optional</div>
-
-          <button class="btn" style="width:100%" onclick="resetPassword()">
-            <i class="fa-solid fa-key"></i> Reset Password
-          </button>
-        </div>
-
-        <!-- Password Login (Staff/Admin) -->
-        <div class="card">
-          <h3><i class="fa-solid fa-user-shield" style="color:var(--brand)"></i> Password Login (Staff/Admin)</h3>
-          <p class="small hint">Use this if you already have a password set.</p>
-
-          <div style="margin-top:12px">
-            <label class="small">Email</label>
-            <input id="email" class="input" type="email" placeholder="staff@email.com" autocomplete="email" />
-          </div>
-
-          <div style="margin-top:12px">
-            <label class="small">Password</label>
-            <input id="password" class="input" type="password" placeholder="••••••••" autocomplete="current-password" />
-          </div>
-
-          <div class="actions" style="margin-top:12px">
-            <button class="btn solid" style="width:100%" onclick="signInPassword()">
-              <i class="fa-solid fa-right-to-bracket"></i> Sign In
-            </button>
-          </div>
-
-          <div class="small" style="margin-top:12px;opacity:.75">
-            Staff accounts can be upgraded to Admin/Super Admin in Supabase.
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Standard Footer -->
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="brandline">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-            <div>
-              <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Real Estate • Logistics • Insights • Exchange</div>
-            </div>
-          </div>
-
-          <div class="small" style="margin-top:8px">
-            Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
-          </div>
-
-          <div class="social-row" aria-label="Social links">
-            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-            <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <b>Navigation</b>
-          <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
-          <div class="small"><a href="logistics.html">Logistics</a></div>
-          <div class="small"><a href="insights.html">Insights</a></div>
-          <div class="small"><a href="exchange.html">Exchange</a></div>
-          <div class="small"><a href="premium.html">Premium</a></div>
-        </div>
-
-        <div>
-          <b>Contact</b>
-          <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
-          <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-
-          <div class="actions" style="margin-top:12px">
-            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))">
-              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-            </button>
-          </div>
-
-          <div class="small" style="margin-top:10px;opacity:.65">
-            <a href="auth.html">Staff Sign-in</a> • <a href="admin.html">Admin</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="small">© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+    <div class="small" style="text-align:center; margin-top: 20px; opacity: 0.6;">
+      Secured by Supabase & Paystack
     </div>
-  </footer>
+  </div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="toast" class="toast"></div>
 
   <script>
-    async function sendRegistrationLink(){
-      const sb = await LARMAH.initSupabase();
-      const email = document.getElementById("linkEmail").value.trim();
-      if(!email || !email.includes("@")){ LARMAH.toast("Enter a valid email"); return; }
+    let mode = 'login';
+    function switchAuth(newMode) {
+      mode = newMode;
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      document.getElementById('signupFields').style.display = mode === 'register' ? 'block' : 'none';
+      document.getElementById('submitBtn').textContent = mode === 'register' ? 'Create Account' : 'Sign In';
+    }
 
-      const redirectUrl = new URL("index.html", window.location.href).toString();
+    async function handleAuth(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const pass = document.getElementById('password').value;
+      const name = document.getElementById('fullName').value;
+      const btn = document.getElementById('submitBtn');
+      
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+      btn.disabled = true;
 
-      LARMAH.toast("Sending link…");
-      const r = await sb.auth.signInWithOtp({
-        email,
-        options: {
-          emailRedirectTo: redirectUrl,
-          // shouldCreateUser defaults to true; leaving it out keeps auto-create ON.
-          // shouldCreateUser: true,
+      try {
+        if(mode === 'login') {
+          await LARMAH.login(email, pass);
+        } else {
+          await LARMAH.signup(email, pass, name);
         }
-      });
-
-      if(r.error){ LARMAH.toast(r.error.message); return; }
-      LARMAH.toast("Registration link sent. Check your email.");
-    }
-
-    async function signInPassword(){
-      const sb = await LARMAH.initSupabase();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      if(!email || !password){ LARMAH.toast("Enter email and password"); return; }
-
-      LARMAH.toast("Signing in…");
-      const r = await sb.auth.signInWithPassword({ email, password });
-      if(r.error){ LARMAH.toast(r.error.message); return; }
-
-      LARMAH.toast("Welcome back!");
-      setTimeout(()=> location.href="index.html", 700);
-    }
-
-    async function resetPassword(){
-      const sb = await LARMAH.initSupabase();
-      const email =
-        (document.getElementById("linkEmail").value.trim() ||
-         document.getElementById("email").value.trim());
-
-      if(!email || !email.includes("@")){ LARMAH.toast("Enter a valid email first"); return; }
-
-      const redirectUrl = new URL("auth.html", window.location.href).toString();
-
-      LARMAH.toast("Sending reset email…");
-      const r = await sb.auth.resetPasswordForEmail(email, { redirectTo: redirectUrl });
-      if(r.error){ LARMAH.toast(r.error.message); return; }
-      LARMAH.toast("Password reset email sent.");
+      } catch(err) {
+        LARMAH.toast(err.message, 'error');
+        btn.innerHTML = mode === 'register' ? 'Create Account' : 'Sign In';
+        btn.disabled = false;
+      }
     }
   </script>
 </body>
