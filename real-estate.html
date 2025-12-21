@@ -1,4 +1,3 @@
-<!-- real-estate.html (UPGRADED — pro + smart + 100% mobile responsive + new nav overlay) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +17,6 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    /* Page helpers (responsive) */
     .catalog-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
     .filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:12px 0 6px}
     @media(max-width:980px){.filters{grid-template-columns:1fr}}
@@ -37,7 +35,6 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
-      <!-- BEAUTIFUL MOBILE OVERLAY NAV -->
       <nav id="nav" aria-label="Primary navigation">
         <div class="nav-panel">
           <div class="nav-panel-head">
@@ -75,7 +72,6 @@
   </header>
 
   <main class="container">
-    <!-- HERO -->
     <section class="hero">
       <div class="hero-shell">
         <div class="hero-inner">
@@ -87,9 +83,7 @@
             </div>
 
             <h1>Find Your Next Home.</h1>
-            <p class="lead">
-              Verified listings across Nigeria. Tap any property to enquire instantly on WhatsApp with a reference ID.
-            </p>
+            <p class="lead">Verified listings across Nigeria. Tap any property to enquire instantly on WhatsApp with a reference ID.</p>
 
             <div class="actions">
               <a class="btn solid" href="#catalog"><i class="fa-solid fa-magnifying-glass"></i> Browse Catalog</a>
@@ -113,7 +107,6 @@
       </div>
     </section>
 
-    <!-- VERIFICATION / PROCESS -->
     <section class="section">
       <div class="section-head-split">
         <div>
@@ -158,7 +151,6 @@
       </div>
     </section>
 
-    <!-- CATALOG -->
     <section class="section" id="catalog">
       <div class="catalog-head">
         <div>
@@ -204,7 +196,6 @@
       <div id="catalogMount"></div>
     </section>
 
-    <!-- REQUEST -->
     <section class="section" id="request">
       <h2>Personalized Sourcing</h2>
       <p class="lead">Tell us your budget and location — we’ll shortlist verified options.</p>
@@ -247,6 +238,7 @@
     </section>
   </main>
 
+  <!-- Standard Footer -->
   <footer>
     <div class="container">
       <div class="footer-grid">
@@ -258,7 +250,26 @@
               <div class="small">Real Estate • Logistics • Insights • Exchange</div>
             </div>
           </div>
-          <div class="small" style="margin-top:8px">Verified property sourcing across Nigeria — WhatsApp-first support.</div>
+
+          <div class="small" style="margin-top:8px">
+            Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
+          </div>
+
+          <div class="social-row" aria-label="Social links">
+            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+            <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <b>Navigation</b>
+          <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
+          <div class="small"><a href="logistics.html">Logistics</a></div>
+          <div class="small"><a href="insights.html">Insights</a></div>
+          <div class="small"><a href="exchange.html">Exchange</a></div>
+          <div class="small"><a href="premium.html">Premium</a></div>
         </div>
 
         <div>
@@ -266,17 +277,20 @@
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
           <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-        </div>
 
-        <div>
-          <b>Internal</b>
-          <div class="small" style="margin-top:10px"><a href="auth.html">Staff Sign-in</a></div>
-          <div class="small"><a href="admin.html">Admin</a></div>
-          <div class="small"><a href="premium.html">Premium</a></div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+            </button>
+          </div>
+
+          <div class="small" style="margin-top:10px;opacity:.65">
+            <a href="auth.html">Staff Sign-in</a> • <a href="admin.html">Admin</a>
+          </div>
         </div>
       </div>
 
-      <div class="small">© <span id="year"></span> Larmah Enterprise.</div>
+      <div class="small">© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
     </div>
   </footer>
 
@@ -337,14 +351,12 @@
       const sort = document.getElementById("re_sort").value;
 
       let items = (__RE_ITEMS||[]).slice();
-
       if(q){
         items = items.filter(it => norm(it.title + " " + (it.description||"") + " " + (it.tags||[]).join(" ")).includes(q));
       }
       if(tf){
         items = items.filter(it => inferType(it) === tf);
       }
-
       if(sort === "az") items.sort((a,b)=> String(a.title||"").localeCompare(String(b.title||"")));
       else items.sort((a,b)=> new Date(b.updated_at||0) - new Date(a.updated_at||0));
 
