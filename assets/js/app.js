@@ -1,3 +1,5 @@
+// assets/js/app.js (FULL UPDATED — builds a separate mobile drawer overlay, fixes nav errors)
+
 (() => {
   const LARMAH = (window.LARMAH = window.LARMAH || {});
 
@@ -6,117 +8,13 @@
   LARMAH.SUPABASE_URL = "https://drchjifufpsvvlzgpaiy.supabase.co";
   LARMAH.SUPABASE_ANON_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRyY2hqaWZ1ZnBzdnZsemdwYWl5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwOTMwNDEsImV4cCI6MjA4MTY2OTA0MX0.MLr1iCF4gjz0wnT1IFISCV9eJtnbq96_W_i7wAMOSbY";
-
   LARMAH.PAYSTACK_PUBLIC_KEY = "PUT_YOUR_PAYSTACK_PUBLIC_KEY_HERE";
 
-  // State for scroll lock
-  let scrollPosition = 0;
-  let scrollLockEnabled = false;
-
-  // Helpers to find nav element (supports nav#nav OR .mobile-nav)
-  function getNavEl() {
-    return document.getElementById("nav") || document.querySelector(".mobile-nav");
-  }
-  function getNavPanel(nav) {
-    return nav ? nav.querySelector(".nav-panel") : null;
-  }
-
-  // Scroll lock functions
-  LARMAH.lockScroll = function () {
-    if (scrollLockEnabled) return;
-    
-    scrollPosition = window.pageYOffset;
-    const body = document.body;
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-    
-    body.style.position = "fixed";
-    body.style.top = `-${scrollPosition}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.overflow = "hidden";
-    body.style.paddingRight = `${scrollbarWidth}px`;
-    
-    // Also fix any fixed elements that might shift
-    document.querySelectorAll("header").forEach(el => {
-      el.style.paddingRight = `${scrollbarWidth}px`;
-    });
-    
-    scrollLockEnabled = true;
+  // -------- Helpers --------
+  LARMAH.escapeHtml = function (s) {
+    return String(s ?? "").replace(/[&<>"']/g, (m) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
   };
 
-  LARMAH.unlockScroll = function () {
-    if (!scrollLockEnabled) return;
-    
-    const body = document.body;
-    
-    body.style.position = "";
-    body.style.top = "";
-    body.style.left = "";
-    body.style.right = "";
-    body.style.overflow = "";
-    body.style.paddingRight = "";
-    
-    // Reset header padding
-    document.querySelectorAll("header").forEach(el => {
-      el.style.paddingRight = "";
-    });
-    
-    window.scrollTo(0, scrollPosition);
-    scrollLockEnabled = false;
-  };
-
-  // NAV
-  LARMAH.toggleMenu = function () {
-    const nav = getNavEl();
-    if (!nav) return;
-    
-    const isOpening = !nav.classList.contains("active");
-    nav.classList.toggle("active");
-    document.body.classList.toggle("nav-open", nav.classList.contains("active"));
-    
-    if (isOpening) {
-      LARMAH.lockScroll();
-    } else {
-      LARMAH.unlockScroll();
-    }
-  };
-
-  LARMAH.closeMenu = function () {
-    const nav = getNavEl();
-    if (!nav || !nav.classList.contains("active")) return;
-    
-    nav.classList.remove("active");
-    document.body.classList.remove("nav-open");
-    LARMAH.unlockScroll();
-  };
-
-  LARMAH.setActiveNav = function () {
-    const links = Array.from(document.querySelectorAll(".nav-link"));
-    if (!links.length) return;
-
-    const page = (document.body.getAttribute("data-page") || "").trim();
-    const currentFile = (location.pathname.split("/").pop() || "index.html").split("?")[0];
-
-    const anyDataLink = links.some((a) => a.dataset && a.dataset.link);
-
-    if (anyDataLink && page) {
-      links.forEach((a) => {
-        if (!a.dataset.link) return;
-        a.classList.toggle("active", a.dataset.link === page);
-      });
-      return;
-    }
-
-    const matched = links.find((a) => {
-      const href = (a.getAttribute("href") || "").split("#")[0].split("?")[0];
-      const hrefFile = href.split("/").pop();
-      return hrefFile && hrefFile === currentFile;
-    });
-
-    if (matched) links.forEach((a) => a.classList.toggle("active", a === matched));
-  };
-
-  // UI
   LARMAH.toast = function (msg, ms = 2400) {
     const t = document.getElementById("toast");
     if (!t) return;
@@ -124,12 +22,6 @@
     t.style.display = "block";
     clearTimeout(window.__larmahToast);
     window.__larmahToast = setTimeout(() => (t.style.display = "none"), ms);
-  };
-
-  LARMAH.escapeHtml = function (s) {
-    return String(s ?? "").replace(/[&<>"']/g, (m) => {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m];
-    });
   };
 
   // WhatsApp
@@ -152,24 +44,18 @@
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // Supabase
+  // -------- Supabase --------
   LARMAH.sb = null;
 
   LARMAH.initSupabase = async function () {
-    if (!window.supabase) {
-      console.warn("Supabase SDK not loaded");
-      return null;
-    }
+    if (!window.supabase) return null;
     if (LARMAH.sb) return LARMAH.sb;
 
     LARMAH.sb = window.supabase.createClient(LARMAH.SUPABASE_URL, LARMAH.SUPABASE_ANON_KEY, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
     });
 
-    try {
-      LARMAH.sb.auth.onAuthStateChange(() => LARMAH.renderAuthPill());
-    } catch (_) {}
-
+    try { LARMAH.sb.auth.onAuthStateChange(() => LARMAH.renderAuthPill()); } catch (_) {}
     return LARMAH.sb;
   };
 
@@ -208,7 +94,7 @@
       '<button class="pill" onclick="LARMAH.signOut()"><i class="fa-solid fa-right-from-bracket"></i> Sign out</button>';
   };
 
-  // Catalog
+  // -------- Data: Catalog --------
   LARMAH.fetchCatalog = async function (category) {
     const sb = await LARMAH.initSupabase();
     if (!sb) return [];
@@ -222,7 +108,7 @@
     return data || [];
   };
 
-  // Requests
+  // -------- Data: Requests --------
   LARMAH.submitRequest = async function (payload) {
     const sb = await LARMAH.initSupabase();
     if (!sb) return { ok: false, error: "Supabase not configured" };
@@ -253,7 +139,7 @@
     return { ok: true };
   };
 
-  // Insights (pinned first) + fallback
+  // -------- Insights --------
   LARMAH.fetchInsights = async function (limit = 12) {
     const sb = await LARMAH.initSupabase();
     if (!sb) return [];
@@ -270,11 +156,9 @@
   LARMAH.renderInsights = async function (mountId) {
     const mount = document.getElementById(mountId);
     if (!mount) return;
-
     mount.innerHTML = '<div class="notice"><strong>Loading…</strong></div>';
 
     const posts = await LARMAH.fetchInsights(12);
-
     if (!posts.length) {
       mount.innerHTML = `
         <div class="grid">
@@ -324,7 +208,6 @@
   LARMAH.loadCrypto = async function (mountId) {
     const el = document.getElementById(mountId);
     if (!el) return;
-
     el.innerHTML = "<strong>Loading…</strong>";
 
     try {
@@ -336,9 +219,7 @@
       const data = await res.json();
 
       const fmt = (n) => (typeof n === "number" ? n.toLocaleString() : "-");
-      const last = data.bitcoin?.last_updated_at
-        ? new Date(data.bitcoin.last_updated_at * 1000).toLocaleTimeString()
-        : "";
+      const last = data.bitcoin?.last_updated_at ? new Date(data.bitcoin.last_updated_at * 1000).toLocaleTimeString() : "";
 
       el.innerHTML =
         '<div class="grid">' +
@@ -377,7 +258,146 @@
       .subscribe();
   };
 
-  // Boot
+  // -------- Active nav --------
+  LARMAH.setActiveNav = function () {
+    const links = Array.from(document.querySelectorAll(".nav-link"));
+    if (!links.length) return;
+
+    const page = (document.body.getAttribute("data-page") || "").trim();
+    links.forEach(a => {
+      if (!a.dataset || !a.dataset.link) return;
+      a.classList.toggle("active", a.dataset.link === page);
+    });
+  };
+
+  // -------- Mobile Drawer Builder --------
+  function buildMobileDrawerIfNeeded(){
+    if (document.getElementById("mobileNavOverlay")) return;
+
+    // Gather links from desktop nav (nav#nav) - use .nav-link if present, else any <a>
+    const nav = document.getElementById("nav");
+    const linkEls = nav ? Array.from(nav.querySelectorAll("a.nav-link")) : [];
+    const uniq = new Map();
+    linkEls.forEach(a => {
+      const href = (a.getAttribute("href") || "").trim();
+      const text = (a.textContent || "").trim();
+      if (!href || href.startsWith("#")) return;
+      if (!uniq.has(href)) uniq.set(href, { href, text, dataLink: a.dataset ? a.dataset.link : "" });
+    });
+
+    // fallback: if nav has no .nav-link, scan header for any links
+    if (uniq.size === 0) {
+      const headerLinks = Array.from(document.querySelectorAll("header a[href]"));
+      headerLinks.forEach(a => {
+        const href = (a.getAttribute("href") || "").trim();
+        const text = (a.textContent || "").trim();
+        if (!href || href.startsWith("#") || href.includes(".jpeg")) return;
+        if (!uniq.has(href) && text) uniq.set(href, { href, text, dataLink: "" });
+      });
+    }
+
+    // Logo src from header brand
+    const logo = document.querySelector(".brand img");
+    const logoSrc = logo ? logo.getAttribute("src") : "assets/images/larmah-header.jpeg";
+
+    const overlay = document.createElement("div");
+    overlay.id = "mobileNavOverlay";
+    overlay.innerHTML = `
+      <div class="mnav-panel" role="dialog" aria-modal="true" aria-label="Menu">
+        <div class="mnav-head">
+          <div class="mnav-brand">
+            <img src="${logoSrc}" alt="Larmah Enterprise">
+          </div>
+          <button class="mnav-close" type="button" aria-label="Close menu">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="mnav-body">
+          <div class="mnav-links">
+            ${Array.from(uniq.values()).map(item => `
+              <a class="mnav-link" href="${item.href}" ${item.dataLink ? `data-link="${item.dataLink}"` : ""}>
+                <span>${LARMAH.escapeHtml(item.text)}</span>
+                <i class="fa-solid fa-chevron-right" style="opacity:.55"></i>
+              </a>
+            `).join("")}
+          </div>
+
+          <div class="mnav-footer">
+            <div class="mnav-hint">Tip: Tap a section to open. Press ESC to close.</div>
+            <a class="btn solid" href="premium.html"><i class="fa-solid fa-star"></i> Premium</a>
+            <button class="btn" type="button" data-whatsapp>
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    // Close handlers
+    overlay.querySelector(".mnav-close").addEventListener("click", () => LARMAH.closeMenu());
+    overlay.addEventListener("click", (e) => {
+      const panel = overlay.querySelector(".mnav-panel");
+      if (panel && !panel.contains(e.target)) LARMAH.closeMenu();
+    });
+
+    // Close on link click
+    overlay.querySelectorAll(".mnav-link").forEach(a => {
+      a.addEventListener("click", () => LARMAH.closeMenu());
+    });
+
+    // WhatsApp button
+    const waBtn = overlay.querySelector("[data-whatsapp]");
+    if (waBtn){
+      waBtn.addEventListener("click", () => {
+        LARMAH.openWhatsApp(LARMAH.buildMessage("Quick Help", { Name:"", Phone:"", Message:"Hello Larmah, I need help." }));
+      });
+    }
+  }
+
+  // Open/close menu using overlay on mobile
+  function isMobile(){
+    return window.matchMedia && window.matchMedia("(max-width: 980px)").matches;
+  }
+
+  LARMAH.openMenu = function(){
+    if (!isMobile()) return;
+    buildMobileDrawerIfNeeded();
+    const overlay = document.getElementById("mobileNavOverlay");
+    if (!overlay) return;
+    overlay.classList.add("active");
+    document.body.classList.add("nav-open");
+
+    // set active in overlay
+    const page = (document.body.getAttribute("data-page") || "").trim();
+    overlay.querySelectorAll(".mnav-link").forEach(a => {
+      const dl = a.getAttribute("data-link") || "";
+      a.classList.toggle("active", dl && dl === page);
+    });
+
+    // focus close
+    const closeBtn = overlay.querySelector(".mnav-close");
+    closeBtn && closeBtn.focus();
+  };
+
+  // Override toggle to use overlay on mobile
+  LARMAH.toggleMenu = function(){
+    if (!isMobile()) return;
+    buildMobileDrawerIfNeeded();
+    const overlay = document.getElementById("mobileNavOverlay");
+    if (!overlay) return;
+    if (overlay.classList.contains("active")) LARMAH.closeMenu();
+    else LARMAH.openMenu();
+  };
+
+  LARMAH.closeMenu = function(){
+    const overlay = document.getElementById("mobileNavOverlay");
+    if (overlay) overlay.classList.remove("active");
+    document.body.classList.remove("nav-open");
+  };
+
+  // -------- Boot --------
   document.addEventListener("DOMContentLoaded", async () => {
     const y = document.getElementById("year");
     if (y) y.textContent = new Date().getFullYear();
@@ -386,38 +406,14 @@
     await LARMAH.initSupabase();
     await LARMAH.renderAuthPill();
 
-    // Close menu on any nav link click
-    document.querySelectorAll(".nav-link").forEach((a) => {
-      a.addEventListener("click", () => LARMAH.closeMenu());
-    });
-
-    // Close on ESC
+    // ESC closes drawer
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") LARMAH.closeMenu();
     });
 
-    // Close when clicking outside nav panel
-    document.addEventListener("click", (e) => {
-      const nav = getNavEl();
-      if (!nav || !nav.classList.contains("active")) return;
-
-      const panel = getNavPanel(nav);
-      const menuBtn = e.target.closest && e.target.closest(".menu-btn");
-      if (menuBtn) return;
-
-      if (panel && !panel.contains(e.target)) LARMAH.closeMenu();
-    });
-
-    // Handle window resize - close menu on large screens
+    // If window resized to desktop, close overlay
     window.addEventListener("resize", () => {
-      if (window.innerWidth > 980) {
-        LARMAH.closeMenu();
-      }
-    });
-
-    // Ensure scroll is unlocked if user navigates away
-    window.addEventListener("beforeunload", () => {
-      LARMAH.unlockScroll();
+      if (!isMobile()) LARMAH.closeMenu();
     });
   });
 })();
