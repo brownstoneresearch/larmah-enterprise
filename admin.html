@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Command | Larmah Enterprise</title>
-  
+
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
@@ -19,185 +19,241 @@
       display: flex; align-items: center; justify-content: center;
     }
     .login-box {
-      width: 400px; max-width: 90vw;
+      width: 420px; max-width: 92vw;
       background: var(--panel); border: 1px solid var(--border);
       padding: 40px; border-radius: 20px;
       text-align: center;
       box-shadow: 0 50px 100px rgba(0,0,0,0.5);
     }
 
-    /* --- ADMIN LAYOUT (Hidden by default) --- */
+    /* --- ADMIN LAYOUT --- */
     #admin-interface { display: none; height: 100vh; }
-    
     body { padding-bottom: 0; overflow: hidden; }
-    
-    .admin-layout { 
-      display: grid; grid-template-columns: 240px 1fr; 
-      height: 100%; 
+
+    .admin-layout {
+      display: grid; grid-template-columns: 260px 1fr;
+      height: 100%;
     }
 
     /* Sidebar */
     .admin-sidebar {
-      background: #050810; 
+      background: #050810;
       border-right: 1px solid var(--border);
       display: flex; flex-direction: column;
-      padding: 20px; z-index: 10;
+      padding: 20px;
+      z-index: 10;
     }
-    .admin-nav { list-style: none; margin-top: 40px; display: grid; gap: 8px; }
+    .admin-nav { list-style: none; margin: 26px 0 0; padding: 0; display: grid; gap: 8px; }
     .nav-item {
-      padding: 12px 16px; border-radius: 12px;
+      padding: 12px 14px; border-radius: 12px;
       color: var(--muted); cursor: pointer;
       display: flex; align-items: center; gap: 12px;
-      font-weight: 600; font-size: 0.95rem;
+      font-weight: 800; font-size: 0.92rem;
       transition: all 0.2s ease;
+      border: 1px solid transparent;
+      user-select: none;
     }
     .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-    .nav-item.active { 
-      background: rgba(0, 217, 129, 0.1); 
-      color: var(--brand); 
-      border: 1px solid rgba(0, 217, 129, 0.2); 
+    .nav-item.active {
+      background: rgba(0, 217, 129, 0.10);
+      color: var(--brand);
+      border: 1px solid rgba(0, 217, 129, 0.25);
     }
 
-    /* Main Content */
-    .admin-main { 
-      position: relative; overflow-y: auto; 
-      padding: 30px; background: var(--bg);
+    /* Main */
+    .admin-main {
+      position: relative;
+      overflow-y: auto;
+      padding: 30px;
+      background: var(--bg);
     }
     .admin-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 30px; padding-bottom: 20px;
+      margin-bottom: 22px; padding-bottom: 14px;
       border-bottom: 1px solid var(--border);
+      gap: 12px;
     }
 
-    /* Data Tables */
+    /* Tables */
     .data-table-wrapper {
       background: var(--panel); border: 1px solid var(--border);
       border-radius: 16px; overflow: hidden;
     }
     table { width: 100%; border-collapse: collapse; }
-    th { 
-      text-align: left; padding: 16px; 
-      background: rgba(255,255,255,0.03); 
-      color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;
+    th {
+      text-align: left; padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      color: var(--muted); font-size: 0.82rem;
+      text-transform: uppercase; letter-spacing: 1px;
     }
-    td { 
-      padding: 16px; border-top: 1px solid rgba(255,255,255,0.05); 
-      font-size: 0.95rem; vertical-align: middle;
+    td {
+      padding: 14px 16px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-size: 0.93rem;
+      vertical-align: middle;
     }
     tr:hover td { background: rgba(255,255,255,0.02); }
-    .tbl-thumb { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; background: #000; }
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+
+    .tbl-thumb { width: 46px; height: 46px; border-radius: 10px; object-fit: cover; background: #000; }
+
+    .badge { padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 900; display: inline-block; }
     .badge.active { background: rgba(67, 209, 125, 0.2); color: var(--ok); }
-    .badge.draft { background: rgba(255, 176, 32, 0.2); color: var(--warn); }
+    .badge.draft { background: rgba(255, 176, 32, 0.18); color: var(--warn); }
+    .badge.sold { background: rgba(255, 90, 103, 0.18); color: var(--bad); }
+    .badge.closed { background: rgba(255, 90, 103, 0.18); color: var(--bad); }
+
     .action-btn {
-      width: 32px; height: 32px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
-      cursor: pointer; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--text); transition: 0.2s;
+      width: 34px; height: 34px; border-radius: 10px;
+      display: inline-flex; align-items: center; justify-content: center;
+      cursor: pointer; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.05); color: var(--text);
+      transition: 0.2s;
     }
     .action-btn:hover { background: #fff; color: #000; }
     .action-btn.danger:hover { background: var(--bad); color: #fff; border-color: var(--bad); }
 
     /* Modal */
     .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
-      z-index: 9999; display: none; align-items: center; justify-content: center;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(5px);
+      z-index: 9999;
+      display: none; align-items: center; justify-content: center;
+      padding: 20px;
     }
     .modal.active { display: flex; }
     .editor-box {
-      width: 600px; max-width: 90vw; background: #0f1218; border: 1px solid var(--border); border-radius: 20px;
-      padding: 30px; box-shadow: 0 50px 100px rgba(0,0,0,0.6); max-height: 90vh; overflow-y: auto;
+      width: 680px; max-width: 95vw;
+      background: #0f1218;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 26px;
+      box-shadow: 0 50px 100px rgba(0,0,0,0.6);
+      max-height: 90vh;
+      overflow-y: auto;
     }
-    .form-group { margin-bottom: 16px; }
-    .form-label { display: block; color: var(--muted); font-size: 0.85rem; margin-bottom: 6px; font-weight: 700; }
+    .form-group { margin-bottom: 14px; }
+    .form-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      font-weight: 900;
+    }
 
-    @media(max-width: 900px) { .admin-layout { grid-template-columns: 1fr; } .admin-sidebar { display: none; } }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media(max-width: 720px){ .row2 { grid-template-columns: 1fr; } }
+
+    .notice-admin {
+      padding: 12px 14px; border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+    }
+
+    @media(max-width: 900px) {
+      .admin-layout { grid-template-columns: 1fr; }
+      .admin-sidebar { display: none; }
+    }
   </style>
 </head>
-<body data-page="admin">
 
+<body data-page="admin">
+  <!-- LOGIN GATE -->
   <div id="login-gate">
     <div class="login-box">
-      <img src="assets/images/larmah-header.jpeg" style="width:60px; border-radius:12px; margin:0 auto 20px; display:block">
+      <img src="assets/images/larmah-header.jpeg" style="width:60px; border-radius:12px; margin:0 auto 18px; display:block">
       <h2 style="margin-bottom:10px">Admin Access</h2>
-      <p class="small" style="margin-bottom:24px">Authorized personnel only.</p>
-      
-      <form onsubmit="adminLogin(event)">
-        <div style="margin-bottom:16px; text-align:left">
+      <p class="small" style="margin-bottom:22px">Authorized personnel only.</p>
+
+      <form id="adminLoginForm">
+        <div style="margin-bottom:14px; text-align:left">
           <label class="form-label">Email</label>
           <input type="email" id="admin_email" class="input" placeholder="admin@heylarmah.tech" required>
         </div>
-        <div style="margin-bottom:24px; text-align:left">
+        <div style="margin-bottom:20px; text-align:left">
           <label class="form-label">Password</label>
           <input type="password" id="admin_pass" class="input" placeholder="••••••••" required>
         </div>
         <button type="submit" class="btn solid" style="width:100%" id="loginBtn">Authenticate</button>
       </form>
-      <div id="loginMsg" class="small" style="margin-top:16px; color:var(--bad); display:none"></div>
+
+      <div id="loginMsg" class="small" style="margin-top:14px; color:var(--bad); display:none"></div>
     </div>
   </div>
 
+  <!-- ADMIN INTERFACE -->
   <div id="admin-interface">
     <div class="admin-layout">
       <aside class="admin-sidebar">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">
-          <img src="assets/images/larmah-header.jpeg" style="width:40px; border-radius:10px">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px">
+          <img src="assets/images/larmah-header.jpeg" style="width:42px; border-radius:12px">
           <div>
-             <div style="font-weight:800; font-size:1rem;">Larmah Admin</div>
-             <div style="font-size:0.75rem; color:var(--muted)">Master Control</div>
+            <div style="font-weight:900; font-size:1rem;">Larmah Admin</div>
+            <div style="font-size:0.75rem; color:var(--muted)">Master Control</div>
           </div>
         </div>
 
         <ul class="admin-nav">
-          <li class="nav-item active" onclick="switchView('overview')"><i class="fa-solid fa-gauge-high"></i> Overview</li>
-          <li class="nav-item" onclick="switchView('real-estate')"><i class="fa-solid fa-building"></i> Real Estate</li>
-          <li class="nav-item" onclick="switchView('logistics')"><i class="fa-solid fa-truck-fast"></i> Logistics</li>
-          <li class="nav-item" onclick="switchView('users')"><i class="fa-solid fa-users"></i> Users</li>
+          <li class="nav-item active" onclick="switchView('overview', this)"><i class="fa-solid fa-gauge-high"></i> Overview</li>
+          <li class="nav-item" onclick="switchView('real-estate', this)"><i class="fa-solid fa-building"></i> Real Estate</li>
+          <li class="nav-item" onclick="switchView('logistics', this)"><i class="fa-solid fa-truck-fast"></i> Logistics</li>
+          <li class="nav-item" onclick="switchView('rates', this)"><i class="fa-solid fa-coins"></i> Rates</li>
+          <li class="nav-item" onclick="switchView('insights', this)"><i class="fa-regular fa-newspaper"></i> Insights</li>
+          <li class="nav-item" onclick="switchView('requests', this)"><i class="fa-solid fa-inbox"></i> Requests</li>
+          <li class="nav-item" onclick="switchView('users', this)"><i class="fa-solid fa-users"></i> Users</li>
         </ul>
 
         <div style="margin-top:auto">
-           <button class="btn small" style="width:100%" onclick="adminLogout()">
-              <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
-           </button>
+          <button class="btn small" style="width:100%" onclick="adminLogout()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+          </button>
         </div>
       </aside>
 
       <main class="admin-main">
-        
+        <!-- OVERVIEW -->
         <div id="view-overview" class="view-section">
           <div class="admin-header">
             <h1>System Overview</h1>
-            <div class="small" style="color:var(--ok)">● Secure Session Active</div>
+            <div class="small" style="color:var(--ok)"><i class="fa-solid fa-shield-halved"></i> Secure Session Active</div>
           </div>
-          
-          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:30px">
+
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:22px">
             <div class="card">
-               <div class="small" style="color:var(--muted)">Total Users</div>
-               <div style="font-size:2rem; font-weight:800; margin-top:5px" id="stat_users">--</div>
+              <div class="small" style="color:var(--muted)">Total Users</div>
+              <div style="font-size:2rem; font-weight:950; margin-top:5px" id="stat_users">—</div>
             </div>
             <div class="card">
-               <div class="small" style="color:var(--muted)">Active Listings</div>
-               <div style="font-size:2rem; font-weight:800; margin-top:5px" id="stat_listings">--</div>
+              <div class="small" style="color:var(--muted)">Total Listings</div>
+              <div style="font-size:2rem; font-weight:950; margin-top:5px" id="stat_listings">—</div>
             </div>
             <div class="card">
-               <div class="small" style="color:var(--muted)">Pending Actions</div>
-               <div style="font-size:2rem; font-weight:800; margin-top:5px; color:var(--warn)">0</div>
+              <div class="small" style="color:var(--muted)">Requests (Last 7 Days)</div>
+              <div style="font-size:2rem; font-weight:950; margin-top:5px" id="stat_requests">—</div>
             </div>
+          </div>
+
+          <div class="notice-admin">
+            <b>Tip:</b> For true security, enforce Supabase RLS so only admins can write to <code>listings</code>, <code>rates</code>, and <code>insights</code>.
           </div>
         </div>
 
+        <!-- REAL ESTATE -->
         <div id="view-real-estate" class="view-section" style="display:none">
           <div class="admin-header">
             <h1>Real Estate Catalog</h1>
-            <button class="btn solid small" onclick="openEditor('real-estate')"><i class="fa-solid fa-plus"></i> Add Property</button>
+            <button class="btn solid small" onclick="openEditor('listing', null, 'real-estate')"><i class="fa-solid fa-plus"></i> Add Property</button>
           </div>
           <div class="data-table-wrapper">
             <table>
               <thead>
                 <tr>
-                  <th width="60">Img</th>
-                  <th>Title / Location</th>
+                  <th width="70">Img</th>
+                  <th>Title</th>
                   <th>Price</th>
                   <th>Status</th>
-                  <th width="100">Actions</th>
+                  <th width="120">Actions</th>
                 </tr>
               </thead>
               <tbody id="tbody-real-estate"></tbody>
@@ -205,20 +261,21 @@
           </div>
         </div>
 
+        <!-- LOGISTICS -->
         <div id="view-logistics" class="view-section" style="display:none">
           <div class="admin-header">
             <h1>Logistics Fleet</h1>
-            <button class="btn solid small" onclick="openEditor('logistics')"><i class="fa-solid fa-plus"></i> Add Vehicle</button>
+            <button class="btn solid small" onclick="openEditor('listing', null, 'logistics')"><i class="fa-solid fa-plus"></i> Add Service</button>
           </div>
           <div class="data-table-wrapper">
             <table>
               <thead>
                 <tr>
-                  <th width="60">Img</th>
-                  <th>Service Name</th>
+                  <th width="70">Img</th>
+                  <th>Title</th>
                   <th>Rate</th>
                   <th>Status</th>
-                  <th width="100">Actions</th>
+                  <th width="120">Actions</th>
                 </tr>
               </thead>
               <tbody id="tbody-logistics"></tbody>
@@ -226,9 +283,76 @@
           </div>
         </div>
 
+        <!-- RATES -->
+        <div id="view-rates" class="view-section" style="display:none">
+          <div class="admin-header">
+            <h1>Desk Rates</h1>
+            <button class="btn solid small" onclick="openEditor('rate', null, null)"><i class="fa-solid fa-plus"></i> Add Rate</button>
+          </div>
+          <div class="data-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Asset</th>
+                  <th>Buy</th>
+                  <th>Sell</th>
+                  <th>Status</th>
+                  <th width="120">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-rates"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- INSIGHTS -->
+        <div id="view-insights" class="view-section" style="display:none">
+          <div class="admin-header">
+            <h1>Insights</h1>
+            <button class="btn solid small" onclick="openEditor('insight', null, null)"><i class="fa-solid fa-plus"></i> Add Insight</button>
+          </div>
+          <div class="data-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th width="120">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-insights"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- REQUESTS -->
+        <div id="view-requests" class="view-section" style="display:none">
+          <div class="admin-header">
+            <h1>Requests Inbox</h1>
+            <button class="btn small" onclick="fetchRequests()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+          </div>
+          <div class="data-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Created</th>
+                  <th>Status</th>
+                  <th width="120">Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-requests"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- USERS -->
         <div id="view-users" class="view-section" style="display:none">
           <div class="admin-header">
             <h1>User Profiles</h1>
+            <button class="btn small" onclick="fetchUsers()"><i class="fa-solid fa-rotate"></i> Refresh</button>
           </div>
           <div class="data-table-wrapper">
             <table>
@@ -248,49 +372,156 @@
     </div>
   </div>
 
+  <!-- EDITOR MODAL -->
   <div id="editorModal" class="modal">
     <div class="editor-box">
-      <div style="display:flex; justify-content:space-between; margin-bottom:20px; align-items:center">
-         <h2 id="editorTitle" style="margin:0">Edit Item</h2>
-         <button class="action-btn" onclick="closeEditor()"><i class="fa-solid fa-xmark"></i></button>
+      <div style="display:flex; justify-content:space-between; margin-bottom:18px; align-items:center; gap:12px">
+        <h2 id="editorTitle" style="margin:0">Edit</h2>
+        <button class="action-btn" onclick="closeEditor()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <form id="editorForm" onsubmit="handleSave(event)">
+
+      <form id="editorForm">
+        <input type="hidden" id="edit_entity">
         <input type="hidden" id="edit_id">
         <input type="hidden" id="edit_category">
-        <div class="form-group">
-           <label class="form-label">Title / Name</label>
-           <input type="text" id="edit_title" class="input" required>
-        </div>
-        <div class="row2">
-           <div class="form-group">
-              <label class="form-label">Price</label>
-              <input type="text" id="edit_price" class="input">
-           </div>
-           <div class="form-group">
+
+        <!-- LISTING FIELDS -->
+        <div id="fields-listing" style="display:none">
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input type="text" id="listing_title" class="input" required>
+          </div>
+
+          <div class="row2">
+            <div class="form-group">
+              <label class="form-label">Price / Rate</label>
+              <input type="text" id="listing_price" class="input">
+            </div>
+            <div class="form-group">
               <label class="form-label">Status</label>
-              <select id="edit_status" class="input">
-                 <option value="active">Active</option>
-                 <option value="draft">Draft</option>
-                 <option value="sold">Sold</option>
+              <select id="listing_status" class="input">
+                <option value="active">Active</option>
+                <option value="draft">Draft</option>
+                <option value="sold">Sold</option>
               </select>
-           </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Image URL</label>
+            <input type="text" id="listing_image" class="input" placeholder="https://...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tags (comma separated)</label>
+            <input type="text" id="listing_tags" class="input" placeholder="lekki, shortlet, vi">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="listing_desc" class="input" rows="4"></textarea>
+          </div>
         </div>
-        <div class="form-group">
-           <label class="form-label">Image URL</label>
-           <input type="text" id="edit_image" class="input">
+
+        <!-- RATE FIELDS -->
+        <div id="fields-rate" style="display:none">
+          <div class="row2">
+            <div class="form-group">
+              <label class="form-label">Asset</label>
+              <select id="rate_asset" class="input">
+                <option value="USD">USD</option>
+                <option value="GBP">GBP</option>
+                <option value="EUR">EUR</option>
+                <option value="USDT">USDT</option>
+                <option value="BTC">BTC</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="rate_status" class="input">
+                <option value="active">Active</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="form-group">
+              <label class="form-label">Buy</label>
+              <input type="number" id="rate_buy" class="input" step="0.01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sell</label>
+              <input type="number" id="rate_sell" class="input" step="0.01">
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-           <label class="form-label">Tags (comma separated)</label>
-           <input type="text" id="edit_tags" class="input">
+
+        <!-- INSIGHT FIELDS -->
+        <div id="fields-insight" style="display:none">
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input type="text" id="insight_title" class="input" required>
+          </div>
+
+          <div class="row2">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="insight_category" class="input">
+                <option value="real-estate">Real Estate</option>
+                <option value="logistics">Logistics</option>
+                <option value="exchange">Exchange</option>
+                <option value="all">All</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="insight_status" class="input">
+                <option value="active">Active</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Image URL (optional)</label>
+            <input type="text" id="insight_image" class="input" placeholder="https://...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Summary</label>
+            <textarea id="insight_summary" class="input" rows="4"></textarea>
+          </div>
         </div>
-        <div class="form-group">
-           <label class="form-label">Description</label>
-           <textarea id="edit_desc" class="input" rows="4"></textarea>
+
+        <!-- REQUEST VIEW (READ ONLY) -->
+        <div id="fields-request" style="display:none">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <input type="text" id="req_category" class="input" disabled>
+          </div>
+          <div class="row2">
+            <div class="form-group">
+              <label class="form-label">Created</label>
+              <input type="text" id="req_created" class="input" disabled>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <input type="text" id="req_status" class="input" disabled>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Payload</label>
+            <textarea id="req_payload" class="input" rows="10" disabled></textarea>
+          </div>
         </div>
-        <div style="margin-top:20px; display:flex; gap:10px">
-           <button type="submit" class="btn solid" style="flex:1" id="saveBtn">Save Changes</button>
-           <button type="button" class="btn" onclick="closeEditor()">Cancel</button>
+
+        <div style="margin-top:18px; display:flex; gap:10px">
+          <button type="submit" class="btn solid" style="flex:1" id="saveBtn">Save</button>
+          <button type="button" class="btn" onclick="closeEditor()">Close</button>
         </div>
+
+        <div class="small" style="margin-top:10px;opacity:.7" id="editorHint"></div>
       </form>
     </div>
   </div>
@@ -298,218 +529,638 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // --- AUTHENTICATION & SECURITY ---
+    // ---------------------------
+    // GLOBAL STATE
+    // ---------------------------
+    let sb = null;
+    const CACHE = {
+      listings: new Map(),
+      rates: new Map(),
+      insights: new Map(),
+      requests: new Map()
+    };
 
-    // 1. Check Session on Load
-    document.addEventListener('DOMContentLoaded', async () => {
-       const { data: { session } } = await supabase.auth.getSession();
-       if(session) {
-          verifyAdmin(session.user);
-       } else {
-          // Stay on login gate
-          document.getElementById('login-gate').style.display = 'flex';
-       }
-    });
-
-    // 2. Verify Admin (Client-Side Check)
-    // NOTE: For true security, enable RLS on Supabase so only admins can WRITE/DELETE.
-    function verifyAdmin(user) {
-       // Optional: Restrict to specific email
-       // if(user.email !== 'admin@heylarmah.tech') {
-       //    alert("Access Denied: Not an admin account.");
-       //    supabase.auth.signOut();
-       //    return;
-       // }
-       
-       document.getElementById('login-gate').style.display = 'none';
-       document.getElementById('admin-interface').style.display = 'block';
-       loadStats();
+    // ---------------------------
+    // HELPERS
+    // ---------------------------
+    function toast(msg, type="info"){
+      if (window.LARMAH && LARMAH.toast) return LARMAH.toast(msg, type);
+      const t = document.getElementById("toast");
+      if(!t) return;
+      t.textContent = msg;
+      t.className = `toast show ${type}`;
+      setTimeout(()=> t.className="toast", 4000);
     }
 
-    // 3. Login Logic
-    async function adminLogin(e) {
-       e.preventDefault();
-       const email = document.getElementById('admin_email').value;
-       const password = document.getElementById('admin_pass').value;
-       const btn = document.getElementById('loginBtn');
-       const msg = document.getElementById('loginMsg');
-       
-       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
-       btn.disabled = true;
-       msg.style.display = 'none';
-
-       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-       
-       if(error) {
-          msg.textContent = "Invalid Credentials: " + error.message;
-          msg.style.display = 'block';
-          btn.innerHTML = 'Authenticate';
-          btn.disabled = false;
-       } else {
-          verifyAdmin(data.user);
-       }
+    function showLogin(msg=null){
+      document.getElementById("login-gate").style.display = "flex";
+      document.getElementById("admin-interface").style.display = "none";
+      if(msg){
+        const el = document.getElementById("loginMsg");
+        el.textContent = msg;
+        el.style.display = "block";
+      }
     }
 
-    // 4. Logout Logic
-    async function adminLogout() {
-       await supabase.auth.signOut();
-       window.location.reload();
+    function showAdmin(){
+      document.getElementById("login-gate").style.display = "none";
+      document.getElementById("admin-interface").style.display = "block";
     }
 
-    // --- DASHBOARD LOGIC ---
-
-    function switchView(viewId) {
-      document.querySelectorAll('.view-section').forEach(el => el.style.display = 'none');
-      document.getElementById('view-' + viewId).style.display = 'block';
-      
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-
-      if (viewId === 'real-estate') fetchAdminListings('real-estate');
-      if (viewId === 'logistics') fetchAdminListings('logistics');
-      if (viewId === 'users') fetchAdminUsers();
-      if (viewId === 'overview') loadStats();
+    function badgeClass(status){
+      const s = String(status||"").toLowerCase();
+      if(s === "active") return "active";
+      if(s === "draft") return "draft";
+      if(s === "sold") return "sold";
+      if(s === "closed") return "closed";
+      return "draft";
     }
 
-    // DATA FETCHING
-    async function fetchAdminListings(category) {
-      const tbody = document.getElementById('tbody-' + category);
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">Loading...</td></tr>';
+    function safeDate(d){
+      try { return new Date(d).toLocaleString(); } catch { return ""; }
+    }
 
-      const { data, error } = await supabase
-        .from('listings')
-        .select('*')
-        .eq('category', category)
-        .order('created_at', { ascending: false });
-
-      if (error || !data || !data.length) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center">No active items.</td></tr>';
+    // ---------------------------
+    // AUTH
+    // ---------------------------
+    async function initAdmin(){
+      sb = window.supabaseClient;
+      if(!sb){
+        showLogin("Supabase client not ready. Confirm assets/js/app.js is loading.");
         return;
       }
 
-      tbody.innerHTML = data.map(item => `
-        <tr>
-          <td><img src="${item.image_url || ''}" class="tbl-thumb" onerror="this.src='assets/images/placeholder-home.jpg'"></td>
-          <td>
-            <div style="font-weight:700">${LARMAH.escapeHtml(item.title)}</div>
-            <div style="font-size:0.8rem; opacity:0.6">${item.id}</div>
-          </td>
-          <td style="color:var(--accent)">${LARMAH.escapeHtml(item.price)}</td>
-          <td><span class="badge ${item.status === 'active' ? 'active' : 'draft'}">${item.status}</span></td>
-          <td>
-            <div style="display:flex; gap:6px">
-               <button class="action-btn" onclick='prepareEdit(${JSON.stringify(item)})'><i class="fa-solid fa-pen"></i></button>
-               <button class="action-btn danger" onclick="deleteItem('${item.id}', '${category}')"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    async function fetchAdminUsers() {
-      const tbody = document.getElementById('tbody-users');
-      // Needs 'profiles' table to exist
-      const { data, error } = await supabase.from('profiles').select('*');
-      
-      if(error || !data || !data.length) {
-         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center">No profiles found.</td></tr>';
-         return;
+      const { data, error } = await sb.auth.getSession();
+      if(error){
+        showLogin("Session error: " + error.message);
+        return;
+      }
+      if(!data?.session){
+        showLogin();
+        return;
       }
 
-      tbody.innerHTML = data.map(u => `
-         <tr>
-           <td>
-              <div>${LARMAH.escapeHtml(u.email || 'N/A')}</div>
-              <div style="font-size:0.8rem;opacity:0.5;font-family:monospace">${u.id}</div>
-           </td>
-           <td>${LARMAH.escapeHtml(u.full_name || 'User')}</td>
-           <td>${new Date(u.created_at || Date.now()).toLocaleDateString()}</td>
-           <td><span class="badge active">Active</span></td>
-         </tr>
-      `).join('');
+      showAdmin();
+      await loadStats();
+      await fetchListings("real-estate");
     }
 
-    async function loadStats() {
-       const { count: cListings } = await supabase.from('listings').select('*', { count: 'exact', head: true });
-       const { count: cUsers } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-       document.getElementById('stat_listings').textContent = cListings || 0;
-       document.getElementById('stat_users').textContent = cUsers || 0;
+    async function adminLogin(email, password){
+      const btn = document.getElementById("loginBtn");
+      const msg = document.getElementById("loginMsg");
+      msg.style.display = "none";
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+      btn.disabled = false;
+      btn.textContent = "Authenticate";
+
+      if(error){
+        msg.textContent = "Invalid Credentials: " + error.message;
+        msg.style.display = "block";
+        return;
+      }
+
+      showAdmin();
+      await loadStats();
+      switchView("overview", document.querySelector(".nav-item"));
     }
 
-    // CRUD ACTIONS
-    function openEditor(category) {
-       document.getElementById('editorModal').classList.add('active');
-       document.getElementById('editorForm').reset();
-       document.getElementById('editorTitle').textContent = "New Item";
-       document.getElementById('edit_id').value = "";
-       document.getElementById('edit_category').value = category;
-       document.getElementById('edit_status').value = "active";
+    async function adminLogout(){
+      if(!sb) sb = window.supabaseClient;
+      await sb.auth.signOut();
+      location.reload();
     }
 
-    function prepareEdit(item) {
-       document.getElementById('editorModal').classList.add('active');
-       document.getElementById('editorTitle').textContent = "Edit Item";
-       document.getElementById('edit_id').value = item.id;
-       document.getElementById('edit_category').value = item.category;
-       document.getElementById('edit_title').value = item.title;
-       document.getElementById('edit_price').value = item.price;
-       document.getElementById('edit_status').value = item.status;
-       document.getElementById('edit_image').value = item.image_url;
-       document.getElementById('edit_desc').value = item.description;
-       document.getElementById('edit_tags').value = (item.tags || []).join(', ');
+    // ---------------------------
+    // NAV
+    // ---------------------------
+    function switchView(viewId, el){
+      document.querySelectorAll(".view-section").forEach(v => v.style.display = "none");
+      const view = document.getElementById("view-" + viewId);
+      if(view) view.style.display = "block";
+
+      document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+      if(el) el.classList.add("active");
+
+      if(viewId === "overview") loadStats();
+      if(viewId === "real-estate") fetchListings("real-estate");
+      if(viewId === "logistics") fetchListings("logistics");
+      if(viewId === "rates") fetchRates();
+      if(viewId === "insights") fetchInsights();
+      if(viewId === "requests") fetchRequests();
+      if(viewId === "users") fetchUsers();
     }
 
-    function closeEditor() {
-       document.getElementById('editorModal').classList.remove('active');
+    // ---------------------------
+    // STATS
+    // ---------------------------
+    async function loadStats(){
+      try {
+        const { count: cListings } = await sb.from("listings").select("*", { count: "exact", head: true });
+        document.getElementById("stat_listings").textContent = cListings ?? 0;
+      } catch {
+        document.getElementById("stat_listings").textContent = "—";
+      }
+
+      try {
+        const { count: cUsers } = await sb.from("profiles").select("*", { count: "exact", head: true });
+        document.getElementById("stat_users").textContent = cUsers ?? 0;
+      } catch {
+        document.getElementById("stat_users").textContent = "—";
+      }
+
+      // last 7 days requests
+      try {
+        const since = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+        const { count: cReq } = await sb
+          .from("requests")
+          .select("*", { count: "exact", head: true })
+          .gte("created_at", since);
+        document.getElementById("stat_requests").textContent = cReq ?? 0;
+      } catch {
+        document.getElementById("stat_requests").textContent = "—";
+      }
     }
 
-    async function handleSave(e) {
-       e.preventDefault();
-       const btn = document.getElementById('saveBtn');
-       btn.textContent = "Saving..."; btn.disabled = true;
+    // ---------------------------
+    // LISTINGS CRUD
+    // ---------------------------
+    async function fetchListings(category){
+      const tbodyId = category === "real-estate" ? "tbody-real-estate" : "tbody-logistics";
+      const tbody = document.getElementById(tbodyId);
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
-       const id = document.getElementById('edit_id').value;
-       const category = document.getElementById('edit_category').value;
-       
-       const payload = {
-          title: document.getElementById('edit_title').value,
-          price: document.getElementById('edit_price').value,
-          category: category,
-          image_url: document.getElementById('edit_image').value,
-          description: document.getElementById('edit_desc').value,
-          status: document.getElementById('edit_status').value,
-          tags: document.getElementById('edit_tags').value.split(',').map(s=>s.trim()).filter(Boolean)
-       };
+      try {
+        const { data, error } = await sb
+          .from("listings")
+          .select("*")
+          .eq("category", category)
+          .order("created_at", { ascending: false });
 
-       let error;
-       if (id) {
-          const res = await supabase.from('listings').update(payload).eq('id', id);
-          error = res.error;
-       } else {
-          const res = await supabase.from('listings').insert([payload]);
-          error = res.error;
-       }
+        if(error) throw error;
 
-       btn.textContent = "Save Changes"; btn.disabled = false;
+        CACHE.listings.clear();
+        (data || []).forEach(it => CACHE.listings.set(String(it.id), it));
 
-       if(error) {
-          LARMAH.toast("Error: " + error.message, 'error');
-       } else {
-          LARMAH.toast("Saved successfully!", 'success');
+        if(!data || !data.length){
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No items found.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data.map(it => `
+          <tr>
+            <td>
+              <img class="tbl-thumb" src="${LARMAH.escapeHtml(it.image_url || 'assets/images/larmah-header.jpeg')}"
+                   onerror="this.src='assets/images/larmah-header.jpeg'">
+            </td>
+            <td>
+              <div style="font-weight:900">${LARMAH.escapeHtml(it.title || "")}</div>
+              <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div>
+            </td>
+            <td style="color:var(--accent);font-weight:800">${LARMAH.escapeHtml(it.price || "")}</td>
+            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
+            <td>
+              <div style="display:flex;gap:8px">
+                <button class="action-btn" onclick="openEditor('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="action-btn danger" onclick="deleteEntity('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `).join("");
+      } catch(e){
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading. Check table <b>listings</b>.</td></tr>`;
+        console.warn(e);
+      }
+    }
+
+    // ---------------------------
+    // RATES CRUD
+    // ---------------------------
+    async function fetchRates(){
+      const tbody = document.getElementById("tbody-rates");
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
+
+      try {
+        const { data, error } = await sb
+          .from("rates")
+          .select("*")
+          .order("asset", { ascending: true });
+
+        if(error) throw error;
+
+        CACHE.rates.clear();
+        (data || []).forEach(it => CACHE.rates.set(String(it.id), it));
+
+        if(!data || !data.length){
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No rates found.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data.map(it => `
+          <tr>
+            <td style="font-weight:900">${LARMAH.escapeHtml(String(it.asset || it.symbol || ""))}</td>
+            <td style="color:var(--ok);font-weight:900">${LARMAH.escapeHtml(String(it.buy ?? ""))}</td>
+            <td style="color:var(--warn);font-weight:900">${LARMAH.escapeHtml(String(it.sell ?? ""))}</td>
+            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
+            <td>
+              <div style="display:flex;gap:8px">
+                <button class="action-btn" onclick="openEditor('rate','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
+                <button class="action-btn danger" onclick="deleteEntity('rate','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `).join("");
+      } catch(e){
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading. Check table <b>rates</b>.</td></tr>`;
+        console.warn(e);
+      }
+    }
+
+    // ---------------------------
+    // INSIGHTS CRUD
+    // ---------------------------
+    async function fetchInsights(){
+      const tbody = document.getElementById("tbody-insights");
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
+
+      try {
+        const { data, error } = await sb
+          .from("insights")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(50);
+
+        if(error) throw error;
+
+        CACHE.insights.clear();
+        (data || []).forEach(it => CACHE.insights.set(String(it.id), it));
+
+        if(!data || !data.length){
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No insights found.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data.map(it => `
+          <tr>
+            <td style="font-weight:900">${LARMAH.escapeHtml(it.title || "")}</td>
+            <td>${LARMAH.escapeHtml(it.category || "all")}</td>
+            <td class="small">${LARMAH.escapeHtml(it.created_at ? new Date(it.created_at).toLocaleDateString() : "")}</td>
+            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
+            <td>
+              <div style="display:flex;gap:8px">
+                <button class="action-btn" onclick="openEditor('insight','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
+                <button class="action-btn danger" onclick="deleteEntity('insight','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `).join("");
+      } catch(e){
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading. Check table <b>insights</b>.</td></tr>`;
+        console.warn(e);
+      }
+    }
+
+    // ---------------------------
+    // REQUESTS (READ ONLY)
+    // ---------------------------
+    async function fetchRequests(){
+      const tbody = document.getElementById("tbody-requests");
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
+
+      try {
+        const { data, error } = await sb
+          .from("requests")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(80);
+
+        if(error) throw error;
+
+        CACHE.requests.clear();
+        (data || []).forEach(it => CACHE.requests.set(String(it.id), it));
+
+        if(!data || !data.length){
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">No requests yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data.map(it => `
+          <tr>
+            <td style="font-weight:900">${LARMAH.escapeHtml(it.category || "general")}</td>
+            <td class="small">${LARMAH.escapeHtml(it.created_at ? new Date(it.created_at).toLocaleString() : "")}</td>
+            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "new")}</span></td>
+            <td>
+              <button class="btn small" onclick="openEditor('request','${String(it.id)}',null)">View</button>
+            </td>
+          </tr>
+        `).join("");
+      } catch(e){
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading. Check table <b>requests</b>.</td></tr>`;
+        console.warn(e);
+      }
+    }
+
+    // ---------------------------
+    // USERS (PROFILES)
+    // ---------------------------
+    async function fetchUsers(){
+      const tbody = document.getElementById("tbody-users");
+      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
+
+      try {
+        const { data, error } = await sb
+          .from("profiles")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(100);
+
+        if(error) throw error;
+
+        if(!data || !data.length){
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">No profiles found.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data.map(u => `
+          <tr>
+            <td>
+              <div>${LARMAH.escapeHtml(u.email || "N/A")}</div>
+              <div style="font-size:0.8rem;opacity:0.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(u.id || ""))}</div>
+            </td>
+            <td>${LARMAH.escapeHtml(u.full_name || "User")}</td>
+            <td>${LARMAH.escapeHtml(u.created_at ? new Date(u.created_at).toLocaleDateString() : "")}</td>
+            <td><span class="badge active">Active</span></td>
+          </tr>
+        `).join("");
+      } catch(e){
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading. Check table <b>profiles</b>.</td></tr>`;
+        console.warn(e);
+      }
+    }
+
+    // ---------------------------
+    // EDITOR MODAL
+    // ---------------------------
+    function resetEditor(){
+      document.getElementById("editorForm").reset();
+      document.getElementById("edit_entity").value = "";
+      document.getElementById("edit_id").value = "";
+      document.getElementById("edit_category").value = "";
+      document.getElementById("editorHint").textContent = "";
+
+      ["listing","rate","insight","request"].forEach(k => {
+        const el = document.getElementById("fields-" + k);
+        if(el) el.style.display = "none";
+      });
+
+      // request view should not show save
+      document.getElementById("saveBtn").style.display = "";
+      document.getElementById("saveBtn").disabled = false;
+    }
+
+    function openEditor(entity, id=null, category=null){
+      resetEditor();
+      document.getElementById("editorModal").classList.add("active");
+      document.getElementById("edit_entity").value = entity;
+      document.getElementById("edit_id").value = id || "";
+      document.getElementById("edit_category").value = category || "";
+
+      if(entity === "listing"){
+        document.getElementById("fields-listing").style.display = "block";
+        document.getElementById("editorTitle").textContent = id ? "Edit Listing" : "New Listing";
+        document.getElementById("editorHint").textContent = category ? `Category: ${category}` : "";
+
+        if(id){
+          const it = CACHE.listings.get(String(id));
+          if(it){
+            document.getElementById("listing_title").value = it.title || "";
+            document.getElementById("listing_price").value = it.price || "";
+            document.getElementById("listing_status").value = it.status || "draft";
+            document.getElementById("listing_image").value = it.image_url || "";
+            document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : (it.tags || "");
+            document.getElementById("listing_desc").value = it.description || "";
+          }
+        } else {
+          document.getElementById("listing_status").value = "active";
+        }
+      }
+
+      if(entity === "rate"){
+        document.getElementById("fields-rate").style.display = "block";
+        document.getElementById("editorTitle").textContent = id ? "Edit Rate" : "New Rate";
+        if(id){
+          const it = CACHE.rates.get(String(id));
+          if(it){
+            document.getElementById("rate_asset").value = String(it.asset || it.symbol || "USD").toUpperCase();
+            document.getElementById("rate_status").value = it.status || "active";
+            document.getElementById("rate_buy").value = it.buy ?? "";
+            document.getElementById("rate_sell").value = it.sell ?? "";
+          }
+        } else {
+          document.getElementById("rate_status").value = "active";
+        }
+      }
+
+      if(entity === "insight"){
+        document.getElementById("fields-insight").style.display = "block";
+        document.getElementById("editorTitle").textContent = id ? "Edit Insight" : "New Insight";
+        if(id){
+          const it = CACHE.insights.get(String(id));
+          if(it){
+            document.getElementById("insight_title").value = it.title || "";
+            document.getElementById("insight_category").value = it.category || "all";
+            document.getElementById("insight_status").value = it.status || "active";
+            document.getElementById("insight_image").value = it.image_url || "";
+            document.getElementById("insight_summary").value = it.summary || it.snippet || "";
+          }
+        } else {
+          document.getElementById("insight_status").value = "active";
+        }
+      }
+
+      if(entity === "request"){
+        document.getElementById("fields-request").style.display = "block";
+        document.getElementById("editorTitle").textContent = "Request Details";
+        document.getElementById("saveBtn").style.display = "none"; // read only
+
+        const it = CACHE.requests.get(String(id));
+        if(it){
+          document.getElementById("req_category").value = it.category || "";
+          document.getElementById("req_created").value = it.created_at ? safeDate(it.created_at) : "";
+          document.getElementById("req_status").value = it.status || "";
+          document.getElementById("req_payload").value = JSON.stringify(it.payload || {}, null, 2);
+        }
+      }
+    }
+
+    function closeEditor(){
+      document.getElementById("editorModal").classList.remove("active");
+    }
+
+    // ---------------------------
+    // SAVE HANDLER
+    // ---------------------------
+    async function saveEditor(e){
+      e.preventDefault();
+
+      const entity = document.getElementById("edit_entity").value;
+      const id = document.getElementById("edit_id").value || null;
+      const category = document.getElementById("edit_category").value || null;
+
+      const btn = document.getElementById("saveBtn");
+      btn.disabled = true;
+      btn.textContent = "Saving...";
+
+      try {
+        if(entity === "listing"){
+          const payload = {
+            title: document.getElementById("listing_title").value.trim(),
+            price: document.getElementById("listing_price").value.trim(),
+            status: document.getElementById("listing_status").value,
+            image_url: document.getElementById("listing_image").value.trim(),
+            description: document.getElementById("listing_desc").value.trim(),
+            tags: document.getElementById("listing_tags").value
+              .split(",").map(s=>s.trim()).filter(Boolean),
+            category: category || "real-estate"
+          };
+
+          if(!payload.title) throw new Error("Title is required.");
+
+          if(id){
+            const { error } = await sb.from("listings").update(payload).eq("id", id);
+            if(error) throw error;
+          } else {
+            const { error } = await sb.from("listings").insert([payload]);
+            if(error) throw error;
+          }
+
+          toast("Saved listing", "success");
           closeEditor();
-          fetchAdminListings(category);
-       }
+          await fetchListings(payload.category);
+          await loadStats();
+        }
+
+        if(entity === "rate"){
+          const payload = {
+            asset: document.getElementById("rate_asset").value,
+            buy: Number(document.getElementById("rate_buy").value || 0),
+            sell: Number(document.getElementById("rate_sell").value || 0),
+            status: document.getElementById("rate_status").value
+          };
+
+          if(id){
+            const { error } = await sb.from("rates").update(payload).eq("id", id);
+            if(error) throw error;
+          } else {
+            const { error } = await sb.from("rates").insert([payload]);
+            if(error) throw error;
+          }
+
+          toast("Saved rate", "success");
+          closeEditor();
+          await fetchRates();
+        }
+
+        if(entity === "insight"){
+          const payload = {
+            title: document.getElementById("insight_title").value.trim(),
+            category: document.getElementById("insight_category").value,
+            status: document.getElementById("insight_status").value,
+            image_url: document.getElementById("insight_image").value.trim(),
+            summary: document.getElementById("insight_summary").value.trim()
+          };
+
+          if(!payload.title) throw new Error("Title is required.");
+
+          if(id){
+            const { error } = await sb.from("insights").update(payload).eq("id", id);
+            if(error) throw error;
+          } else {
+            const { error } = await sb.from("insights").insert([payload]);
+            if(error) throw error;
+          }
+
+          toast("Saved insight", "success");
+          closeEditor();
+          await fetchInsights();
+        }
+
+      } catch(err){
+        toast(err.message || "Save failed", "error");
+        console.warn(err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Save";
+      }
     }
 
-    async function deleteItem(id, category) {
-       if(!confirm("Delete this item?")) return;
-       const { error } = await supabase.from('listings').delete().eq('id', id);
-       if(error) LARMAH.toast("Delete failed", 'error');
-       else {
-          LARMAH.toast("Item deleted", 'success');
-          fetchAdminListings(category);
-       }
+    // ---------------------------
+    // DELETE
+    // ---------------------------
+    async function deleteEntity(entity, id, category=null){
+      if(!confirm("Delete this item?")) return;
+
+      try {
+        if(entity === "listing"){
+          const { error } = await sb.from("listings").delete().eq("id", id);
+          if(error) throw error;
+          toast("Deleted listing", "success");
+          await fetchListings(category);
+          await loadStats();
+        }
+
+        if(entity === "rate"){
+          const { error } = await sb.from("rates").delete().eq("id", id);
+          if(error) throw error;
+          toast("Deleted rate", "success");
+          await fetchRates();
+        }
+
+        if(entity === "insight"){
+          const { error } = await sb.from("insights").delete().eq("id", id);
+          if(error) throw error;
+          toast("Deleted insight", "success");
+          await fetchInsights();
+        }
+      } catch(e){
+        toast(e.message || "Delete failed", "error");
+        console.warn(e);
+      }
     }
+
+    // ---------------------------
+    // WIRE UP
+    // ---------------------------
+    document.addEventListener("DOMContentLoaded", async () => {
+      // wait for app.js to create supabaseClient
+      sb = window.supabaseClient;
+      if(!sb){
+        showLogin("Supabase client not ready. Confirm assets/js/app.js is loading.");
+        return;
+      }
+
+      // login form
+      document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("admin_email").value.trim();
+        const pass = document.getElementById("admin_pass").value;
+        await adminLogin(email, pass);
+      });
+
+      // editor save
+      document.getElementById("editorForm").addEventListener("submit", saveEditor);
+
+      // close modal on backdrop click
+      document.getElementById("editorModal").addEventListener("click", (e) => {
+        if(e.target.id === "editorModal") closeEditor();
+      });
+
+      // init session
+      await initAdmin();
+    });
   </script>
 </body>
 </html>
