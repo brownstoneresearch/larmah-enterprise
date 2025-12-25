@@ -1,491 +1,175 @@
 /**
- * LARMAH ENTERPRISE | Unified Application Controller
- * Combines Core Functionality with Admin Command Center Sync
+ * LARMAH ENTERPRISE | app.js (Stable Core)
+ * - Keeps header/footer/mobile menu in your HTML (does NOT inject/remove anything)
+ * - Creates Supabase client as window.supabaseClient
+ * - Exposes window.LARMAH for inline onclick handlers
+ * - Adds WhatsApp support + best-effort Supabase request logging
  */
 
-// ==========================================
-// 1. CONFIGURATION & INITIALIZATION
-// ==========================================
-const SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+/* ---------------------------
+   1) SUPABASE CONFIG
+---------------------------- */
+window.SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
+window.SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
 
-// Business Configuration
-const BUSINESS_CONFIG = {
-    phone: "2347063080605",
-    whatsAppUrl: (text) => `https://wa.me/${this.phone}?text=${encodeURIComponent(text)}`,
-    brandName: "LARMAH"
-};
-
-// Initialize Supabase Client
-let supabase;
-try {
-    supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-    if (!supabase) console.warn("Supabase SDK not loaded. Some features may be limited.");
-} catch (e) {
-    console.error("Supabase initialization error:", e);
+function ensureSupabaseClient() {
+  // Supabase CDN exposes window.supabase (library)
+  if (!window.supabase || typeof window.supabase.createClient !== "function") {
+    console.error("Supabase library missing. Ensure CDN <script> loads before app.js");
+    return null;
+  }
+  if (!window.supabaseClient) {
+    window.supabaseClient = window.supabase.createClient(
+      window.SUPABASE_URL,
+      window.SUPABASE_ANON_KEY
+    );
+  }
+  return window.supabaseClient;
 }
 
-// ==========================================
-// 2. GLOBAL APP CONTROLLER
-// ==========================================
-const LARMAH = {
-    user: null,
-    profile: null,
-    businessPhone: BUSINESS_CONFIG.phone,
+/* ---------------------------
+   2) LARMAH GLOBAL
+---------------------------- */
+window.LARMAH = {
+  businessPhone: "2347063080605",
+  user: null,
+  session: null,
 
-    // ============ UI UTILITIES ============
-    
-    /**
-     * Displays toast notification with type-based styling
-     * @param {string} msg - Message to display
-     * @param {string} type - 'success' | 'error' | 'info' (default)
-     */
-    toast: function(msg, type = 'info') {
-        const t = document.getElementById('toast');
-        if (!t) return;
-        
-        // Reset and apply type-specific styling
-        t.className = `toast show ${type}`;
-        t.textContent = msg;
-        
-        // Auto-hide with smooth transition
-        setTimeout(() => {
-            t.style.opacity = '0';
-            setTimeout(() => { 
-                t.className = "toast";
-                t.style.opacity = '1';
-            }, 300);
-        }, 4000);
-    },
+  sb() {
+    return ensureSupabaseClient();
+  },
 
-    /**
-     * Toggles mobile navigation menu
-     */
-    toggleMenu: function() {
-        const overlay = document.getElementById('mobileNavOverlay');
-        document.body.classList.toggle('nav-open');
-        if (overlay) overlay.classList.toggle('active');
-    },
+  /* ---------- UI ---------- */
+  toast(msg, type = "info") {
+    const t = document.getElementById("toast");
+    if (!t) return;
+    t.textContent = msg;
+    t.className = `toast show ${type}`;
+    clearTimeout(this.__toastTimer);
+    this.__toastTimer = setTimeout(() => (t.className = "toast"), 4000);
+  },
 
-    /**
-     * Sanitizes strings to prevent XSS attacks
-     */
-    escapeHtml: function(str) {
-        if (!str) return '';
-        return String(str).replace(/[&<>"']/g, m => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        }[m]));
-    },
+  escapeHtml(str) {
+    if (str === null || str === undefined) return "";
+    const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
+    return String(str).replace(/[&<>"']/g, (m) => map[m]);
+  },
 
-    // ============ AUTHENTICATION ============
-    
-    /**
-     * Checks authentication state and handles page redirections
-     */
-    async checkSession() {
-        if (!supabase) return;
+  toggleMenu() {
+    document.body.classList.toggle("nav-open");
+    const overlay = document.getElementById("mobileNavOverlay");
+    if (overlay) overlay.classList.toggle("active");
+  },
 
-        try {
-            const { data: { session } } = await supabase.auth.getSession();
-            this.user = session?.user || null;
-            const currentPage = document.body.getAttribute('data-page');
+  /* ---------- WhatsApp ---------- */
+  openWhatsApp(text) {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const baseUrl = isMobile ? "https://api.whatsapp.com/send" : "https://web.whatsapp.com/send";
+    const url = `${baseUrl}?phone=${this.businessPhone}&text=${encodeURIComponent(text)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  },
 
-            // Handle logged-in state
-            if (this.user) {
-                // Redirect from auth page if already logged in
-                if (currentPage === 'auth') {
-                    window.location.href = 'dashboard.html';
-                    return;
-                }
-                // Load extended profile
-                await this.loadProfile();
-                // Show dashboard button
-                const authKey = `sb-${SUPABASE_URL.split('//')[1].split('.')[0]}-auth-token`;
-                if (localStorage.getItem(authKey)) {
-                    const actions = document.querySelector('.header-actions');
-                    if (actions) actions.style.display = 'flex';
-                }
-            } 
-            // Handle logged-out state
-            else {
-                // Protect dashboard pages
-                if (['dashboard'].includes(currentPage)) {
-                    window.location.href = 'auth.html';
-                }
-            }
-        } catch (error) {
-            console.error("Session check error:", error);
-        }
-    },
+  buildRef(prefix = "WEB") {
+    return `${prefix}-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
+  },
 
-    /**
-     * Loads user profile from database
-     */
-    async loadProfile() {
-        if (!this.user || !supabase) return;
-        
-        try {
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', this.user.id)
-                .single();
-
-            if (data) {
-                this.profile = data;
-                // Update UI if elements exist
-                const nameDisplay = document.getElementById('user_name_display');
-                const idDisplay = document.getElementById('user_id_display');
-                
-                if (nameDisplay) nameDisplay.textContent = data.full_name || 'User';
-                if (idDisplay) idDisplay.textContent = this.user.id.substring(0, 8).toUpperCase();
-            }
-        } catch (e) {
-            console.warn("Profile load error:", e);
-        }
-    },
-
-    /**
-     * Login with email and password
-     */
-    async login(email, password) {
-        if (!supabase) throw new Error("Supabase not initialized");
-        
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        
-        this.toast("Login successful!", "success");
-        setTimeout(() => window.location.href = 'dashboard.html', 500);
-    },
-
-    /**
-     * Signup with email, password, and name
-     */
-    async signup(email, password, fullName) {
-        if (!supabase) throw new Error("Supabase not initialized");
-        
-        // Create auth user
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { data: { full_name: fullName } }
-        });
-        
-        if (error) throw error;
-
-        // Create profile entry
-        if (data.user) {
-            await supabase.from('profiles').insert([{ 
-                id: data.user.id, 
-                email: email, 
-                full_name: fullName 
-            }]);
-        }
-
-        this.toast("Account created! Check email for verification.", "success");
-    },
-
-    /**
-     * Logout current user
-     */
-    async logout() {
-        if (!supabase) return;
-        
-        await supabase.auth.signOut();
-        this.toast("Logged out successfully", "info");
-        setTimeout(() => window.location.href = 'auth.html', 500);
-    },
-
-    // ============ WHATSAPP ENGINE ============
-    
-    /**
-     * Opens WhatsApp with pre-filled message
-     * @param {string} text - Message to send
-     */
-    openWhatsApp: function(text) {
-        // Detect device for optimal WhatsApp URL
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        const baseUrl = isMobile ? "https://api.whatsapp.com/send" : "https://web.whatsapp.com/send";
-        const url = `${baseUrl}?phone=${this.businessPhone}&text=${encodeURIComponent(text)}`;
-        
-        window.open(url, '_blank');
-    },
-
-    /**
-     * Constructs formatted WhatsApp message
-     * @param {string} header - Message header/title
-     * @param {Object} fields - Key-value pairs for message body
-     * @returns {string} Formatted message
-     */
-    buildMessage: function(header, fields) {
-        let msg = `*${BUSINESS_CONFIG.brandName} | ${header.toUpperCase()}*\n`;
-        msg += `────────────────────────────\n`;
-        
-        for (const [key, val] of Object.entries(fields)) {
-            if (val && String(val).trim() !== "") {
-                msg += `*${key}:* ${val}\n`;
-            }
-        }
-        
-        msg += `────────────────────────────\n`;
-        msg += `_Ref: ${Math.random().toString(36).substr(2, 6).toUpperCase()}_\n`;
-        msg += `_Sent via heylarmah.tech_`;
-        
-        return msg;
-    },
-
-    // ============ DATABASE OPERATIONS ============
-    
-    /**
-     * Dual action: Logs to Supabase and opens WhatsApp
-     * @param {string} category - Request category
-     * @param {Object} details - Request details
-     */
-    async submitBooking(category, details) {
-        this.toast("Processing request...", "info");
-
-        // 1. Log to database for admin tracking
-        if (supabase) {
-            try {
-                await supabase.from('requests').insert([{
-                    category: category.toLowerCase().replace(" ", "-"),
-                    name: details.Name || 'Guest',
-                    phone: details.Phone || 'N/A',
-                    message: Object.entries(details).map(([k, v]) => `${k}: ${v}`).join(" | "),
-                    status: 'new',
-                    user_id: this.user?.id || null
-                }]);
-            } catch (e) { 
-                console.warn("DB logging skipped:", e);
-            }
-        }
-
-        // 2. Build and send WhatsApp message
-        const msg = this.buildMessage(`${category} Booking`, details);
-        this.openWhatsApp(msg);
-        
-        this.toast("Success! WhatsApp opened.", "success");
-    },
-
-    /**
-     * Fetches active listings by category
-     * @param {string} category - Category to filter by
-     * @returns {Array} List of active listings
-     */
-    async fetchCatalog(category) {
-        if (!supabase) return [];
-        
-        try {
-            const { data, error } = await supabase
-                .from('listings')
-                .select('*')
-                .eq('category', category)
-                .eq('status', 'active')
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                console.error("Catalog fetch error:", error);
-                return [];
-            }
-            return data || [];
-        } catch (e) {
-            console.error("Catalog operation error:", e);
-            return [];
-        }
-    },
-
-    // ============ IMAGE GALLERY ============
-    
-    /**
-     * Normalizes image URLs from various formats to array
-     * @param {Object} item - Item containing image data
-     * @returns {Array} Array of image URLs
-     */
-    normalizeImageUrls: function(item) {
-        const arr = [];
-        
-        // Handle single image URL
-        if (item.image_url) arr.push(item.image_url);
-        
-        // Handle array of image URLs
-        if (Array.isArray(item.image_urls)) {
-            item.image_urls.forEach(u => {
-                if (u && !arr.includes(u)) arr.push(u);
-            });
-        }
-        
-        // Handle 'images' array field
-        if (Array.isArray(item.images)) {
-            item.images.forEach(u => {
-                if (u && !arr.includes(u)) arr.push(u);
-            });
-        }
-        
-        return arr.slice(0, 3); // Limit to first 3 images
-    },
-
-    /**
-     * Generates HTML for image gallery with swipe functionality
-     * @param {Array} urls - Array of image URLs
-     * @param {string} title - Alt text for images
-     * @param {string} idPrefix - Unique ID prefix for gallery
-     * @returns {string} Gallery HTML
-     */
-    galleryHtml: function(urls, title, idPrefix) {
-        if (!urls || !urls.length) return '';
-        
-        const isMulti = urls.length > 1;
-        const galleryId = `gal-${idPrefix || Math.random().toString(36).substr(2, 9)}`;
-        
-        // Generate image tags
-        const imagesHtml = urls.map((url, i) => `
-            <img src="${this.escapeHtml(url)}" 
-                 class="gallery-img ${i === 0 ? 'active' : ''}" 
-                 style="${i === 0 ? 'display:block' : 'display:none'}" 
-                 alt="${this.escapeHtml(title)}" 
-                 loading="lazy">
-        `).join('');
-        
-        // Generate navigation dots for multi-image galleries
-        const dotsHtml = isMulti ? `
-            <div class="gallery-dots">
-                ${urls.map((_, i) => `
-                    <div class="gallery-dot ${i === 0 ? 'active' : ''}" 
-                         data-index="${i}"></div>
-                `).join('')}
-            </div>
-            <div class="gallery-hint">Tap to view next</div>
-        ` : '';
-        
-        return `
-            <div class="gallery ${isMulti ? 'multi' : ''}" id="${galleryId}">
-                ${imagesHtml}
-                ${dotsHtml}
-            </div>
-        `;
-    },
-
-    /**
-     * Binds interaction events to galleries
-     * @param {HTMLElement} container - Container element containing galleries
-     */
-    bindGalleries: function(container) {
-        if (!container) return;
-        
-        const galleries = container.querySelectorAll('.gallery.multi');
-        
-        galleries.forEach(gallery => {
-            let currentIndex = 0;
-            const images = gallery.querySelectorAll('.gallery-img');
-            const dots = gallery.querySelectorAll('.gallery-dot');
-            
-            gallery.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Hide current image
-                if (images[currentIndex]) {
-                    images[currentIndex].style.display = 'none';
-                }
-                if (dots[currentIndex]) {
-                    dots[currentIndex].classList.remove('active');
-                }
-                
-                // Calculate next index
-                currentIndex = (currentIndex + 1) % images.length;
-                
-                // Show next image
-                if (images[currentIndex]) {
-                    images[currentIndex].style.display = 'block';
-                }
-                if (dots[currentIndex]) {
-                    dots[currentIndex].classList.add('active');
-                }
-            });
-            
-            // Optional: Add keyboard navigation
-            gallery.setAttribute('tabindex', '0');
-            gallery.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    gallery.click();
-                }
-            });
-        });
-    },
-
-    // ============ GENERAL SUBMISSION ============
-    
-    /**
-     * Generic submission handler with optional DB logging
-     * @param {Object} payload - Submission data
-     * @returns {Object} Result of submission
-     */
-    async submitRequest(payload) {
-        if (!supabase || !this.user) {
-            return { ok: false, message: "Authentication required" };
-        }
-        
-        try {
-            const { error } = await supabase.from('requests').insert([{
-                user_id: this.user.id,
-                category: payload.category,
-                details: payload.details,
-                status: 'pending',
-                created_at: new Date().toISOString()
-            }]);
-            
-            return { ok: !error, error };
-        } catch (e) {
-            console.error("Submission error:", e);
-            return { ok: false, error: e };
-        }
+  buildMessage(header, fields = {}, ref = null) {
+    const rid = ref || this.buildRef("WEB");
+    let msg = `*LARMAH ENTERPRISE | ${String(header || "").toUpperCase()}*\n`;
+    msg += `------------------------------\n`;
+    for (const [k, v] of Object.entries(fields)) {
+      if (v !== null && v !== undefined && String(v).trim() !== "") {
+        msg += `*${k}:* ${v}\n`;
+      }
     }
+    msg += `------------------------------\n`;
+    msg += `_Sent via heylarmah.tech_\n`;
+    msg += `_Ref: ${rid}_`;
+    return msg;
+  },
+
+  /* ---------- Auth / Session ---------- */
+  async getSession() {
+    const sb = this.sb();
+    if (!sb) return null;
+    const { data, error } = await sb.auth.getSession();
+    if (error) console.warn("getSession error:", error.message);
+    this.session = data?.session || null;
+    this.user = data?.session?.user || null;
+    return this.session;
+  },
+
+  async updateHeaderAuthUI() {
+    // shows/hides dashboard button (your HTML uses .header-actions)
+    const el = document.querySelector(".header-actions");
+    if (!el) return;
+    const session = await this.getSession();
+    el.style.display = session ? "flex" : "none";
+  },
+
+  async signOut(redirect = "auth.html") {
+    const sb = this.sb();
+    if (!sb) return;
+    await sb.auth.signOut();
+    this.user = null;
+    this.session = null;
+    if (redirect) window.location.href = redirect;
+  },
+
+  /* ---------- Requests logging (best-effort) ---------- */
+  async logRequest(category, payload) {
+    const sb = this.sb();
+    if (!sb) return;
+
+    // requires table requests(category text, payload jsonb, created_at timestamptz, user_id uuid nullable, status text)
+    try {
+      await this.getSession(); // ensure this.user is fresh
+      const row = {
+        category: category || "general",
+        payload: payload || {},
+        user_id: this.user?.id || null,
+        status: "new",
+        created_at: new Date().toISOString(),
+      };
+      const { error } = await sb.from("requests").insert([row]);
+      if (error) throw error;
+    } catch (e) {
+      // silent failure — WhatsApp still opens
+      console.warn("Request logging failed:", e?.message || e);
+    }
+  },
+
+  async submitRequest({ header, category, fields, refPrefix = "WEB" }) {
+    const ref = this.buildRef(refPrefix);
+    const msg = this.buildMessage(header, { ...fields }, ref);
+
+    // best-effort log
+    await this.logRequest(category || "general", { header, fields, ref });
+
+    // open WhatsApp
+    this.openWhatsApp(msg);
+  },
 };
 
-// ==========================================
-// 3. INITIALIZATION & EVENT BINDING
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    // Set current year in footer
-    const yearEl = document.getElementById('year');
-    if (yearEl) {
-        yearEl.textContent = new Date().getFullYear();
-    }
-    
-    // Initialize authentication state
-    LARMAH.checkSession();
-    
-    // Setup mobile navigation overlay
-    const overlay = document.getElementById('mobileNavOverlay');
-    if (overlay) {
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                LARMAH.toggleMenu();
-            }
-        });
-        
-        // Close on escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.body.classList.contains('nav-open')) {
-                LARMAH.toggleMenu();
-            }
-        });
-    }
-    
-    // Add global click handler for gallery initialization
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('[data-init-galleries]')) {
-            LARMAH.bindGalleries(e.target.closest('[data-init-galleries]'));
-        }
+/* ---------------------------
+   3) INIT
+---------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  ensureSupabaseClient();
+
+  // Close mobile sheet if clicking overlay background
+  const overlay = document.getElementById("mobileNavOverlay");
+  if (overlay) {
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) window.LARMAH.toggleMenu();
     });
-});
+  }
 
-// Export for module usage if needed
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { LARMAH, BUSINESS_CONFIG };
-}
+  // Footer year
+  const yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // Header dashboard visibility
+  window.LARMAH.updateHeaderAuthUI();
+});
