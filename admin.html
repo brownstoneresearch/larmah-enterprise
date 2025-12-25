@@ -8,7 +8,27 @@
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+  <!-- Supabase Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- ✅ FALLBACK: create supabaseClient even if app.js fails to load -->
+  <script>
+    // Keep these aligned with assets/js/app.js
+    window.SUPABASE_URL = window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
+    window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+
+    window.ensureSupabaseClient = function () {
+      if (window.supabaseClient) return window.supabaseClient;
+      if (!window.supabase || typeof window.supabase.createClient !== "function") return null;
+      window.supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+      return window.supabaseClient;
+    };
+
+    // Create immediately (best effort)
+    window.ensureSupabaseClient();
+  </script>
+
+  <!-- Your global app (optional, but still loaded) -->
   <script defer src="assets/js/app.js"></script>
 
   <style>
@@ -150,14 +170,14 @@
   <!-- LOGIN GATE -->
   <div id="login-gate">
     <div class="login-box">
-      <img src="assets/images/larmah-header.jpeg" style="width:60px; border-radius:12px; margin:0 auto 18px; display:block">
+      <img src="assets/images/larmah-header.jpeg" style="width:60px; border-radius:12px; margin:0 auto 18px; display:block" alt="Larmah">
       <h2 style="margin-bottom:10px">Admin Access</h2>
       <p class="small" style="margin-bottom:22px">Authorized personnel only.</p>
 
       <form id="adminLoginForm">
         <div style="margin-bottom:14px; text-align:left">
           <label class="form-label">Email</label>
-          <input type="email" id="admin_email" class="input" placeholder="admin@heylarmah.tech" required>
+          <input type="email" id="admin_email" class="input" placeholder="luckymomodu60@gmail.com" required>
         </div>
         <div style="margin-bottom:20px; text-align:left">
           <label class="form-label">Password</label>
@@ -175,7 +195,7 @@
     <div class="admin-layout">
       <aside class="admin-sidebar">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px">
-          <img src="assets/images/larmah-header.jpeg" style="width:42px; border-radius:12px">
+          <img src="assets/images/larmah-header.jpeg" style="width:42px; border-radius:12px" alt="Larmah">
           <div>
             <div style="font-weight:900; font-size:1rem;">Larmah Admin</div>
             <div style="font-size:0.75rem; color:var(--muted)">Master Control</div>
@@ -223,7 +243,7 @@
           </div>
 
           <div class="notice-admin">
-            <b>Tip:</b> For true security, enforce Supabase RLS so only admins can write to <code>listings</code>, <code>rates</code>, and <code>insights</code>.
+            <b>Tip:</b> You must add <b>luckymomodu60@gmail.com</b> into <code>public.admins</code> and enable <code>is_admin()</code> RPC.
           </div>
         </div>
 
@@ -373,7 +393,7 @@
         <input type="hidden" id="edit_id">
         <input type="hidden" id="edit_category">
 
-        <!-- LISTING FIELDS -->
+        <!-- LISTING -->
         <div id="fields-listing" style="display:none">
           <div class="form-group">
             <label class="form-label">Title</label>
@@ -411,7 +431,7 @@
           </div>
         </div>
 
-        <!-- RATE FIELDS -->
+        <!-- RATE -->
         <div id="fields-rate" style="display:none">
           <div class="row2">
             <div class="form-group">
@@ -445,7 +465,7 @@
           </div>
         </div>
 
-        <!-- INSIGHT FIELDS -->
+        <!-- INSIGHT -->
         <div id="fields-insight" style="display:none">
           <div class="form-group">
             <label class="form-label">Title</label>
@@ -482,7 +502,7 @@
           </div>
         </div>
 
-        <!-- REQUEST VIEW (READ ONLY) -->
+        <!-- REQUEST VIEW -->
         <div id="fields-request" style="display:none">
           <div class="form-group">
             <label class="form-label">Category</label>
@@ -517,9 +537,7 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // ---------------------------
-    // GLOBAL STATE
-    // ---------------------------
+    // ----------- GLOBALS -----------
     let sb = null;
     const CACHE = {
       listings: new Map(),
@@ -528,11 +546,18 @@
       requests: new Map()
     };
 
-    // ---------------------------
-    // HELPERS
-    // ---------------------------
+    // ensure LARMAH.escapeHtml exists (if app.js didn’t load)
+    window.LARMAH = window.LARMAH || {};
+    if (!window.LARMAH.escapeHtml) {
+      window.LARMAH.escapeHtml = (str) => {
+        if (str === null || str === undefined) return "";
+        const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
+        return String(str).replace(/[&<>"']/g, (m) => map[m]);
+      };
+    }
+
     function toast(msg, type="info"){
-      if (window.LARMAH && LARMAH.toast) return LARMAH.toast(msg, type);
+      if (window.LARMAH && typeof LARMAH.toast === "function") return LARMAH.toast(msg, type);
       const t = document.getElementById("toast");
       if(!t) return;
       t.textContent = msg;
@@ -544,13 +569,12 @@
       document.getElementById("login-gate").style.display = "flex";
       document.getElementById("admin-interface").style.display = "none";
       const el = document.getElementById("loginMsg");
-      if(el){
-        if(msg){
-          el.textContent = msg;
-          el.style.display = "block";
-        } else {
-          el.style.display = "none";
-        }
+      if(!el) return;
+      if(msg){
+        el.textContent = msg;
+        el.style.display = "block";
+      } else {
+        el.style.display = "none";
       }
     }
 
@@ -580,13 +604,11 @@
       document.getElementById("saveBtn").style.display = (entity === "request") ? "none" : "";
     }
 
-    // ---------------------------
-    // AUTH (Admins only)
-    // ---------------------------
+    // ----------- AUTH (ADMIN ONLY) -----------
     async function initAdmin(){
-      sb = window.supabaseClient;
+      sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       if(!sb){
-        showLogin("Supabase client not ready. Confirm assets/js/app.js is loading.");
+        showLogin("Supabase client not ready. Check that the Supabase CDN loads and app.js path is correct.");
         return;
       }
 
@@ -600,7 +622,7 @@
         return;
       }
 
-      // ✅ Admin check (requires SQL function public.is_admin())
+      // Admin check via RPC
       const { data: isAdmin, error: adminErr } = await sb.rpc("is_admin");
       if(adminErr){
         showLogin("Admin check failed: " + adminErr.message);
@@ -636,16 +658,14 @@
         return;
       }
 
-      // ✅ Admin check right after login
+      // Admin check right after login
       const { data: isAdmin, error: adminErr } = await sb.rpc("is_admin");
-
       if (adminErr) {
         await sb.auth.signOut();
         msg.textContent = "Admin check failed: " + adminErr.message;
         msg.style.display = "block";
         return;
       }
-
       if (!isAdmin) {
         await sb.auth.signOut();
         msg.textContent = "Access denied: Admins only.";
@@ -659,14 +679,12 @@
     }
 
     async function adminLogout(){
-      if(!sb) sb = window.supabaseClient;
+      if(!sb) sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       await sb.auth.signOut();
       location.reload();
     }
 
-    // ---------------------------
-    // NAV
-    // ---------------------------
+    // ----------- NAV -----------
     function switchView(viewId, el){
       document.querySelectorAll(".view-section").forEach(v => v.style.display = "none");
       const view = document.getElementById("view-" + viewId);
@@ -684,49 +702,35 @@
       if(viewId === "users") fetchUsers();
     }
 
-    // ---------------------------
-    // STATS
-    // ---------------------------
+    // ----------- STATS -----------
     async function loadStats(){
       try {
         const { count } = await sb.from("listings").select("*", { count: "exact", head: true });
         document.getElementById("stat_listings").textContent = count ?? 0;
-      } catch {
-        document.getElementById("stat_listings").textContent = "—";
-      }
+      } catch { document.getElementById("stat_listings").textContent = "—"; }
 
       try {
         const { count } = await sb.from("profiles").select("*", { count: "exact", head: true });
         document.getElementById("stat_users").textContent = count ?? 0;
-      } catch {
-        document.getElementById("stat_users").textContent = "—";
-      }
+      } catch { document.getElementById("stat_users").textContent = "—"; }
 
       try {
         const since = new Date(Date.now() - 7*24*60*60*1000).toISOString();
         const { count } = await sb.from("requests").select("*", { count: "exact", head: true }).gte("created_at", since);
         document.getElementById("stat_requests").textContent = count ?? 0;
-      } catch {
-        document.getElementById("stat_requests").textContent = "—";
-      }
+      } catch { document.getElementById("stat_requests").textContent = "—"; }
     }
 
-    // ---------------------------
-    // LISTINGS CRUD
-    // ---------------------------
+    // ----------- LISTINGS -----------
     async function fetchListings(category){
       const tbody = document.getElementById(category === "real-estate" ? "tbody-real-estate" : "tbody-logistics");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
       try {
-        const { data, error } = await sb
-          .from("listings")
-          .select("*")
-          .eq("category", category)
-          .order("created_at", { ascending: false });
-
+        const { data, error } = await sb.from("listings").select("*").eq("category", category).order("created_at", { ascending: false });
         if(error) throw error;
 
+        CACHE.listings.clear();
         (data || []).forEach(it => CACHE.listings.set(String(it.id), it));
 
         if(!data || !data.length){
@@ -737,8 +741,7 @@
         tbody.innerHTML = data.map(it => `
           <tr>
             <td>
-              <img class="tbl-thumb"
-                   src="${LARMAH.escapeHtml(it.image_url || 'assets/images/larmah-header.jpeg')}"
+              <img class="tbl-thumb" src="${LARMAH.escapeHtml(it.image_url || 'assets/images/larmah-header.jpeg')}"
                    onerror="this.src='assets/images/larmah-header.jpeg'">
             </td>
             <td>
@@ -757,13 +760,11 @@
         `).join("");
       } catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading. Check table <b>listings</b> + RLS.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading listings. Check RLS + admin rights.</td></tr>`;
       }
     }
 
-    // ---------------------------
-    // RATES CRUD
-    // ---------------------------
+    // ----------- RATES -----------
     async function fetchRates(){
       const tbody = document.getElementById("tbody-rates");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
@@ -772,6 +773,7 @@
         const { data, error } = await sb.from("rates").select("*").order("asset", { ascending: true });
         if(error) throw error;
 
+        CACHE.rates.clear();
         (data || []).forEach(it => CACHE.rates.set(String(it.id), it));
 
         if(!data || !data.length){
@@ -795,21 +797,20 @@
         `).join("");
       } catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading. Check table <b>rates</b> + RLS.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading rates. Check RLS + admin rights.</td></tr>`;
       }
     }
 
-    // ---------------------------
-    // INSIGHTS CRUD
-    // ---------------------------
+    // ----------- INSIGHTS -----------
     async function fetchInsights(){
       const tbody = document.getElementById("tbody-insights");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
       try {
-        const { data, error } = await sb.from("insights").select("*").order("created_at", { ascending: false }).limit(80);
+        const { data, error } = await sb.from("insights").select("*").order("created_at", { ascending: false }).limit(120);
         if(error) throw error;
 
+        CACHE.insights.clear();
         (data || []).forEach(it => CACHE.insights.set(String(it.id), it));
 
         if(!data || !data.length){
@@ -833,21 +834,20 @@
         `).join("");
       } catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading. Check table <b>insights</b> + RLS.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading insights. Check RLS + admin rights.</td></tr>`;
       }
     }
 
-    // ---------------------------
-    // REQUESTS (READ)
-    // ---------------------------
+    // ----------- REQUESTS -----------
     async function fetchRequests(){
       const tbody = document.getElementById("tbody-requests");
       tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
 
       try {
-        const { data, error } = await sb.from("requests").select("*").order("created_at", { ascending: false }).limit(120);
+        const { data, error } = await sb.from("requests").select("*").order("created_at", { ascending: false }).limit(200);
         if(error) throw error;
 
+        CACHE.requests.clear();
         (data || []).forEach(it => CACHE.requests.set(String(it.id), it));
 
         if(!data || !data.length){
@@ -865,19 +865,17 @@
         `).join("");
       } catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading. Check table <b>requests</b> + RLS.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading requests. Check RLS + admin rights.</td></tr>`;
       }
     }
 
-    // ---------------------------
-    // USERS (READ)
-    // ---------------------------
+    // ----------- USERS -----------
     async function fetchUsers(){
       const tbody = document.getElementById("tbody-users");
       tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
 
       try {
-        const { data, error } = await sb.from("profiles").select("*").order("created_at", { ascending: false }).limit(150);
+        const { data, error } = await sb.from("profiles").select("*").order("created_at", { ascending: false }).limit(200);
         if(error) throw error;
 
         if(!data || !data.length){
@@ -898,13 +896,11 @@
         `).join("");
       } catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading. Check table <b>profiles</b> + RLS.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading profiles. Check RLS.</td></tr>`;
       }
     }
 
-    // ---------------------------
-    // EDITOR
-    // ---------------------------
+    // ----------- EDITOR -----------
     function resetEditor(){
       document.getElementById("editorForm").reset();
       document.getElementById("edit_entity").value = "";
@@ -925,7 +921,6 @@
       if(entity === "listing"){
         document.getElementById("editorTitle").textContent = id ? "Edit Listing" : "New Listing";
         document.getElementById("editorHint").textContent = category ? `Category: ${category}` : "";
-
         if(id){
           const it = CACHE.listings.get(String(id));
           if(it){
@@ -1010,7 +1005,6 @@
             description: document.getElementById("listing_desc").value.trim(),
             tags: document.getElementById("listing_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
           };
-
           if(!payload.title) throw new Error("Title is required.");
 
           if(id){
@@ -1056,7 +1050,6 @@
             image_url: document.getElementById("insight_image").value.trim(),
             summary: document.getElementById("insight_summary").value.trim()
           };
-
           if(!payload.title) throw new Error("Title is required.");
 
           if(id){
@@ -1111,13 +1104,11 @@
       }
     }
 
-    // ---------------------------
-    // WIRE UP
-    // ---------------------------
+    // ----------- WIRE UP -----------
     document.addEventListener("DOMContentLoaded", async () => {
-      sb = window.supabaseClient;
+      sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       if(!sb){
-        showLogin("Supabase client not ready. Confirm assets/js/app.js is loading.");
+        showLogin("Supabase client not ready. Check CDN + file paths.");
         return;
       }
 
