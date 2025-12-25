@@ -31,7 +31,6 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    /* Market Board Styles */
     .market-board {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 12px; margin-bottom: 40px;
@@ -45,13 +44,12 @@
     }
     .ticker-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.15); }
     .ticker-pair { font-size: 0.8rem; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
-    .ticker-val { font-size: 1.25rem; font-weight: 700; color: var(--text); }
-    .ticker-change { font-size: 0.8rem; margin-top: 4px; font-weight: 600; }
+    .ticker-val { font-size: 1.25rem; font-weight: 800; color: var(--text); }
+    .ticker-change { font-size: 0.8rem; margin-top: 4px; font-weight: 700; }
     .up { color: var(--ok); }
     .down { color: var(--bad); }
 
-    /* Blog Styles */
-    .blog-date { font-size: 0.8rem; color: var(--accent); font-weight: 700; margin-bottom: 6px; display: block; }
+    .blog-date { font-size: 0.8rem; color: var(--accent); font-weight: 800; margin-bottom: 6px; display: block; }
     .blog-snip { color: var(--muted); font-size: 0.95rem; margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   </style>
 </head>
@@ -131,29 +129,29 @@
 
             <h1>Stay Ahead of the Market.</h1>
             <p class="lead">
-              Verified updates on Nigeria's Real Estate trends, Logistics shifts, and live Exchange rates.
-              Information is power.
+              Verified updates on Real Estate trends, Logistics shifts, and Exchange context —
+              curated for Nigeria.
             </p>
 
             <div class="actions">
               <a class="btn solid" href="#news"><i class="fa-regular fa-newspaper"></i> Latest News</a>
-              <button class="btn primary" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Subscribe Insights', { Name:'' }))">
+              <button class="btn primary" onclick="subscribeInsights()">
                 <i class="fa-brands fa-whatsapp"></i> Get Daily Updates
               </button>
             </div>
           </div>
-          
+
           <div class="hero-badges" style="align-content:center">
-             <div class="hero-card" style="background:rgba(0,0,0,0.4)">
-                <div style="font-size:.8rem;color:var(--muted)">Reference Rates</div>
-                <div style="font-size:1.5rem;font-weight:700;margin:4px 0">₦1,640 <span style="font-size:1rem;color:var(--muted)">/ $</span></div>
-                <div style="font-size:.85rem;color:var(--ok)">Live Desk Rate</div>
-             </div>
-             <div class="hero-card" style="background:rgba(0,0,0,0.4)">
-                <div style="font-size:.8rem;color:var(--muted)">Crypto Desk</div>
-                <div style="font-size:1.5rem;font-weight:700;margin:4px 0">102k <span style="font-size:1rem;color:var(--muted)">USDT</span></div>
-                <div style="font-size:.85rem;color:var(--ok)">Buy/Sell Available</div>
-             </div>
+            <div class="hero-card" style="background:rgba(0,0,0,0.4)">
+              <div style="font-size:.8rem;color:var(--muted)">USD/NGN (Ref)</div>
+              <div style="font-size:1.5rem;font-weight:800;margin:4px 0" id="refUsd">₦—</div>
+              <div style="font-size:.85rem;color:var(--ok)">Desk Reference</div>
+            </div>
+            <div class="hero-card" style="background:rgba(0,0,0,0.4)">
+              <div style="font-size:.8rem;color:var(--muted)">USDT/NGN (Ref)</div>
+              <div style="font-size:1.5rem;font-weight:800;margin:4px 0" id="refUsdt">₦—</div>
+              <div style="font-size:.85rem;color:var(--ok)">Desk Reference</div>
+            </div>
           </div>
         </div>
       </div>
@@ -164,28 +162,12 @@
         <h2>Live Market Board</h2>
         <a class="mini-link small" href="exchange.html">Trade Now →</a>
       </div>
-      
-      <div class="market-board">
-        <div class="ticker-card">
-            <div class="ticker-pair">USD / NGN</div>
-            <div class="ticker-val">1,645</div>
-            <div class="ticker-change up"><i class="fa-solid fa-caret-up"></i> 0.5%</div>
-        </div>
-        <div class="ticker-card">
-            <div class="ticker-pair">GBP / NGN</div>
-            <div class="ticker-val">2,150</div>
-            <div class="ticker-change up"><i class="fa-solid fa-caret-up"></i> 0.2%</div>
-        </div>
-        <div class="ticker-card">
-            <div class="ticker-pair">BTC / USD</div>
-            <div class="ticker-val">$102,400</div>
-            <div class="ticker-change up"><i class="fa-solid fa-caret-up"></i> 1.2%</div>
-        </div>
-        <div class="ticker-card">
-            <div class="ticker-pair">Lekki Rent (Avg)</div>
-            <div class="ticker-val">₦5.2M</div>
-            <div class="ticker-change down"><i class="fa-solid fa-caret-down"></i> Stable</div>
-        </div>
+
+      <div class="market-board" id="marketBoard">
+        <div class="ticker-card"><div class="ticker-pair">USD / NGN</div><div class="ticker-val">—</div><div class="ticker-change up">Live Desk</div></div>
+        <div class="ticker-card"><div class="ticker-pair">GBP / NGN</div><div class="ticker-val">—</div><div class="ticker-change up">Live Desk</div></div>
+        <div class="ticker-card"><div class="ticker-pair">USDT / NGN</div><div class="ticker-val">—</div><div class="ticker-change up">Live Desk</div></div>
+        <div class="ticker-card"><div class="ticker-pair">BTC / USD</div><div class="ticker-val">—</div><div class="ticker-change up">Reference</div></div>
       </div>
     </section>
 
@@ -199,6 +181,7 @@
             <button class="btn small" onclick="filterNews('all')">All</button>
             <button class="btn small" onclick="filterNews('real-estate')">Property</button>
             <button class="btn small" onclick="filterNews('logistics')">Logistics</button>
+            <button class="btn small" onclick="filterNews('exchange')">Exchange</button>
         </div>
       </div>
 
@@ -217,7 +200,7 @@
           <h2 style="margin:0">Don't miss a beat.</h2>
           <p class="lead" style="margin:6px 0 0">Join the Larmah Executive Broadcast list on WhatsApp.</p>
         </div>
-        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Join Broadcast List', { Name:'' }))">
+        <button class="btn solid" onclick="subscribeInsights()">
           <i class="fa-brands fa-whatsapp"></i> Subscribe Free
         </button>
       </div>
@@ -283,90 +266,174 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
     let __NEWS_ITEMS = [];
 
-    // Mock News Data (Fallback if DB empty)
+    // fallback content (so page never looks empty)
     const MOCK_NEWS = [
-      {
-        id: 1, title: "Lekki Property Prices see 15% Shift",
-        category: "real-estate", date: "2025-12-18",
-        summary: "Verified data shows a surge in shortlet demand along the corridor due to holiday influx.",
-        image: null
-      },
-      {
-        id: 2, title: "Logistics: New Checkpoints on Mainland Bridge",
-        category: "logistics", date: "2025-12-15",
-        summary: "Our dispatch riders report increased delays. Larmah Premium Escort services remain unaffected.",
-        image: null
-      },
-      {
-        id: 3, title: "Naira vs Dollar: Week in Review",
-        category: "exchange", date: "2025-12-10",
-        summary: "An analysis of the parallel market rates and what to expect for Q1 2026.",
-        image: null
-      }
+      { id: "m1", title: "Lekki Shortlet Demand: Holiday Uptick", category: "real-estate", date: "2025-12-18", summary: "Higher shortlet demand along Lekki/VI driven by seasonal travel.", image: null },
+      { id: "m2", title: "Mainland Routes: Dispatch Delays Rising", category: "logistics", date: "2025-12-15", summary: "Some routes show increased delays. Premium concierge dispatch remains available.", image: null },
+      { id: "m3", title: "FX Watch: NGN Spread Trends", category: "exchange", date: "2025-12-10", summary: "A desk summary of spreads and what to watch going into Q1.", image: null }
     ];
 
+    // Fallback desk rates (if no rates table)
+    const RATES = {
+      USD: { sell: 1645 },
+      GBP: { sell: 2160 },
+      USDT: { sell: 1650 },
+      BTC: { sell: 102500 }
+    };
+
+    async function loadRates(){
+      try {
+        const sb = window.supabaseClient;
+        if(!sb) throw new Error("supabaseClient not ready");
+
+        // optional table "rates": asset, buy, sell, status
+        const { data, error } = await sb
+          .from("rates")
+          .select("*")
+          .eq("status", "active");
+
+        if(error) throw error;
+
+        (data || []).forEach(r => {
+          const a = String(r.asset || r.symbol || "").toUpperCase();
+          if(!a) return;
+          RATES[a] = { sell: Number(r.sell ?? RATES[a]?.sell ?? 0) };
+        });
+      } catch(e){
+        // fallback stays
+        console.warn("Rates load fallback:", e?.message || e);
+      }
+
+      // update hero ref
+      document.getElementById("refUsd").textContent = "₦" + (Number(RATES.USD.sell)||0).toLocaleString();
+      document.getElementById("refUsdt").textContent = "₦" + (Number(RATES.USDT.sell)||0).toLocaleString();
+
+      // update board
+      const board = document.getElementById("marketBoard");
+      board.innerHTML = `
+        <div class="ticker-card">
+          <div class="ticker-pair">USD / NGN</div>
+          <div class="ticker-val">${Number(RATES.USD.sell||0).toLocaleString()}</div>
+          <div class="ticker-change up">Live Desk</div>
+        </div>
+        <div class="ticker-card">
+          <div class="ticker-pair">GBP / NGN</div>
+          <div class="ticker-val">${Number(RATES.GBP.sell||0).toLocaleString()}</div>
+          <div class="ticker-change up">Live Desk</div>
+        </div>
+        <div class="ticker-card">
+          <div class="ticker-pair">USDT / NGN</div>
+          <div class="ticker-val">${Number(RATES.USDT.sell||0).toLocaleString()}</div>
+          <div class="ticker-change up">Live Desk</div>
+        </div>
+        <div class="ticker-card">
+          <div class="ticker-pair">BTC / USD</div>
+          <div class="ticker-val">$${Number(RATES.BTC.sell||0).toLocaleString()}</div>
+          <div class="ticker-change up">Reference</div>
+        </div>
+      `;
+    }
+
     async function loadNews(){
-        const mount = document.getElementById("newsMount");
-        // Try fetch, fallback to mock
-        try {
-            // Assuming we might have a 'news' or 'insights' table later. 
-            // For now, we use MOCK data to ensure UI looks good immediately.
-            __NEWS_ITEMS = MOCK_NEWS; 
-            renderNews(__NEWS_ITEMS);
-        } catch(e) {
-            console.error(e);
-            mount.innerHTML = `<div class="notice">Could not load insights.</div>`;
-        }
+      try {
+        const sb = window.supabaseClient;
+        if(!sb) throw new Error("supabaseClient not ready");
+
+        // optional table "insights": id, title, category, summary, image_url, status, created_at
+        const { data, error } = await sb
+          .from("insights")
+          .select("*")
+          .eq("status", "active")
+          .order("created_at", { ascending: false })
+          .limit(12);
+
+        if(error) throw error;
+
+        __NEWS_ITEMS = (data || []).map(it => ({
+          id: it.id,
+          title: it.title,
+          category: it.category || "all",
+          date: (it.created_at ? new Date(it.created_at).toISOString().slice(0,10) : ""),
+          summary: it.summary || it.snippet || "",
+          image: it.image_url || null
+        }));
+
+        if(!__NEWS_ITEMS.length) __NEWS_ITEMS = MOCK_NEWS;
+      } catch(e){
+        console.warn("Insights load fallback:", e?.message || e);
+        __NEWS_ITEMS = MOCK_NEWS;
+      }
+
+      renderNews(__NEWS_ITEMS);
     }
 
     function renderNews(items){
-        const mount = document.getElementById("newsMount");
-        if(!items.length){
-            mount.innerHTML = `<div class="notice">No updates available.</div>`;
-            return;
-        }
+      const mount = document.getElementById("newsMount");
+      if(!items.length){
+        mount.innerHTML = `<div class="notice">No updates available.</div>`;
+        return;
+      }
 
-        mount.innerHTML = `
-            <div class="grid">
-                ${items.map(it => `
-                    <div class="card">
-                        ${it.image ? `<img src="${it.image}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:12px">` : ''}
-                        <span class="blog-date">${it.date} • ${it.category.toUpperCase()}</span>
-                        <h3 style="font-size:1.1rem">${LARMAH.escapeHtml(it.title)}</h3>
-                        <div class="blog-snip">${LARMAH.escapeHtml(it.summary)}</div>
-                        <div class="actions" style="margin-top:12px">
-                            <button class="btn small" onclick="readArticle('${it.id}')">Read Update</button>
-                        </div>
-                    </div>
-                `).join('')}
+      mount.innerHTML = `
+        <div class="grid">
+          ${items.map(it => `
+            <div class="card">
+              ${it.image ? `<img src="${it.image}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:12px" onerror="this.remove()">` : ""}
+              <span class="blog-date">${LARMAH.escapeHtml(it.date)} • ${LARMAH.escapeHtml(String(it.category).toUpperCase())}</span>
+              <h3 style="font-size:1.1rem">${LARMAH.escapeHtml(it.title)}</h3>
+              <div class="blog-snip">${LARMAH.escapeHtml(it.summary)}</div>
+              <div class="actions" style="margin-top:12px">
+                <button class="btn small" onclick="discussInsight('${it.id}')">Discuss on WhatsApp</button>
+              </div>
             </div>
-        `;
+          `).join("")}
+        </div>
+      `;
     }
 
     function filterNews(cat){
-        if(cat === 'all') return renderNews(__NEWS_ITEMS);
-        const filtered = __NEWS_ITEMS.filter(x => x.category === cat);
-        renderNews(filtered);
+      if(cat === "all") return renderNews(__NEWS_ITEMS);
+      renderNews(__NEWS_ITEMS.filter(x => x.category === cat));
     }
 
-    function readArticle(id){
-        // Since we don't have full article pages yet, we open a WhatsApp discussion about the topic
-        const item = __NEWS_ITEMS.find(x => String(x.id) === String(id));
-        if(!item) return;
-        LARMAH.openWhatsApp(LARMAH.buildMessage('Insight Discussion', {
-            Topic: item.title,
-            Ref: "BLOG-"+id,
-            Message: "I'd like to know more about this update."
-        }));
+    async function discussInsight(id){
+      const it = __NEWS_ITEMS.find(x => String(x.id) === String(id));
+      if(!it) return;
+
+      if(LARMAH.submitRequest){
+        await LARMAH.submitRequest({
+          header: "Insight Discussion",
+          category: "insights",
+          fields: {
+            Topic: it.title,
+            Category: it.category,
+            Message: "Hi Larmah, I'd like more details on this update."
+          }
+        });
+      } else {
+        LARMAH.openWhatsApp(LARMAH.buildMessage("Insight Discussion", { Topic: it.title, Category: it.category }));
+      }
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-        loadNews();
+    async function subscribeInsights(){
+      if(LARMAH.submitRequest){
+        await LARMAH.submitRequest({
+          header: "Subscribe Insights",
+          category: "insights",
+          fields: { Name:"", Phone:"", Request:"Please add me to daily updates." }
+        });
+      } else {
+        LARMAH.openWhatsApp(LARMAH.buildMessage("Subscribe Insights", { Request:"Please add me to daily updates." }));
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      await loadRates();
+      await loadNews();
     });
   </script>
 </body>
 </html>
-
-```
