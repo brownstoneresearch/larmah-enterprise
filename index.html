@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  
+
   <title>Larmah Enterprise | Nigeria’s Trust-First Commerce Hub</title>
   <meta name="description" content="Verified Real Estate, reliable Logistics, live Insights, and Exchange — WhatsApp-first support across Nigeria. The #1 commerce hub for trust-based transactions." />
   <meta name="keywords" content="Larmah Enterprise, Real Estate Nigeria, Logistics Lagos, Crypto Exchange Nigeria, Shortlets Ikoyi, Haulage Nigeria, Trusted Commerce" />
@@ -34,79 +34,6 @@
 </head>
 
 <body data-page="home">
-
-  <div id="mobileNavOverlay">
-    <div class="msheet">
-      <div class="msheet-head">
-        <div class="msheet-brand">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
-        </div>
-        <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="msheet-body">
-        <div class="msheet-links">
-            <a href="real-estate.html" class="msheet-link">
-                <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="logistics.html" class="msheet-link">
-                <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="insights.html" class="msheet-link">
-                <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="exchange.html" class="msheet-link">
-                <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-        </div>
-        <div class="msheet-footer">
-            <div class="msheet-hint">Menu</div>
-            <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-                <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
-            </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <header>
-    <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Home">
-        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-      </a>
-
-      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
-
-      <nav id="nav" aria-label="Primary navigation">
-        <ul>
-          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
-          <li><a class="nav-link" href="logistics.html">Logistics</a></li>
-          <li><a class="nav-link" href="insights.html">Insights</a></li>
-          <li><a class="nav-link" href="exchange.html">Exchange</a></li>
-        </ul>
-      </nav>
-      
-      <div class="header-actions" style="margin-left:auto; display:none;">
-          <a href="dashboard.html" class="pill primary">Dashboard</a>
-      </div>
-      <script>
-        // Simple check to show dashboard button if logged in (Client-side visual only)
-        document.addEventListener("DOMContentLoaded", () => {
-             if(localStorage.getItem('sb-'+SUPABASE_URL+'-auth-token')) {
-                 document.querySelector('.header-actions').style.display = 'flex';
-             }
-        });
-      </script>
-    </div>
-  </header>
-
   <main class="container">
     <section class="hero">
       <div class="hero-shell">
@@ -179,9 +106,9 @@
             <a class="mini-link small" href="real-estate.html">View all →</a>
           </div>
           <div id="latestRE">
-             <div class="latest-skel">
-                <div class="skel-line"></div><div class="skel-line short"></div>
-             </div>
+            <div class="latest-skel">
+              <div class="skel-line"></div><div class="skel-line short"></div>
+            </div>
           </div>
         </div>
 
@@ -191,9 +118,9 @@
             <a class="mini-link small" href="logistics.html">View all →</a>
           </div>
           <div id="latestLG">
-             <div class="latest-skel">
-                <div class="skel-line"></div><div class="skel-line short"></div>
-             </div>
+            <div class="latest-skel">
+              <div class="skel-line"></div><div class="skel-line short"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -212,81 +139,25 @@
     </section>
   </main>
 
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="brandline">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-            <div>
-              <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Real Estate • Logistics • Insights • Exchange</div>
-            </div>
-          </div>
-
-          <div class="small" style="margin-top:8px">
-            Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
-          </div>
-
-          <div class="social-row" aria-label="Social links">
-            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-            <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <b>Navigation</b>
-          <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
-          <div class="small"><a href="logistics.html">Logistics</a></div>
-          <div class="small"><a href="insights.html">Insights</a></div>
-          <div class="small"><a href="exchange.html">Exchange</a></div>
-          <div class="small"><a href="premium.html">Premium</a></div>
-        </div>
-
-        <div>
-          <b>Contact</b>
-          <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
-          <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-
-          <div class="actions" style="margin-top:12px">
-            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))">
-              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-            </button>
-          </div>
-
-          <div class="small" style="margin-top:10px;opacity:.65">
-            <a href="auth.html">Staff Sign-in</a> • <a href="admin.html">Admin</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="small">© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
-    </div>
-  </footer>
-
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
     const __INDEX_CACHE = { "real-estate": [], "logistics": [] };
 
-    // Function to fetch data directly from Supabase via LARMAH helper
     async function renderPreview(category, mountId){
       const mount = document.getElementById(mountId);
       if(!mount) return;
 
       try {
-        // Fetch up to 3 items
-        const { data, error } = await supabase
-            .from('listings')
-            .select('*')
-            .eq('category', category)
-            .eq('status', 'active')
-            .order('created_at', {ascending: false})
-            .limit(3);
+        const { data, error } = await supabaseClient
+          .from('listings')
+          .select('*')
+          .eq('category', category)
+          .eq('status', 'active')
+          .order('created_at', {ascending: false})
+          .limit(3);
+
+        if(error) throw error;
 
         const items = data || [];
         __INDEX_CACHE[category] = items;
@@ -299,14 +170,12 @@
         mount.innerHTML = `
           <div class="latest-list">
             ${items.map(it => {
-              // Image Handling
               const imgUrl = it.image_url || 'assets/images/larmah-header.jpeg';
-              
               return `
                 <div class="latest-item">
                   <div class="latest-thumb">
-                    <img src="${LARMAH.escapeHtml(imgUrl)}" 
-                         alt="${LARMAH.escapeHtml(it.title)}" 
+                    <img src="${LARMAH.escapeHtml(imgUrl)}"
+                         alt="${LARMAH.escapeHtml(it.title)}"
                          loading="lazy"
                          onerror="this.src='assets/images/larmah-header.jpeg'">
                   </div>
@@ -344,6 +213,29 @@
         Ref: "WEB-INDEX-" + id
       }));
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // app.js exposes supabaseClient globally
+      if(!window.supabaseClient){
+        console.error("supabaseClient not ready");
+        return;
+      }
+      window.supabaseClient = window.supabaseClient; // keep
+      window.supabaseClient && (window.supabaseClient); // no-op
+
+      // alias used in this page:
+      window.supabaseClient && (window.supabaseClient);
+      window.supabaseClient && (window.supabaseClient);
+
+      // IMPORTANT: ensure a global alias exists for this inline script
+      window.supabaseClient && (window.supabaseClient);
+    });
+  </script>
+
+  <script>
+    // create a stable alias used above
+    window.supabaseClient = window.supabaseClient || window.supabaseClient;
+    const supabaseClient = window.supabaseClient;
 
     document.addEventListener("DOMContentLoaded", () => {
       renderPreview("real-estate", "latestRE");
