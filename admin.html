@@ -582,28 +582,41 @@
 
     // ---------------------------
     // AUTH
-    // ---------------------------
+    
     async function initAdmin(){
-      sb = window.supabaseClient;
-      if(!sb){
-        showLogin("Supabase client not ready. Confirm assets/js/app.js is loading.");
-        return;
-      }
+  sb = window.supabaseClient;
+  if(!sb){
+    showLogin("Supabase client not ready. Confirm assets/js/app.js is loading.");
+    return;
+  }
 
-      const { data, error } = await sb.auth.getSession();
-      if(error){
-        showLogin("Session error: " + error.message);
-        return;
-      }
-      if(!data?.session){
-        showLogin();
-        return;
-      }
+  const { data, error } = await sb.auth.getSession();
+  if(error){
+    showLogin("Session error: " + error.message);
+    return;
+  }
+  if(!data?.session){
+    showLogin();
+    return;
+  }
 
-      showAdmin();
-      await loadStats();
-      await fetchListings("real-estate");
-    }
+  // ✅ ADMIN CHECK (calls public.is_admin())
+  const { data: isAdmin, error: adminErr } = await sb.rpc("is_admin");
+  if(adminErr){
+    showLogin("Admin check failed: " + adminErr.message);
+    return;
+  }
+  if(!isAdmin){
+    await sb.auth.signOut();
+    showLogin("Access denied: Admins only.");
+    return;
+  }
+
+  // ✅ OK: Admin session
+  showAdmin();
+  await loadStats();
+  await fetchListings("real-estate");
+}
 
     async function adminLogin(email, password){
       const btn = document.getElementById("loginBtn");
