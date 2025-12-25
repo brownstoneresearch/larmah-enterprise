@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
+  
   <title>Logistics | Larmah Enterprise</title>
   <meta name="description" content="Premium dispatch, airport pickups, escort-ready movement, and haulage across Nigeria. Verified fleet, instant WhatsApp booking." />
   <meta name="keywords" content="Logistics Nigeria, Airport Pickup Lagos, Haulage Nigeria, Escort Services Lagos, Car Hire Nigeria, Dispatch Riders" />
@@ -31,15 +31,110 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
+    /* Page Specific */
     .catalog-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-    .filters-box { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; }
+
+    .filters-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
     .filters { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     @media(max-width: 768px) { .filters { grid-template-columns: 1fr; } }
+
     .pillbar { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
+
+    .card-media {
+      width: 100%;
+      height: 180px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.2);
+      margin-bottom: 12px;
+    }
+    .card-media img { width: 100%; height: 100%; object-fit: cover; display:block; }
   </style>
 </head>
 
 <body data-page="logistics">
+
+  <div id="mobileNavOverlay">
+    <div class="msheet">
+      <div class="msheet-head">
+        <div class="msheet-brand">
+            <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
+        </div>
+        <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="msheet-body">
+        <div class="msheet-links">
+            <a href="real-estate.html" class="msheet-link">
+                <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+            </a>
+            <a href="logistics.html" class="msheet-link active">
+                <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
+                <i class="fa-solid fa-check" style="font-size:12px;"></i>
+            </a>
+            <a href="insights.html" class="msheet-link">
+                <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+            </a>
+            <a href="exchange.html" class="msheet-link">
+                <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
+                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+            </a>
+        </div>
+        <div class="msheet-footer">
+            <div class="msheet-hint">Menu</div>
+            <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
+                <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Larmah Home">
+        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+      </a>
+
+      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <nav id="nav" aria-label="Primary navigation">
+        <ul>
+          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+          <li><a class="nav-link active" href="logistics.html">Logistics</a></li>
+          <li><a class="nav-link" href="insights.html">Insights</a></li>
+          <li><a class="nav-link" href="exchange.html">Exchange</a></li>
+        </ul>
+      </nav>
+      
+      <div class="header-actions" style="margin-left:auto; display:none;">
+          <a href="dashboard.html" class="pill primary">Dashboard</a>
+      </div>
+
+      <!-- FIXED: safe auth UI -->
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") {
+            LARMAH.updateHeaderAuthUI();
+          }
+        });
+      </script>
+    </div>
+  </header>
+
   <main class="container">
     <section class="hero">
       <div class="hero-shell">
@@ -72,17 +167,61 @@
 
           <div class="hero-badges">
             <div class="hero-card">
-              <h3><i class="fa-solid fa-plane-arrival" style="color:var(--brand)"></i> Airport Pickup</h3>
-              <p>Executive pickup + drop-off with reliable timing.</p>
+                <h3><i class="fa-solid fa-plane-arrival" style="color:var(--brand)"></i> Airport Pickup</h3>
+                <p>Executive pickup + drop-off with reliable timing.</p>
             </div>
             <div class="hero-card">
-              <h3><i class="fa-solid fa-road" style="color:var(--brand)"></i> Intercity Dispatch</h3>
-              <p>City-to-city movement with secure handling.</p>
+                <h3><i class="fa-solid fa-road" style="color:var(--brand)"></i> Intercity Dispatch</h3>
+                <p>City-to-city movement with secure handling.</p>
             </div>
             <div class="hero-card">
-              <h3><i class="fa-solid fa-truck-ramp-box" style="color:var(--brand)"></i> Haulage</h3>
-              <p>Heavy logistics requests — quick quote via WhatsApp.</p>
+                <h3><i class="fa-solid fa-truck-ramp-box" style="color:var(--brand)"></i> Haulage</h3>
+                <p>Heavy logistics requests — quick quote via WhatsApp.</p>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head-split">
+        <div>
+          <h2>Verification & Process</h2>
+          <p class="lead">A clear, trackable workflow from booking to completion.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3><i class="fa-solid fa-shield-halved" style="color:var(--brand)"></i> Verification Proof</h3>
+          <p class="small">What we confirm before dispatch.</p>
+          <div class="small" style="margin-top:10px;opacity:.9;line-height:1.8">
+            • Driver/dispatch confirmation<br/>
+            • Route & timing confirmation<br/>
+            • Reference IDs per booking<br/>
+            • Premium priority handling available
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-diagram-project" style="color:var(--brand)"></i> How It Works</h3>
+          <p class="small">Fast, trackable steps.</p>
+          <div class="small" style="margin-top:10px;opacity:.9;line-height:1.8">
+            1) Choose a service<br/>
+            2) Tap Book (auto WhatsApp message)<br/>
+            3) Confirm pickup & ETA<br/>
+            4) Receive next steps & settlement guidance
+          </div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fa-solid fa-crown" style="color:var(--brand)"></i> Priority Access</h3>
+          <p class="small">Premium members get faster confirmation.</p>
+          <div class="actions" style="margin-top:12px">
+            <a class="btn solid small" href="premium.html"><i class="fa-solid fa-star"></i> Go Premium</a>
+            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Priority Logistics Request', { Name:'', Phone:'', Pickup:'', Dropoff:'', DateTime:'', Notes:'' }))">
+              <i class="fa-brands fa-whatsapp"></i> Priority Chat
+            </button>
           </div>
         </div>
       </div>
@@ -135,9 +274,9 @@
       </div>
 
       <div id="catalogMount">
-        <div class="latest-skel">
-          <div class="skel-line"></div><div class="skel-line short"></div>
-        </div>
+          <div class="latest-skel">
+            <div class="skel-line"></div><div class="skel-line short"></div>
+          </div>
       </div>
     </section>
 
@@ -180,16 +319,71 @@
         </div>
 
         <div class="small" style="margin-top:12px;opacity:.75;text-align:center">
-          Requests are logged securely for priority follow-up.
+            Requests are logged securely for priority follow-up.
         </div>
       </div>
     </section>
   </main>
 
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="brandline">
+            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+            <div>
+              <div style="font-weight:950">Larmah Enterprise</div>
+              <div class="small">Real Estate • Logistics • Insights • Exchange</div>
+            </div>
+          </div>
+
+          <div class="small" style="margin-top:8px">
+            Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
+          </div>
+
+          <div class="social-row" aria-label="Social links">
+            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+            <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <b>Navigation</b>
+          <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
+          <div class="small"><a href="logistics.html">Logistics</a></div>
+          <div class="small"><a href="insights.html">Insights</a></div>
+          <div class="small"><a href="exchange.html">Exchange</a></div>
+          <div class="small"><a href="premium.html">Premium</a></div>
+        </div>
+
+        <div>
+          <b>Contact</b>
+          <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
+          <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
+          <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
+
+          <div class="actions" style="margin-top:12px">
+            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+            </button>
+          </div>
+
+          <div class="small" style="margin-top:10px;opacity:.65">
+            <a href="auth.html">Staff Sign-in</a> • <a href="admin.html">Admin</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="small">© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+    </div>
+  </footer>
+
   <div id="toast" class="toast"></div>
 
   <script>
-    const supabaseClient = window.supabaseClient;
+    document.getElementById('year').textContent = new Date().getFullYear();
     let __LG_ITEMS = [];
     const norm = (s)=> String(s||"").toLowerCase();
 
@@ -207,6 +401,7 @@
       q.value = (q.value ? q.value + " " : "") + tag;
       renderLG();
     }
+
     function clearFilters(){
       document.getElementById("lg_q").value = "";
       document.getElementById("lg_tier_filter").value = "";
@@ -239,56 +434,67 @@
 
       mount.innerHTML = `
         <div class="grid">
-          ${items.map(it => `
-            <div class="card">
-              ${(() => {
-                const urls = LARMAH.normalizeImageUrls(it);
-                return urls.length ? LARMAH.galleryHtml(urls, it.title, "lg-" + it.id) : "";
-              })()}
-              <h3>${LARMAH.escapeHtml(it.title)}</h3>
-              <p>${LARMAH.escapeHtml(it.description || "")}</p>
-              ${it.price ? `<div class="price">${LARMAH.escapeHtml(it.price)}</div>` : ``}
-              <div class="meta">Ready • Ref: WEB-LG-${it.id}</div>
-              <div class="actions">
-                <button class="btn small primary" onclick="enquireLogistics('${it.id}')">
-                  <i class="fa-brands fa-whatsapp"></i> Book / Enquire
-                </button>
+          ${items.map(it => {
+            const imgUrl = it.image_url || "assets/images/larmah-header.jpeg";
+            return `
+              <div class="card">
+                <div class="card-media">
+                  <img src="${LARMAH.escapeHtml(imgUrl)}" alt="${LARMAH.escapeHtml(it.title)}" loading="lazy"
+                       onerror="this.src='assets/images/larmah-header.jpeg'">
+                </div>
+
+                <h3>${LARMAH.escapeHtml(it.title)}</h3>
+                <p>${LARMAH.escapeHtml(it.description || "")}</p>
+
+                ${it.price ? `<div class="price">${LARMAH.escapeHtml(it.price)}</div>` : ``}
+                <div class="meta">Ready • Ref: WEB-LG-${it.id}</div>
+
+                <div class="actions">
+                  <button class="btn small primary" onclick="enquireLogistics('${it.id}')">
+                      <i class="fa-brands fa-whatsapp"></i> Book / Enquire
+                  </button>
+                </div>
               </div>
-            </div>
-          `).join("")}
+            `;
+          }).join("")}
         </div>
       `;
-      LARMAH.bindGalleries(mount);
     }
 
     async function loadLogistics(){
       const mount = document.getElementById("catalogMount");
       mount.innerHTML = `
         <div class="grid">
-          <div class="card" style="height:300px;opacity:0.5"></div>
-          <div class="card" style="height:300px;opacity:0.5"></div>
+            <div class="card" style="height:300px;opacity:0.5"></div>
+            <div class="card" style="height:300px;opacity:0.5"></div>
         </div>`;
 
-      const { data, error } = await supabaseClient
-        .from('listings')
-        .select('*')
-        .eq('category', 'logistics')
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
+      try {
+        const sb = window.supabaseClient;
+        if(!sb) throw new Error("supabaseClient not ready");
 
-      if (error) {
-        console.error(error);
-        mount.innerHTML = `<div class="notice">Error loading fleet data. Please refresh.</div>`;
-        return;
+        const { data, error } = await sb
+          .from('listings')
+          .select('*')
+          .eq('category', 'logistics')
+          .eq('status', 'active')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        __LG_ITEMS = data || [];
+
+        if(!__LG_ITEMS.length){
+          mount.innerHTML = `<div class="notice"><strong>No services listed currently.</strong> Please submit a booking request below.</div>`;
+          return;
+        }
+        renderLG();
+      } catch(e){
+        console.error(e);
+        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)">
+          <strong>Error loading fleet.</strong> Please refresh.
+        </div>`;
       }
-
-      __LG_ITEMS = data || [];
-
-      if(!__LG_ITEMS.length){
-        mount.innerHTML = `<div class="notice"><strong>No services listed currently.</strong> Please submit a booking request below.</div>`;
-        return;
-      }
-      renderLG();
     }
 
     function enquireLogistics(id){
@@ -318,12 +524,16 @@
         return;
       }
 
-      // LOG TO SUPABASE + OPEN WHATSAPP SUPPORT
-      await LARMAH.submitRequest({
-        header: "New Logistics Booking",
-        category: "logistics",
-        fields
-      });
+      // ✅ Log (best effort) + open WhatsApp support
+      if (LARMAH.submitRequest) {
+        await LARMAH.submitRequest({
+          header: "New Logistics Booking",
+          category: "logistics",
+          fields
+        });
+      } else {
+        LARMAH.openWhatsApp(LARMAH.buildMessage("New Logistics Booking", fields));
+      }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -331,10 +541,6 @@
       document.getElementById("lg_tier_filter").addEventListener("change", renderLG);
       document.getElementById("lg_sort").addEventListener("change", renderLG);
 
-      if(!supabaseClient){
-        console.error("supabaseClient not ready");
-        return;
-      }
       loadLogistics();
     });
   </script>
