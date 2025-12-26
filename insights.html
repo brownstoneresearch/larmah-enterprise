@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>Insights | Larmah Enterprise</title>
-  <meta name="description" content="Live market intelligence, FX rates, real estate trends, and logistics updates for the Nigerian market." />
+  <meta name="description" content="Live market intelligence, FX and crypto pairs, real estate trends, and logistics updates for the Nigerian market — curated from verified sources." />
   <meta name="keywords" content="Nigeria FX Rates, Lagos Real Estate News, Logistics Trends Nigeria, Crypto Rates Nigeria, Larmah Insights" />
   <meta name="theme-color" content="#070A12" />
   <link rel="canonical" href="https://heylarmah.tech/insights.html" />
@@ -13,7 +13,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heylarmah.tech/insights.html" />
   <meta property="og:title" content="Larmah Insights | Market Intelligence" />
-  <meta property="og:description" content="Stay ahead with live FX rates, verified market news, and strategic updates." />
+  <meta property="og:description" content="Live rates + verified Nigerian updates — updated in real-time from Admin." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <meta name="twitter:card" content="summary_large_image" />
@@ -48,7 +48,7 @@
       text-align:center;
     }
     .ticker-pair{ font-size: 0.8rem; color: var(--muted); font-weight: 900; margin-bottom: 6px; }
-    .ticker-val{ font-size: 1.2rem; font-weight: 950; color: var(--text); }
+    .ticker-val{ font-size: 1.15rem; font-weight: 950; color: var(--text); }
     .ticker-sub{ font-size:.8rem; color: var(--muted); opacity:.9; margin-top:6px; }
 
     /* Insight media slider */
@@ -92,6 +92,27 @@
 
     .blog-date { font-size: 0.8rem; color: var(--accent); font-weight: 900; margin-bottom: 6px; display: block; }
     .blog-snip { color: var(--muted); font-size: 0.95rem; margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+    .source-pill{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:.78rem;
+      color:var(--muted);
+      margin-top:10px;
+    }
+
+    .filters-row{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      margin-top: 10px;
+    }
+    .filters-row .input{ min-width: 220px; }
+    @media(max-width: 520px){
+      .filters-row .input{ width:100%; min-width:unset; }
+    }
 
     .sk-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; }
     .sk-card{ height:210px; border-radius:16px; background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); opacity:.6; }
@@ -144,11 +165,11 @@
             <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-chart-column"></i> Market Intelligence</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Supabase Live Updates</span>
+              <span class="kicker-sub">Verified Sources + Live</span>
             </div>
 
             <h1>Stay Ahead of the Market.</h1>
-            <p class="lead">Verified updates from the Larmah desk — live rates and curated insights, updated by Admin.</p>
+            <p class="lead">Curated Nigeria updates + live desk pairs. New posts appear instantly when synced.</p>
 
             <div class="actions">
               <a class="btn solid" href="#news"><i class="fa-regular fa-newspaper"></i> Latest Insights</a>
@@ -198,7 +219,14 @@
         <div>
           <h2>Latest Insights</h2>
           <p class="lead">Pulled from Supabase <code>insights</code> table.</p>
+
+          <div class="filters-row">
+            <select id="sourceFilter" class="input">
+              <option value="all">All sources</option>
+            </select>
+          </div>
         </div>
+
         <div class="pillbar">
           <button class="btn small" onclick="setInsightFilter('all')">All</button>
           <button class="btn small" onclick="setInsightFilter('real-estate')">Property</button>
@@ -268,7 +296,6 @@
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
             </button>
           </div>
-          <!-- ✅ Removed Staff Sign-in/Admin -->
         </div>
       </div>
 
@@ -284,10 +311,10 @@
 
     let __insightsAll = [];
     let __insightsFilter = "all";
+    let __sourceFilter = "all";
+
     const __IN_IMG_URLS = {};
     const __IN_IMG_IDX = {};
-
-    // rate map for market board
     let __ratesMap = {};
 
     function normUpper(s){ return String(s||"").trim().toUpperCase(); }
@@ -333,17 +360,41 @@
       renderInsights();
     }
 
+    function setSourceFilter(v){
+      __sourceFilter = v;
+      renderInsights();
+    }
+
+    function updateSourceOptions(items){
+      const sel = document.getElementById("sourceFilter");
+      if(!sel) return;
+
+      const sources = (items||[])
+        .map(x => String(x.source_name || "Larmah Desk").trim())
+        .filter(Boolean);
+
+      const uniq = Array.from(new Set(sources)).sort((a,b)=> a.localeCompare(b));
+      const current = sel.value || "all";
+
+      sel.innerHTML = `<option value="all">All sources</option>` +
+        uniq.map(s => `<option value="${LARMAH.escapeHtml(s)}">${LARMAH.escapeHtml(s)}</option>`).join("");
+
+      sel.value = uniq.includes(current) ? current : "all";
+    }
+
     function renderInsights(){
       const mount = document.getElementById("newsMount");
       const items = (__insightsAll||[]).filter(it => {
-        if(__insightsFilter === "all") return true;
-        return String(it.category||"all") === __insightsFilter;
+        const catOk = (__insightsFilter === "all") ? true : String(it.category||"all") === __insightsFilter;
+        const src = String(it.source_name || "Larmah Desk").trim();
+        const srcOk = (__sourceFilter === "all") ? true : src === __sourceFilter;
+        return catOk && srcOk;
       });
 
       document.getElementById("heroInsightCount").textContent = String((__insightsAll||[]).length);
 
       if(!items.length){
-        mount.innerHTML = `<div class="notice">No updates yet for this category.</div>`;
+        mount.innerHTML = `<div class="notice">No updates match this filter.</div>`;
         return;
       }
 
@@ -356,12 +407,17 @@
             const hasMany = urls.length > 1;
             const hasImg = urls.length > 0;
 
+            const source = it.source_name || "Larmah Desk";
+            const articleUrl = it.article_url || "";
+            const pub = it.published_at ? new Date(it.published_at).toLocaleString() : new Date(it.created_at).toLocaleString();
+
             return `
               <div class="card">
                 ${hasImg ? `
                   <div class="card-media">
-                    <img id="in-img-${id}" src="${LARMAH.escapeHtml(urls[0])}" alt="${LARMAH.escapeHtml(it.title)}" loading="lazy"
-                         onerror="this.style.display='none'">
+                    <img id="in-img-${id}" src="${LARMAH.escapeHtml(urls[0])}" alt="${LARMAH.escapeHtml(it.title)}"
+                         loading="lazy" onerror="this.style.display='none'">
+
                     ${hasMany ? `
                       <div class="media-nav">
                         <button class="media-btn" type="button" onclick="cycleInsightImage('${id}', -1)" aria-label="Prev"><i class="fa-solid fa-chevron-left"></i></button>
@@ -374,11 +430,14 @@
                   </div>
                 ` : ``}
 
-                <span class="blog-date">${new Date(it.created_at).toLocaleDateString()} • ${(it.category||"all").toUpperCase()}</span>
+                <span class="blog-date">${LARMAH.escapeHtml(pub)} • ${(it.category||"all").toUpperCase()}</span>
                 <h3 style="font-size:1.1rem">${LARMAH.escapeHtml(it.title)}</h3>
+
+                <div class="source-pill"><i class="fa-solid fa-circle-check"></i> Source: ${LARMAH.escapeHtml(source)}</div>
                 <div class="blog-snip">${LARMAH.escapeHtml(it.summary || "")}</div>
 
                 <div class="actions" style="margin-top:12px">
+                  ${articleUrl ? `<a class="btn small" href="${LARMAH.escapeHtml(articleUrl)}" target="_blank" rel="noopener">Read Source</a>` : ``}
                   <button class="btn small" onclick="openInsightChat('${id}')">Discuss</button>
                 </div>
               </div>
@@ -391,9 +450,12 @@
     function openInsightChat(id){
       const it = (__insightsAll||[]).find(x => String(x.id) === String(id));
       if(!it) return;
+
       LARMAH.openWhatsApp(LARMAH.buildMessage("Insight Discussion", {
         Topic: it.title,
         Category: it.category || "all",
+        Source: it.source_name || "Larmah Desk",
+        Link: it.article_url || "",
         Ref: "INS-" + id,
         Message: "I'd like to know more about this update."
       }));
@@ -452,6 +514,7 @@
         .from("insights")
         .select("*")
         .eq("status","active")
+        .order("published_at",{ascending:false, nullsFirst:false})
         .order("created_at",{ascending:false})
         .limit(80);
 
@@ -462,14 +525,21 @@
       }
 
       __insightsAll = data || [];
+      updateSourceOptions(__insightsAll);
       renderInsights();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+      // Source filter UI
+      const sel = document.getElementById("sourceFilter");
+      if(sel){
+        sel.addEventListener("change", () => setSourceFilter(sel.value));
+      }
+
       loadRates();
       loadInsights();
 
-      // ✅ realtime (all pages standard)
+      // ✅ realtime for insights + rates
       if(window.LARMAH && LARMAH.realtime){
         LARMAH.realtime.subscribe("insights", () => loadInsights(), "in-insights", { debounceMs: 700, statusElId: "liveStateIN" });
         LARMAH.realtime.subscribe("rates", () => loadRates(), "in-rates", { debounceMs: 700 });
