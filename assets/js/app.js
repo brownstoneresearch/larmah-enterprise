@@ -1,14 +1,23 @@
 /**
- * LARMAH ENTERPRISE | assets/js/app.js (UPGRADED — FULL)
+ * LARMAH ENTERPRISE | assets/js/app.js (COMPLETE — UPDATED)
  * ✅ Supabase client singleton (window.supabaseClient + LARMAH.supabase)
  * ✅ WhatsApp builder + request logging
- * ✅ Auth UI helper
+ * ✅ Auth helpers + role-based redirect:
+ *    - Admin (profiles.role='admin' AND email matches ADMIN_EMAIL) => admin.html
+ *    - Non-admin => dashboard.html
  * ✅ Realtime subscribe/unsubscribe (filter/match supported)
- * ✅ Edge function helper (for RSS sync)
+ * ✅ Edge function helper (rss-sync)
+ *
+ * NOTE:
+ * - You MUST have RPC: public.is_admin() and profile.role set correctly.
+ * - Also run: GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated, anon;
  */
 
 (() => {
   "use strict";
+
+  // ---------- CONFIG ----------
+  const ADMIN_EMAIL = "luckymomodu60@gmail.com";
 
   window.SUPABASE_URL =
     window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
@@ -20,11 +29,14 @@
   const now = () => Date.now();
   const rand = (len = 10) => Math.random().toString(36).slice(2, 2 + len).toUpperCase();
 
+  // ---------- SUPABASE SINGLETON ----------
   function ensureSupabaseClient() {
     if (window.supabaseClient) return window.supabaseClient;
 
     if (!window.supabase || typeof window.supabase.createClient !== "function") {
-      console.error("Supabase library missing. Ensure the CDN script loads before app.js.");
+      console.error(
+        "Supabase library missing. Ensure <script src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'></script> loads before app.js."
+      );
       return null;
     }
 
@@ -38,6 +50,7 @@
 
   window.ensureSupabaseClient = window.ensureSupabaseClient || ensureSupabaseClient;
 
+  // ---------- GLOBAL LARMAH ----------
   const LARMAH = (window.LARMAH = window.LARMAH || {});
   LARMAH.businessPhone = LARMAH.businessPhone || "2347063080605";
 
@@ -51,7 +64,7 @@
 
   LARMAH.__toastTimer = LARMAH.__toastTimer || null;
   LARMAH.__sessionCacheTs = LARMAH.__sessionCacheTs || 0;
-  LARMAH.__sessionCacheTtlMs = LARMAH.__sessionCacheTtlMs || 12000;
+  LARMAH.__sessionCacheTtlMs = LARMAH.__sessionCacheTtlMs || 12_000;
 
   LARMAH.sb = function () { return ensureSupabaseClient(); };
 
@@ -83,7 +96,9 @@
   LARMAH.openWhatsApp = function (text) {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     const baseUrl = isMobile ? "https://api.whatsapp.com/send" : "https://web.whatsapp.com/send";
-    const url = `${baseUrl}?phone=${encodeURIComponent(LARMAH.businessPhone)}&text=${encodeURIComponent(String(text || ""))}`;
+    const url = `${baseUrl}?phone=${encodeURIComponent(LARMAH.businessPhone)}&text=${encodeURIComponent(
+      String(text || "")
+    )}`;
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -105,7 +120,7 @@
     return msg;
   };
 
-  // ---------- AUTH ----------
+  // ---------- AUTH / ROLE HELPERS ----------
   LARMAH.getSession = async function ({ force = false } = {}) {
     const sb = LARMAH.sb();
     if (!sb) return null;
@@ -130,12 +145,95 @@
     }
   };
 
+  /**
+   * ✅ Checks admin using BOTH:
+   *  - RPC is_admin() (DB role)
+   *  - email must match ADMIN_EMAIL (your requirement)
+   */
+  LARMAH.isAdmin = async function () {
+    const sb = LARMAH.sb();
+    if (!sb) return false;
+
+    await LARMAH.getSession();
+    const email = (LARMAH.user?.email || "").toLowerCase();
+    if (!email) return false;
+
+    // Email must match
+    if (email !== String(ADMIN_EMAIL).toLowerCase()) return false;
+
+    // Role must match via RPC
+    try {
+      const { data, error } = await sb.rpc("is_admin");
+      if (error) {
+        console.warn("is_admin rpc error:", error.message);
+        return false;
+      }
+      return !!data;
+    } catch (e) {
+      console.warn("is_admin rpc exception:", e);
+      return false;
+    }
+  };
+
+  /**
+   * ✅ Universal redirect after sign-in
+   * - admin => admin.html
+   * - non-admin => dashboard.html
+   */
+  LARMAH.redirectAfterLogin = async function ({
+    adminUrl = "admin.html",
+    userUrl = "dashboard.html",
+    fallbackUrl = "auth.html"
+  } = {}) {
+    try {
+      const sb = LARMAH.sb();
+      if (!sb) {
+        window.location.href = fallbackUrl;
+        return;
+      }
+      await LARMAH.getSession({ force: true });
+      if (!LARMAH.session) {
+        window.location.href = fallbackUrl;
+        return;
+      }
+      const admin = await LARMAH.isAdmin();
+      window.location.href = admin ? adminUrl : userUrl;
+    } catch (e) {
+      console.warn("redirectAfterLogin:", e);
+      window.location.href = fallbackUrl;
+    }
+  };
+
   LARMAH.updateHeaderAuthUI = async function () {
     const el = document.querySelector(".header-actions");
     if (!el) return;
     const session = await LARMAH.getSession();
     el.style.display = session ? "flex" : "none";
   };
+
+  LARMAH.signOut = async function (redirect = "auth.html") {
+    const sb = LARMAH.sb();
+    if (!sb) return;
+    try { await sb.auth.signOut(); } catch (e) { console.warn("signOut:", e); }
+    LARMAH.user = null;
+    LARMAH.session = null;
+    LARMAH.__sessionCacheTs = now();
+    if (LARMAH.realtime) LARMAH.realtime.unsubscribeAll();
+    if (redirect) window.location.href = redirect;
+  };
+
+  // Keep state fresh
+  function initAuthListener() {
+    const sb = LARMAH.sb();
+    if (!sb || !sb.auth || typeof sb.auth.onAuthStateChange !== "function") return;
+
+    sb.auth.onAuthStateChange((_event, session) => {
+      LARMAH.session = session || null;
+      LARMAH.user = session?.user || null;
+      LARMAH.__sessionCacheTs = now();
+      try { LARMAH.updateHeaderAuthUI(); } catch {}
+    });
+  }
 
   // ---------- REQUEST LOGGING ----------
   LARMAH.logRequest = async function (category, payload, status = "new") {
@@ -254,18 +352,13 @@
   };
 
   // ---------- BOOT ----------
-  document.addEventListener("DOMContentLoaded", () => {
-    ensureSupabaseClient();
-
-    const yearEl = document.getElementById("year");
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
-
+  function initOverlayClose() {
     const overlay = document.getElementById("mobileNavOverlay");
-    if (overlay) {
-      overlay.addEventListener("click", (e) => {
-        if (e.target === overlay) LARMAH.toggleMenu(false);
-      });
-    }
+    if (!overlay) return;
+
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) LARMAH.toggleMenu(false);
+    });
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
@@ -273,7 +366,16 @@
         if (isOpen) LARMAH.toggleMenu(false);
       }
     });
+  }
 
-    if (typeof LARMAH.updateHeaderAuthUI === "function") LARMAH.updateHeaderAuthUI();
+  document.addEventListener("DOMContentLoaded", () => {
+    ensureSupabaseClient();
+    initAuthListener();
+    initOverlayClose();
+
+    const yearEl = document.getElementById("year");
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+    try { LARMAH.updateHeaderAuthUI(); } catch {}
   });
 })();
