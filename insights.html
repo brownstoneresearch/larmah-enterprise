@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  
+
   <title>Insights | Larmah Enterprise</title>
   <meta name="description" content="Live market intelligence, FX rates, real estate trends, and logistics updates for the Nigerian market." />
   <meta name="keywords" content="Nigeria FX Rates, Lagos Real Estate News, Logistics Trends Nigeria, Crypto Rates Nigeria, Larmah Insights" />
@@ -31,26 +31,74 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    .market-board {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 12px; margin-bottom: 40px;
+    /* Market board */
+    .market-board{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 26px;
     }
-    .ticker-card {
+    .ticker-card{
       background: rgba(255,255,255,0.03);
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 16px;
-      text-align: center;
-      transition: transform 0.2s;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+      text-align:center;
+      transition: transform .2s;
     }
-    .ticker-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.15); }
-    .ticker-pair { font-size: 0.8rem; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
-    .ticker-val { font-size: 1.25rem; font-weight: 800; color: var(--text); }
-    .ticker-change { font-size: 0.8rem; margin-top: 4px; font-weight: 700; }
-    .up { color: var(--ok); }
-    .down { color: var(--bad); }
+    .ticker-card:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,0.14); }
+    .ticker-pair{ font-size: 0.8rem; color: var(--muted); font-weight: 900; margin-bottom: 6px; }
+    .ticker-val{ font-size: 1.25rem; font-weight: 950; color: var(--text); }
+    .ticker-sub{ font-size:.8rem; color: var(--muted); opacity:.9; margin-top:6px; }
+    .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
+    .live-dot i { font-size: 8px; }
 
-    .blog-date { font-size: 0.8rem; color: var(--accent); font-weight: 800; margin-bottom: 6px; display: block; }
+    /* Insight cards */
+    .blog-date { font-size: 0.8rem; color: var(--accent); font-weight: 900; margin-bottom: 6px; display: block; }
     .blog-snip { color: var(--muted); font-size: 0.95rem; margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+    /* Card media slider */
+    .card-media{
+      width:100%; height:180px; border-radius:14px; overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.2);
+      margin-bottom: 12px;
+      position: relative;
+      user-select:none;
+    }
+    .card-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .media-nav{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 10px;
+      pointer-events:none;
+    }
+    .media-btn{
+      width:34px; height:34px; border-radius:12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.10);
+      display:grid; place-items:center;
+      color:#fff;
+      pointer-events:auto;
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+    }
+    .media-btn:hover{ background: rgba(0,0,0,0.55); }
+    .media-dots{
+      position:absolute; left:0; right:0; bottom:10px;
+      display:flex; justify-content:center; gap:6px;
+      pointer-events:none;
+    }
+    .media-dot{
+      width:7px; height:7px; border-radius:999px;
+      background: rgba(255,255,255,0.35);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .media-dot.active{ background: rgba(255,255,255,0.9); }
+
+    /* Skeleton */
+    .sk-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; }
+    .sk-card{ height:210px; border-radius:16px; background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); opacity:.6; }
   </style>
 </head>
 
@@ -60,36 +108,36 @@
     <div class="msheet">
       <div class="msheet-head">
         <div class="msheet-brand">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
+          <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
         </div>
         <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
-            <i class="fa-solid fa-xmark"></i>
+          <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
       <div class="msheet-body">
         <div class="msheet-links">
-            <a href="real-estate.html" class="msheet-link">
-                <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="logistics.html" class="msheet-link">
-                <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="insights.html" class="msheet-link active">
-                <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
-                <i class="fa-solid fa-check" style="font-size:12px;"></i>
-            </a>
-            <a href="exchange.html" class="msheet-link">
-                <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
+          <a href="real-estate.html" class="msheet-link">
+            <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
+          <a href="logistics.html" class="msheet-link">
+            <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
+          <a href="insights.html" class="msheet-link active">
+            <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
+            <i class="fa-solid fa-check" style="font-size:12px;"></i>
+          </a>
+          <a href="exchange.html" class="msheet-link">
+            <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
         </div>
         <div class="msheet-footer">
-            <div class="msheet-hint">Menu</div>
-            <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-                <span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span>
-            </a>
+          <div class="msheet-hint">Menu</div>
+          <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
+            <span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span>
+          </a>
         </div>
       </div>
     </div>
@@ -124,33 +172,36 @@
             <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-chart-column"></i> Market Intelligence</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Data-Driven Commerce</span>
+              <span class="kicker-sub">Supabase Live Updates</span>
             </div>
 
             <h1>Stay Ahead of the Market.</h1>
             <p class="lead">
-              Verified updates on Real Estate trends, Logistics shifts, and Exchange context —
-              curated for Nigeria.
+              Verified updates on Real Estate trends, Logistics shifts, and live Exchange rates — updated from Admin in real-time.
             </p>
 
             <div class="actions">
               <a class="btn solid" href="#news"><i class="fa-regular fa-newspaper"></i> Latest News</a>
-              <button class="btn primary" onclick="subscribeInsights()">
-                <i class="fa-brands fa-whatsapp"></i> Get Daily Updates
+              <button class="btn primary" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Subscribe Insights', { Name:'' }))">
+                <i class="fa-brands fa-whatsapp"></i> Get Updates
               </button>
+            </div>
+
+            <div class="small live-dot" id="liveStateIN" style="margin-top:12px;opacity:.9">
+              <i class="fa-solid fa-circle fa-beat"></i> Live updates enabled
             </div>
           </div>
 
           <div class="hero-badges" style="align-content:center">
             <div class="hero-card" style="background:rgba(0,0,0,0.4)">
-              <div style="font-size:.8rem;color:var(--muted)">USD/NGN (Ref)</div>
-              <div style="font-size:1.5rem;font-weight:800;margin:4px 0" id="refUsd">₦—</div>
-              <div style="font-size:.85rem;color:var(--ok)">Desk Reference</div>
+              <div style="font-size:.8rem;color:var(--muted)">Rates Board</div>
+              <div style="font-size:1.5rem;font-weight:950;margin:4px 0" id="heroRateMain">—</div>
+              <div style="font-size:.85rem;color:var(--ok)">Live from Admin</div>
             </div>
             <div class="hero-card" style="background:rgba(0,0,0,0.4)">
-              <div style="font-size:.8rem;color:var(--muted)">USDT/NGN (Ref)</div>
-              <div style="font-size:1.5rem;font-weight:800;margin:4px 0" id="refUsdt">₦—</div>
-              <div style="font-size:.85rem;color:var(--ok)">Desk Reference</div>
+              <div style="font-size:.8rem;color:var(--muted)">Insights Feed</div>
+              <div style="font-size:1.5rem;font-weight:950;margin:4px 0" id="heroInsightCount">—</div>
+              <div style="font-size:.85rem;color:var(--ok)">Active posts</div>
             </div>
           </div>
         </div>
@@ -159,15 +210,18 @@
 
     <section class="section">
       <div class="section-head-split">
-        <h2>Live Market Board</h2>
+        <div>
+          <h2>Live Market Board</h2>
+          <p class="lead">Rates pulled from the <code>rates</code> table.</p>
+        </div>
         <a class="mini-link small" href="exchange.html">Trade Now →</a>
       </div>
 
-      <div class="market-board" id="marketBoard">
-        <div class="ticker-card"><div class="ticker-pair">USD / NGN</div><div class="ticker-val">—</div><div class="ticker-change up">Live Desk</div></div>
-        <div class="ticker-card"><div class="ticker-pair">GBP / NGN</div><div class="ticker-val">—</div><div class="ticker-change up">Live Desk</div></div>
-        <div class="ticker-card"><div class="ticker-pair">USDT / NGN</div><div class="ticker-val">—</div><div class="ticker-change up">Live Desk</div></div>
-        <div class="ticker-card"><div class="ticker-pair">BTC / USD</div><div class="ticker-val">—</div><div class="ticker-change up">Reference</div></div>
+      <div id="marketBoard" class="market-board">
+        <div class="ticker-card"><div class="ticker-pair">USD/NGN</div><div class="ticker-val">—</div><div class="ticker-sub">Buy/Sell</div></div>
+        <div class="ticker-card"><div class="ticker-pair">GBP/NGN</div><div class="ticker-val">—</div><div class="ticker-sub">Buy/Sell</div></div>
+        <div class="ticker-card"><div class="ticker-pair">USDT/NGN</div><div class="ticker-val">—</div><div class="ticker-sub">Buy/Sell</div></div>
+        <div class="ticker-card"><div class="ticker-pair">EUR/NGN</div><div class="ticker-val">—</div><div class="ticker-sub">Buy/Sell</div></div>
       </div>
     </section>
 
@@ -175,21 +229,19 @@
       <div class="section-head-split">
         <div>
           <h2>Latest Insights</h2>
-          <p class="lead">Curated updates from the Larmah desk.</p>
+          <p class="lead">Curated updates from the Larmah desk (pulled from <code>insights</code> table).</p>
         </div>
         <div class="pillbar">
-            <button class="btn small" onclick="filterNews('all')">All</button>
-            <button class="btn small" onclick="filterNews('real-estate')">Property</button>
-            <button class="btn small" onclick="filterNews('logistics')">Logistics</button>
-            <button class="btn small" onclick="filterNews('exchange')">Exchange</button>
+          <button class="btn small" onclick="setInsightFilter('all')">All</button>
+          <button class="btn small" onclick="setInsightFilter('real-estate')">Property</button>
+          <button class="btn small" onclick="setInsightFilter('logistics')">Logistics</button>
+          <button class="btn small" onclick="setInsightFilter('exchange')">Exchange</button>
         </div>
       </div>
 
       <div id="newsMount">
-        <div class="grid">
-            <div class="card" style="height:200px;opacity:0.5"></div>
-            <div class="card" style="height:200px;opacity:0.5"></div>
-            <div class="card" style="height:200px;opacity:0.5"></div>
+        <div class="sk-grid">
+          <div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div>
         </div>
       </div>
     </section>
@@ -200,7 +252,7 @@
           <h2 style="margin:0">Don't miss a beat.</h2>
           <p class="lead" style="margin:6px 0 0">Join the Larmah Executive Broadcast list on WhatsApp.</p>
         </div>
-        <button class="btn solid" onclick="subscribeInsights()">
+        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Join Broadcast List', { Name:'' }))">
           <i class="fa-brands fa-whatsapp"></i> Subscribe Free
         </button>
       </div>
@@ -247,7 +299,7 @@
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
 
           <div class="actions" style="margin-top:12px">
-            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))">
+            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
             </button>
           </div>
@@ -265,174 +317,226 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-    let __NEWS_ITEMS = [];
+    const sbClient = () => window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
 
-    // fallback content (so page never looks empty)
-    const MOCK_NEWS = [
-      { id: "m1", title: "Lekki Shortlet Demand: Holiday Uptick", category: "real-estate", date: "2025-12-18", summary: "Higher shortlet demand along Lekki/VI driven by seasonal travel.", image: null },
-      { id: "m2", title: "Mainland Routes: Dispatch Delays Rising", category: "logistics", date: "2025-12-15", summary: "Some routes show increased delays. Premium concierge dispatch remains available.", image: null },
-      { id: "m3", title: "FX Watch: NGN Spread Trends", category: "exchange", date: "2025-12-10", summary: "A desk summary of spreads and what to watch going into Q1.", image: null }
-    ];
+    let __insightsAll = [];
+    let __insightsFilter = "all";
 
-    // Fallback desk rates (if no rates table)
-    const RATES = {
-      USD: { sell: 1645 },
-      GBP: { sell: 2160 },
-      USDT: { sell: 1650 },
-      BTC: { sell: 102500 }
-    };
+    // slider state per insight
+    const __IN_IMG_URLS = {};
+    const __IN_IMG_IDX = {};
 
-    async function loadRates(){
-      try {
-        const sb = window.supabaseClient;
-        if(!sb) throw new Error("supabaseClient not ready");
+    let __insChannel = null;
+    let __deb = null;
+    const debounce = (fn, ms=700)=>{ clearTimeout(__deb); __deb=setTimeout(fn, ms); };
 
-        // optional table "rates": asset, buy, sell, status
-        const { data, error } = await sb
-          .from("rates")
-          .select("*")
-          .eq("status", "active");
-
-        if(error) throw error;
-
-        (data || []).forEach(r => {
-          const a = String(r.asset || r.symbol || "").toUpperCase();
-          if(!a) return;
-          RATES[a] = { sell: Number(r.sell ?? RATES[a]?.sell ?? 0) };
-        });
-      } catch(e){
-        // fallback stays
-        console.warn("Rates load fallback:", e?.message || e);
-      }
-
-      // update hero ref
-      document.getElementById("refUsd").textContent = "₦" + (Number(RATES.USD.sell)||0).toLocaleString();
-      document.getElementById("refUsdt").textContent = "₦" + (Number(RATES.USDT.sell)||0).toLocaleString();
-
-      // update board
-      const board = document.getElementById("marketBoard");
-      board.innerHTML = `
-        <div class="ticker-card">
-          <div class="ticker-pair">USD / NGN</div>
-          <div class="ticker-val">${Number(RATES.USD.sell||0).toLocaleString()}</div>
-          <div class="ticker-change up">Live Desk</div>
-        </div>
-        <div class="ticker-card">
-          <div class="ticker-pair">GBP / NGN</div>
-          <div class="ticker-val">${Number(RATES.GBP.sell||0).toLocaleString()}</div>
-          <div class="ticker-change up">Live Desk</div>
-        </div>
-        <div class="ticker-card">
-          <div class="ticker-pair">USDT / NGN</div>
-          <div class="ticker-val">${Number(RATES.USDT.sell||0).toLocaleString()}</div>
-          <div class="ticker-change up">Live Desk</div>
-        </div>
-        <div class="ticker-card">
-          <div class="ticker-pair">BTC / USD</div>
-          <div class="ticker-val">$${Number(RATES.BTC.sell||0).toLocaleString()}</div>
-          <div class="ticker-change up">Reference</div>
-        </div>
-      `;
+    function getInsightImages(it){
+      const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
+      if(arr.length) return arr.slice(0,3);
+      if(it.image_url) return [it.image_url];
+      return [];
     }
 
-    async function loadNews(){
-      try {
-        const sb = window.supabaseClient;
-        if(!sb) throw new Error("supabaseClient not ready");
-
-        // optional table "insights": id, title, category, summary, image_url, status, created_at
-        const { data, error } = await sb
-          .from("insights")
-          .select("*")
-          .eq("status", "active")
-          .order("created_at", { ascending: false })
-          .limit(12);
-
-        if(error) throw error;
-
-        __NEWS_ITEMS = (data || []).map(it => ({
-          id: it.id,
-          title: it.title,
-          category: it.category || "all",
-          date: (it.created_at ? new Date(it.created_at).toISOString().slice(0,10) : ""),
-          summary: it.summary || it.snippet || "",
-          image: it.image_url || null
-        }));
-
-        if(!__NEWS_ITEMS.length) __NEWS_ITEMS = MOCK_NEWS;
-      } catch(e){
-        console.warn("Insights load fallback:", e?.message || e);
-        __NEWS_ITEMS = MOCK_NEWS;
-      }
-
-      renderNews(__NEWS_ITEMS);
+    function initInsightImages(it){
+      const id = String(it.id);
+      __IN_IMG_URLS[id] = getInsightImages(it);
+      __IN_IMG_IDX[id] = 0;
     }
 
-    function renderNews(items){
+    function setInsightImage(id){
+      const img = document.getElementById(`in-img-${id}`);
+      if(!img) return;
+      const urls = __IN_IMG_URLS[id] || [];
+      const idx = __IN_IMG_IDX[id] || 0;
+      img.src = urls[idx] || "";
+      const dotsWrap = document.getElementById(`in-dots-${id}`);
+      if(dotsWrap){
+        dotsWrap.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
+      }
+    }
+
+    function cycleInsightImage(id, dir){
+      const urls = __IN_IMG_URLS[id] || [];
+      if(urls.length <= 1) return;
+      const max = urls.length;
+      const cur = __IN_IMG_IDX[id] || 0;
+      __IN_IMG_IDX[id] = (cur + dir + max) % max;
+      setInsightImage(id);
+    }
+
+    function setInsightFilter(cat){
+      __insightsFilter = cat;
+      renderInsights();
+    }
+
+    function renderInsights(){
       const mount = document.getElementById("newsMount");
+      const items = (__insightsAll||[]).filter(it => {
+        if(__insightsFilter === "all") return true;
+        return String(it.category||"all") === __insightsFilter;
+      });
+
+      document.getElementById("heroInsightCount").textContent = String((__insightsAll||[]).length);
+
       if(!items.length){
-        mount.innerHTML = `<div class="notice">No updates available.</div>`;
+        mount.innerHTML = `<div class="notice">No updates yet for this category.</div>`;
         return;
       }
 
       mount.innerHTML = `
         <div class="grid">
-          ${items.map(it => `
-            <div class="card">
-              ${it.image ? `<img src="${it.image}" style="width:100%;height:160px;object-fit:cover;border-radius:12px;margin-bottom:12px" onerror="this.remove()">` : ""}
-              <span class="blog-date">${LARMAH.escapeHtml(it.date)} • ${LARMAH.escapeHtml(String(it.category).toUpperCase())}</span>
-              <h3 style="font-size:1.1rem">${LARMAH.escapeHtml(it.title)}</h3>
-              <div class="blog-snip">${LARMAH.escapeHtml(it.summary)}</div>
-              <div class="actions" style="margin-top:12px">
-                <button class="btn small" onclick="discussInsight('${it.id}')">Discuss on WhatsApp</button>
+          ${items.map(it => {
+            const id = String(it.id);
+            initInsightImages(it);
+            const urls = __IN_IMG_URLS[id];
+            const hasMany = urls.length > 1;
+            const hasImg = urls.length > 0;
+
+            return `
+              <div class="card">
+                ${hasImg ? `
+                  <div class="card-media">
+                    <img id="in-img-${id}" src="${LARMAH.escapeHtml(urls[0])}" alt="${LARMAH.escapeHtml(it.title)}"
+                         loading="lazy" onerror="this.style.display='none'">
+
+                    ${hasMany ? `
+                      <div class="media-nav">
+                        <button class="media-btn" type="button" aria-label="Prev image" onclick="cycleInsightImage('${id}', -1)">
+                          <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <button class="media-btn" type="button" aria-label="Next image" onclick="cycleInsightImage('${id}', 1)">
+                          <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                      </div>
+                      <div class="media-dots" id="in-dots-${id}">
+                        ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
+                      </div>
+                    ` : ``}
+                  </div>
+                ` : ``}
+
+                <span class="blog-date">${new Date(it.created_at).toLocaleDateString()} • ${(it.category||"all").toUpperCase()}</span>
+                <h3 style="font-size:1.1rem">${LARMAH.escapeHtml(it.title)}</h3>
+                <div class="blog-snip">${LARMAH.escapeHtml(it.summary || "")}</div>
+
+                <div class="actions" style="margin-top:12px">
+                  <button class="btn small" onclick="openInsightChat('${id}')">Discuss</button>
+                </div>
               </div>
-            </div>
-          `).join("")}
+            `;
+          }).join("")}
         </div>
       `;
     }
 
-    function filterNews(cat){
-      if(cat === "all") return renderNews(__NEWS_ITEMS);
-      renderNews(__NEWS_ITEMS.filter(x => x.category === cat));
-    }
-
-    async function discussInsight(id){
-      const it = __NEWS_ITEMS.find(x => String(x.id) === String(id));
+    function openInsightChat(id){
+      const it = (__insightsAll||[]).find(x => String(x.id) === String(id));
       if(!it) return;
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Insight Discussion", {
+        Topic: it.title,
+        Category: it.category || "all",
+        Ref: "INS-" + id,
+        Message: "I'd like to know more about this update."
+      }));
+    }
 
-      if(LARMAH.submitRequest){
-        await LARMAH.submitRequest({
-          header: "Insight Discussion",
-          category: "insights",
-          fields: {
-            Topic: it.title,
-            Category: it.category,
-            Message: "Hi Larmah, I'd like more details on this update."
-          }
-        });
-      } else {
-        LARMAH.openWhatsApp(LARMAH.buildMessage("Insight Discussion", { Topic: it.title, Category: it.category }));
+    async function loadInsights(){
+      const sb = sbClient();
+      const mount = document.getElementById("newsMount");
+      if(!sb){
+        mount.innerHTML = `<div class="notice">Supabase not ready.</div>`;
+        return;
+      }
+
+      try{
+        const { data, error } = await sb
+          .from("insights")
+          .select("*")
+          .eq("status","active")
+          .order("created_at",{ascending:false})
+          .limit(60);
+
+        if(error) throw error;
+
+        __insightsAll = data || [];
+        renderInsights();
+      }catch(e){
+        console.error(e);
+        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)">
+          <strong>Could not load insights.</strong>
+        </div>`;
       }
     }
 
-    async function subscribeInsights(){
-      if(LARMAH.submitRequest){
-        await LARMAH.submitRequest({
-          header: "Subscribe Insights",
-          category: "insights",
-          fields: { Name:"", Phone:"", Request:"Please add me to daily updates." }
-        });
-      } else {
-        LARMAH.openWhatsApp(LARMAH.buildMessage("Subscribe Insights", { Request:"Please add me to daily updates." }));
+    async function loadRates(){
+      const sb = sbClient();
+      const board = document.getElementById("marketBoard");
+      if(!sb || !board) return;
+
+      try{
+        const { data, error } = await sb
+          .from("rates")
+          .select("asset,buy,sell,status,updated_at")
+          .eq("status","active")
+          .order("asset",{ascending:true});
+
+        if(error) throw error;
+
+        const wanted = ["USD","GBP","USDT","EUR"];
+        const map = {};
+        (data||[]).forEach(r => { map[String(r.asset||"").toUpperCase()] = r; });
+
+        const cards = wanted.map(asset => {
+          const r = map[asset] || null;
+          const buy = r?.buy ?? null;
+          const sell = r?.sell ?? null;
+          const val = (buy!==null && sell!==null) ? `${Number(buy).toLocaleString()} / ${Number(sell).toLocaleString()}` : "—";
+          return `
+            <div class="ticker-card">
+              <div class="ticker-pair">${asset} / NGN</div>
+              <div class="ticker-val">${val}</div>
+              <div class="ticker-sub">Buy / Sell</div>
+            </div>
+          `;
+        }).join("");
+
+        board.innerHTML = cards;
+
+        // hero main rate (USD)
+        const usd = map["USD"];
+        document.getElementById("heroRateMain").textContent = usd ? `₦${Number(usd.sell||0).toLocaleString()} / $` : "—";
+      }catch(e){
+        console.error(e);
       }
     }
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      await loadRates();
-      await loadNews();
+    function initRealtime(){
+      const sb = sbClient();
+      if(!sb) return;
+
+      if(__insChannel){
+        try{ sb.removeChannel(__insChannel); }catch{}
+        __insChannel = null;
+      }
+
+      __insChannel = sb
+        .channel("realtime-insights-page")
+        .on("postgres_changes", { event:"*", schema:"public", table:"insights" }, () => debounce(loadInsights, 700))
+        .on("postgres_changes", { event:"*", schema:"public", table:"rates" }, () => debounce(loadRates, 700))
+        .subscribe((status) => {
+          const el = document.getElementById("liveStateIN");
+          if(!el) return;
+          if(status === "SUBSCRIBED") el.innerHTML = `<i class="fa-solid fa-circle fa-beat"></i> Live updates enabled`;
+          else el.innerHTML = `<i class="fa-solid fa-circle"></i> Live: ${status}`;
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadRates();
+      loadInsights();
+      initRealtime();
     });
   </script>
 </body>
