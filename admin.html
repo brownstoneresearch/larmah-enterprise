@@ -11,7 +11,7 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- ✅ Fallback: create supabaseClient even if app.js fails -->
+  <!-- ✅ Fallback client -->
   <script>
     window.SUPABASE_URL = window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
     window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
@@ -24,7 +24,6 @@
     window.ensureSupabaseClient();
   </script>
 
-  <!-- Your global app.js (still loaded) -->
   <script defer src="assets/js/app.js"></script>
 
   <style>
@@ -63,18 +62,15 @@
     @media(max-width:720px){.row2{grid-template-columns:1fr}}
     .notice-admin{padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--muted)}
     .status-select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:8px 10px;font-weight:900;cursor:pointer}
-    .mini-preview{margin-top:10px;border:1px solid rgba(255,255,255,.10);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.03)}
-    .mini-preview img{width:100%;height:160px;object-fit:cover;display:block}
-    .mini-preview .cap{padding:10px 12px;font-size:.85rem;color:var(--muted);display:flex;justify-content:space-between;gap:10px;align-items:center}
     .img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
     @media(max-width:720px){.img-grid{grid-template-columns:1fr}}
     .img-slot{border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:12px;background:rgba(255,255,255,.03)}
     .img-slot .slot-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:10px}
-    .img-slot .slot-head b{font-size:.85rem}
     .img-slot .slot-preview{width:100%;height:140px;border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
     .img-slot .slot-preview img{width:100%;height:100%;object-fit:cover;display:block}
     .img-slot .slot-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
     .tiny{font-size:.78rem;opacity:.75}
+    .saving{opacity:.7;pointer-events:none}
     @media(max-width:900px){.admin-layout{grid-template-columns:1fr}.admin-sidebar{display:none}}
   </style>
 </head>
@@ -156,7 +152,7 @@
           </div>
 
           <div class="notice-admin">
-            ✅ Manage Listings, Rates, and Insights (Add / Edit / Save / Delete). Upload up to <b>3 images</b> per Listing/Insight via Supabase Storage bucket <code>larmah-media</code>.
+            ✅ Save button is responsive and will store data on Supabase. Upload up to <b>3 images</b> per Listing/Insight to Storage bucket <code>larmah-media</code>.
           </div>
         </div>
 
@@ -168,9 +164,7 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead>
-                <tr><th width="70">Img</th><th>Title</th><th>Price</th><th>Status</th><th width="120">Actions</th></tr>
-              </thead>
+              <thead><tr><th width="70">Img</th><th>Title</th><th>Price</th><th>Status</th><th width="160">Actions</th></tr></thead>
               <tbody id="tbody-real-estate"></tbody>
             </table>
           </div>
@@ -184,9 +178,7 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead>
-                <tr><th width="70">Img</th><th>Title</th><th>Rate</th><th>Status</th><th width="120">Actions</th></tr>
-              </thead>
+              <thead><tr><th width="70">Img</th><th>Title</th><th>Rate</th><th>Status</th><th width="160">Actions</th></tr></thead>
               <tbody id="tbody-logistics"></tbody>
             </table>
           </div>
@@ -200,9 +192,7 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead>
-                <tr><th>Asset</th><th>Buy</th><th>Sell</th><th>Status</th><th width="120">Actions</th></tr>
-              </thead>
+              <thead><tr><th>Asset</th><th>Buy</th><th>Sell</th><th>Status</th><th width="120">Actions</th></tr></thead>
               <tbody id="tbody-rates"></tbody>
             </table>
           </div>
@@ -216,9 +206,7 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead>
-                <tr><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th width="120">Actions</th></tr>
-              </thead>
+              <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th width="160">Actions</th></tr></thead>
               <tbody id="tbody-insights"></tbody>
             </table>
           </div>
@@ -232,9 +220,7 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead>
-                <tr><th>Category</th><th>Created</th><th>Status</th><th width="170">Update Status</th><th width="70">View</th></tr>
-              </thead>
+              <thead><tr><th>Category</th><th>Created</th><th>Status</th><th width="170">Update Status</th><th width="70">View</th></tr></thead>
               <tbody id="tbody-requests"></tbody>
             </table>
           </div>
@@ -248,9 +234,7 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead>
-                <tr><th>Email / ID</th><th>Full Name</th><th>Joined</th><th>Status</th></tr>
-              </thead>
+              <thead><tr><th>Email / ID</th><th>Full Name</th><th>Joined</th><th>Status</th></tr></thead>
               <tbody id="tbody-users"></tbody>
             </table>
           </div>
@@ -259,6 +243,9 @@
       </main>
     </div>
   </div>
+
+  <!-- Quick upload (table editor) -->
+  <input id="quickUploadInput" type="file" accept="image/*" style="display:none">
 
   <!-- EDITOR MODAL -->
   <div id="editorModal" class="modal">
@@ -269,21 +256,21 @@
       </div>
 
       <form id="editorForm">
-        <input type="hidden" id="edit_entity" />
-        <input type="hidden" id="edit_id" />
-        <input type="hidden" id="edit_category" />
+        <input type="hidden" id="edit_entity">
+        <input type="hidden" id="edit_id">
+        <input type="hidden" id="edit_category">
 
         <!-- LISTING -->
         <div id="fields-listing" style="display:none">
           <div class="form-group">
             <label class="form-label">Title</label>
-            <input type="text" id="listing_title" class="input" required />
+            <input type="text" id="listing_title" class="input" required>
           </div>
 
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Price / Rate</label>
-              <input type="text" id="listing_price" class="input" />
+              <input type="text" id="listing_price" class="input">
             </div>
             <div class="form-group">
               <label class="form-label">Status</label>
@@ -302,48 +289,33 @@
 
           <div class="form-group">
             <label class="form-label">Tags (comma separated)</label>
-            <input type="text" id="listing_tags" class="input" placeholder="lekki, shortlet, vi" />
+            <input type="text" id="listing_tags" class="input" placeholder="lekki, shortlet, vi">
           </div>
 
           <div class="form-group">
-            <label class="form-label">Images (1–3) via Supabase Storage</label>
-            <div class="tiny">Uploads go to bucket <b>larmah-media</b>. We set the first image as <code>image_url</code> for the website, and store all as <code>image_urls</code> if that column exists.</div>
+            <label class="form-label">Images (1–3)</label>
+            <div class="tiny">Upload or paste URLs. First image becomes the main catalogue image.</div>
+
             <div class="img-grid" style="margin-top:10px">
-              <!-- slot 1 -->
               <div class="img-slot">
-                <div class="slot-head">
-                  <b>Image 1 (Main)</b>
-                  <button type="button" class="btn small" onclick="clearSlot('listing',1)">Clear</button>
-                </div>
+                <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('listing',1)">Clear</button></div>
                 <input type="file" id="listing_file_1" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_1" src="" alt=""></div>
-                <div class="slot-actions">
-                  <input type="text" id="listing_url_1" class="input" placeholder="or paste URL (optional)">
-                </div>
+                <div class="slot-actions"><input type="text" id="listing_url_1" class="input" placeholder="or paste URL"></div>
               </div>
-              <!-- slot 2 -->
+
               <div class="img-slot">
-                <div class="slot-head">
-                  <b>Image 2</b>
-                  <button type="button" class="btn small" onclick="clearSlot('listing',2)">Clear</button>
-                </div>
+                <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('listing',2)">Clear</button></div>
                 <input type="file" id="listing_file_2" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_2" src="" alt=""></div>
-                <div class="slot-actions">
-                  <input type="text" id="listing_url_2" class="input" placeholder="or paste URL (optional)">
-                </div>
+                <div class="slot-actions"><input type="text" id="listing_url_2" class="input" placeholder="or paste URL"></div>
               </div>
-              <!-- slot 3 -->
+
               <div class="img-slot">
-                <div class="slot-head">
-                  <b>Image 3</b>
-                  <button type="button" class="btn small" onclick="clearSlot('listing',3)">Clear</button>
-                </div>
+                <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('listing',3)">Clear</button></div>
                 <input type="file" id="listing_file_3" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_3" src="" alt=""></div>
-                <div class="slot-actions">
-                  <input type="text" id="listing_url_3" class="input" placeholder="or paste URL (optional)">
-                </div>
+                <div class="slot-actions"><input type="text" id="listing_url_3" class="input" placeholder="or paste URL"></div>
               </div>
             </div>
           </div>
@@ -374,11 +346,11 @@
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Buy</label>
-              <input type="number" id="rate_buy" class="input" step="0.01" />
+              <input type="number" id="rate_buy" class="input" step="0.01">
             </div>
             <div class="form-group">
               <label class="form-label">Sell</label>
-              <input type="number" id="rate_sell" class="input" step="0.01" />
+              <input type="number" id="rate_sell" class="input" step="0.01">
             </div>
           </div>
         </div>
@@ -387,7 +359,7 @@
         <div id="fields-insight" style="display:none">
           <div class="form-group">
             <label class="form-label">Title</label>
-            <input type="text" id="insight_title" class="input" required />
+            <input type="text" id="insight_title" class="input" required>
           </div>
 
           <div class="row2">
@@ -415,51 +387,42 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Images (1–3) via Supabase Storage</label>
-            <div class="tiny">First image becomes <code>image_url</code> used by Insights pages; store all as <code>image_urls</code> if that column exists.</div>
+            <label class="form-label">Images (1–3)</label>
+            <div class="tiny">Upload or paste URLs. First image becomes the main insight image.</div>
+
             <div class="img-grid" style="margin-top:10px">
               <div class="img-slot">
                 <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('insight',1)">Clear</button></div>
                 <input type="file" id="insight_file_1" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_1" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_1" class="input" placeholder="or paste URL (optional)"></div>
+                <div class="slot-actions"><input type="text" id="insight_url_1" class="input" placeholder="or paste URL"></div>
               </div>
+
               <div class="img-slot">
                 <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('insight',2)">Clear</button></div>
                 <input type="file" id="insight_file_2" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_2" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_2" class="input" placeholder="or paste URL (optional)"></div>
+                <div class="slot-actions"><input type="text" id="insight_url_2" class="input" placeholder="or paste URL"></div>
               </div>
+
               <div class="img-slot">
                 <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('insight',3)">Clear</button></div>
                 <input type="file" id="insight_file_3" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_3" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_3" class="input" placeholder="or paste URL (optional)"></div>
+                <div class="slot-actions"><input type="text" id="insight_url_3" class="input" placeholder="or paste URL"></div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- REQUEST (view only) -->
+        <!-- REQUEST -->
         <div id="fields-request" style="display:none">
-          <div class="form-group">
-            <label class="form-label">Category</label>
-            <input type="text" id="req_category" class="input" disabled />
-          </div>
+          <div class="form-group"><label class="form-label">Category</label><input type="text" id="req_category" class="input" disabled></div>
           <div class="row2">
-            <div class="form-group">
-              <label class="form-label">Created</label>
-              <input type="text" id="req_created" class="input" disabled />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Status</label>
-              <input type="text" id="req_status" class="input" disabled />
-            </div>
+            <div class="form-group"><label class="form-label">Created</label><input type="text" id="req_created" class="input" disabled></div>
+            <div class="form-group"><label class="form-label">Status</label><input type="text" id="req_status" class="input" disabled></div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Payload</label>
-            <textarea id="req_payload" class="input" rows="10" disabled></textarea>
-          </div>
+          <div class="form-group"><label class="form-label">Payload</label><textarea id="req_payload" class="input" rows="10" disabled></textarea></div>
         </div>
 
         <div style="margin-top:18px;display:flex;gap:10px">
@@ -475,28 +438,19 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // ---------------------------
-    // SETTINGS
-    // ---------------------------
     const STORAGE_BUCKET = "larmah-media";
     const ONLY_ADMIN_EMAIL = "luckymomodu60@gmail.com";
-
     let sb = null;
 
-    const CACHE = {
-      listings: new Map(),
-      rates: new Map(),
-      insights: new Map(),
-      requests: new Map()
-    };
+    const CACHE = { listings:new Map(), rates:new Map(), insights:new Map(), requests:new Map() };
 
     // fallback escapeHtml
     window.LARMAH = window.LARMAH || {};
     if (!window.LARMAH.escapeHtml) {
       window.LARMAH.escapeHtml = (str) => {
         if (str === null || str === undefined) return "";
-        const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
-        return String(str).replace(/[&<>"']/g, (m) => map[m]);
+        const map = { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" };
+        return String(str).replace(/[&<>"']/g, m => map[m]);
       };
     }
 
@@ -534,9 +488,7 @@
       return "draft";
     }
 
-    function safeDate(d){
-      try { return new Date(d).toLocaleString(); } catch { return ""; }
-    }
+    function safeDate(d){ try { return new Date(d).toLocaleString(); } catch { return ""; } }
 
     function setFieldsVisible(entity){
       ["listing","rate","insight","request"].forEach(k => {
@@ -546,41 +498,28 @@
       document.getElementById("saveBtn").style.display = (entity === "request") ? "none" : "";
     }
 
-    // ---------------------------
-    // STORAGE HELPERS
-    // ---------------------------
-    function randomId(len = 10){ return Math.random().toString(36).slice(2, 2 + len); }
+    // ---- Storage helpers
+    function randomId(len=10){ return Math.random().toString(36).slice(2, 2+len); }
 
     async function uploadToStorage(file, folder){
       if(!file) return null;
 
       const maxMb = 10;
-      if(file.size > maxMb * 1024 * 1024) throw new Error(`File too large. Max ${maxMb}MB`);
+      if(file.size > maxMb*1024*1024) throw new Error(`File too large. Max ${maxMb}MB`);
 
       const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g,"") || "jpg";
       const path = `${folder}/${Date.now()}-${randomId(8)}.${ext}`;
 
-      const { error: upErr } = await sb.storage.from(STORAGE_BUCKET).upload(path, file, {
-        cacheControl: "3600",
-        upsert: false
-      });
+      const { error: upErr } = await sb.storage.from(STORAGE_BUCKET).upload(path, file, { cacheControl:"3600", upsert:false });
       if(upErr) throw upErr;
 
       const { data } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
       const url = data?.publicUrl;
       if(!url) throw new Error("Could not generate public URL");
-
       return { path, url };
     }
 
-    async function removeFromStorage(path){
-      if(!path) return;
-      try { await sb.storage.from(STORAGE_BUCKET).remove([path]); } catch {}
-    }
-
-    // ---------------------------
-    // IMAGES UI (slots 1-3)
-    // ---------------------------
+    // ---- Image slots
     function clearSlot(kind, idx){
       const file = document.getElementById(`${kind}_file_${idx}`);
       const url = document.getElementById(`${kind}_url_${idx}`);
@@ -601,54 +540,97 @@
       });
     }
 
-    function getSlotUrl(kind, idx){
-      return (document.getElementById(`${kind}_url_${idx}`)?.value || "").trim();
-    }
-    function setSlotUrl(kind, idx, v){
-      const el = document.getElementById(`${kind}_url_${idx}`);
-      if(el) el.value = v || "";
-    }
-    function setSlotPreview(kind, idx, url){
-      const prev = document.getElementById(`${kind}_prev_${idx}`);
-      if(prev) prev.src = url || "";
-    }
+    function getSlotUrl(kind, idx){ return (document.getElementById(`${kind}_url_${idx}`)?.value || "").trim(); }
+    function setSlotUrl(kind, idx, v){ const el = document.getElementById(`${kind}_url_${idx}`); if(el) el.value = v || ""; }
+    function setSlotPreview(kind, idx, url){ const el = document.getElementById(`${kind}_prev_${idx}`); if(el) el.src = url || ""; }
 
-    // Read up to 3 images from modal:
-    // - If file chosen => upload and use returned url/path
-    // - Else if url field filled => use that url, path null
     async function collectImages(kind, folder){
       const urls = [];
       const paths = [];
-
       for(let i=1;i<=3;i++){
         const file = document.getElementById(`${kind}_file_${i}`)?.files?.[0] || null;
-        const manualUrl = getSlotUrl(kind, i);
+        const manual = getSlotUrl(kind, i);
 
         if(file){
-          const uploaded = await uploadToStorage(file, folder);
-          urls.push(uploaded.url);
-          paths.push(uploaded.path);
-          // sync UI
-          setSlotUrl(kind, i, uploaded.url);
-          setSlotPreview(kind, i, uploaded.url);
-        } else if(manualUrl){
-          urls.push(manualUrl);
+          const up = await uploadToStorage(file, folder);
+          urls.push(up.url);
+          paths.push(up.path);
+          setSlotUrl(kind, i, up.url);
+          setSlotPreview(kind, i, up.url);
+        } else if(manual){
+          urls.push(manual);
           paths.push(null);
-          setSlotPreview(kind, i, manualUrl);
+          setSlotPreview(kind, i, manual);
         }
       }
-
       return { urls, paths };
     }
 
-    // ---------------------------
-    // AUTH (ONLY ADMIN EMAIL)
-    // ---------------------------
-    async function assertOnlyAdminEmail(){
-      const { data, error } = await sb.auth.getSession();
-      if(error) throw error;
+    // ---- Table thumbnail helper
+    function pickThumb(it){
+      if (Array.isArray(it.image_urls) && it.image_urls[0]) return it.image_urls[0];
+      if (it.image_url) return it.image_url;
+      return "assets/images/larmah-header.jpeg";
+    }
+
+    // ---- Quick upload on table rows
+    async function quickUploadMainImage(entity, id, category=null){
+      const input = document.getElementById("quickUploadInput");
+      if(!input) return;
+
+      input.value = "";
+      input.onchange = async () => {
+        const file = input.files?.[0];
+        if(!file) return;
+
+        try{
+          toast("Uploading image…", "info");
+
+          const folder = (entity === "insight") ? "insights" : "listings";
+          const up = await uploadToStorage(file, folder);
+
+          const table = (entity === "insight") ? "insights" : "listings";
+          const cacheMap = (entity === "insight") ? CACHE.insights : CACHE.listings;
+          const current = cacheMap.get(String(id)) || {};
+
+          const nextUrls = Array.isArray(current.image_urls) ? current.image_urls.slice(0,3) : [];
+          const nextPaths = Array.isArray(current.image_paths) ? current.image_paths.slice(0,3) : [];
+          nextUrls[0] = up.url;
+          nextPaths[0] = up.path;
+
+          const payload = {
+            image_url: up.url,
+            image_path: up.path,
+            image_urls: nextUrls,
+            image_paths: nextPaths
+          };
+
+          let res = await sb.from(table).update(payload).eq("id", id).select().single();
+          if(res.error) throw res.error;
+
+          toast("Image updated ✅", "success");
+          if(entity === "listing") await fetchListings(category);
+          else await fetchInsights();
+        }catch(e){
+          console.warn(e);
+          toast(e?.message || "Upload failed", "error");
+        }
+      };
+
+      input.click();
+    }
+
+    // ---- Auth lock (email + is_admin)
+    async function assertOnlyAdmin(){
+      const { data } = await sb.auth.getSession();
       const email = (data?.session?.user?.email || "").toLowerCase();
       if(email !== ONLY_ADMIN_EMAIL){
+        await sb.auth.signOut();
+        throw new Error("Access denied: Admins only.");
+      }
+      const { data: isAdmin, error } = await sb.rpc("is_admin");
+      if(error) throw error;
+      if(!isAdmin){
         await sb.auth.signOut();
         throw new Error("Access denied: Admins only.");
       }
@@ -657,29 +639,15 @@
 
     async function initAdmin(){
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
-      if(!sb){
-        showLogin("Supabase client not ready. Check CDN + file paths.");
-        return;
-      }
+      if(!sb){ showLogin("Supabase client not ready."); return; }
 
-      const { data, error } = await sb.auth.getSession();
-      if(error){ showLogin("Session error: " + error.message); return; }
+      const { data } = await sb.auth.getSession();
       if(!data?.session){ showLogin(); return; }
 
-      // Hard email lock
-      const email = (data.session.user.email || "").toLowerCase();
-      if(email !== ONLY_ADMIN_EMAIL){
-        await sb.auth.signOut();
-        showLogin("Access denied: Admins only.");
-        return;
-      }
-
-      // DB admin check
-      const { data: isAdmin, error: adminErr } = await sb.rpc("is_admin");
-      if(adminErr){ showLogin("Admin check failed: " + adminErr.message); return; }
-      if(!isAdmin){
-        await sb.auth.signOut();
-        showLogin("Access denied: Admins only.");
+      try{
+        await assertOnlyAdmin();
+      }catch(e){
+        showLogin(e.message);
         return;
       }
 
@@ -708,17 +676,13 @@
       }
 
       try{
-        await assertOnlyAdminEmail();
-        const { data: isAdmin, error: adminErr } = await sb.rpc("is_admin");
-        if(adminErr) throw adminErr;
-        if(!isAdmin) throw new Error("Access denied: Admins only.");
-
+        await assertOnlyAdmin();
         showAdmin();
         await loadStats();
         switchView("overview", document.querySelector(".nav-item"));
       }catch(e){
         await sb.auth.signOut();
-        msg.textContent = e?.message || "Access denied";
+        msg.textContent = e.message || "Access denied";
         msg.style.display = "block";
       }
     }
@@ -728,9 +692,7 @@
       location.reload();
     }
 
-    // ---------------------------
-    // NAV
-    // ---------------------------
+    // ---- Nav
     function switchView(viewId, el){
       document.querySelectorAll(".view-section").forEach(v => v.style.display = "none");
       const view = document.getElementById("view-" + viewId);
@@ -748,50 +710,41 @@
       if(viewId === "users") fetchUsers();
     }
 
-    // ---------------------------
-    // STATS
-    // ---------------------------
+    // ---- Stats
     async function loadStats(){
-      try {
-        const { count } = await sb.from("listings").select("*", { count: "exact", head: true });
-        document.getElementById("stat_listings").textContent = count ?? 0;
-      } catch { document.getElementById("stat_listings").textContent = "—"; }
+      try { const { count } = await sb.from("listings").select("*", { count:"exact", head:true }); document.getElementById("stat_listings").textContent = count ?? 0; }
+      catch { document.getElementById("stat_listings").textContent = "—"; }
+
+      try { const { count } = await sb.from("profiles").select("*", { count:"exact", head:true }); document.getElementById("stat_users").textContent = count ?? 0; }
+      catch { document.getElementById("stat_users").textContent = "—"; }
 
       try {
-        const { count } = await sb.from("profiles").select("*", { count: "exact", head: true });
-        document.getElementById("stat_users").textContent = count ?? 0;
-      } catch { document.getElementById("stat_users").textContent = "—"; }
-
-      try {
-        const since = new Date(Date.now() - 7*24*60*60*1000).toISOString();
-        const { count } = await sb.from("requests").select("*", { count: "exact", head: true }).gte("created_at", since);
+        const since = new Date(Date.now()-7*24*60*60*1000).toISOString();
+        const { count } = await sb.from("requests").select("*",{count:"exact", head:true}).gte("created_at", since);
         document.getElementById("stat_requests").textContent = count ?? 0;
       } catch { document.getElementById("stat_requests").textContent = "—"; }
     }
 
-    // ---------------------------
-    // FETCH: LISTINGS
-    // ---------------------------
+    // ---- Fetch listings
     async function fetchListings(category){
       const tbody = document.getElementById(category === "real-estate" ? "tbody-real-estate" : "tbody-logistics");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
-      try {
-        const { data, error } = await sb.from("listings").select("*").eq("category", category).order("created_at", { ascending: false });
+      try{
+        const { data, error } = await sb.from("listings").select("*").eq("category", category).order("created_at",{ascending:false});
         if(error) throw error;
 
         CACHE.listings.clear();
-        (data || []).forEach(it => CACHE.listings.set(String(it.id), it));
+        (data||[]).forEach(it => CACHE.listings.set(String(it.id), it));
 
-        if(!data || !data.length){
+        if(!data?.length){
           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No items found.</td></tr>`;
           return;
         }
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(it.image_url || 'assets/images/larmah-header.jpeg')}"
-                     onerror="this.src='assets/images/larmah-header.jpeg'"></td>
+            <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
             <td>
               <div style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</div>
               <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div>
@@ -800,40 +753,39 @@
             <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
             <td>
               <div style="display:flex;gap:8px">
-                <button class="action-btn" onclick="openEditor('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-pen"></i></button>
-                <button class="action-btn danger" onclick="deleteEntity('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-trash"></i></button>
+                <button class="action-btn" title="Edit" onclick="openEditor('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-image"></i></button>
+                <button class="action-btn danger" title="Delete" onclick="deleteEntity('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-trash"></i></button>
               </div>
             </td>
           </tr>
         `).join("");
-      } catch(e){
+      }catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading listings. Check RLS/admin.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading listings.</td></tr>`;
       }
     }
 
-    // ---------------------------
-    // FETCH: RATES
-    // ---------------------------
+    // ---- Fetch rates
     async function fetchRates(){
       const tbody = document.getElementById("tbody-rates");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
-      try {
-        const { data, error } = await sb.from("rates").select("*").order("asset", { ascending: true });
+      try{
+        const { data, error } = await sb.from("rates").select("*").order("asset",{ascending:true});
         if(error) throw error;
 
         CACHE.rates.clear();
-        (data || []).forEach(it => CACHE.rates.set(String(it.id), it));
+        (data||[]).forEach(it => CACHE.rates.set(String(it.id), it));
 
-        if(!data || !data.length){
+        if(!data?.length){
           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No rates found.</td></tr>`;
           return;
         }
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td style="font-weight:950">${LARMAH.escapeHtml(String(it.asset || ""))}</td>
+            <td style="font-weight:950">${LARMAH.escapeHtml(String(it.asset||""))}</td>
             <td style="color:var(--ok);font-weight:950">${LARMAH.escapeHtml(String(it.buy ?? ""))}</td>
             <td style="color:var(--warn);font-weight:950">${LARMAH.escapeHtml(String(it.sell ?? ""))}</td>
             <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
@@ -845,27 +797,25 @@
             </td>
           </tr>
         `).join("");
-      } catch(e){
+      }catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading rates. Check RLS/admin.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading rates.</td></tr>`;
       }
     }
 
-    // ---------------------------
-    // FETCH: INSIGHTS
-    // ---------------------------
+    // ---- Fetch insights
     async function fetchInsights(){
       const tbody = document.getElementById("tbody-insights");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
-      try {
-        const { data, error } = await sb.from("insights").select("*").order("created_at", { ascending: false }).limit(250);
+      try{
+        const { data, error } = await sb.from("insights").select("*").order("created_at",{ascending:false}).limit(250);
         if(error) throw error;
 
         CACHE.insights.clear();
-        (data || []).forEach(it => CACHE.insights.set(String(it.id), it));
+        (data||[]).forEach(it => CACHE.insights.set(String(it.id), it));
 
-        if(!data || !data.length){
+        if(!data?.length){
           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No insights found.</td></tr>`;
           return;
         }
@@ -878,32 +828,30 @@
             <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
             <td>
               <div style="display:flex;gap:8px">
-                <button class="action-btn" onclick="openEditor('insight','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
-                <button class="action-btn danger" onclick="deleteEntity('insight','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
+                <button class="action-btn" title="Edit" onclick="openEditor('insight','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
+                <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('insight','${String(it.id)}',null)"><i class="fa-solid fa-image"></i></button>
+                <button class="action-btn danger" title="Delete" onclick="deleteEntity('insight','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
               </div>
             </td>
           </tr>
         `).join("");
-      } catch(e){
+      }catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading insights. Check RLS/admin.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading insights.</td></tr>`;
       }
     }
 
-    // ---------------------------
-    // FETCH: REQUESTS + USERS
-    // ---------------------------
+    // ---- Requests
     async function fetchRequests(){
       const tbody = document.getElementById("tbody-requests");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
-      try {
-        const { data, error } = await sb.from("requests").select("*").order("created_at", { ascending: false }).limit(500);
+      try{
+        const { data, error } = await sb.from("requests").select("*").order("created_at",{ascending:false}).limit(500);
         if(error) throw error;
-
         CACHE.requests.clear();
-        (data || []).forEach(it => CACHE.requests.set(String(it.id), it));
+        (data||[]).forEach(it => CACHE.requests.set(String(it.id), it));
 
-        if(!data || !data.length){
+        if(!data?.length){
           tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No requests yet.</td></tr>`;
           return;
         }
@@ -924,9 +872,9 @@
             <td><button class="btn small" onclick="openEditor('request','${String(it.id)}',null)">View</button></td>
           </tr>
         `).join("");
-      } catch(e){
+      }catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading requests. Check RLS/admin.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading requests.</td></tr>`;
       }
     }
 
@@ -938,20 +886,20 @@
         await loadStats();
         await fetchRequests();
       }catch(e){
-        console.warn(e);
-        toast(e.message || "Failed to update request status", "error");
+        toast(e.message || "Failed updating status", "error");
         await fetchRequests();
       }
     }
 
+    // ---- Users
     async function fetchUsers(){
       const tbody = document.getElementById("tbody-users");
       tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
       try{
-        const { data, error } = await sb.from("profiles").select("*").order("created_at", { ascending: false }).limit(500);
+        const { data, error } = await sb.from("profiles").select("*").order("created_at",{ascending:false}).limit(500);
         if(error) throw error;
 
-        if(!data || !data.length){
+        if(!data?.length){
           tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">No profiles found.</td></tr>`;
           return;
         }
@@ -968,27 +916,18 @@
           </tr>
         `).join("");
       }catch(e){
-        console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading profiles. Check RLS.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading profiles.</td></tr>`;
       }
     }
 
-    // ---------------------------
-    // EDITOR OPEN/CLOSE
-    // ---------------------------
+    // ---- Editor open/close/reset
     function resetEditor(){
       document.getElementById("editorForm").reset();
       document.getElementById("edit_entity").value = "";
       document.getElementById("edit_id").value = "";
       document.getElementById("edit_category").value = "";
       document.getElementById("editorHint").textContent = "";
-
-      // clear previews
-      ["listing","insight"].forEach(kind=>{
-        for(let i=1;i<=3;i++){
-          clearSlot(kind,i);
-        }
-      });
+      ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) clearSlot(kind,i); });
     }
 
     function openEditor(entity, id=null, category=null){
@@ -1001,7 +940,7 @@
 
       if(entity === "listing"){
         document.getElementById("editorTitle").textContent = id ? "Edit Listing" : "New Listing";
-        document.getElementById("editorHint").textContent = category ? `Category: ${category}` : "";
+        document.getElementById("listing_status").value = "active";
 
         if(id){
           const it = CACHE.listings.get(String(id));
@@ -1012,9 +951,6 @@
             document.getElementById("listing_desc").value = it.description || "";
             document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : "";
 
-            // Fill images:
-            // - If `image_urls` exists => use it
-            // - else fallback: use `image_url` as slot1
             const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
             for(let i=1;i<=3;i++){
               const u = arr[i-1] || "";
@@ -1022,13 +958,12 @@
               setSlotPreview("listing", i, u);
             }
           }
-        } else {
-          document.getElementById("listing_status").value = "active";
         }
       }
 
       if(entity === "rate"){
         document.getElementById("editorTitle").textContent = id ? "Edit Rate" : "New Rate";
+        document.getElementById("rate_status").value = "active";
         if(id){
           const it = CACHE.rates.get(String(id));
           if(it){
@@ -1037,13 +972,12 @@
             document.getElementById("rate_sell").value = it.sell ?? "";
             document.getElementById("rate_status").value = it.status || "active";
           }
-        } else {
-          document.getElementById("rate_status").value = "active";
         }
       }
 
       if(entity === "insight"){
         document.getElementById("editorTitle").textContent = id ? "Edit Insight" : "New Insight";
+        document.getElementById("insight_status").value = "active";
         if(id){
           const it = CACHE.insights.get(String(id));
           if(it){
@@ -1059,8 +993,6 @@
               setSlotPreview("insight", i, u);
             }
           }
-        } else {
-          document.getElementById("insight_status").value = "active";
         }
       }
 
@@ -1076,26 +1008,25 @@
       }
     }
 
-    function closeEditor(){
-      document.getElementById("editorModal").classList.remove("active");
-    }
+    function closeEditor(){ document.getElementById("editorModal").classList.remove("active"); }
 
-    // ---------------------------
-    // SAVE + DELETE
-    // ---------------------------
+    // ---- Save (responsive + reliable)
     async function saveEditor(e){
       e.preventDefault();
+      if(document.body.classList.contains("saving")) return;
 
       const entity = document.getElementById("edit_entity").value;
       const id = document.getElementById("edit_id").value || null;
       const category = document.getElementById("edit_category").value || null;
 
       const btn = document.getElementById("saveBtn");
-      btn.disabled = true;
-      btn.textContent = "Saving...";
+      const original = btn.textContent;
 
-      try {
-        // LISTING
+      document.body.classList.add("saving");
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+      try{
         if(entity === "listing"){
           const payload = {
             category: category || "real-estate",
@@ -1107,42 +1038,20 @@
           };
           if(!payload.title) throw new Error("Title is required.");
 
-          // Collect images 1–3
           const imgs = await collectImages("listing", "listings");
           const urls = imgs.urls.slice(0,3);
           const paths = imgs.paths.slice(0,3);
 
-          // Backwards compatibility: main image_url is first
           payload.image_url = urls[0] || "";
           payload.image_path = paths[0] || null;
+          payload.image_urls = urls;
+          payload.image_paths = paths;
 
-          // Optional columns (if exist): image_urls, image_paths
-          payload.image_urls = urls.length ? urls : null;
-          payload.image_paths = paths.length ? paths : null;
+          const res = id
+            ? await sb.from("listings").update(payload).eq("id", id).select().single()
+            : await sb.from("listings").insert([payload]).select().single();
 
-          // Remove null optional fields to avoid column errors if those columns don't exist
-          // We'll attempt with them; if it fails due to missing columns, retry without.
-          let res;
-          try{
-            res = id
-              ? await sb.from("listings").update(payload).eq("id", id).select().single()
-              : await sb.from("listings").insert([payload]).select().single();
-            if(res.error) throw res.error;
-          }catch(err){
-            // retry without image_urls/image_paths if schema doesn't have them
-            const msg = (err?.message || "").toLowerCase();
-            if(msg.includes("column") && (msg.includes("image_urls") || msg.includes("image_paths"))){
-              const payload2 = { ...payload };
-              delete payload2.image_urls;
-              delete payload2.image_paths;
-              res = id
-                ? await sb.from("listings").update(payload2).eq("id", id).select().single()
-                : await sb.from("listings").insert([payload2]).select().single();
-              if(res.error) throw res.error;
-            } else {
-              throw err;
-            }
-          }
+          if(res.error) throw res.error;
 
           toast("Saved listing ✅", "success");
           closeEditor();
@@ -1151,7 +1060,6 @@
           return;
         }
 
-        // RATE (upsert by asset)
         if(entity === "rate"){
           const payload = {
             asset: document.getElementById("rate_asset").value,
@@ -1173,7 +1081,6 @@
           return;
         }
 
-        // INSIGHT
         if(entity === "insight"){
           const payload = {
             title: document.getElementById("insight_title").value.trim(),
@@ -1189,29 +1096,14 @@
 
           payload.image_url = urls[0] || "";
           payload.image_path = paths[0] || null;
-          payload.image_urls = urls.length ? urls : null;
-          payload.image_paths = paths.length ? paths : null;
+          payload.image_urls = urls;
+          payload.image_paths = paths;
 
-          let res;
-          try{
-            res = id
-              ? await sb.from("insights").update(payload).eq("id", id).select().single()
-              : await sb.from("insights").insert([payload]).select().single();
-            if(res.error) throw res.error;
-          }catch(err){
-            const msg = (err?.message || "").toLowerCase();
-            if(msg.includes("column") && (msg.includes("image_urls") || msg.includes("image_paths"))){
-              const payload2 = { ...payload };
-              delete payload2.image_urls;
-              delete payload2.image_paths;
-              res = id
-                ? await sb.from("insights").update(payload2).eq("id", id).select().single()
-                : await sb.from("insights").insert([payload2]).select().single();
-              if(res.error) throw res.error;
-            } else {
-              throw err;
-            }
-          }
+          const res = id
+            ? await sb.from("insights").update(payload).eq("id", id).select().single()
+            : await sb.from("insights").insert([payload]).select().single();
+
+          if(res.error) throw res.error;
 
           toast("Saved insight ✅", "success");
           closeEditor();
@@ -1219,86 +1111,55 @@
           return;
         }
 
-      } catch(err){
+      }catch(err){
         console.warn("SAVE ERROR:", err);
-        toast(err?.message || "Save failed (check RLS/admin/storage)", "error");
-      } finally {
+        const msg = err?.message || err?.hint || err?.error_description || "Save failed";
+        toast(msg, "error");
+      }finally{
+        document.body.classList.remove("saving");
         btn.disabled = false;
-        btn.textContent = "Save";
+        btn.textContent = original;
       }
     }
 
     async function deleteEntity(entity, id, category=null){
       if(!confirm("Delete this item?")) return;
-
       try{
         if(entity === "listing"){
-          const it = CACHE.listings.get(String(id));
-          // try remove storage objects (best-effort)
-          if(it){
-            if(it.image_path) await removeFromStorage(it.image_path);
-            if(Array.isArray(it.image_paths)){
-              for(const p of it.image_paths){ if(p) await removeFromStorage(p); }
-            }
-          }
           const { error } = await sb.from("listings").delete().eq("id", id);
           if(error) throw error;
-
           toast("Deleted listing ✅", "success");
           await fetchListings(category);
           await loadStats();
           return;
         }
-
         if(entity === "rate"){
           const { error } = await sb.from("rates").delete().eq("id", id);
           if(error) throw error;
-
           toast("Deleted rate ✅", "success");
           await fetchRates();
           return;
         }
-
         if(entity === "insight"){
-          const it = CACHE.insights.get(String(id));
-          if(it){
-            if(it.image_path) await removeFromStorage(it.image_path);
-            if(Array.isArray(it.image_paths)){
-              for(const p of it.image_paths){ if(p) await removeFromStorage(p); }
-            }
-          }
           const { error } = await sb.from("insights").delete().eq("id", id);
           if(error) throw error;
-
           toast("Deleted insight ✅", "success");
           await fetchInsights();
           return;
         }
-
       }catch(e){
-        console.warn(e);
         toast(e.message || "Delete failed", "error");
       }
     }
 
-    // ---------------------------
-    // WIRE UP
-    // ---------------------------
+    // ---- Wire up
     document.addEventListener("DOMContentLoaded", async () => {
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
-      if(!sb){
-        showLogin("Supabase client not ready. Check CDN + file paths.");
-        return;
-      }
+      if(!sb){ showLogin("Supabase not ready."); return; }
 
-      // Bind previews for all slots
-      ["listing","insight"].forEach(kind=>{
-        for(let i=1;i<=3;i++){
-          bindFilePreview(kind,i);
-        }
-      });
+      // slot previews
+      ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) bindFilePreview(kind,i); });
 
-      // Login form
       document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         await adminLogin(
@@ -1307,10 +1168,8 @@
         );
       });
 
-      // Save
       document.getElementById("editorForm").addEventListener("submit", saveEditor);
 
-      // Close modal
       document.getElementById("editorModal").addEventListener("click", (e) => {
         if(e.target.id === "editorModal") closeEditor();
       });
@@ -1319,7 +1178,6 @@
         if(e.key === "Escape") closeEditor();
       });
 
-      // Start session check
       await initAdmin();
     });
   </script>
