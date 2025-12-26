@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  
+
   <title>Larmah Enterprise | Nigeria’s Trust-First Commerce Hub</title>
   <meta name="description" content="Verified Real Estate, reliable Logistics, live Insights, and Exchange — WhatsApp-first support across Nigeria. The #1 commerce hub for trust-based transactions." />
   <meta name="keywords" content="Larmah Enterprise, Real Estate Nigeria, Logistics Lagos, Crypto Exchange Nigeria, Shortlets Ikoyi, Haulage Nigeria, Trusted Commerce" />
@@ -33,106 +33,57 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    /* Compact latest catalogue list */
-    .latest-compact {
-      display: grid;
-      gap: 10px;
-      margin-top: 10px;
+    /* Compact latest list */
+    .latest-compact{display:grid;gap:10px;margin-top:10px}
+    .latest-compact .lrow{
+      display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;
+      padding:10px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03)
+    }
+    .latest-compact .lthumb{
+      width:62px;height:50px;border-radius:12px;overflow:hidden;background:rgba(0,0,0,0.25);
+      border:1px solid rgba(255,255,255,0.08)
+    }
+    .latest-compact .lthumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .latest-compact .ltitle{font-weight:900;font-size:0.95rem;line-height:1.15;margin-bottom:4px}
+    .latest-compact .lmeta{display:flex;gap:10px;flex-wrap:wrap;font-size:0.82rem;color:var(--muted);opacity:0.9}
+    .latest-compact .lprice{color:var(--accent);font-weight:900}
+    .latest-compact .lactions{display:flex;gap:8px;align-items:center}
+    .latest-compact .lactions .btn.small{padding:8px 10px;border-radius:12px}
+
+    /* Compact insights preview */
+    .ins-compact{display:grid;gap:10px;margin-top:10px}
+    .ins-compact .irow{
+      padding:12px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03)
+    }
+    .ins-compact .idate{font-size:.8rem;color:var(--muted);opacity:.85;margin-bottom:6px}
+    .ins-compact .ititle{font-weight:950;line-height:1.2}
+    .ins-compact .isum{margin-top:6px;color:var(--muted);font-size:.9rem;opacity:.9;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+    /* Rates mini board */
+    .rate-mini{display:grid;gap:10px;margin-top:10px}
+    .rate-mini .rrow{
+      display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:center;
+      padding:10px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03)
+    }
+    .rate-mini .pair{font-weight:950}
+    .rate-mini .buy{color:var(--ok);font-weight:950}
+    .rate-mini .sell{color:var(--warn);font-weight:950}
+    .rate-mini .tag{font-size:.8rem;color:var(--muted);opacity:.9}
+    @media(max-width:640px){
+      .rate-mini .rrow{grid-template-columns:1fr 1fr;row-gap:8px}
+      .rate-mini .rrow .rbtn{grid-column:1/-1}
     }
 
-    .latest-compact .lrow {
-      display: grid;
-      grid-template-columns: 62px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      padding: 10px 10px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.03);
+    /* Skeleton */
+    .latest-compact-skel{display:grid;gap:10px;margin-top:10px}
+    .latest-compact-skel .sk{
+      display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;
+      padding:10px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03)
     }
-
-    .latest-compact .lthumb {
-      width: 62px;
-      height: 50px;
-      border-radius: 12px;
-      overflow: hidden;
-      background: rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .latest-compact .lthumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .latest-compact .ltitle {
-      font-weight: 900;
-      font-size: 0.95rem;
-      line-height: 1.15;
-      margin-bottom: 4px;
-    }
-
-    .latest-compact .lmeta {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      font-size: 0.82rem;
-      color: var(--muted);
-      opacity: 0.9;
-    }
-
-    .latest-compact .lprice {
-      color: var(--accent);
-      font-weight: 900;
-    }
-
-    .latest-compact .lactions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .latest-compact .lactions .btn.small {
-      padding: 8px 10px;
-      border-radius: 12px;
-    }
-
-    /* Compact skeleton */
-    .latest-compact-skel { display:grid; gap:10px; margin-top:10px; }
-    .latest-compact-skel .sk {
-      display:grid; grid-template-columns:62px 1fr auto;
-      gap:12px; align-items:center;
-      padding:10px 10px;
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:14px;
-      background: rgba(255,255,255,0.03);
-    }
-    .latest-compact-skel .sk-thumb{
-      width:62px; height:50px; border-radius:12px;
-      background: rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.08);
-    }
-    .latest-compact-skel .sk-line{
-      height:10px; border-radius:999px;
-      background: rgba(255,255,255,0.07);
-      margin:6px 0;
-    }
-    .latest-compact-skel .sk-line.short{ width:60%; }
-    .latest-compact-skel .sk-btn{
-      width:38px; height:34px; border-radius:12px;
-      background: rgba(255,255,255,0.07);
-    }
-
-    @media (max-width: 520px) {
-      .latest-compact .lrow {
-        grid-template-columns: 56px 1fr;
-      }
-      .latest-compact .lactions {
-        justify-content: flex-start;
-      }
-    }
+    .latest-compact-skel .sk-thumb{width:62px;height:50px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08)}
+    .latest-compact-skel .sk-line{height:10px;border-radius:999px;background:rgba(255,255,255,0.07);margin:6px 0}
+    .latest-compact-skel .sk-line.short{width:60%}
+    .latest-compact-skel .sk-btn{width:38px;height:34px;border-radius:12px;background:rgba(255,255,255,0.07)}
   </style>
 </head>
 
@@ -195,7 +146,7 @@
           <li><a class="nav-link" href="exchange.html">Exchange</a></li>
         </ul>
       </nav>
-      
+
       <div class="header-actions" style="margin-left:auto; display:none;">
         <a href="dashboard.html" class="pill primary">Dashboard</a>
       </div>
@@ -230,7 +181,7 @@
               <a class="btn solid" href="#latest"><i class="fa-solid fa-sparkles"></i> Browse Latest</a>
               <a class="btn" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
               <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
-              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { Name:'', Phone:'', Topic:'Real Estate / Logistics / Exchange', Message:'Hello Larmah, I need assistance.' }))">
+              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { Topic:'Real Estate / Logistics / Exchange', Message:'Hello Larmah, I need assistance.' }))">
                 <i class="fa-brands fa-whatsapp"></i> Quick WhatsApp
               </button>
             </div>
@@ -268,13 +219,14 @@
     <section class="section" id="latest">
       <div class="section-head-split">
         <div>
-          <h2>Latest Catalogues</h2>
-          <p class="lead">Live preview from verified inventory — updated real-time.</p>
+          <h2>Live Updates</h2>
+          <p class="lead">Homepage panels pull in real-time updates from Supabase.</p>
         </div>
         <a class="btn small" href="insights.html"><i class="fa-solid fa-chart-line"></i> Insights</a>
       </div>
 
       <div class="grid home-grid">
+        <!-- Real Estate -->
         <div class="card">
           <div class="section-titleline">
             <h3 style="margin:0"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</h3>
@@ -289,6 +241,7 @@
           </div>
         </div>
 
+        <!-- Logistics -->
         <div class="card">
           <div class="section-titleline">
             <h3 style="margin:0"><i class="fa-solid fa-truck" style="color:var(--brand)"></i> Logistics</h3>
@@ -297,6 +250,34 @@
           <div id="latestLG">
             <div class="latest-compact-skel">
               <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Latest Insights -->
+        <div class="card">
+          <div class="section-titleline">
+            <h3 style="margin:0"><i class="fa-solid fa-newspaper" style="color:var(--brand)"></i> Latest Insights</h3>
+            <a class="mini-link small" href="insights.html">Read all →</a>
+          </div>
+          <div id="latestIN">
+            <div class="latest-compact-skel">
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Rates -->
+        <div class="card">
+          <div class="section-titleline">
+            <h3 style="margin:0"><i class="fa-solid fa-coins" style="color:var(--brand)"></i> Live Rates</h3>
+            <a class="mini-link small" href="exchange.html">Exchange →</a>
+          </div>
+          <div id="latestRT">
+            <div class="latest-compact-skel">
               <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
               <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
             </div>
@@ -311,7 +292,7 @@
           <h2 style="margin:0">Need something specific?</h2>
           <p class="lead" style="margin:6px 0 0">Tell us your budget, location, and timeline — we’ll respond via WhatsApp.</p>
         </div>
-        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { Name:'', Phone:'', Category:'Real Estate / Logistics / Exchange', Details:'Describe what you need…' }))">
+        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { Category:'Real Estate / Logistics / Exchange', Details:'Describe what you need…' }))">
           <i class="fa-brands fa-whatsapp"></i> Start Request
         </button>
       </div>
@@ -335,7 +316,7 @@
           </div>
 
           <div class="social-row" aria-label="Social links">
-            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a class="social-btn" href="https://instagram.com/hey_lar                                 mah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
             <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
             <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
@@ -358,7 +339,7 @@
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
 
           <div class="actions" style="margin-top:12px">
-            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))">
+            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
             </button>
           </div>
@@ -376,11 +357,22 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Minimal fallback if app.js didn't load for any reason
+    window.LARMAH = window.LARMAH || {
+      escapeHtml: (s)=> String(s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])),
+      openWhatsApp: (t)=> window.open("https://wa.me/2347063080605?text="+encodeURIComponent(t), "_blank"),
+      buildMessage: (h,f)=> h + " " + JSON.stringify(f||{})
+    };
 
     const __INDEX_CACHE = { "real-estate": [], "logistics": [] };
     let __homeChannel = null;
     let __homeDebounce = null;
+
+    function sbClient(){
+      return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
+    }
 
     function debounce(fn, wait=700){
       clearTimeout(__homeDebounce);
@@ -388,27 +380,25 @@
     }
 
     function pickListingImage(it){
-      // Prefer multi-image array from admin uploads
       if (Array.isArray(it.image_urls) && it.image_urls.length && it.image_urls[0]) return it.image_urls[0];
-      // fallback
       if (it.image_url) return it.image_url;
       return "assets/images/larmah-header.jpeg";
     }
 
-    async function renderPreview(category, mountId){
+    async function renderListingsPreview(category, mountId){
       const mount = document.getElementById(mountId);
       if(!mount) return;
 
       try {
-        const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+        const sb = sbClient();
         if(!sb) throw new Error("supabaseClient not ready");
 
         const { data, error } = await sb
-          .from('listings')
-          .select('id,title,price,image_url,image_urls,category,status,created_at')
-          .eq('category', category)
-          .eq('status', 'active')
-          .order('created_at', {ascending: false})
+          .from("listings")
+          .select("id,title,price,image_url,image_urls,category,status,created_at")
+          .eq("category", category)
+          .eq("status", "active")
+          .order("created_at", { ascending: false })
           .limit(3);
 
         if(error) throw error;
@@ -426,7 +416,6 @@
             ${items.map(it => {
               const imgUrl = pickListingImage(it);
               const price = it.price || "Contact for quote";
-
               return `
                 <div class="lrow">
                   <div class="lthumb">
@@ -435,7 +424,6 @@
                          loading="lazy"
                          onerror="this.src='assets/images/larmah-header.jpeg'">
                   </div>
-
                   <div class="linfo">
                     <div class="ltitle">${LARMAH.escapeHtml(it.title)}</div>
                     <div class="lmeta">
@@ -443,7 +431,6 @@
                       <span>Verified</span>
                     </div>
                   </div>
-
                   <div class="lactions">
                     <button class="btn small primary" onclick="enquireFromIndex('${category}','${it.id}')">
                       <i class="fa-brands fa-whatsapp"></i>
@@ -451,10 +438,10 @@
                   </div>
                 </div>
               `;
-            }).join('')}
+            }).join("")}
           </div>
         `;
-      } catch(e) {
+      } catch(e){
         console.error(e);
         mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)">
           <strong>Connection error.</strong> Please refresh.
@@ -475,29 +462,124 @@
       }));
     }
 
+    async function renderInsightsPreview(){
+      const mount = document.getElementById("latestIN");
+      if(!mount) return;
+
+      try{
+        const sb = sbClient();
+        if(!sb) throw new Error("supabaseClient not ready");
+
+        const { data, error } = await sb
+          .from("insights")
+          .select("id,title,category,summary,status,created_at")
+          .eq("status","active")
+          .order("created_at", { ascending:false })
+          .limit(3);
+
+        if(error) throw error;
+
+        const items = data || [];
+        if(!items.length){
+          mount.innerHTML = `<div class="notice">No insights yet.</div>`;
+          return;
+        }
+
+        mount.innerHTML = `
+          <div class="ins-compact">
+            ${items.map(it => `
+              <div class="irow">
+                <div class="idate">${new Date(it.created_at).toLocaleDateString()} • ${LARMAH.escapeHtml((it.category||"all").toUpperCase())}</div>
+                <div class="ititle">${LARMAH.escapeHtml(it.title)}</div>
+                <div class="isum">${LARMAH.escapeHtml(it.summary || "")}</div>
+                <div style="margin-top:10px">
+                  <a class="btn small" href="insights.html">Read →</a>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }catch(e){
+        console.error(e);
+        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)"><strong>Insights unavailable.</strong></div>`;
+      }
+    }
+
+    async function renderRatesPreview(){
+      const mount = document.getElementById("latestRT");
+      if(!mount) return;
+
+      try{
+        const sb = sbClient();
+        if(!sb) throw new Error("supabaseClient not ready");
+
+        const { data, error } = await sb
+          .from("rates")
+          .select("asset,buy,sell,status,updated_at")
+          .eq("status","active")
+          .order("asset", { ascending:true });
+
+        if(error) throw error;
+
+        const rows = (data || []).filter(x => ["USD","GBP","USDT","EUR","BTC"].includes(String(x.asset||"").toUpperCase()));
+        const top = rows.slice(0,4);
+
+        if(!top.length){
+          mount.innerHTML = `<div class="notice">Rates not available.</div>`;
+          return;
+        }
+
+        mount.innerHTML = `
+          <div class="rate-mini">
+            ${top.map(r => `
+              <div class="rrow">
+                <div>
+                  <div class="pair">${LARMAH.escapeHtml(r.asset)} <span class="tag">/ NGN</span></div>
+                  <div class="tag">${r.updated_at ? ("Updated " + new Date(r.updated_at).toLocaleTimeString()) : ""}</div>
+                </div>
+                <div class="buy">Buy: ${Number(r.buy||0).toLocaleString()}</div>
+                <div class="sell">Sell: ${Number(r.sell||0).toLocaleString()}</div>
+                <div class="rbtn"><a class="btn small" href="exchange.html">Trade</a></div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }catch(e){
+        console.error(e);
+        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)"><strong>Rates unavailable.</strong></div>`;
+      }
+    }
+
     function initHomeRealtime(){
-      const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+      const sb = sbClient();
       if(!sb) return;
 
       if(__homeChannel){
-        try { sb.removeChannel(__homeChannel); } catch {}
+        try{ sb.removeChannel(__homeChannel); }catch{}
         __homeChannel = null;
       }
 
-      __homeChannel = sb
-        .channel("home-latest-previews")
+      __homeChannel = sb.channel("home-live-panels")
         .on("postgres_changes", { event:"*", schema:"public", table:"listings" }, () => {
           debounce(() => {
-            renderPreview("real-estate", "latestRE");
-            renderPreview("logistics", "latestLG");
-          }, 700);
+            renderListingsPreview("real-estate","latestRE");
+            renderListingsPreview("logistics","latestLG");
+          }, 600);
+        })
+        .on("postgres_changes", { event:"*", schema:"public", table:"insights" }, () => {
+          debounce(() => renderInsightsPreview(), 700);
+        })
+        .on("postgres_changes", { event:"*", schema:"public", table:"rates" }, () => {
+          debounce(() => renderRatesPreview(), 700);
         })
         .subscribe();
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      renderPreview("real-estate", "latestRE");
-      renderPreview("logistics", "latestLG");
+      renderListingsPreview("real-estate","latestRE");
+      renderListingsPreview("logistics","latestLG");
+      renderInsightsPreview();
+      renderRatesPreview();
       initHomeRealtime();
     });
   </script>
