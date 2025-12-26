@@ -31,32 +31,17 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    /* Page Specific Styles */
-    .catalog-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-
-    .filters-box {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-
-    .filters { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+    .catalog-head { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+    .filters-box { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; }
+    .filters { display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
     @media(max-width: 768px) { .filters { grid-template-columns: 1fr; } }
+    .pillbar { display:flex; gap:8px; flex-wrap:wrap; border-top: 1px solid rgba(255,255,255,0.05); padding-top:12px; }
 
-    .pillbar { display: flex; gap: 8px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; }
-
-    .card-media {
-      width: 100%;
-      height: 180px;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.2);
-      margin-bottom: 12px;
-    }
+    .card-media { width: 100%; height: 190px; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); margin-bottom: 12px; }
     .card-media img { width: 100%; height: 100%; object-fit: cover; display:block; }
+
+    .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
+    .live-dot i { font-size: 8px; }
   </style>
 </head>
 
@@ -66,36 +51,36 @@
     <div class="msheet">
       <div class="msheet-head">
         <div class="msheet-brand">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
+          <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
         </div>
         <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
-            <i class="fa-solid fa-xmark"></i>
+          <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
       <div class="msheet-body">
         <div class="msheet-links">
-            <a href="real-estate.html" class="msheet-link active">
-                <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
-                <i class="fa-solid fa-check" style="font-size:12px;"></i>
-            </a>
-            <a href="logistics.html" class="msheet-link">
-                <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="insights.html" class="msheet-link">
-                <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="exchange.html" class="msheet-link">
-                <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
+          <a href="real-estate.html" class="msheet-link active">
+            <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
+            <i class="fa-solid fa-check" style="font-size:12px;"></i>
+          </a>
+          <a href="logistics.html" class="msheet-link">
+            <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
+          <a href="insights.html" class="msheet-link">
+            <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
+          <a href="exchange.html" class="msheet-link">
+            <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
         </div>
         <div class="msheet-footer">
-            <div class="msheet-hint">Menu</div>
-            <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-                <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
-            </a>
+          <div class="msheet-hint">Menu</div>
+          <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
+            <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
+          </a>
         </div>
       </div>
     </div>
@@ -119,17 +104,13 @@
           <li><a class="nav-link" href="exchange.html">Exchange</a></li>
         </ul>
       </nav>
-      
-      <div class="header-actions" style="margin-left:auto; display:none;">
-          <a href="dashboard.html" class="pill primary">Dashboard</a>
-      </div>
 
-      <!-- FIXED: safe auth UI -->
+      <div class="header-actions" style="margin-left:auto; display:none;">
+        <a href="dashboard.html" class="pill primary">Dashboard</a>
+      </div>
       <script>
         document.addEventListener("DOMContentLoaded", () => {
-          if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") {
-            LARMAH.updateHeaderAuthUI();
-          }
+          if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") LARMAH.updateHeaderAuthUI();
         });
       </script>
     </div>
@@ -164,61 +145,17 @@
 
           <div class="hero-badges">
             <div class="hero-card">
-                <h3><i class="fa-solid fa-key" style="color:var(--brand)"></i> Shortlets</h3>
-                <p>Weekend stays & executive shortlet inventory.</p>
+              <h3><i class="fa-solid fa-key" style="color:var(--brand)"></i> Shortlets</h3>
+              <p>Weekend stays & executive shortlet inventory.</p>
             </div>
             <div class="hero-card">
-                <h3><i class="fa-solid fa-house-chimney" style="color:var(--brand)"></i> Rentals</h3>
-                <p>Yearly rentals in high-demand locations.</p>
+              <h3><i class="fa-solid fa-house-chimney" style="color:var(--brand)"></i> Rentals</h3>
+              <p>Yearly rentals in high-demand locations.</p>
             </div>
             <div class="hero-card">
-                <h3><i class="fa-solid fa-file-signature" style="color:var(--brand)"></i> Purchase</h3>
-                <p>Buying guidance and verified listing flow.</p>
+              <h3><i class="fa-solid fa-file-signature" style="color:var(--brand)"></i> Purchase</h3>
+              <p>Buying guidance and verified listing flow.</p>
             </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head-split">
-        <div>
-          <h2>Verification & Process</h2>
-          <p class="lead">Clear steps that reduce risk before money changes hands.</p>
-        </div>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <h3><i class="fa-solid fa-shield-halved" style="color:var(--brand)"></i> Verification Proof</h3>
-          <p class="small">What we confirm before you commit funds.</p>
-          <div class="small" style="margin-top:10px;opacity:.9;line-height:1.8">
-            • Listing/partner validation<br/>
-            • WhatsApp confirmation steps<br/>
-            • Traceable reference IDs per enquiry<br/>
-            • Premium priority sourcing available
-          </div>
-        </div>
-
-        <div class="card">
-          <h3><i class="fa-solid fa-diagram-project" style="color:var(--brand)"></i> How It Works</h3>
-          <p class="small">Fast, trackable process.</p>
-          <div class="small" style="margin-top:10px;opacity:.9;line-height:1.8">
-            1) Browse catalog<br/>
-            2) Tap Enquire (auto WhatsApp message)<br/>
-            3) Confirm availability & details<br/>
-            4) Receive next steps & settlement guidance
-          </div>
-        </div>
-
-        <div class="card">
-          <h3><i class="fa-solid fa-crown" style="color:var(--brand)"></i> Priority Access</h3>
-          <p class="small">Premium members get faster sourcing turnaround.</p>
-          <div class="actions" style="margin-top:12px">
-            <a class="btn solid small" href="premium.html"><i class="fa-solid fa-star"></i> Go Premium</a>
-            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Priority Property Request', { Name:'', Phone:'', Location:'', Budget:'', Notes:'' }))">
-              <i class="fa-brands fa-whatsapp"></i> Priority Chat
-            </button>
           </div>
         </div>
       </div>
@@ -229,6 +166,9 @@
         <div>
           <h2>Featured Properties</h2>
           <p class="lead">Direct from verified owners and partners.</p>
+          <div class="small live-dot" id="liveStateRE" style="margin-top:8px;opacity:.9">
+            <i class="fa-solid fa-circle fa-beat"></i> Live updates enabled
+          </div>
         </div>
         <a class="btn small" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Sourcing</a>
       </div>
@@ -269,9 +209,9 @@
       </div>
 
       <div id="catalogMount">
-          <div class="latest-skel">
-            <div class="skel-line"></div><div class="skel-line short"></div>
-          </div>
+        <div class="latest-skel">
+          <div class="skel-line"></div><div class="skel-line short"></div>
+        </div>
       </div>
     </section>
 
@@ -313,7 +253,7 @@
         </div>
 
         <div class="small" style="margin-top:12px;opacity:.75;text-align:center">
-            Requests are logged securely for priority follow-up by Larmah staff.
+          Requests are logged (if you are signed in) for priority follow-up.
         </div>
       </div>
     </section>
@@ -377,12 +317,20 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-    let __RE_ITEMS = [];
+    document.getElementById("year").textContent = new Date().getFullYear();
+
     const norm = (s)=> String(s||"").toLowerCase();
+    let __RE_ITEMS = [];
+    let __reChannel = null;
+    let __reDebounce = null;
+
+    function debounce(fn, wait=700){
+      clearTimeout(__reDebounce);
+      __reDebounce = setTimeout(fn, wait);
+    }
 
     function inferType(item){
-      const hay = norm(item.title + " " + (item.description||"") + " " + (item.tags||[]).join(" "));
+      const hay = norm((item.title||"") + " " + (item.description||"") + " " + (item.tags||[]).join(" "));
       if(hay.includes("shortlet") || hay.includes("airbnb")) return "shortlet";
       if(hay.includes("rent") || hay.includes("year") || hay.includes("annual")) return "rent";
       if(hay.includes("buy") || hay.includes("sale") || hay.includes("purchase")) return "buy";
@@ -419,16 +367,13 @@
                   <img src="${LARMAH.escapeHtml(imgUrl)}" alt="${LARMAH.escapeHtml(it.title)}" loading="lazy"
                        onerror="this.src='assets/images/larmah-header.jpeg'">
                 </div>
-
                 <h3>${LARMAH.escapeHtml(it.title)}</h3>
                 <p>${LARMAH.escapeHtml(it.description || "")}</p>
-
                 ${it.price ? `<div class="price">${LARMAH.escapeHtml(it.price)}</div>` : ``}
                 <div class="meta">Verified • Ref: WEB-RE-${it.id}</div>
-
                 <div class="actions">
                   <button class="btn small primary" onclick="enquireProperty('${it.id}')">
-                      <i class="fa-brands fa-whatsapp"></i> Enquire
+                    <i class="fa-brands fa-whatsapp"></i> Enquire
                   </button>
                 </div>
               </div>
@@ -446,14 +391,14 @@
       let items = (__RE_ITEMS||[]).slice();
 
       if(q){
-        items = items.filter(it => norm(it.title + " " + (it.description||"") + " " + (it.tags||[]).join(" ")).includes(q));
+        items = items.filter(it => norm((it.title||"") + " " + (it.description||"") + " " + (it.tags||[]).join(" ")).includes(q));
       }
       if(tf){
         items = items.filter(it => inferType(it) === tf);
       }
 
       if(sort === "az") items.sort((a,b)=> String(a.title||"").localeCompare(String(b.title||"")));
-      else items.sort((a,b)=> new Date(b.updated_at||b.created_at||0) - new Date(a.updated_at||a.created_at||0));
+      else items.sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
 
       renderCards(items);
     }
@@ -462,13 +407,13 @@
       const mount = document.getElementById("catalogMount");
       mount.innerHTML = `
         <div class="grid">
-            <div class="card" style="height:300px;opacity:0.5"></div>
-            <div class="card" style="height:300px;opacity:0.5"></div>
-            <div class="card" style="height:300px;opacity:0.5"></div>
+          <div class="card" style="height:300px;opacity:0.5"></div>
+          <div class="card" style="height:300px;opacity:0.5"></div>
+          <div class="card" style="height:300px;opacity:0.5"></div>
         </div>`;
 
       try {
-        const sb = window.supabaseClient;
+        const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
         if(!sb) throw new Error("supabaseClient not ready");
 
         const { data, error } = await sb
@@ -478,10 +423,9 @@
           .eq('status', 'active')
           .order('created_at', { ascending: false });
 
-        if (error) throw error;
+        if(error) throw error;
 
         __RE_ITEMS = data || [];
-
         if(!__RE_ITEMS.length){
           mount.innerHTML = `<div class="notice"><strong>No active listings currently.</strong> Please submit a custom request below.</div>`;
           return;
@@ -522,17 +466,44 @@
         return;
       }
 
-      // ✅ Log (best effort) + open WhatsApp support
-      if (LARMAH.submitRequest) {
+      if(LARMAH.submitRequest){
         await LARMAH.submitRequest({
           header: "New Property Sourcing Request",
           category: "real-estate",
-          fields
+          fields,
+          refPrefix: "RE"
         });
       } else {
-        // fallback
         LARMAH.openWhatsApp(LARMAH.buildMessage("New Property Sourcing Request", fields));
       }
+    }
+
+    function initRealtimeRealEstate(){
+      const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+      if(!sb) return;
+
+      if(__reChannel){
+        try { sb.removeChannel(__reChannel); } catch {}
+        __reChannel = null;
+      }
+
+      __reChannel = sb
+        .channel("realtime-real-estate")
+        .on("postgres_changes", { event:"*", schema:"public", table:"listings" }, (payload) => {
+          // Refresh only when relevant (category/status could change)
+          const n = payload.new || {};
+          const o = payload.old || {};
+          const cat = (n.category || o.category || "").toLowerCase();
+          if(cat !== "real-estate") return;
+
+          debounce(() => loadRealEstate(), 800);
+        })
+        .subscribe((status) => {
+          const el = document.getElementById("liveStateRE");
+          if(!el) return;
+          if(status === "SUBSCRIBED") el.innerHTML = `<i class="fa-solid fa-circle fa-beat"></i> Live updates enabled`;
+          else el.innerHTML = `<i class="fa-solid fa-circle"></i> Live: ${status}`;
+        });
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -541,6 +512,7 @@
       document.getElementById("re_sort").addEventListener("change", renderRE);
 
       loadRealEstate();
+      initRealtimeRealEstate();
     });
   </script>
 </body>
