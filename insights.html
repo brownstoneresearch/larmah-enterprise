@@ -7,22 +7,34 @@
   <title>Insights | Larmah Enterprise</title>
   <meta name="description" content="Live market intelligence, FX and crypto pairs, real-estate trends, and logistics updates for the Nigerian market — curated from verified sources." />
   <meta name="keywords" content="Nigeria FX Rates, Lagos Real Estate News, Logistics Trends Nigeria, Crypto Rates Nigeria, Larmah Insights" />
+  <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://heylarmah.tech/insights.html" />
 
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
+  <meta property="og:locale" content="en_NG" />
   <meta property="og:url" content="https://heylarmah.tech/insights.html" />
   <meta property="og:title" content="Larmah Insights | Market Intelligence" />
   <meta property="og:description" content="Live rates + verified Nigerian updates — updated in real-time from Admin." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
+  <meta property="og:image:alt" content="Larmah Insights — Market Intelligence" />
 
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Larmah Insights" />
   <meta name="twitter:description" content="Live data and verified updates for the Nigerian commerce sector." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
-  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
+  <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
+
+  <!-- Performance -->
+  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -30,10 +42,55 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"CollectionPage",
+    "name":"Larmah Insights",
+    "url":"https://heylarmah.tech/insights.html",
+    "isPartOf":{
+      "@type":"WebSite",
+      "name":"Larmah Enterprise",
+      "url":"https://heylarmah.tech/"
+    }
+  }
+  </script>
+
   <style>
+    /* --- Premium refinements (safe overrides) --- */
+
     .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
     .live-dot i { font-size: 8px; }
 
+    /* ✅ Hero buttons alignment */
+    .hero .actions{
+      display:flex;
+      align-items:stretch;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    .hero .actions .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      white-space:nowrap;
+      line-height:1;
+      min-height:48px;
+      padding:12px 16px;
+    }
+    .hero .actions .btn i{ line-height:1; }
+    @media (min-width: 920px){
+      .hero .actions .btn{ min-width: 220px; }
+    }
+    @media (max-width: 520px){
+      .hero .actions{ flex-direction:column; }
+      .hero .actions .btn{ width:100%; }
+    }
+
+    /* Market board */
     .market-board{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -46,12 +103,18 @@
       border-radius: 16px;
       padding: 16px;
       text-align:center;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .ticker-card:hover{
+      transform: translateY(-1px);
+      border-color: rgba(212,175,55,.20);
+      background: rgba(255,255,255,0.045);
     }
     .ticker-pair{ font-size: 0.8rem; color: var(--muted); font-weight: 900; margin-bottom: 6px; }
     .ticker-val{ font-size: 1.15rem; font-weight: 950; color: var(--text); }
     .ticker-sub{ font-size:.8rem; color: var(--muted); opacity:.9; margin-top:6px; }
-    
-    /* New: Rate display styles */
+
+    /* Rate display styles */
     .rate-display { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 4px; }
     .rate-buy, .rate-sell { font-size: 0.85rem; }
     .rate-buy { color: var(--ok); }
@@ -66,13 +129,23 @@
       margin-bottom: 12px;
       position: relative;
       user-select:none;
+      isolation:isolate;
     }
-    .card-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .card-media img{ width:100%; height:100%; object-fit:cover; display:block; transform: scale(1.01); }
+    .card-media::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,.30), rgba(0,0,0,0) 55%);
+      pointer-events:none;
+      z-index:1;
+    }
+
     .media-nav{
       position:absolute; inset:0;
       display:flex; align-items:center; justify-content:space-between;
       padding: 0 10px;
       pointer-events:none;
+      z-index:2;
     }
     .media-btn{
       width:34px; height:34px; border-radius:12px;
@@ -83,19 +156,26 @@
       pointer-events:auto;
       cursor:pointer;
       backdrop-filter: blur(6px);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
     }
-    .media-btn:hover{ background: rgba(0,0,0,0.55); }
+    .media-btn:hover{
+      background: rgba(0,0,0,0.55);
+      border-color: rgba(212,175,55,.22);
+      transform: translateY(-1px);
+    }
+
     .media-dots{
       position:absolute; left:0; right:0; bottom:10px;
       display:flex; justify-content:center; gap:6px;
       pointer-events:none;
+      z-index:2;
     }
     .media-dot{
       width:7px; height:7px; border-radius:999px;
       background: rgba(255,255,255,0.35);
       border: 1px solid rgba(255,255,255,0.25);
     }
-    .media-dot.active{ background: rgba(255,255,255,0.9); }
+    .media-dot.active{ background: rgba(255,255,255,0.92); }
 
     .blog-date { font-size: 0.8rem; color: var(--accent); font-weight: 900; margin-bottom: 6px; display: block; }
     .blog-snip { color: var(--muted); font-size: 0.95rem; margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
@@ -123,34 +203,57 @@
 
     .sk-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; }
     .sk-card{ height:210px; border-radius:16px; background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); opacity:.6; }
-    
+
     /* Loading animation for rates */
     .rate-loading { animation: pulse 1.5s infinite; }
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; }
-      50% { opacity: 0.3; }
+    @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 0.3; } }
+
+    /* Notice */
+    .notice{
+      border-radius: 16px;
+      padding: 12px 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
     }
+    .notice strong{ color: var(--text); }
   </style>
 </head>
 
 <body data-page="insights">
 
-  <div id="mobileNavOverlay">
-    <div class="msheet">
+  <div id="mobileNavOverlay" aria-hidden="true">
+    <div class="msheet" role="dialog" aria-label="Mobile navigation">
       <div class="msheet-head">
         <div class="msheet-brand"><img src="assets/images/larmah-header.jpeg" alt="Larmah Logo"></div>
-        <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu"><i class="fa-solid fa-xmark"></i></button>
+        <button class="msheet-close" type="button" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
       <div class="msheet-body">
         <div class="msheet-links">
-          <a href="real-estate.html" class="msheet-link"><span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
-          <a href="logistics.html" class="msheet-link"><span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
-          <a href="insights.html" class="msheet-link active"><span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span><i class="fa-solid fa-check" style="font-size:12px;"></i></a>
-          <a href="exchange.html" class="msheet-link"><span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
+          <a href="real-estate.html" class="msheet-link">
+            <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
+          <a href="logistics.html" class="msheet-link">
+            <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
+          <a href="insights.html" class="msheet-link active">
+            <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
+            <i class="fa-solid fa-check" style="font-size:12px;"></i>
+          </a>
+          <a href="exchange.html" class="msheet-link">
+            <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
         </div>
         <div class="msheet-footer">
           <div class="msheet-hint">Menu</div>
-          <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)"><span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span></a>
+          <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
+            <span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span>
+          </a>
         </div>
       </div>
     </div>
@@ -158,8 +261,10 @@
 
   <header>
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Home"><img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" /></a>
-      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+      <a class="brand" href="index.html" aria-label="Larmah Home">
+        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+      </a>
+      <button class="menu-btn" type="button" onclick="LARMAH.toggleMenu()" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
       <nav id="nav" aria-label="Primary navigation">
         <ul>
           <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
@@ -172,7 +277,7 @@
   </header>
 
   <main class="container">
-    <section class="hero">
+    <section class="hero" aria-label="Insights hero">
       <div class="hero-shell">
         <div class="hero-inner">
           <div>
@@ -185,12 +290,12 @@
             <h1>Stay Ahead of the Market.</h1>
             <p class="lead">Curated Nigeria updates + live desk pairs. New posts appear instantly when synced.</p>
 
-            <div class="actions">
+            <div class="actions" aria-label="Primary actions">
               <a class="btn solid" href="#news"><i class="fa-regular fa-newspaper"></i> Latest Insights</a>
               <a class="btn primary" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
             </div>
 
-            <div class="small live-dot" id="liveStateIN" style="margin-top:12px;opacity:.9">
+            <div class="small live-dot" id="liveStateIN" style="margin-top:12px;opacity:.9" aria-live="polite">
               <i class="fa-solid fa-circle fa-beat"></i> Live updates enabled
             </div>
           </div>
@@ -211,7 +316,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" aria-label="Market board">
       <div class="section-head-split">
         <div>
           <h2>Live Market Board</h2>
@@ -221,7 +326,6 @@
       </div>
 
       <div id="marketBoard" class="market-board">
-        <!-- Will be populated by JavaScript -->
         <div class="ticker-card rate-loading"><div class="ticker-pair">USDT/NGN</div><div class="ticker-val">—</div><div class="rate-display"><span class="rate-buy">—</span><span class="rate-separator">|</span><span class="rate-sell">—</span></div><div class="ticker-sub">Buy / Sell</div></div>
         <div class="ticker-card rate-loading"><div class="ticker-pair">BTC/USDT</div><div class="ticker-val">—</div><div class="rate-display"><span class="rate-buy">—</span><span class="rate-separator">|</span><span class="rate-sell">—</span></div><div class="ticker-sub">Buy / Sell</div></div>
         <div class="ticker-card rate-loading"><div class="ticker-pair">BTC/NGN</div><div class="ticker-val">—</div><div class="rate-display"><span class="rate-buy">—</span><span class="rate-separator">|</span><span class="rate-sell">—</span></div><div class="ticker-sub">Buy / Sell</div></div>
@@ -229,24 +333,25 @@
       </div>
     </section>
 
-    <section class="section" id="news">
+    <section class="section" id="news" aria-label="Latest insights">
       <div class="section-head-split">
         <div>
           <h2>Latest Insights</h2>
           <p class="lead">Pulled from Supabase <code>insights</code> table.</p>
 
           <div class="filters-row">
-            <select id="sourceFilter" class="input">
+            <select id="sourceFilter" class="input" aria-label="Filter by source">
               <option value="all">All sources</option>
             </select>
           </div>
         </div>
 
-        <div class="pillbar">
-          <button class="btn small" onclick="setInsightFilter('all')">All</button>
-          <button class="btn small" onclick="setInsightFilter('real-estate')">Property</button>
-          <button class="btn small" onclick="setInsightFilter('logistics')">Logistics</button>
-          <button class="btn small" onclick="setInsightFilter('exchange')">Exchange</button>
+        <div class="pillbar" aria-label="Category filters">
+          <!-- ✅ Use data-filter so JS can set active state without relying on global event -->
+          <button class="btn small is-active" type="button" data-filter="all" onclick="setInsightFilter('all', this)">All</button>
+          <button class="btn small" type="button" data-filter="real-estate" onclick="setInsightFilter('real-estate', this)">Property</button>
+          <button class="btn small" type="button" data-filter="logistics" onclick="setInsightFilter('logistics', this)">Logistics</button>
+          <button class="btn small" type="button" data-filter="exchange" onclick="setInsightFilter('exchange', this)">Exchange</button>
         </div>
       </div>
 
@@ -257,13 +362,14 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" aria-label="WhatsApp subscribe">
       <div class="cta-strip">
         <div>
           <h2 style="margin:0">Don't miss a beat.</h2>
           <p class="lead" style="margin:6px 0 0">Join the Larmah broadcast list on WhatsApp.</p>
         </div>
-        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Join Broadcast List', { Name:'' }))">
+        <button class="btn solid" type="button"
+          onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Join Broadcast List', { Name:'' }))">
           <i class="fa-brands fa-whatsapp"></i> Subscribe Free
         </button>
       </div>
@@ -304,10 +410,11 @@
         <div>
           <b>Contact</b>
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
+          <div class="small"><i class="fa-regular fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="751700061c1b100606351d100c19140718141d5b0110161d">[email&#160;protected]</a></div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
           <div class="actions" style="margin-top:12px">
-            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
+            <button class="btn small" type="button"
+              onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
             </button>
           </div>
@@ -318,7 +425,9 @@
     </div>
   </footer>
 
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 
   <script>
     // Global variables
@@ -331,14 +440,18 @@
 
     // Utility functions
     function sbClient() {
+      // Prefer your centralized client if present:
       if (window.LARMAH && LARMAH.supabase) return LARMAH.supabase;
+      // Fallback to ensureSupabaseClient if your app.js uses it:
+      if (window.supabaseClient) return window.supabaseClient;
+      if (window.ensureSupabaseClient) return window.ensureSupabaseClient();
       console.error('Supabase client not initialized');
       return null;
     }
 
     function formatNumber(num, decimals = 2) {
       if (num == null || isNaN(num)) return '—';
-      return num.toLocaleString('en-US', {
+      return Number(num).toLocaleString('en-US', {
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals
       });
@@ -346,20 +459,20 @@
 
     function formatCurrency(amount, currency = '₦') {
       if (amount == null || isNaN(amount)) return '—';
-      return currency + formatNumber(amount);
+      return currency + formatNumber(amount, 0);
     }
 
     function formatTimestamp(timestamp) {
       if (!timestamp) return '';
       const date = new Date(timestamp);
       if (isNaN(date.getTime())) return '';
-      
+
       const now = new Date();
       const diffMs = now - date;
       const diffMins = Math.floor(diffMs / 60000);
       const diffHours = Math.floor(diffMs / 3600000);
       const diffDays = Math.floor(diffMs / 86400000);
-      
+
       if (diffMins < 1) return 'Just now';
       if (diffMins < 60) return `${diffMins}m ago`;
       if (diffHours < 24) return `${diffHours}h ago`;
@@ -372,33 +485,28 @@
       const sources = [...new Set(insights.map(i => i.source_name).filter(Boolean))];
       const select = document.getElementById('sourceFilter');
       if (!select) return;
-      
-      // Keep current value
+
       const currentValue = select.value;
       select.innerHTML = '<option value="all">All sources</option>';
-      
+
       sources.forEach(source => {
         const option = document.createElement('option');
         option.value = source;
         option.textContent = source;
         select.appendChild(option);
       });
-      
-      // Restore selection if possible
-      if (sources.includes(currentValue)) {
-        select.value = currentValue;
-      }
+
+      if (sources.includes(currentValue)) select.value = currentValue;
+      else select.value = 'all';
     }
 
-    function setInsightFilter(category) {
+    // ✅ safer: pass the button explicitly, no reliance on global event
+    function setInsightFilter(category, btnEl) {
       __currentFilter = category;
       renderInsights();
-      
-      // Update active button state
-      document.querySelectorAll('.pillbar .btn').forEach(btn => {
-        btn.classList.remove('active');
-      });
-      event.target.classList.add('active');
+
+      document.querySelectorAll('.pillbar .btn').forEach(btn => btn.classList.remove('is-active'));
+      if (btnEl) btnEl.classList.add('is-active');
     }
 
     function setSourceFilter(source) {
@@ -409,21 +517,15 @@
     function renderInsights() {
       const mount = document.getElementById('newsMount');
       if (!mount) return;
-      
-      // Filter insights
+
       let filtered = __insightsAll;
-      
-      if (__currentFilter !== 'all') {
-        filtered = filtered.filter(i => i.category === __currentFilter);
-      }
-      
-      if (__currentSource !== 'all') {
-        filtered = filtered.filter(i => i.source_name === __currentSource);
-      }
-      
+
+      if (__currentFilter !== 'all') filtered = filtered.filter(i => i.category === __currentFilter);
+      if (__currentSource !== 'all') filtered = filtered.filter(i => i.source_name === __currentSource);
+
       __activeInsightsCount = filtered.length;
       updateInsightCount();
-      
+
       if (filtered.length === 0) {
         mount.innerHTML = `
           <div class="notice" style="grid-column:1/-1;text-align:center;padding:32px">
@@ -434,40 +536,47 @@
         `;
         return;
       }
-      
-      // Render insights grid
-      const html = filtered.slice(0, 12).map(insight => {
+
+      const html = filtered.slice(0, 12).map((insight) => {
         const dateStr = insight.published_at || insight.created_at;
         const imageUrls = insight.image_urls || (insight.image_url ? [insight.image_url] : []);
         const firstImage = imageUrls.length > 0 ? imageUrls[0] : null;
         const imageCount = imageUrls.length;
         const sourceName = insight.source_name || 'Unknown';
-        
+
+        const safeTitle = (insight.title || "").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        const safeSummary = (insight.summary || "").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        const safeUrl = (insight.article_url || "").replace(/"/g,"&quot;");
+
         return `
           <div class="card slide-up">
             ${firstImage ? `
-              <div class="card-media" data-images='${JSON.stringify(imageUrls)}'>
-                <img src="${firstImage}" alt="${insight.title}" loading="lazy">
+              <div class="card-media" data-images='${JSON.stringify(imageUrls).replace(/'/g,"&#39;")}'>
+                <img src="${firstImage}" alt="${safeTitle}" loading="lazy" onerror="this.style.display='none'">
                 ${imageCount > 1 ? `
                   <div class="media-nav">
-                    <button class="media-btn prev-btn" onclick="navMedia(this, -1)"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button class="media-btn next-btn" onclick="navMedia(this, 1)"><i class="fa-solid fa-chevron-right"></i></button>
+                    <button class="media-btn prev-btn" type="button" aria-label="Previous image" onclick="navMedia(this, -1)">
+                      <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button class="media-btn next-btn" type="button" aria-label="Next image" onclick="navMedia(this, 1)">
+                      <i class="fa-solid fa-chevron-right"></i>
+                    </button>
                   </div>
-                  <div class="media-dots">
+                  <div class="media-dots" aria-hidden="true">
                     ${imageUrls.map((_, i) => `<div class="media-dot ${i === 0 ? 'active' : ''}"></div>`).join('')}
                   </div>
                 ` : ''}
               </div>
             ` : ''}
-            
+
             <div class="card-body">
               <span class="blog-date">${formatTimestamp(dateStr)}</span>
               <h3 class="card-title" style="font-size:1rem;margin-bottom:8px">
-                <a href="${insight.article_url}" target="_blank" rel="noopener">${insight.title}</a>
+                ${safeUrl ? `<a href="${safeUrl}" target="_blank" rel="noopener">${safeTitle || "Read update"}</a>` : (safeTitle || "Update")}
               </h3>
-              
-              ${insight.summary ? `<p class="blog-snip">${insight.summary}</p>` : ''}
-              
+
+              ${safeSummary ? `<p class="blog-snip">${safeSummary}</p>` : ''}
+
               <div class="source-pill">
                 <i class="fa-solid fa-rss"></i> ${sourceName}
               </div>
@@ -475,43 +584,35 @@
           </div>
         `;
       }).join('');
-      
+
       mount.innerHTML = `
         <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
           ${html}
         </div>
       `;
-      
-      // Update hero count
-      updateInsightCount();
     }
 
     function updateInsightCount() {
       const countEl = document.getElementById('heroInsightCount');
-      if (countEl) {
-        countEl.textContent = __activeInsightsCount || '—';
-      }
+      if (countEl) countEl.textContent = (__activeInsightsCount ?? '—');
     }
 
     // Media navigation
     function navMedia(btn, direction) {
       const mediaEl = btn.closest('.card-media');
       if (!mediaEl) return;
-      
+
       const images = JSON.parse(mediaEl.dataset.images || '[]');
       if (images.length <= 1) return;
-      
+
       const imgEl = mediaEl.querySelector('img');
       const dots = mediaEl.querySelectorAll('.media-dot');
       const currentIndex = images.findIndex(src => src === imgEl.src);
-      let nextIndex = (currentIndex + direction + images.length) % images.length;
-      
+      const safeIndex = currentIndex >= 0 ? currentIndex : 0;
+      const nextIndex = (safeIndex + direction + images.length) % images.length;
+
       imgEl.src = images[nextIndex];
-      imgEl.alt = `Insight image ${nextIndex + 1}`;
-      
-      dots.forEach((dot, i) => {
-        dot.classList.toggle('active', i === nextIndex);
-      });
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === nextIndex));
     }
 
     // Rates functions
@@ -522,8 +623,8 @@
         base: row.base || '',
         quote: row.quote || '',
         pair: row.pair || `${row.base}/${row.quote}`,
-        buy: parseFloat(row.buy) || 0,
-        sell: parseFloat(row.sell) || 0,
+        buy: row.buy != null ? parseFloat(row.buy) : null,
+        sell: row.sell != null ? parseFloat(row.sell) : null,
         status: row.status || 'inactive',
         updated_at: row.updated_at,
         created_at: row.created_at
@@ -533,45 +634,28 @@
     function renderMarketBoard() {
       const board = document.getElementById('marketBoard');
       if (!board) return;
-      
-      // Clear loading states
-      board.querySelectorAll('.rate-loading').forEach(el => {
-        el.classList.remove('rate-loading');
-      });
-      
-      // Define the pairs we want to display
+
       const targetPairs = ['USDT/NGN', 'BTC/USDT', 'BTC/NGN', 'ETH/USDT'];
       const defaultPairs = ['USD/NGN', 'EUR/NGN', 'GBP/NGN'];
-      
-      // Get rates for target pairs
+
       const displayRates = targetPairs.map(pair => {
-        if (__ratesMap[pair]) {
-          return __ratesMap[pair];
-        }
-        
-        // If not found, try to find similar
-        const similar = __rates.find(r => 
-          r.pair.includes(pair.split('/')[0]) || 
-          r.pair.includes(pair.split('/')[1])
+        if (__ratesMap[pair]) return __ratesMap[pair];
+        const similar = __rates.find(r =>
+          (r.pair || '').includes(pair.split('/')[0]) ||
+          (r.pair || '').includes(pair.split('/')[1])
         );
-        
-        return similar || { pair, buy: null, sell: null };
+        return similar || { pair, buy: null, sell: null, quote: pair.split('/')[1] };
       });
-      
-      // If no rates found, use defaults
+
       if (__rates.length === 0) {
         displayRates.length = 0;
-        defaultPairs.forEach(pair => {
-          displayRates.push({ pair, buy: null, sell: null });
-        });
+        defaultPairs.forEach(pair => displayRates.push({ pair, buy: null, sell: null, quote: pair.split('/')[1] }));
       }
-      
-      // Render each rate card
+
       board.innerHTML = displayRates.map(rate => {
         const hasBuy = rate.buy != null && !isNaN(rate.buy) && rate.buy > 0;
         const hasSell = rate.sell != null && !isNaN(rate.sell) && rate.sell > 0;
-        
-        // Format values
+
         let tickerVal = '—';
         if (hasBuy && hasSell) {
           const avg = (rate.buy + rate.sell) / 2;
@@ -581,10 +665,10 @@
         } else if (hasSell) {
           tickerVal = rate.quote === 'NGN' ? formatCurrency(rate.sell) : formatNumber(rate.sell);
         }
-        
+
         const buyText = hasBuy ? (rate.quote === 'NGN' ? formatCurrency(rate.buy) : formatNumber(rate.buy)) : '—';
         const sellText = hasSell ? (rate.quote === 'NGN' ? formatCurrency(rate.sell) : formatNumber(rate.sell)) : '—';
-        
+
         return `
           <div class="ticker-card">
             <div class="ticker-pair">${rate.pair}</div>
@@ -598,63 +682,51 @@
           </div>
         `;
       }).join('');
-      
-      // Update hero rate
+
       updateHeroRate();
     }
 
     function updateHeroRate() {
       const heroRateEl = document.getElementById('heroRateMain');
       const heroUpdatedEl = document.getElementById('heroRateUpdated');
-      
       if (!heroRateEl) return;
-      
-      // Try to get USDT/NGN sell rate
+
       const usdtngn = __ratesMap['USDT/NGN'];
       if (usdtngn && usdtngn.sell) {
-        heroRateEl.textContent = usdtngn.quote === 'NGN' ? 
-          formatCurrency(usdtngn.sell) : 
-          formatNumber(usdtngn.sell);
-        
-        if (heroUpdatedEl && usdtngn.updated_at) {
+        heroRateEl.textContent = usdtngn.quote === 'NGN' ? formatCurrency(usdtngn.sell) : formatNumber(usdtngn.sell);
+        if (heroUpdatedEl) {
           const timeAgo = formatTimestamp(usdtngn.updated_at);
           heroUpdatedEl.textContent = timeAgo ? `Updated ${timeAgo}` : 'Live from Admin';
         }
-      } else {
-        // Fallback to any rate
-        const firstRate = __rates.find(r => r.sell);
-        if (firstRate) {
-          heroRateEl.textContent = firstRate.quote === 'NGN' ? 
-            formatCurrency(firstRate.sell) : 
-            formatNumber(firstRate.sell);
-        } else {
-          heroRateEl.textContent = '—';
-        }
+        return;
       }
+
+      const firstRate = __rates.find(r => r && r.sell);
+      heroRateEl.textContent = firstRate
+        ? (firstRate.quote === 'NGN' ? formatCurrency(firstRate.sell) : formatNumber(firstRate.sell))
+        : '—';
     }
 
     async function loadRates() {
       const sb = sbClient();
       if (!sb) return;
-      
+
       try {
         const { data, error } = await sb
           .from('rates')
           .select('*')
           .eq('status', 'active')
           .order('updated_at', { ascending: false });
-        
+
         if (error) {
           console.error('Failed to load rates:', error);
           return;
         }
-        
+
         __rates = (data || []).map(normalizeRateRow);
         __ratesMap = {};
-        __rates.forEach(r => {
-          __ratesMap[r.pair] = r;
-        });
-        
+        __rates.forEach(r => { __ratesMap[r.pair] = r; });
+
         renderMarketBoard();
       } catch (error) {
         console.error('Error loading rates:', error);
@@ -664,14 +736,12 @@
     async function loadInsights() {
       const sb = sbClient();
       const mount = document.getElementById('newsMount');
-      
+
       if (!sb) {
-        if (mount) {
-          mount.innerHTML = '<div class="notice">Supabase not ready.</div>';
-        }
+        if (mount) mount.innerHTML = '<div class="notice">Supabase not ready.</div>';
         return;
       }
-      
+
       try {
         const { data, error } = await sb
           .from('insights')
@@ -679,7 +749,7 @@
           .eq('status', 'active')
           .order('published_at', { ascending: false })
           .limit(50);
-        
+
         if (error) {
           console.error('Failed to load insights:', error);
           if (mount) {
@@ -692,7 +762,7 @@
           }
           return;
         }
-        
+
         __insightsAll = data || [];
         updateSourceOptions(__insightsAll);
         renderInsights();
@@ -701,52 +771,40 @@
       }
     }
 
-    // Initialize
     document.addEventListener('DOMContentLoaded', () => {
-      // Set current year in footer
       const yearEl = document.getElementById('year');
-      if (yearEl) {
-        yearEl.textContent = new Date().getFullYear();
-      }
-      
-      // Set up source filter event listener
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
       const sourceFilter = document.getElementById('sourceFilter');
       if (sourceFilter) {
-        sourceFilter.addEventListener('change', (e) => {
-          setSourceFilter(e.target.value);
-        });
+        sourceFilter.addEventListener('change', (e) => setSourceFilter(e.target.value));
       }
-      
-      // Load initial data
+
       loadRates();
       loadInsights();
-      
-      // Set up realtime subscriptions if available
+
       if (window.LARMAH && LARMAH.realtime) {
-        // Subscribe to rates changes
-        LARMAH.realtime.subscribe('rates', () => {
-          console.log('Rates updated, refreshing...');
-          loadRates();
-        }, 'insights-rates', { 
+        LARMAH.realtime.subscribe('rates', () => loadRates(), 'insights-rates', {
           debounceMs: 1000,
           statusElId: 'liveStateIN'
         });
-        
-        // Subscribe to insights changes
-        LARMAH.realtime.subscribe('insights', () => {
-          console.log('Insights updated, refreshing...');
-          loadInsights();
-        }, 'insights-feed', { 
-          debounceMs: 1000 
+
+        LARMAH.realtime.subscribe('insights', () => loadInsights(), 'insights-feed', {
+          debounceMs: 1000
         });
       }
-      
-      // Auto-refresh every 60 seconds
+
+      // Optional safety refresh
       setInterval(() => {
         loadRates();
         loadInsights();
       }, 60000);
     });
   </script>
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+    crossorigin="anonymous"></script>
 </body>
 </html>
