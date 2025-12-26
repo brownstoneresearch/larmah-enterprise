@@ -843,24 +843,25 @@
        ✅ RSS SYNC (Little upgrade)
        =========================== */
     async function syncRssNow(){
-      try{
-        toast("Running RSS sync…", "info");
-        if (sb.functions && sb.functions.invoke) {
-          const { data, error } = await sb.functions.invoke("rss-sync", { body: {} });
-          if(error) throw error;
-          toast("RSS sync complete ✅", "success");
-          // refresh insights table after sync
-          try { await fetchInsights(); } catch {}
-          try { await fetchRssSources(); } catch {}
-          console.log("rss-sync:", data);
-        } else {
-          toast("Edge Functions not available in client.", "error");
-        }
-      }catch(e){
-        console.warn(e);
-        toast(e?.message || "RSS sync failed", "error");
-      }
-    }
+  try{
+    toast("Running RSS sync…", "info");
+    const { data, error } = await sb.functions.invoke("rss-sync", { body: {} });
+    if(error) throw error;
+
+    const inserted = data?.items_inserted_est ?? 0;
+    const fetched = data?.sources_fetched ?? 0;
+    toast(`RSS synced ✅ (${inserted} items, ${fetched} feeds)`, "success");
+
+    // refresh views
+    try { await fetchInsights(); } catch {}
+    try { await fetchRssSources(); } catch {}
+
+    console.log("rss-sync result:", data);
+  }catch(e){
+    console.warn(e);
+    toast(e?.message || "RSS sync failed", "error");
+  }
+}
 
     /* ===========================
        STATS
