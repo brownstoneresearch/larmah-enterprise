@@ -5,10 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>Exchange | Larmah Enterprise</title>
-  <meta name="description" content="Institutional-grade FX and Crypto OTC desk. Live NGN rates, secure settlement, and instant WhatsApp booking." />
+  <meta name="description" content="Institutional-grade FX and Crypto OTC desk. Live rates, secure settlement, and instant WhatsApp booking." />
   <meta name="keywords" content="Buy Dollar Nigeria, Sell USDT Nigeria, Crypto OTC Lagos, FX Rates Nigeria, Larmah Exchange" />
   <meta name="theme-color" content="#070A12" />
   <link rel="canonical" href="https://heylarmah.tech/exchange.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://heylarmah.tech/exchange.html" />
+  <meta property="og:title" content="Larmah Exchange | Prime Desk" />
+  <meta property="og:description" content="Live Rates: NGN & USDT pairs. Secure OTC settlement for Nigeria." />
+  <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Larmah Exchange" />
+  <meta name="twitter:description" content="Institutional rates. Instant settlement. Trade with confidence." />
+  <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
@@ -20,61 +31,83 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    .rate-board {
-      background: rgba(0,0,0,0.3);
-      border: 1px solid var(--border);
-      border-radius: var(--radius2);
-      padding: 24px;
-      backdrop-filter: blur(10px);
-      box-shadow: inset 0 0 80px rgba(0,0,0,0.5);
-      position: relative;
-      overflow: hidden;
-    }
-    .rate-row {
-      display: grid; grid-template-columns: 1fr 1fr 1fr auto;
-      align-items: center; gap: 12px;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .rate-row:last-child { border-bottom: none; }
-
-    .currency-pair { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 1.05rem; }
-    .currency-icon {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: rgba(255,255,255,0.1);
-      display: grid; place-items: center; font-size: 0.9rem;
-    }
-    .rate-val { font-family: ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-    .rate-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; font-weight: 900; }
-    .buy-rate { color: var(--ok); font-weight: 900; font-size: 1.1rem; }
-    .sell-rate { color: var(--warn); font-weight: 900; font-size: 1.1rem; }
-
-    .converter {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
-    }
-    .conv-input-group { position: relative; margin-bottom: 12px; }
-    .conv-input {
-      font-size: 1.5rem; font-weight: 950; padding-right: 100px;
-      background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.1);
-    }
-    .conv-select {
-      position: absolute; right: 6px; top: 6px; bottom: 6px;
-      width: 90px; border: none; background: rgba(255,255,255,0.08);
-      color: #fff; font-weight: 900; border-radius: 10px; cursor: pointer;
-      text-align: center;
-    }
-    .conv-result { text-align: right; font-size: 0.9rem; color: var(--muted); margin-top: 8px; }
-    .conv-total { font-size: 1.8rem; font-weight: 950; color: var(--accent); letter-spacing: -1px; }
-
     .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
     .live-dot i { font-size: 8px; }
 
-    @media(max-width: 600px) {
-      .rate-row { grid-template-columns: 1fr 1fr; row-gap: 16px; }
-      .rate-action { grid-column: 1 / -1; }
+    .exchange-grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items: start;
+    }
+    @media(max-width: 900px){ .exchange-grid{ grid-template-columns: 1fr; } }
+
+    .rate-board {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 20px;
+      padding: 18px;
+      backdrop-filter: blur(10px);
+      box-shadow: inset 0 0 80px rgba(0,0,0,0.45);
+      position: relative;
+      overflow: hidden;
+    }
+    .board-title{
+      display:flex; align-items:baseline; justify-content:space-between;
+      gap:10px; margin-bottom: 6px;
+    }
+    .board-title h3{ margin:0; font-weight: 950; }
+    .board-title .small{ opacity:.8; }
+
+    .rate-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .rate-row:last-child { border-bottom: none; }
+    .rate-row.head{
+      padding-top:0;
+      border-bottom:1px solid rgba(255,255,255,0.10);
+      opacity:0.7;
+      font-size:0.85rem;
+    }
+
+    .pair { display:flex; align-items:center; gap:10px; font-weight: 950; font-size: 1.02rem; }
+    .pair small{ font-weight:800; color:var(--muted); opacity:.9; }
+    .icon{
+      width:32px;height:32px;border-radius:50%;
+      display:grid;place-items:center;
+      background: rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.10);
+    }
+    .label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
+    .buy { color: var(--ok); font-weight: 950; }
+    .sell { color: var(--warn); font-weight: 950; }
+    .val{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
+
+    .converter{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+    }
+    .conv-row{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media(max-width:520px){ .conv-row{ grid-template-columns: 1fr; } }
+
+    .conv-input{
+      font-size: 1.35rem; font-weight: 950;
+      background: rgba(0,0,0,0.2);
+      border-color: rgba(255,255,255,0.12);
+    }
+    .conv-result{ text-align:right; font-size: .9rem; color: var(--muted); margin-top: 8px; }
+    .conv-total{ font-size: 1.8rem; font-weight: 950; color: var(--accent); letter-spacing: -1px; }
+
+    .pill{ display:inline-flex; gap:8px; align-items:center; padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10); background:rgba(255,255,255,0.03);
+      font-weight:900; font-size:.8rem; color:var(--muted);
     }
   </style>
 </head>
@@ -84,37 +117,19 @@
   <div id="mobileNavOverlay">
     <div class="msheet">
       <div class="msheet-head">
-        <div class="msheet-brand">
-          <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
-        </div>
-        <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <div class="msheet-brand"><img src="assets/images/larmah-header.jpeg" alt="Larmah Logo"></div>
+        <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu"><i class="fa-solid fa-xmark"></i></button>
       </div>
       <div class="msheet-body">
         <div class="msheet-links">
-          <a href="real-estate.html" class="msheet-link">
-            <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="logistics.html" class="msheet-link">
-            <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="insights.html" class="msheet-link">
-            <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="exchange.html" class="msheet-link active">
-            <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
-            <i class="fa-solid fa-check" style="font-size:12px;"></i>
-          </a>
+          <a href="real-estate.html" class="msheet-link"><span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
+          <a href="logistics.html" class="msheet-link"><span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
+          <a href="insights.html" class="msheet-link"><span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
+          <a href="exchange.html" class="msheet-link active"><span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span><i class="fa-solid fa-check" style="font-size:12px;"></i></a>
         </div>
         <div class="msheet-footer">
           <div class="msheet-hint">Menu</div>
-          <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-            <span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span>
-          </a>
+          <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)"><span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span></a>
         </div>
       </div>
     </div>
@@ -125,10 +140,7 @@
       <a class="brand" href="index.html" aria-label="Larmah Home">
         <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
       </a>
-
-      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
 
       <nav id="nav" aria-label="Primary navigation">
         <ul>
@@ -149,58 +161,61 @@
             <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-money-bill-trend-up"></i> OTC Trading Desk</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Instant Settlement</span>
+              <span class="kicker-sub">Pairs: NGN & USDT</span>
             </div>
 
-            <h1>Institutional Grade<br>Exchange Rates.</h1>
-            <p class="lead">
-              Securely trade FX and Crypto with Larmah's verified OTC desk.
-              Competitive rates, WhatsApp-first booking.
-            </p>
+            <h1>Multi-Pair<br/>Exchange Rates.</h1>
+            <p class="lead">BTC/USDT, BTC/NGN, ETH/NGN, ETH/USDT, USDT/NGN — and more. Rates update live from Admin.</p>
 
             <div class="actions">
               <a class="btn solid" href="#rates"><i class="fa-solid fa-chart-pie"></i> Check Rates</a>
-              <button class="btn primary" onclick="startTrade()">
-                <i class="fa-brands fa-whatsapp"></i> Start Trade
-              </button>
+              <button class="btn primary" onclick="bookTrade()"><i class="fa-brands fa-whatsapp"></i> Start Trade</button>
             </div>
 
-            <div class="trust-row">
-              <div class="trust-badge"><i class="fa-solid fa-lock"></i> Escrow Available</div>
-              <div class="trust-badge"><i class="fa-solid fa-bolt"></i> &lt; 10min Settlement</div>
+            <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap">
+              <span class="pill"><i class="fa-solid fa-lock"></i> Escrow Available</span>
+              <span class="pill"><i class="fa-solid fa-bolt"></i> Fast Settlement</span>
+              <span class="pill"><i class="fa-solid fa-shield-halved"></i> Verified Desk</span>
             </div>
 
-            <div class="small live-dot" id="liveStateFX" style="margin-top:12px;opacity:.9">
-              <i class="fa-solid fa-circle fa-beat"></i> Live rate updates enabled
+            <div class="small live-dot" id="liveStateEX" style="margin-top:12px;opacity:.9">
+              <i class="fa-solid fa-circle fa-beat"></i> Live updates enabled
             </div>
           </div>
 
-          <div style="align-self:center">
-            <div class="converter">
-              <h3 style="margin-bottom:12px;font-size:1rem;color:var(--muted)">Quick Converter</h3>
+          <div class="converter">
+            <h3 style="margin-bottom:12px;font-size:1rem;color:var(--muted)">Quick Converter</h3>
 
-              <div class="conv-input-group">
-                <input type="number" id="calc_amount" class="input conv-input" value="1000" placeholder="0.00">
-                <select id="calc_from" class="conv-select">
-                  <option value="USD">USD ($)</option>
-                  <option value="GBP">GBP (£)</option>
-                  <option value="EUR">EUR (€)</option>
-                  <option value="USDT">USDT</option>
+            <div class="conv-row">
+              <div>
+                <label class="small">Pair</label>
+                <select id="calc_pair" class="input"></select>
+              </div>
+              <div>
+                <label class="small">Side</label>
+                <select id="calc_side" class="input">
+                  <option value="sell">Buy Base (We Sell)</option>
+                  <option value="buy">Sell Base (We Buy)</option>
                 </select>
               </div>
-
-              <div class="conv-result">
-                <div>Estimated Value (NGN)</div>
-                <div class="conv-total" id="calc_result">₦—</div>
-                <div style="font-size:0.8rem;opacity:0.6;margin-top:4px">
-                  Rate: <span id="calc_rate_display">—</span> / 1
-                </div>
-              </div>
-
-              <button class="btn solid" style="width:100%;margin-top:16px" onclick="lockRate()">
-                <i class="fa-brands fa-whatsapp"></i> Lock this Rate
-              </button>
             </div>
+
+            <div style="margin-top:10px">
+              <label class="small">Amount (Base)</label>
+              <input type="number" id="calc_amount" class="input conv-input" value="1" placeholder="0.00">
+            </div>
+
+            <div class="conv-result">
+              <div>Estimated Quote Value</div>
+              <div class="conv-total" id="calc_result">—</div>
+              <div style="font-size:0.8rem;opacity:0.6;margin-top:4px">
+                Rate: <span id="calc_rate_display">—</span>
+              </div>
+            </div>
+
+            <button class="btn solid" style="width:100%;margin-top:14px" onclick="bookTrade()">
+              <i class="fa-brands fa-whatsapp"></i> Lock This Quote
+            </button>
           </div>
 
         </div>
@@ -211,45 +226,37 @@
       <div class="section-head-split">
         <div>
           <h2>Live Desk Rates</h2>
-          <p class="lead">Rates update live. Confirm on WhatsApp.</p>
+          <p class="lead">All pairs pulled from <code>rates</code> table (status=active).</p>
         </div>
-        <div class="small" style="color:var(--ok)">
-          <i class="fa-solid fa-circle fa-beat" style="font-size:8px;margin-right:6px"></i> Live
+        <div class="small" style="color:var(--ok)"><i class="fa-solid fa-circle fa-beat" style="font-size:8px;margin-right:6px"></i> Live</div>
+      </div>
+
+      <div class="exchange-grid">
+        <div>
+          <div class="rate-board" id="boardNGN"></div>
+          <div style="height:12px"></div>
+          <div class="rate-board" id="boardUSDT"></div>
+          <div style="height:12px"></div>
+          <div class="rate-board" id="boardOTHER"></div>
+        </div>
+
+        <div class="card">
+          <h3>How to Trade</h3>
+          <div class="small" style="opacity:.9;line-height:1.8;margin-top:8px">
+            1) Select a pair & rate<br/>
+            2) Tap “Trade” to open WhatsApp<br/>
+            3) Confirm amount & settlement details<br/>
+            4) Settle on desk confirmation
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn solid" onclick="bookTrade()"><i class="fa-brands fa-whatsapp"></i> Start Trade</button>
+            <a class="btn" href="insights.html"><i class="fa-regular fa-newspaper"></i> Insights</a>
+          </div>
         </div>
       </div>
 
-      <div class="rate-board">
-        <div class="rate-row" style="padding-top:0; border-bottom:1px solid rgba(255,255,255,0.1); opacity:0.6; font-size:0.85rem">
-          <div>ASSET</div><div>WE BUY @</div><div>WE SELL @</div><div>ACTION</div>
-        </div>
-
-        <div class="rate-row">
-          <div class="currency-pair"><div class="currency-icon"><i class="fa-solid fa-dollar-sign"></i></div><div>USD <span style="font-size:0.8rem;color:var(--muted);font-weight:400">/ NGN</span></div></div>
-          <div class="rate-buy"><div class="rate-label">We Buy</div><div class="rate-val" id="rate_usd_buy">—</div></div>
-          <div class="rate-sell"><div class="rate-label">We Sell</div><div class="rate-val" id="rate_usd_sell">—</div></div>
-          <div class="rate-action"><button class="btn small primary" onclick="tradeAsset('USD')">Trade</button></div>
-        </div>
-
-        <div class="rate-row">
-          <div class="currency-pair"><div class="currency-icon"><i class="fa-solid fa-sterling-sign"></i></div><div>GBP <span style="font-size:0.8rem;color:var(--muted);font-weight:400">/ NGN</span></div></div>
-          <div class="rate-buy"><div class="rate-label">We Buy</div><div class="rate-val" id="rate_gbp_buy">—</div></div>
-          <div class="rate-sell"><div class="rate-label">We Sell</div><div class="rate-val" id="rate_gbp_sell">—</div></div>
-          <div class="rate-action"><button class="btn small primary" onclick="tradeAsset('GBP')">Trade</button></div>
-        </div>
-
-        <div class="rate-row">
-          <div class="currency-pair"><div class="currency-icon" style="color:#26A17B"><i class="fa-brands fa-ethereum"></i></div><div>USDT <span style="font-size:0.8rem;color:var(--muted);font-weight:400">/ NGN</span></div></div>
-          <div class="rate-buy"><div class="rate-label">We Buy</div><div class="rate-val" id="rate_usdt_buy">—</div></div>
-          <div class="rate-sell"><div class="rate-label">We Sell</div><div class="rate-val" id="rate_usdt_sell">—</div></div>
-          <div class="rate-action"><button class="btn small primary" onclick="tradeAsset('USDT')">Trade</button></div>
-        </div>
-
-        <div class="rate-row">
-          <div class="currency-pair"><div class="currency-icon" style="color:#F7931A"><i class="fa-brands fa-bitcoin"></i></div><div>BTC <span style="font-size:0.8rem;color:var(--muted);font-weight:400">/ USD</span></div></div>
-          <div class="rate-buy"><div class="rate-label">We Buy</div><div class="rate-val" id="rate_btc_buy">—</div></div>
-          <div class="rate-sell"><div class="rate-label">We Sell</div><div class="rate-val" id="rate_btc_sell">—</div></div>
-          <div class="rate-action"><button class="btn small primary" onclick="tradeAsset('BTC')">Trade</button></div>
-        </div>
+      <div style="text-align:center; margin-top:16px; font-size:0.85rem; color:var(--muted2)">
+        Rates are indicative and subject to final confirmation on WhatsApp.
       </div>
     </section>
   </main>
@@ -295,9 +302,6 @@
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
             </button>
           </div>
-          <div class="small" style="margin-top:10px;opacity:.65">
-            <a href="auth.html">Staff Sign-in</a> • <a href="admin.html">Admin</a>
-          </div>
         </div>
       </div>
 
@@ -309,123 +313,214 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
+    const sbClient = () => window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
 
-    const RATES = {
-      USD:{buy:1635,sell:1645},
-      GBP:{buy:2140,sell:2160},
-      EUR:{buy:1780,sell:1800},
-      USDT:{buy:1642,sell:1650},
-      BTC:{buy:101200,sell:102500}
+    let __rates = [];
+    let __ratesMap = {};
+    let __exChannel = null;
+    let __deb = null;
+    const debounce = (fn, ms=600)=>{ clearTimeout(__deb); __deb=setTimeout(fn, ms); };
+
+    const ICON = (base) => {
+      const b = String(base||"").toUpperCase();
+      if (b === "BTC") return '<i class="fa-brands fa-bitcoin"></i>';
+      if (b === "ETH") return '<i class="fa-brands fa-ethereum"></i>';
+      if (b === "USD") return '<i class="fa-solid fa-dollar-sign"></i>';
+      if (b === "GBP") return '<i class="fa-solid fa-sterling-sign"></i>';
+      if (b === "EUR") return '<i class="fa-solid fa-euro-sign"></i>';
+      if (b === "USDT") return '<i class="fa-solid fa-circle-dollar-to-slot"></i>';
+      return '<i class="fa-solid fa-coins"></i>';
     };
 
-    let __fxChannel = null;
-    let __fxDeb = null;
-    function debounce(fn, wait=600){ clearTimeout(__fxDeb); __fxDeb = setTimeout(fn, wait); }
-
-    function fmt(n){ return (n===null||n===undefined) ? "—" : Number(n).toLocaleString(); }
-
-    function paintRates(){
-      document.getElementById("rate_usd_buy").textContent = fmt(RATES.USD.buy);
-      document.getElementById("rate_usd_sell").textContent = fmt(RATES.USD.sell);
-      document.getElementById("rate_gbp_buy").textContent = fmt(RATES.GBP.buy);
-      document.getElementById("rate_gbp_sell").textContent = fmt(RATES.GBP.sell);
-      document.getElementById("rate_usdt_buy").textContent = fmt(RATES.USDT.buy);
-      document.getElementById("rate_usdt_sell").textContent = fmt(RATES.USDT.sell);
-      document.getElementById("rate_btc_buy").textContent = "$" + fmt(RATES.BTC.buy);
-      document.getElementById("rate_btc_sell").textContent = "$" + fmt(RATES.BTC.sell);
-      updateCalc();
+    function fmt(n){
+      if(n === null || n === undefined || n === "") return "—";
+      const num = Number(n);
+      if(Number.isNaN(num)) return String(n);
+      return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
     }
 
-    async function loadRates(){
-      try{
-        const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
-        if(!sb) throw new Error("supabaseClient not ready");
+    function normalizeRateRow(r){
+      const base = (r.base || r.asset || "").toUpperCase();
+      const quote = (r.quote || "NGN").toUpperCase();
+      const pair = (r.pair || (base + "/" + quote)).toUpperCase();
+      return {
+        ...r,
+        base,
+        quote,
+        pair,
+        buy: r.buy ?? null,
+        sell: r.sell ?? null
+      };
+    }
 
-        const { data, error } = await sb.from("rates").select("*").eq("status","active");
-        if(error) throw error;
+    function renderBoard(mountId, title, subtitle, rows){
+      const el = document.getElementById(mountId);
+      if(!el) return;
 
-        (data || []).forEach(r => {
-          const a = String(r.asset||"").toUpperCase();
-          if(!a) return;
-          RATES[a] = { buy:Number(r.buy||0), sell:Number(r.sell||0) };
-        });
-      }catch(e){
-        console.warn("Rates fallback:", e?.message || e);
+      if(!rows.length){
+        el.innerHTML = `
+          <div class="board-title"><h3>${title}</h3><div class="small">${subtitle}</div></div>
+          <div class="notice">No active pairs.</div>
+        `;
+        return;
       }
-      paintRates();
+
+      el.innerHTML = `
+        <div class="board-title">
+          <h3>${title}</h3>
+          <div class="small">${subtitle}</div>
+        </div>
+        <div class="rate-row head">
+          <div>PAIR</div><div>WE BUY @</div><div>WE SELL @</div><div>ACTION</div>
+        </div>
+        ${rows.map(r => `
+          <div class="rate-row">
+            <div class="pair">
+              <div class="icon">${ICON(r.base)}</div>
+              <div>${r.base}<small> / ${r.quote}</small></div>
+            </div>
+            <div class="buy">
+              <div class="label">We Buy</div>
+              <div class="val">${fmt(r.buy)}</div>
+            </div>
+            <div class="sell">
+              <div class="label">We Sell</div>
+              <div class="val">${fmt(r.sell)}</div>
+            </div>
+            <div class="rate-action">
+              <button class="btn small primary" onclick="tradePair('${r.pair}')">Trade</button>
+            </div>
+          </div>
+        `).join("")}
+      `;
+    }
+
+    function rebuildPairSelect(){
+      const sel = document.getElementById("calc_pair");
+      if(!sel) return;
+
+      const pairs = __rates
+        .filter(r => r.status === "active")
+        .map(r => r.pair)
+        .filter(Boolean);
+
+      const unique = Array.from(new Set(pairs)).sort((a,b)=> a.localeCompare(b));
+      sel.innerHTML = unique.map(p => `<option value="${p}">${p}</option>`).join("");
+
+      // sensible default preference
+      const prefer = ["USDT/NGN","BTC/USDT","BTC/NGN","ETH/USDT","ETH/NGN"];
+      const pick = prefer.find(p => unique.includes(p)) || unique[0];
+      if(pick) sel.value = pick;
+    }
+
+    function getSelectedRate(){
+      const pair = document.getElementById("calc_pair")?.value;
+      return __ratesMap[pair] || null;
     }
 
     function updateCalc(){
+      const r = getSelectedRate();
       const amt = parseFloat(document.getElementById("calc_amount").value) || 0;
-      const cur = document.getElementById("calc_from").value;
-      const rate = RATES[cur]?.sell || 0;
-      document.getElementById("calc_rate_display").textContent = rate ? rate.toLocaleString() : "—";
-      document.getElementById("calc_result").textContent = rate ? ("₦" + (amt*rate).toLocaleString(undefined,{maximumFractionDigits:2})) : "₦—";
+      const side = document.getElementById("calc_side").value; // buy or sell
+      const rate = side === "sell" ? (Number(r?.sell) || 0) : (Number(r?.buy) || 0);
+
+      const out = rate ? (amt * rate) : 0;
+      document.getElementById("calc_rate_display").textContent = rate ? fmt(rate) : "—";
+      document.getElementById("calc_result").textContent = rate ? `${r.quote} ${out.toLocaleString(undefined,{maximumFractionDigits:2})}` : "—";
     }
 
-    async function startTrade(){
-      if(LARMAH.submitRequest){
-        await LARMAH.submitRequest({
-          header: "Exchange Intro",
-          category: "exchange",
-          fields: { Message: "Hello Larmah, I want to trade. Please share settlement steps." },
-          refPrefix: "FX"
-        });
-      } else {
-        LARMAH.openWhatsApp(LARMAH.buildMessage("Exchange Intro", { Message:"Hello Larmah, I want to trade." }));
-      }
-    }
-
-    async function lockRate(){
+    function bookTrade(){
+      const r = getSelectedRate();
       const amt = document.getElementById("calc_amount").value;
-      const cur = document.getElementById("calc_from").value;
-      const rate = RATES[cur]?.sell || 0;
+      const side = document.getElementById("calc_side").value;
 
-      const fields = { Pair:`${cur}/NGN`, Amount:`${amt} ${cur}`, Rate: rate ? rate.toLocaleString() : "—", Intent:`Lock ${cur} sell rate` };
-      if(LARMAH.submitRequest){
-        await LARMAH.submitRequest({ header:"Trade Booking", category:"exchange", fields, refPrefix:"FX" });
-      } else {
-        LARMAH.openWhatsApp(LARMAH.buildMessage("Trade Booking", fields));
-      }
+      const sideText = side === "sell" ? "I want to BUY base (desk sells)" : "I want to SELL base (desk buys)";
+      const rate = side === "sell" ? r?.sell : r?.buy;
+
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Trade Booking", {
+        Pair: r?.pair || "—",
+        Side: sideText,
+        AmountBase: `${amt} ${r?.base || ""}`,
+        Rate: rate != null ? fmt(rate) : "Confirm",
+        QuoteCurrency: r?.quote || "",
+        Ref: "EX-" + Math.random().toString(36).slice(2,10).toUpperCase()
+      }));
     }
 
-    async function tradeAsset(asset){
-      const a = String(asset||"").toUpperCase();
-      const fields = { Asset:a, Buy:String(RATES[a]?.buy||""), Sell:String(RATES[a]?.sell||""), Intent:`Trade ${a}` };
-      if(LARMAH.submitRequest){
-        await LARMAH.submitRequest({ header:"Trade Booking", category:"exchange", fields, refPrefix:"FX" });
-      } else {
-        LARMAH.openWhatsApp(LARMAH.buildMessage("Trade Booking", fields));
-      }
+    function tradePair(pair){
+      const r = __ratesMap[String(pair||"").toUpperCase()];
+      if(!r) return;
+
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Trade Booking", {
+        Pair: r.pair,
+        Base: r.base,
+        Quote: r.quote,
+        DeskBuy: fmt(r.buy),
+        DeskSell: fmt(r.sell),
+        Ref: "EX-" + Math.random().toString(36).slice(2,10).toUpperCase(),
+        Message: "I want to trade this pair."
+      }));
     }
 
-    function initRealtimeFX(){
-      const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+    async function loadRates(){
+      const sb = sbClient();
       if(!sb) return;
 
-      if(__fxChannel){
-        try { sb.removeChannel(__fxChannel); } catch {}
-        __fxChannel = null;
+      try{
+        const { data, error } = await sb
+          .from("rates")
+          .select("id,asset,base,quote,pair,buy,sell,status,updated_at")
+          .eq("status","active");
+
+        if(error) throw error;
+
+        __rates = (data || []).map(normalizeRateRow);
+        __ratesMap = {};
+        __rates.forEach(r => { __ratesMap[r.pair] = r; });
+
+        // group
+        const ngn = __rates.filter(r => r.quote === "NGN").sort((a,b)=> a.pair.localeCompare(b.pair));
+        const usdt = __rates.filter(r => r.quote === "USDT").sort((a,b)=> a.pair.localeCompare(b.pair));
+        const other = __rates.filter(r => r.quote !== "NGN" && r.quote !== "USDT").sort((a,b)=> a.pair.localeCompare(b.pair));
+
+        renderBoard("boardNGN", "NGN Pairs", "e.g. USDT/NGN, BTC/NGN, ETH/NGN", ngn);
+        renderBoard("boardUSDT", "USDT Pairs", "e.g. BTC/USDT, ETH/USDT", usdt);
+        renderBoard("boardOTHER", "Other Pairs", "Additional pairs as added in Admin", other);
+
+        rebuildPairSelect();
+        updateCalc();
+      }catch(e){
+        console.error(e);
+      }
+    }
+
+    function initRealtime(){
+      const sb = sbClient();
+      if(!sb) return;
+
+      if(__exChannel){
+        try{ sb.removeChannel(__exChannel); }catch{}
+        __exChannel = null;
       }
 
-      __fxChannel = sb.channel("realtime-exchange")
-        .on("postgres_changes", { event:"*", schema:"public", table:"rates" }, () => {
-          debounce(() => loadRates(), 600);
-        })
-        .subscribe((st) => {
-          const el = document.getElementById("liveStateFX");
+      __exChannel = sb
+        .channel("realtime-exchange-pairs")
+        .on("postgres_changes", { event:"*", schema:"public", table:"rates" }, () => debounce(loadRates, 500))
+        .subscribe((status) => {
+          const el = document.getElementById("liveStateEX");
           if(!el) return;
-          if(st === "SUBSCRIBED") el.innerHTML = `<i class="fa-solid fa-circle fa-beat"></i> Live rate updates enabled`;
-          else el.innerHTML = `<i class="fa-solid fa-circle"></i> Live: ${st}`;
+          if(status === "SUBSCRIBED") el.innerHTML = `<i class="fa-solid fa-circle fa-beat"></i> Live updates enabled`;
+          else el.innerHTML = `<i class="fa-solid fa-circle"></i> Live: ${status}`;
         });
     }
 
-    document.addEventListener("DOMContentLoaded", async () => {
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("calc_pair").addEventListener("change", updateCalc);
+      document.getElementById("calc_side").addEventListener("change", updateCalc);
       document.getElementById("calc_amount").addEventListener("input", updateCalc);
-      document.getElementById("calc_from").addEventListener("change", updateCalc);
 
-      await loadRates();
-      initRealtimeFX();
+      loadRates();
+      initRealtime();
     });
   </script>
 </body>
