@@ -11,7 +11,7 @@
 window.SUPABASE_URL = window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
 window.SUPABASE_ANON_KEY =
   window.SUPABASE_ANON_KEY ||
-  "2396252e4e5cc3e7fdcd639e09a2773f51ecbe15d603d6bdaa627995fcae6c07"; // keep your anon key here
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4"; // keep your anon key here
 
 function ensureSupabaseClient() {
   if (window.supabaseClient) return window.supabaseClient;
