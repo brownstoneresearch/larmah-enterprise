@@ -31,12 +31,15 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    /* Market board */
+    .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
+    .live-dot i { font-size: 8px; }
+
+    /* Rates board */
     .market-board{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 12px;
-      margin-bottom: 26px;
+      margin-bottom: 22px;
     }
     .ticker-card{
       background: rgba(255,255,255,0.03);
@@ -44,20 +47,12 @@
       border-radius: 16px;
       padding: 16px;
       text-align:center;
-      transition: transform .2s;
     }
-    .ticker-card:hover{ transform: translateY(-2px); border-color: rgba(255,255,255,0.14); }
     .ticker-pair{ font-size: 0.8rem; color: var(--muted); font-weight: 900; margin-bottom: 6px; }
     .ticker-val{ font-size: 1.25rem; font-weight: 950; color: var(--text); }
     .ticker-sub{ font-size:.8rem; color: var(--muted); opacity:.9; margin-top:6px; }
-    .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
-    .live-dot i { font-size: 8px; }
 
-    /* Insight cards */
-    .blog-date { font-size: 0.8rem; color: var(--accent); font-weight: 900; margin-bottom: 6px; display: block; }
-    .blog-snip { color: var(--muted); font-size: 0.95rem; margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-
-    /* Card media slider */
+    /* Insight media slider */
     .card-media{
       width:100%; height:180px; border-radius:14px; overflow:hidden;
       border: 1px solid rgba(255,255,255,0.08);
@@ -96,7 +91,9 @@
     }
     .media-dot.active{ background: rgba(255,255,255,0.9); }
 
-    /* Skeleton */
+    .blog-date { font-size: 0.8rem; color: var(--accent); font-weight: 900; margin-bottom: 6px; display: block; }
+    .blog-snip { color: var(--muted); font-size: 0.95rem; margin-top: 8px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
     .sk-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; }
     .sk-card{ height:210px; border-radius:16px; background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); opacity:.6; }
   </style>
@@ -116,28 +113,14 @@
       </div>
       <div class="msheet-body">
         <div class="msheet-links">
-          <a href="real-estate.html" class="msheet-link">
-            <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="logistics.html" class="msheet-link">
-            <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="insights.html" class="msheet-link active">
-            <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
-            <i class="fa-solid fa-check" style="font-size:12px;"></i>
-          </a>
-          <a href="exchange.html" class="msheet-link">
-            <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
+          <a href="real-estate.html" class="msheet-link"><span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
+          <a href="logistics.html" class="msheet-link"><span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
+          <a href="insights.html" class="msheet-link active"><span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span><i class="fa-solid fa-check" style="font-size:12px;"></i></a>
+          <a href="exchange.html" class="msheet-link"><span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
         </div>
         <div class="msheet-footer">
           <div class="msheet-hint">Menu</div>
-          <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-            <span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span>
-          </a>
+          <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)"><span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span></a>
         </div>
       </div>
     </div>
@@ -148,10 +131,7 @@
       <a class="brand" href="index.html" aria-label="Larmah Home">
         <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
       </a>
-
-      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
 
       <nav id="nav" aria-label="Primary navigation">
         <ul>
@@ -176,15 +156,11 @@
             </div>
 
             <h1>Stay Ahead of the Market.</h1>
-            <p class="lead">
-              Verified updates on Real Estate trends, Logistics shifts, and live Exchange rates — updated from Admin in real-time.
-            </p>
+            <p class="lead">Verified updates from the Larmah desk — live rates and curated insights, updated by Admin.</p>
 
             <div class="actions">
-              <a class="btn solid" href="#news"><i class="fa-regular fa-newspaper"></i> Latest News</a>
-              <button class="btn primary" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Subscribe Insights', { Name:'' }))">
-                <i class="fa-brands fa-whatsapp"></i> Get Updates
-              </button>
+              <a class="btn solid" href="#news"><i class="fa-regular fa-newspaper"></i> Latest Insights</a>
+              <a class="btn primary" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
             </div>
 
             <div class="small live-dot" id="liveStateIN" style="margin-top:12px;opacity:.9">
@@ -194,14 +170,14 @@
 
           <div class="hero-badges" style="align-content:center">
             <div class="hero-card" style="background:rgba(0,0,0,0.4)">
-              <div style="font-size:.8rem;color:var(--muted)">Rates Board</div>
+              <div style="font-size:.8rem;color:var(--muted)">USD/NGN Sell</div>
               <div style="font-size:1.5rem;font-weight:950;margin:4px 0" id="heroRateMain">—</div>
               <div style="font-size:.85rem;color:var(--ok)">Live from Admin</div>
             </div>
             <div class="hero-card" style="background:rgba(0,0,0,0.4)">
-              <div style="font-size:.8rem;color:var(--muted)">Insights Feed</div>
+              <div style="font-size:.8rem;color:var(--muted)">Active Insights</div>
               <div style="font-size:1.5rem;font-weight:950;margin:4px 0" id="heroInsightCount">—</div>
-              <div style="font-size:.85rem;color:var(--ok)">Active posts</div>
+              <div style="font-size:.85rem;color:var(--ok)">Desk feed</div>
             </div>
           </div>
         </div>
@@ -212,7 +188,7 @@
       <div class="section-head-split">
         <div>
           <h2>Live Market Board</h2>
-          <p class="lead">Rates pulled from the <code>rates</code> table.</p>
+          <p class="lead">Rates pulled from <code>rates</code> table.</p>
         </div>
         <a class="mini-link small" href="exchange.html">Trade Now →</a>
       </div>
@@ -229,7 +205,7 @@
       <div class="section-head-split">
         <div>
           <h2>Latest Insights</h2>
-          <p class="lead">Curated updates from the Larmah desk (pulled from <code>insights</code> table).</p>
+          <p class="lead">Pulled from Supabase <code>insights</code> table.</p>
         </div>
         <div class="pillbar">
           <button class="btn small" onclick="setInsightFilter('all')">All</button>
@@ -250,7 +226,7 @@
       <div class="cta-strip">
         <div>
           <h2 style="margin:0">Don't miss a beat.</h2>
-          <p class="lead" style="margin:6px 0 0">Join the Larmah Executive Broadcast list on WhatsApp.</p>
+          <p class="lead" style="margin:6px 0 0">Join the Larmah broadcast list on WhatsApp.</p>
         </div>
         <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Join Broadcast List', { Name:'' }))">
           <i class="fa-brands fa-whatsapp"></i> Subscribe Free
@@ -270,11 +246,9 @@
               <div class="small">Real Estate • Logistics • Insights • Exchange</div>
             </div>
           </div>
-
           <div class="small" style="margin-top:8px">
             Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
           </div>
-
           <div class="social-row" aria-label="Social links">
             <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
@@ -297,16 +271,12 @@
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
           <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-
           <div class="actions" style="margin-top:12px">
             <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
             </button>
           </div>
-
-          <div class="small" style="margin-top:10px;opacity:.65">
-            <a href="auth.html">Staff Sign-in</a> • <a href="admin.html">Admin</a>
-          </div>
+          <!-- ✅ Removed Staff Sign-in/Admin -->
         </div>
       </div>
 
@@ -318,16 +288,12 @@
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
-
     const sbClient = () => window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
 
     let __insightsAll = [];
     let __insightsFilter = "all";
-
-    // slider state per insight
     const __IN_IMG_URLS = {};
     const __IN_IMG_IDX = {};
-
     let __insChannel = null;
     let __deb = null;
     const debounce = (fn, ms=700)=>{ clearTimeout(__deb); __deb=setTimeout(fn, ms); };
@@ -338,32 +304,25 @@
       if(it.image_url) return [it.image_url];
       return [];
     }
-
     function initInsightImages(it){
       const id = String(it.id);
       __IN_IMG_URLS[id] = getInsightImages(it);
       __IN_IMG_IDX[id] = 0;
     }
-
-    function setInsightImage(id){
-      const img = document.getElementById(`in-img-${id}`);
-      if(!img) return;
-      const urls = __IN_IMG_URLS[id] || [];
-      const idx = __IN_IMG_IDX[id] || 0;
-      img.src = urls[idx] || "";
-      const dotsWrap = document.getElementById(`in-dots-${id}`);
-      if(dotsWrap){
-        dotsWrap.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
-      }
-    }
-
     function cycleInsightImage(id, dir){
       const urls = __IN_IMG_URLS[id] || [];
       if(urls.length <= 1) return;
       const max = urls.length;
       const cur = __IN_IMG_IDX[id] || 0;
       __IN_IMG_IDX[id] = (cur + dir + max) % max;
-      setInsightImage(id);
+
+      const img = document.getElementById(`in-img-${id}`);
+      if(img) img.src = urls[__IN_IMG_IDX[id]] || "";
+
+      const dotsWrap = document.getElementById(`in-dots-${id}`);
+      if(dotsWrap){
+        dotsWrap.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===__IN_IMG_IDX[id]));
+      }
     }
 
     function setInsightFilter(cat){
@@ -400,15 +359,10 @@
                   <div class="card-media">
                     <img id="in-img-${id}" src="${LARMAH.escapeHtml(urls[0])}" alt="${LARMAH.escapeHtml(it.title)}"
                          loading="lazy" onerror="this.style.display='none'">
-
                     ${hasMany ? `
                       <div class="media-nav">
-                        <button class="media-btn" type="button" aria-label="Prev image" onclick="cycleInsightImage('${id}', -1)">
-                          <i class="fa-solid fa-chevron-left"></i>
-                        </button>
-                        <button class="media-btn" type="button" aria-label="Next image" onclick="cycleInsightImage('${id}', 1)">
-                          <i class="fa-solid fa-chevron-right"></i>
-                        </button>
+                        <button class="media-btn" type="button" onclick="cycleInsightImage('${id}', -1)" aria-label="Prev"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="media-btn" type="button" onclick="cycleInsightImage('${id}', 1)" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
                       </div>
                       <div class="media-dots" id="in-dots-${id}">
                         ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
@@ -445,10 +399,7 @@
     async function loadInsights(){
       const sb = sbClient();
       const mount = document.getElementById("newsMount");
-      if(!sb){
-        mount.innerHTML = `<div class="notice">Supabase not ready.</div>`;
-        return;
-      }
+      if(!sb){ mount.innerHTML = `<div class="notice">Supabase not ready.</div>`; return; }
 
       try{
         const { data, error } = await sb
@@ -456,17 +407,14 @@
           .select("*")
           .eq("status","active")
           .order("created_at",{ascending:false})
-          .limit(60);
+          .limit(80);
 
         if(error) throw error;
-
         __insightsAll = data || [];
         renderInsights();
       }catch(e){
         console.error(e);
-        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)">
-          <strong>Could not load insights.</strong>
-        </div>`;
+        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)"><strong>Could not load insights.</strong></div>`;
       }
     }
 
@@ -488,11 +436,9 @@
         const map = {};
         (data||[]).forEach(r => { map[String(r.asset||"").toUpperCase()] = r; });
 
-        const cards = wanted.map(asset => {
+        board.innerHTML = wanted.map(asset => {
           const r = map[asset] || null;
-          const buy = r?.buy ?? null;
-          const sell = r?.sell ?? null;
-          const val = (buy!==null && sell!==null) ? `${Number(buy).toLocaleString()} / ${Number(sell).toLocaleString()}` : "—";
+          const val = (r?.buy != null && r?.sell != null) ? `${Number(r.buy).toLocaleString()} / ${Number(r.sell).toLocaleString()}` : "—";
           return `
             <div class="ticker-card">
               <div class="ticker-pair">${asset} / NGN</div>
@@ -502,11 +448,8 @@
           `;
         }).join("");
 
-        board.innerHTML = cards;
-
-        // hero main rate (USD)
         const usd = map["USD"];
-        document.getElementById("heroRateMain").textContent = usd ? `₦${Number(usd.sell||0).toLocaleString()} / $` : "—";
+        document.getElementById("heroRateMain").textContent = usd?.sell ? `₦${Number(usd.sell).toLocaleString()}` : "—";
       }catch(e){
         console.error(e);
       }
