@@ -42,33 +42,13 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"CollectionPage",
-    "name":"Larmah Exchange",
-    "url":"https://heylarmah.tech/exchange.html",
-    "isPartOf":{
-      "@type":"WebSite",
-      "name":"Larmah Enterprise",
-      "url":"https://heylarmah.tech/"
-    },
-    "about":{
-      "@type":"FinancialService",
-      "name":"OTC Exchange Desk",
-      "areaServed":"NG"
-    }
-  }
-  </script>
-
   <style>
     /* --- Seamless premium upgrades (safe overrides) --- */
 
     .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
     .live-dot i { font-size: 8px; }
 
-    /* ✅ Hero actions alignment (mixed <a>/<button> baseline fix) */
+    /* ✅ Hero actions alignment */
     .hero .actions{
       display:flex;
       align-items:stretch;
@@ -243,6 +223,14 @@
           <li><a class="nav-link active" href="exchange.html">Exchange</a></li>
         </ul>
       </nav>
+      <div class="header-actions" style="margin-left:auto; display:none;">
+        <a href="dashboard.html" class="pill primary">Dashboard</a>
+      </div>
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") LARMAH.updateHeaderAuthUI();
+        });
+      </script>
     </div>
   </header>
 
@@ -490,6 +478,19 @@
       `;
     }
 
+    function regroupAndRender(){
+      const ngn = __rates.filter(r => r.quote === "NGN").sort((a,b)=> a.pair.localeCompare(b.pair));
+      const usdt = __rates.filter(r => r.quote === "USDT").sort((a,b)=> a.pair.localeCompare(b.pair));
+      const other = __rates.filter(r => r.quote !== "NGN" && r.quote !== "USDT").sort((a,b)=> a.pair.localeCompare(b.pair));
+
+      renderBoard("boardNGN","NGN Pairs","e.g. USDT/NGN, BTC/NGN, ETH/NGN",ngn);
+      renderBoard("boardUSDT","USDT Pairs","e.g. BTC/USDT, ETH/USDT",usdt);
+      renderBoard("boardOTHER","Other Pairs","Additional pairs as added in Admin",other);
+
+      rebuildPairSelect();
+      updateCalc();
+    }
+
     function rebuildPairSelect(){
       const sel = document.getElementById("calc_pair");
       if(!sel) return;
@@ -582,16 +583,59 @@
       __ratesMap = {};
       __rates.forEach(r => { __ratesMap[r.pair] = r; });
 
-      const ngn = __rates.filter(r => r.quote === "NGN").sort((a,b)=> a.pair.localeCompare(b.pair));
-      const usdt = __rates.filter(r => r.quote === "USDT").sort((a,b)=> a.pair.localeCompare(b.pair));
-      const other = __rates.filter(r => r.quote !== "NGN" && r.quote !== "USDT").sort((a,b)=> a.pair.localeCompare(b.pair));
+      regroupAndRender();
+    }
 
-      renderBoard("boardNGN","NGN Pairs","e.g. USDT/NGN, BTC/NGN, ETH/NGN",ngn);
-      renderBoard("boardUSDT","USDT Pairs","e.g. BTC/USDT, ETH/USDT",usdt);
-      renderBoard("boardOTHER","Other Pairs","Additional pairs as added in Admin",other);
+    /* ===========================
+       ✅ TRUE LIVE UPDATES (UPSERT/DELETE)
+       =========================== */
+    function upsertRate(row){
+      const pair = String(row.pair || "").toUpperCase();
+      if(!pair) return;
 
-      rebuildPairSelect();
-      updateCalc();
+      __rates = (__rates || []).filter(r => String(r.pair||"").toUpperCase() !== pair);
+      __rates.push(row);
+      __ratesMap[pair] = row;
+    }
+
+    function removeRateByPair(pair){
+      const p = String(pair || "").toUpperCase();
+      if(!p) return;
+
+      __rates = (__rates || []).filter(r => String(r.pair||"").toUpperCase() !== p);
+      delete __ratesMap[p];
+    }
+
+    function applyRatesRealtime(payload){
+      try{
+        const ev = payload?.eventType; // INSERT | UPDATE | DELETE
+        const n = payload?.new || null;
+        const o = payload?.old || null;
+
+        const raw = n || o;
+        if(!raw) return;
+
+        const row = normalizeRateRow(raw);
+        const status = String(row.status || "").toLowerCase();
+
+        if(ev === "DELETE"){
+          removeRateByPair(row.pair);
+          regroupAndRender();
+          return;
+        }
+
+        // INSERT/UPDATE
+        if(status !== "active"){
+          removeRateByPair(row.pair);
+          regroupAndRender();
+          return;
+        }
+
+        upsertRate(row);
+        regroupAndRender();
+      }catch(e){
+        console.warn("applyRatesRealtime error:", e);
+      }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -601,11 +645,14 @@
 
       loadRates();
 
+      // ✅ realtime LIVE upsert/delete
       if(window.LARMAH && LARMAH.realtime){
-        LARMAH.realtime.subscribe("rates", () => loadRates(), "ex-rates", {
-          debounceMs: 500,
-          statusElId: "liveStateEX"
-        });
+        LARMAH.realtime.subscribe(
+          "rates",
+          (payload) => applyRatesRealtime(payload),
+          "ex-rates-live",
+          { debounceMs: 120, statusElId: "liveStateEX" }
+        );
       }
     });
   </script>
