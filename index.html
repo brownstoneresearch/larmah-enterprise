@@ -31,6 +31,109 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
+
+  <style>
+    /* Compact latest catalogue list */
+    .latest-compact {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .latest-compact .lrow {
+      display: grid;
+      grid-template-columns: 62px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .latest-compact .lthumb {
+      width: 62px;
+      height: 50px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .latest-compact .lthumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .latest-compact .ltitle {
+      font-weight: 900;
+      font-size: 0.95rem;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+
+    .latest-compact .lmeta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--muted);
+      opacity: 0.9;
+    }
+
+    .latest-compact .lprice {
+      color: var(--accent);
+      font-weight: 900;
+    }
+
+    .latest-compact .lactions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .latest-compact .lactions .btn.small {
+      padding: 8px 10px;
+      border-radius: 12px;
+    }
+
+    /* Compact skeleton */
+    .latest-compact-skel { display:grid; gap:10px; margin-top:10px; }
+    .latest-compact-skel .sk {
+      display:grid; grid-template-columns:62px 1fr auto;
+      gap:12px; align-items:center;
+      padding:10px 10px;
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:14px;
+      background: rgba(255,255,255,0.03);
+    }
+    .latest-compact-skel .sk-thumb{
+      width:62px; height:50px; border-radius:12px;
+      background: rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .latest-compact-skel .sk-line{
+      height:10px; border-radius:999px;
+      background: rgba(255,255,255,0.07);
+      margin:6px 0;
+    }
+    .latest-compact-skel .sk-line.short{ width:60%; }
+    .latest-compact-skel .sk-btn{
+      width:38px; height:34px; border-radius:12px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    @media (max-width: 520px) {
+      .latest-compact .lrow {
+        grid-template-columns: 56px 1fr;
+      }
+      .latest-compact .lactions {
+        justify-content: flex-start;
+      }
+    }
+  </style>
 </head>
 
 <body data-page="home">
@@ -39,36 +142,36 @@
     <div class="msheet">
       <div class="msheet-head">
         <div class="msheet-brand">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
+          <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
         </div>
         <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
-            <i class="fa-solid fa-xmark"></i>
+          <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
       <div class="msheet-body">
         <div class="msheet-links">
-            <a href="real-estate.html" class="msheet-link">
-                <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="logistics.html" class="msheet-link">
-                <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="insights.html" class="msheet-link">
-                <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
-            <a href="exchange.html" class="msheet-link">
-                <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
-                <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-            </a>
+          <a href="real-estate.html" class="msheet-link">
+            <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
+          <a href="logistics.html" class="msheet-link">
+            <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
+          <a href="insights.html" class="msheet-link">
+            <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
+          <a href="exchange.html" class="msheet-link">
+            <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
+            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
+          </a>
         </div>
         <div class="msheet-footer">
-            <div class="msheet-hint">Menu</div>
-            <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-                <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
-            </a>
+          <div class="msheet-hint">Menu</div>
+          <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
+            <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
+          </a>
         </div>
       </div>
     </div>
@@ -94,7 +197,7 @@
       </nav>
       
       <div class="header-actions" style="margin-left:auto; display:none;">
-          <a href="dashboard.html" class="pill primary">Dashboard</a>
+        <a href="dashboard.html" class="pill primary">Dashboard</a>
       </div>
       <script>
         document.addEventListener("DOMContentLoaded", () => {
@@ -178,9 +281,11 @@
             <a class="mini-link small" href="real-estate.html">View all →</a>
           </div>
           <div id="latestRE">
-             <div class="latest-skel">
-                <div class="skel-line"></div><div class="skel-line short"></div>
-             </div>
+            <div class="latest-compact-skel">
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+            </div>
           </div>
         </div>
 
@@ -190,9 +295,11 @@
             <a class="mini-link small" href="logistics.html">View all →</a>
           </div>
           <div id="latestLG">
-             <div class="latest-skel">
-                <div class="skel-line"></div><div class="skel-line short"></div>
-             </div>
+            <div class="latest-compact-skel">
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -280,6 +387,14 @@
       __homeDebounce = setTimeout(fn, wait);
     }
 
+    function pickListingImage(it){
+      // Prefer multi-image array from admin uploads
+      if (Array.isArray(it.image_urls) && it.image_urls.length && it.image_urls[0]) return it.image_urls[0];
+      // fallback
+      if (it.image_url) return it.image_url;
+      return "assets/images/larmah-header.jpeg";
+    }
+
     async function renderPreview(category, mountId){
       const mount = document.getElementById(mountId);
       if(!mount) return;
@@ -290,7 +405,7 @@
 
         const { data, error } = await sb
           .from('listings')
-          .select('id,title,price,image_url,category,status,created_at')
+          .select('id,title,price,image_url,image_urls,category,status,created_at')
           .eq('category', category)
           .eq('status', 'active')
           .order('created_at', {ascending: false})
@@ -307,24 +422,31 @@
         }
 
         mount.innerHTML = `
-          <div class="latest-list">
+          <div class="latest-compact">
             ${items.map(it => {
-              const imgUrl = it.image_url || 'assets/images/larmah-header.jpeg';
+              const imgUrl = pickListingImage(it);
+              const price = it.price || "Contact for quote";
+
               return `
-                <div class="latest-item">
-                  <div class="latest-thumb">
+                <div class="lrow">
+                  <div class="lthumb">
                     <img src="${LARMAH.escapeHtml(imgUrl)}"
                          alt="${LARMAH.escapeHtml(it.title)}"
                          loading="lazy"
                          onerror="this.src='assets/images/larmah-header.jpeg'">
                   </div>
-                  <div class="latest-body">
-                    <div class="latest-title">${LARMAH.escapeHtml(it.title)}</div>
-                    <div class="latest-meta">
-                      <span class="latest-price">${LARMAH.escapeHtml(it.price || 'Contact for quote')}</span>
+
+                  <div class="linfo">
+                    <div class="ltitle">${LARMAH.escapeHtml(it.title)}</div>
+                    <div class="lmeta">
+                      <span class="lprice">${LARMAH.escapeHtml(price)}</span>
+                      <span>Verified</span>
                     </div>
+                  </div>
+
+                  <div class="lactions">
                     <button class="btn small primary" onclick="enquireFromIndex('${category}','${it.id}')">
-                      <i class="fa-brands fa-whatsapp"></i> Enquire
+                      <i class="fa-brands fa-whatsapp"></i>
                     </button>
                   </div>
                 </div>
