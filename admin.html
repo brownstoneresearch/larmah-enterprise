@@ -984,95 +984,120 @@
     }
 
     async function saveEditor(e){
-      e.preventDefault();
+  e.preventDefault();
 
-      const entity = document.getElementById("edit_entity").value;
-      const id = document.getElementById("edit_id").value || null;
-      const category = document.getElementById("edit_category").value || null;
+  const entity = document.getElementById("edit_entity").value;
+  const id = document.getElementById("edit_id").value || null;
+  const category = document.getElementById("edit_category").value || null;
 
-      const btn = document.getElementById("saveBtn");
-      btn.disabled = true;
-      btn.textContent = "Saving...";
+  const btn = document.getElementById("saveBtn");
+  btn.disabled = true;
+  btn.textContent = "Saving...";
 
-      try {
-        if(entity === "listing"){
-          const payload = {
-            category: category || "real-estate",
-            title: document.getElementById("listing_title").value.trim(),
-            price: document.getElementById("listing_price").value.trim(),
-            status: document.getElementById("listing_status").value,
-            image_url: document.getElementById("listing_image").value.trim(),
-            description: document.getElementById("listing_desc").value.trim(),
-            tags: document.getElementById("listing_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
-          };
-          if(!payload.title) throw new Error("Title is required.");
+  try {
+    // -------- LISTINGS --------
+    if(entity === "listing"){
+      const payload = {
+        category: category || "real-estate",
+        title: document.getElementById("listing_title").value.trim(),
+        price: document.getElementById("listing_price").value.trim(),
+        status: document.getElementById("listing_status").value,
+        image_url: document.getElementById("listing_image").value.trim(),
+        description: document.getElementById("listing_desc").value.trim(),
+        tags: document.getElementById("listing_tags").value
+          .split(",").map(s=>s.trim()).filter(Boolean),
+      };
 
-          if(id){
-            const { error } = await sb.from("listings").update(payload).eq("id", id);
-            if(error) throw error;
-          } else {
-            const { error } = await sb.from("listings").insert([payload]);
-            if(error) throw error;
-          }
+      if(!payload.title) throw new Error("Title is required.");
 
-          toast("Saved listing", "success");
-          closeEditor();
-          await fetchListings(payload.category);
-          await loadStats();
-        }
-
-        if(entity === "rate"){
-          const payload = {
-            asset: document.getElementById("rate_asset").value,
-            buy: Number(document.getElementById("rate_buy").value || 0),
-            sell: Number(document.getElementById("rate_sell").value || 0),
-            status: document.getElementById("rate_status").value
-          };
-
-          if(id){
-            const { error } = await sb.from("rates").update(payload).eq("id", id);
-            if(error) throw error;
-          } else {
-            const { error } = await sb.from("rates").insert([payload]);
-            if(error) throw error;
-          }
-
-          toast("Saved rate", "success");
-          closeEditor();
-          await fetchRates();
-        }
-
-        if(entity === "insight"){
-          const payload = {
-            title: document.getElementById("insight_title").value.trim(),
-            category: document.getElementById("insight_category").value,
-            status: document.getElementById("insight_status").value,
-            image_url: document.getElementById("insight_image").value.trim(),
-            summary: document.getElementById("insight_summary").value.trim()
-          };
-          if(!payload.title) throw new Error("Title is required.");
-
-          if(id){
-            const { error } = await sb.from("insights").update(payload).eq("id", id);
-            if(error) throw error;
-          } else {
-            const { error } = await sb.from("insights").insert([payload]);
-            if(error) throw error;
-          }
-
-          toast("Saved insight", "success");
-          closeEditor();
-          await fetchInsights();
-        }
-      } catch(err){
-        console.warn(err);
-        toast(err.message || "Save failed", "error");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Save";
+      let res;
+      if(id){
+        res = await sb.from("listings").update(payload).eq("id", id).select().single();
+      } else {
+        res = await sb.from("listings").insert([payload]).select().single();
       }
+      if(res.error) throw res.error;
+
+      toast("Saved listing ✅", "success");
+      closeEditor();
+      await fetchListings(payload.category);
+      await loadStats();
+      return;
     }
 
+    // -------- RATES --------
+    if(entity === "rate"){
+      const asset = document.getElementById("rate_asset").value;
+      const payload = {
+        asset,
+        buy: Number(document.getElementById("rate_buy").value || 0),
+        sell: Number(document.getElementById("rate_sell").value || 0),
+        status: document.getElementById("rate_status").value
+      };
+
+      // ✅ Use UPSERT so admin can save repeatedly without unique constraint issues
+      // Requires: unique index on rates(asset) (you already have this in the schema)
+      const res = await sb
+        .from("rates")
+        .upsert([payload], { onConflict: "asset" })
+        .select()
+        .single();
+
+      if(res.error) throw res.error;
+
+      toast("Saved rate ✅", "success");
+      closeEditor();
+      await fetchRates();
+      return;
+    }
+
+    // -------- INSIGHTS --------
+    if(entity === "insight"){
+      const payload = {
+        title: document.getElementById("insight_title").value.trim(),
+        category: document.getElementById("insight_category").value,
+        status: document.getElementById("insight_status").value,
+        image_url: document.getElementById("insight_image").value.trim(),
+        summary: document.getElementById("insight_summary").value.trim()
+      };
+
+      if(!payload.title) throw new Error("Title is required.");
+
+      let res;
+      if(id){
+        res = await sb.from("insights").update(payload).eq("id", id).select().single();
+      } else {
+        res = await sb.from("insights").insert([payload]).select().single();
+      }
+      if(res.error) throw res.error;
+
+      toast("Saved insight ✅", "success");
+      closeEditor();
+      await fetchInsights();
+      return;
+    }
+
+  } catch(err){
+    console.warn("SAVE ERROR:", err);
+
+    // ✅ Show the real Supabase message clearly
+    const msg =
+      err?.message ||
+      err?.error_description ||
+      err?.hint ||
+      "Save failed";
+
+    toast(msg, "error");
+
+    // If it’s RLS, tell you directly
+    if (String(msg).toLowerCase().includes("row-level security") || String(msg).toLowerCase().includes("rls")) {
+      toast("Blocked by RLS: confirm admin allow-list + policies.", "error");
+    }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Save";
+  }
+}
     async function deleteEntity(entity, id, category=null){
       if(!confirm("Delete this item?")) return;
 
