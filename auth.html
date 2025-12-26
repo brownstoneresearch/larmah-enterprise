@@ -154,7 +154,7 @@
           </button>
 
           <div class="hint">
-            If your email isn’t verified yet, you must verify first before login works.
+            If your email isn’t verified yet, open your inbox and click the verification link first.
           </div>
         </form>
 
@@ -268,6 +268,12 @@
         return;
       }
 
+      // ✅ GitHub Pages-safe redirect URL:
+      // For https://brownstoneresearch.github.io/larmah-enterprise/auth.html
+      // BASE becomes https://brownstoneresearch.github.io/larmah-enterprise/
+      const BASE = new URL(".", window.location.href);
+      const REDIRECT_TO = new URL("auth.html", BASE).toString();
+
       // handle email verification redirect (?code=...)
       const url = new URL(window.location.href);
       const code = url.searchParams.get("code");
@@ -288,6 +294,7 @@
         }
       } catch {}
 
+      // SIGN IN
       document.getElementById("loginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = document.getElementById("loginEmail").value.trim();
@@ -309,6 +316,7 @@
         }
       });
 
+      // REGISTER (non-admin by default)
       document.getElementById("registerForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const full_name = document.getElementById("regName").value.trim();
@@ -323,18 +331,20 @@
           const { data, error } = await sb.auth.signUp({
             email,
             password,
-            options: { data: { full_name }, emailRedirectTo: window.location.origin + "/auth.html" }
+            options: {
+              data: { full_name },
+              emailRedirectTo: REDIRECT_TO
+            }
           });
           if (error) throw error;
 
-          // best-effort profile upsert
+          // best-effort profile upsert (trigger also creates profile)
           try {
             if (data?.user?.id) {
               await sb.from("profiles").upsert({
                 id: data.user.id,
                 email,
-                full_name,
-                created_at: new Date().toISOString()
+                full_name
               });
             }
           } catch {}
@@ -350,6 +360,7 @@
         }
       });
 
+      // RESEND VERIFICATION EMAIL
       document.getElementById("resendBtn").addEventListener("click", async () => {
         const email = document.getElementById("loginEmail").value.trim();
         if(!email){
@@ -365,9 +376,10 @@
           const { error } = await sb.auth.resend({
             type: "signup",
             email,
-            options: { emailRedirectTo: window.location.origin + "/auth.html" }
+            options: { emailRedirectTo: REDIRECT_TO }
           });
           if(error) throw error;
+
           LARMAH.toast("Verification email sent. Check your inbox.", "success");
         } catch (err) {
           LARMAH.toast(err.message || "Could not resend email", "error");
