@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  
+
   <title>Real Estate | Larmah Enterprise</title>
   <meta name="description" content="Verified shortlets, rentals, and property sales across Nigeria. Trust-first sourcing with WhatsApp support." />
   <meta name="keywords" content="Real Estate Nigeria, Shortlets Lekki, Apartments Lagos, Buy House Nigeria, Verified Property" />
@@ -37,11 +37,48 @@
     @media(max-width: 768px) { .filters { grid-template-columns: 1fr; } }
     .pillbar { display:flex; gap:8px; flex-wrap:wrap; border-top: 1px solid rgba(255,255,255,0.05); padding-top:12px; }
 
-    .card-media { width: 100%; height: 190px; border-radius: 14px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); margin-bottom: 12px; }
-    .card-media img { width: 100%; height: 100%; object-fit: cover; display:block; }
-
     .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
     .live-dot i { font-size: 8px; }
+
+    .card-media{
+      width:100%; height:190px; border-radius:14px; overflow:hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.2);
+      margin-bottom: 12px;
+      position: relative;
+      user-select:none;
+    }
+    .card-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    .media-nav{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 10px;
+      pointer-events:none;
+    }
+    .media-btn{
+      width:34px; height:34px; border-radius:12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.10);
+      display:grid; place-items:center;
+      color:#fff;
+      pointer-events:auto;
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+    }
+    .media-btn:hover{ background: rgba(0,0,0,0.55); }
+
+    .media-dots{
+      position:absolute; left:0; right:0; bottom:10px;
+      display:flex; justify-content:center; gap:6px;
+      pointer-events:none;
+    }
+    .media-dot{
+      width:7px; height:7px; border-radius:999px;
+      background: rgba(255,255,255,0.35);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .media-dot.active{ background: rgba(255,255,255,0.9); }
   </style>
 </head>
 
@@ -299,14 +336,12 @@
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
 
           <div class="actions" style="margin-top:12px">
-            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Name:'', Phone:'', Message:'Hello Larmah, I need help.' }))">
+            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
             </button>
           </div>
 
-          <div class="small" style="margin-top:10px;opacity:.65">
-            <a href="auth.html">Staff Sign-in</a> • <a href="admin.html">Admin</a>
-          </div>
+          <!-- ✅ Removed: Staff Sign-in • Admin -->
         </div>
       </div>
 
@@ -324,9 +359,51 @@
     let __reChannel = null;
     let __reDebounce = null;
 
+    const __RE_IMG_URLS = {};
+    const __RE_IMG_IDX = {};
+
+    function sbClient(){
+      return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
+    }
+
     function debounce(fn, wait=700){
       clearTimeout(__reDebounce);
       __reDebounce = setTimeout(fn, wait);
+    }
+
+    function getImages(it){
+      const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
+      if(arr.length) return arr.slice(0,3);
+      if(it.image_url) return [it.image_url];
+      return ["assets/images/larmah-header.jpeg"];
+    }
+
+    function initCardImages(it){
+      const id = String(it.id);
+      __RE_IMG_URLS[id] = getImages(it);
+      __RE_IMG_IDX[id] = 0;
+    }
+
+    function setCardImage(id){
+      const img = document.getElementById(`re-img-${id}`);
+      if(!img) return;
+      const urls = __RE_IMG_URLS[id] || ["assets/images/larmah-header.jpeg"];
+      const idx = __RE_IMG_IDX[id] || 0;
+      img.src = urls[idx] || "assets/images/larmah-header.jpeg";
+
+      const dotsWrap = document.getElementById(`re-dots-${id}`);
+      if(dotsWrap){
+        dotsWrap.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
+      }
+    }
+
+    function cycleImage(id, dir){
+      const urls = __RE_IMG_URLS[id] || [];
+      if(urls.length <= 1) return;
+      const max = urls.length;
+      const cur = __RE_IMG_IDX[id] || 0;
+      __RE_IMG_IDX[id] = (cur + dir + max) % max;
+      setCardImage(id);
     }
 
     function inferType(item){
@@ -360,19 +437,40 @@
       mount.innerHTML = `
         <div class="grid">
           ${items.map(it => {
-            const imgUrl = it.image_url || "assets/images/larmah-header.jpeg";
+            const id = String(it.id);
+            initCardImages(it);
+            const urls = __RE_IMG_URLS[id];
+            const hasMany = urls.length > 1;
+            const price = it.price || "Contact for quote";
+
             return `
               <div class="card">
                 <div class="card-media">
-                  <img src="${LARMAH.escapeHtml(imgUrl)}" alt="${LARMAH.escapeHtml(it.title)}" loading="lazy"
-                       onerror="this.src='assets/images/larmah-header.jpeg'">
+                  <img id="re-img-${id}" src="${LARMAH.escapeHtml(urls[0])}" alt="${LARMAH.escapeHtml(it.title)}"
+                       loading="lazy" onerror="this.src='assets/images/larmah-header.jpeg'">
+
+                  ${hasMany ? `
+                    <div class="media-nav">
+                      <button class="media-btn" type="button" aria-label="Prev image" onclick="cycleImage('${id}', -1)">
+                        <i class="fa-solid fa-chevron-left"></i>
+                      </button>
+                      <button class="media-btn" type="button" aria-label="Next image" onclick="cycleImage('${id}', 1)">
+                        <i class="fa-solid fa-chevron-right"></i>
+                      </button>
+                    </div>
+                    <div class="media-dots" id="re-dots-${id}">
+                      ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
+                    </div>
+                  ` : ``}
                 </div>
+
                 <h3>${LARMAH.escapeHtml(it.title)}</h3>
                 <p>${LARMAH.escapeHtml(it.description || "")}</p>
-                ${it.price ? `<div class="price">${LARMAH.escapeHtml(it.price)}</div>` : ``}
-                <div class="meta">Verified • Ref: WEB-RE-${it.id}</div>
+                <div class="price">${LARMAH.escapeHtml(price)}</div>
+                <div class="meta">Verified • Ref: WEB-RE-${id}</div>
+
                 <div class="actions">
-                  <button class="btn small primary" onclick="enquireProperty('${it.id}')">
+                  <button class="btn small primary" onclick="enquireProperty('${id}')">
                     <i class="fa-brands fa-whatsapp"></i> Enquire
                   </button>
                 </div>
@@ -413,7 +511,7 @@
         </div>`;
 
       try {
-        const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+        const sb = sbClient();
         if(!sb) throw new Error("supabaseClient not ready");
 
         const { data, error } = await sb
@@ -479,7 +577,7 @@
     }
 
     function initRealtimeRealEstate(){
-      const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+      const sb = sbClient();
       if(!sb) return;
 
       if(__reChannel){
@@ -490,12 +588,10 @@
       __reChannel = sb
         .channel("realtime-real-estate")
         .on("postgres_changes", { event:"*", schema:"public", table:"listings" }, (payload) => {
-          // Refresh only when relevant (category/status could change)
           const n = payload.new || {};
           const o = payload.old || {};
           const cat = (n.category || o.category || "").toLowerCase();
           if(cat !== "real-estate") return;
-
           debounce(() => loadRealEstate(), 800);
         })
         .subscribe((status) => {
