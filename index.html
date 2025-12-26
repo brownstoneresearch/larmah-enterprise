@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>Larmah Enterprise | Nigeria’s Trust-First Commerce Hub</title>
-  <meta name="description" content="Verified Real Estate, reliable Logistics, live Insights, and Exchange — WhatsApp-first support across Nigeria. The #1 commerce hub for trust-based transactions." />
-  <meta name="keywords" content="Larmah Enterprise, Real Estate Nigeria, Logistics Lagos, Crypto Exchange Nigeria, Shortlets Ikoyi, Haulage Nigeria, Trusted Commerce" />
+  <meta name="description" content="Verified Real Estate and reliable Logistics — WhatsApp-first support across Nigeria. Trust-based commerce, updated live." />
+  <meta name="keywords" content="Larmah Enterprise, Real Estate Nigeria, Logistics Lagos, Shortlets Ikoyi, Haulage Nigeria, Trusted Commerce" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
   <link rel="canonical" href="https://heylarmah.tech/" />
@@ -14,13 +14,13 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heylarmah.tech/" />
   <meta property="og:title" content="Larmah Enterprise | Seamless Commerce, Verified Standards" />
-  <meta property="og:description" content="Verified Real Estate, Logistics, Insights, and Exchange. Built for the Nigeria community." />
+  <meta property="og:description" content="Verified Real Estate and Logistics — built for Nigeria. WhatsApp-first support." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:url" content="https://heylarmah.tech/" />
   <meta name="twitter:title" content="Larmah Enterprise | Nigeria’s Trust-First Hub" />
-  <meta name="twitter:description" content="Real Estate • Logistics • Insights • Exchange. Verified standards for Nigeria." />
+  <meta name="twitter:description" content="Real Estate • Logistics. Verified standards for Nigeria." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
@@ -33,57 +33,86 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    /* Compact latest list */
-    .latest-compact{display:grid;gap:10px;margin-top:10px}
+    /* Hero refinement */
+    .hero-actions-slim{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .hero-actions-slim .btn{min-height:46px}
+    .hero-actions-slim .btn.primary{box-shadow:0 14px 40px rgba(212,175,55,0.12)}
+
+    /* Catalogue layout (professional) */
+    .catalog-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    @media(max-width: 900px){ .catalog-grid{grid-template-columns:1fr} }
+
+    .catalog-panel{
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    .catalog-panel-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.15);
+    }
+    .catalog-panel-title{
+      display:flex; gap:10px; align-items:center;
+    }
+    .catalog-panel-title h3{margin:0;font-weight:950}
+    .catalog-panel-title .small{opacity:.8}
+    .catalog-panel-body{padding: 12px 14px 14px}
+
+    /* Compact rows */
+    .latest-compact{display:grid;gap:10px}
     .latest-compact .lrow{
-      display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;
-      padding:10px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03)
+      display:grid;
+      grid-template-columns: 66px 1fr auto;
+      gap: 12px;
+      align-items:center;
+      padding: 10px 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
     }
     .latest-compact .lthumb{
-      width:62px;height:50px;border-radius:12px;overflow:hidden;background:rgba(0,0,0,0.25);
-      border:1px solid rgba(255,255,255,0.08)
+      width:66px;height:54px;border-radius:12px;overflow:hidden;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
     }
     .latest-compact .lthumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .latest-compact .ltitle{font-weight:900;font-size:0.95rem;line-height:1.15;margin-bottom:4px}
-    .latest-compact .lmeta{display:flex;gap:10px;flex-wrap:wrap;font-size:0.82rem;color:var(--muted);opacity:0.9}
-    .latest-compact .lprice{color:var(--accent);font-weight:900}
-    .latest-compact .lactions{display:flex;gap:8px;align-items:center}
+    .latest-compact .ltitle{font-weight:950;font-size:.95rem;line-height:1.15;margin-bottom:4px}
+    .latest-compact .lmeta{display:flex;gap:10px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);opacity:.9}
+    .latest-compact .lprice{color:var(--accent);font-weight:950}
     .latest-compact .lactions .btn.small{padding:8px 10px;border-radius:12px}
 
-    /* Compact insights preview */
-    .ins-compact{display:grid;gap:10px;margin-top:10px}
-    .ins-compact .irow{
-      padding:12px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03)
-    }
-    .ins-compact .idate{font-size:.8rem;color:var(--muted);opacity:.85;margin-bottom:6px}
-    .ins-compact .ititle{font-weight:950;line-height:1.2}
-    .ins-compact .isum{margin-top:6px;color:var(--muted);font-size:.9rem;opacity:.9;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-
-    /* Rates mini board */
-    .rate-mini{display:grid;gap:10px;margin-top:10px}
-    .rate-mini .rrow{
-      display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:center;
-      padding:10px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03)
-    }
-    .rate-mini .pair{font-weight:950}
-    .rate-mini .buy{color:var(--ok);font-weight:950}
-    .rate-mini .sell{color:var(--warn);font-weight:950}
-    .rate-mini .tag{font-size:.8rem;color:var(--muted);opacity:.9}
-    @media(max-width:640px){
-      .rate-mini .rrow{grid-template-columns:1fr 1fr;row-gap:8px}
-      .rate-mini .rrow .rbtn{grid-column:1/-1}
-    }
-
     /* Skeleton */
-    .latest-compact-skel{display:grid;gap:10px;margin-top:10px}
+    .latest-compact-skel{display:grid;gap:10px}
     .latest-compact-skel .sk{
-      display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;
-      padding:10px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(255,255,255,0.03)
+      display:grid;grid-template-columns:66px 1fr auto;gap:12px;align-items:center;
+      padding:10px;border:1px solid rgba(255,255,255,0.08);
+      border-radius:14px;background:rgba(255,255,255,0.03)
     }
-    .latest-compact-skel .sk-thumb{width:62px;height:50px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08)}
+    .latest-compact-skel .sk-thumb{width:66px;height:54px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08)}
     .latest-compact-skel .sk-line{height:10px;border-radius:999px;background:rgba(255,255,255,0.07);margin:6px 0}
     .latest-compact-skel .sk-line.short{width:60%}
-    .latest-compact-skel .sk-btn{width:38px;height:34px;border-radius:12px;background:rgba(255,255,255,0.07)}
+    .latest-compact-skel .sk-btn{width:44px;height:34px;border-radius:12px;background:rgba(255,255,255,0.07)}
+
+    .live-pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(255,255,255,0.03);
+      color:var(--muted);
+      font-size:.82rem;font-weight:900;
+    }
+    .live-pill i{font-size:8px;color:var(--ok)}
   </style>
 </head>
 
@@ -152,9 +181,7 @@
       </div>
       <script>
         document.addEventListener("DOMContentLoaded", () => {
-          if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") {
-            LARMAH.updateHeaderAuthUI();
-          }
+          if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") LARMAH.updateHeaderAuthUI();
         });
       </script>
     </div>
@@ -166,73 +193,81 @@
         <div class="hero-inner">
           <div>
             <div class="hero-kicker">
-              <span class="kicker-pill"><i class="fa-solid fa-bolt"></i> Nigeria’s Trust-First Hub</span>
+              <span class="kicker-pill"><i class="fa-solid fa-bolt"></i> Trust-first Commerce</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Verified Standards • WhatsApp-first</span>
+              <span class="kicker-sub">Real Estate & Logistics</span>
             </div>
 
-            <h1>Seamless Commerce.<br/>Verified Standards.</h1>
+            <h1>Verified Listings.<br/>Reliable Movement.</h1>
             <p class="lead">
-              Verified Real Estate, reliable Logistics, live Insights, and an admin-managed Exchange desk —
-              built for Nigeria.
+              Two pillars, one standard: verified inventory and trackable support — updated live from our admin desk.
             </p>
 
-            <div class="actions">
-              <a class="btn solid" href="#latest"><i class="fa-solid fa-sparkles"></i> Browse Latest</a>
-              <a class="btn" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
-              <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
-              <button class="btn" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { Topic:'Real Estate / Logistics / Exchange', Message:'Hello Larmah, I need assistance.' }))">
-                <i class="fa-brands fa-whatsapp"></i> Quick WhatsApp
+            <!-- ✅ HERO BUTTONS (ONLY TWO) -->
+            <div class="hero-actions-slim">
+              <a class="btn solid" href="#catalogues"><i class="fa-solid fa-layer-group"></i> Browse Catalogues</a>
+              <button class="btn primary" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('WhatsApp Support', { Message:'Hello Larmah, I need assistance.' }))">
+                <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
               </button>
             </div>
 
-            <div class="trust-row">
-              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Verified listings only</div>
+            <div class="trust-row" style="margin-top:14px">
+              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Verified only</div>
               <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Scam-resistant workflow</div>
-              <div class="trust-badge"><i class="fa-solid fa-headset"></i> Priority options available</div>
+              <div class="trust-badge"><i class="fa-solid fa-headset"></i> Fast support</div>
+            </div>
+
+            <div style="margin-top:12px">
+              <span class="live-pill"><i class="fa-solid fa-circle fa-beat"></i> Live updates via Supabase</span>
             </div>
           </div>
 
           <div class="hero-badges">
             <div class="hero-card">
-              <h3><i class="fa-solid fa-building-circle-check" style="color:var(--brand)"></i> Real Estate</h3>
+              <h3><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</h3>
               <p>Shortlets, rentals, and verified purchase listings.</p>
               <div class="card-actions"><a class="btn small" href="real-estate.html">Explore</a></div>
             </div>
-
             <div class="hero-card">
-              <h3><i class="fa-solid fa-route" style="color:var(--brand)"></i> Logistics</h3>
+              <h3><i class="fa-solid fa-truck-fast" style="color:var(--brand)"></i> Logistics</h3>
               <p>Dispatch, pickups, escort-ready movement, haulage.</p>
               <div class="card-actions"><a class="btn small" href="logistics.html">Book</a></div>
             </div>
-
             <div class="hero-card">
-              <h3><i class="fa-solid fa-money-bill-transfer" style="color:var(--brand)"></i> Exchange</h3>
-              <p>Live FX + crypto desk rates managed in Admin.</p>
-              <div class="card-actions"><a class="btn small" href="exchange.html">Get Rates</a></div>
+              <h3><i class="fa-solid fa-crown" style="color:var(--brand)"></i> Premium</h3>
+              <p>Priority sourcing and concierge handling.</p>
+              <div class="card-actions"><a class="btn small" href="premium.html">Upgrade</a></div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
 
-    <section class="section" id="latest">
+    <!-- ✅ PROFESSIONAL CATALOGUE ARRANGEMENT (ONLY REAL ESTATE + LOGISTICS) -->
+    <section class="section" id="catalogues">
       <div class="section-head-split">
         <div>
-          <h2>Live Updates</h2>
-          <p class="lead">Homepage panels pull in real-time updates from Supabase.</p>
+          <h2>Latest Catalogues</h2>
+          <p class="lead">Pulled from Supabase — updated in real time.</p>
         </div>
         <a class="btn small" href="insights.html"><i class="fa-solid fa-chart-line"></i> Insights</a>
       </div>
 
-      <div class="grid home-grid">
-        <!-- Real Estate -->
-        <div class="card">
-          <div class="section-titleline">
-            <h3 style="margin:0"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</h3>
-            <a class="mini-link small" href="real-estate.html">View all →</a>
+      <div class="catalog-grid">
+        <!-- Real Estate Panel -->
+        <div class="catalog-panel">
+          <div class="catalog-panel-head">
+            <div class="catalog-panel-title">
+              <i class="fa-solid fa-house" style="color:var(--brand);font-size:18px"></i>
+              <div>
+                <h3>Real Estate</h3>
+                <div class="small">Verified properties • Live</div>
+              </div>
+            </div>
+            <a class="btn small" href="real-estate.html">View all →</a>
           </div>
-          <div id="latestRE">
+          <div class="catalog-panel-body" id="latestRE">
             <div class="latest-compact-skel">
               <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
               <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
@@ -241,13 +276,19 @@
           </div>
         </div>
 
-        <!-- Logistics -->
-        <div class="card">
-          <div class="section-titleline">
-            <h3 style="margin:0"><i class="fa-solid fa-truck" style="color:var(--brand)"></i> Logistics</h3>
-            <a class="mini-link small" href="logistics.html">View all →</a>
+        <!-- Logistics Panel -->
+        <div class="catalog-panel">
+          <div class="catalog-panel-head">
+            <div class="catalog-panel-title">
+              <i class="fa-solid fa-truck-fast" style="color:var(--brand);font-size:18px"></i>
+              <div>
+                <h3>Logistics</h3>
+                <div class="small">Dispatch & movement • Live</div>
+              </div>
+            </div>
+            <a class="btn small" href="logistics.html">View all →</a>
           </div>
-          <div id="latestLG">
+          <div class="catalog-panel-body" id="latestLG">
             <div class="latest-compact-skel">
               <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
               <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
@@ -255,34 +296,10 @@
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Latest Insights -->
-        <div class="card">
-          <div class="section-titleline">
-            <h3 style="margin:0"><i class="fa-solid fa-newspaper" style="color:var(--brand)"></i> Latest Insights</h3>
-            <a class="mini-link small" href="insights.html">Read all →</a>
-          </div>
-          <div id="latestIN">
-            <div class="latest-compact-skel">
-              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Live Rates -->
-        <div class="card">
-          <div class="section-titleline">
-            <h3 style="margin:0"><i class="fa-solid fa-coins" style="color:var(--brand)"></i> Live Rates</h3>
-            <a class="mini-link small" href="exchange.html">Exchange →</a>
-          </div>
-          <div id="latestRT">
-            <div class="latest-compact-skel">
-              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-              <div class="sk"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-            </div>
-          </div>
-        </div>
+      <div style="margin-top:16px" class="notice-admin">
+        <b>Tip:</b> Use <a href="admin.html">Admin</a> to add/edit listings. The homepage updates automatically.
       </div>
     </section>
 
@@ -292,7 +309,7 @@
           <h2 style="margin:0">Need something specific?</h2>
           <p class="lead" style="margin:6px 0 0">Tell us your budget, location, and timeline — we’ll respond via WhatsApp.</p>
         </div>
-        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { Category:'Real Estate / Logistics / Exchange', Details:'Describe what you need…' }))">
+        <button class="btn solid" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { Category:'Real Estate / Logistics', Details:'Describe what you need…' }))">
           <i class="fa-brands fa-whatsapp"></i> Start Request
         </button>
       </div>
@@ -316,7 +333,7 @@
           </div>
 
           <div class="social-row" aria-label="Social links">
-            <a class="social-btn" href="https://instagram.com/hey_lar                                 mah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
             <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
             <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
             <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
@@ -359,7 +376,7 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Minimal fallback if app.js didn't load for any reason
+    // Minimal fallback if app.js didn't load
     window.LARMAH = window.LARMAH || {
       escapeHtml: (s)=> String(s||"").replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])),
       openWhatsApp: (t)=> window.open("https://wa.me/2347063080605?text="+encodeURIComponent(t), "_blank"),
@@ -374,7 +391,7 @@
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
     }
 
-    function debounce(fn, wait=700){
+    function debounce(fn, wait=600){
       clearTimeout(__homeDebounce);
       __homeDebounce = setTimeout(fn, wait);
     }
@@ -399,7 +416,7 @@
           .eq("category", category)
           .eq("status", "active")
           .order("created_at", { ascending: false })
-          .limit(3);
+          .limit(4);
 
         if(error) throw error;
 
@@ -462,94 +479,6 @@
       }));
     }
 
-    async function renderInsightsPreview(){
-      const mount = document.getElementById("latestIN");
-      if(!mount) return;
-
-      try{
-        const sb = sbClient();
-        if(!sb) throw new Error("supabaseClient not ready");
-
-        const { data, error } = await sb
-          .from("insights")
-          .select("id,title,category,summary,status,created_at")
-          .eq("status","active")
-          .order("created_at", { ascending:false })
-          .limit(3);
-
-        if(error) throw error;
-
-        const items = data || [];
-        if(!items.length){
-          mount.innerHTML = `<div class="notice">No insights yet.</div>`;
-          return;
-        }
-
-        mount.innerHTML = `
-          <div class="ins-compact">
-            ${items.map(it => `
-              <div class="irow">
-                <div class="idate">${new Date(it.created_at).toLocaleDateString()} • ${LARMAH.escapeHtml((it.category||"all").toUpperCase())}</div>
-                <div class="ititle">${LARMAH.escapeHtml(it.title)}</div>
-                <div class="isum">${LARMAH.escapeHtml(it.summary || "")}</div>
-                <div style="margin-top:10px">
-                  <a class="btn small" href="insights.html">Read →</a>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-      }catch(e){
-        console.error(e);
-        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)"><strong>Insights unavailable.</strong></div>`;
-      }
-    }
-
-    async function renderRatesPreview(){
-      const mount = document.getElementById("latestRT");
-      if(!mount) return;
-
-      try{
-        const sb = sbClient();
-        if(!sb) throw new Error("supabaseClient not ready");
-
-        const { data, error } = await sb
-          .from("rates")
-          .select("asset,buy,sell,status,updated_at")
-          .eq("status","active")
-          .order("asset", { ascending:true });
-
-        if(error) throw error;
-
-        const rows = (data || []).filter(x => ["USD","GBP","USDT","EUR","BTC"].includes(String(x.asset||"").toUpperCase()));
-        const top = rows.slice(0,4);
-
-        if(!top.length){
-          mount.innerHTML = `<div class="notice">Rates not available.</div>`;
-          return;
-        }
-
-        mount.innerHTML = `
-          <div class="rate-mini">
-            ${top.map(r => `
-              <div class="rrow">
-                <div>
-                  <div class="pair">${LARMAH.escapeHtml(r.asset)} <span class="tag">/ NGN</span></div>
-                  <div class="tag">${r.updated_at ? ("Updated " + new Date(r.updated_at).toLocaleTimeString()) : ""}</div>
-                </div>
-                <div class="buy">Buy: ${Number(r.buy||0).toLocaleString()}</div>
-                <div class="sell">Sell: ${Number(r.sell||0).toLocaleString()}</div>
-                <div class="rbtn"><a class="btn small" href="exchange.html">Trade</a></div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-      }catch(e){
-        console.error(e);
-        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)"><strong>Rates unavailable.</strong></div>`;
-      }
-    }
-
     function initHomeRealtime(){
       const sb = sbClient();
       if(!sb) return;
@@ -559,18 +488,12 @@
         __homeChannel = null;
       }
 
-      __homeChannel = sb.channel("home-live-panels")
+      __homeChannel = sb.channel("home-live-catalogues")
         .on("postgres_changes", { event:"*", schema:"public", table:"listings" }, () => {
           debounce(() => {
             renderListingsPreview("real-estate","latestRE");
             renderListingsPreview("logistics","latestLG");
-          }, 600);
-        })
-        .on("postgres_changes", { event:"*", schema:"public", table:"insights" }, () => {
-          debounce(() => renderInsightsPreview(), 700);
-        })
-        .on("postgres_changes", { event:"*", schema:"public", table:"rates" }, () => {
-          debounce(() => renderRatesPreview(), 700);
+          }, 500);
         })
         .subscribe();
     }
@@ -578,8 +501,6 @@
     document.addEventListener("DOMContentLoaded", () => {
       renderListingsPreview("real-estate","latestRE");
       renderListingsPreview("logistics","latestLG");
-      renderInsightsPreview();
-      renderRatesPreview();
       initHomeRealtime();
     });
   </script>
