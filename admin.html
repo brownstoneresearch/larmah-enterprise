@@ -71,6 +71,17 @@
     .tiny{font-size:.78rem;opacity:.75}
     .saving{opacity:.7;pointer-events:none}
     @media(max-width:900px){.admin-layout{grid-template-columns:1fr}.admin-sidebar{display:none}}
+
+    /* ✅ Little upgrade: header quick actions */
+    .quick-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .chip{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      font-weight:900;font-size:.82rem;
+    }
   </style>
 </head>
 
@@ -118,8 +129,9 @@
           <li class="nav-item" onclick="switchView('all-listings', this)"><i class="fa-solid fa-layer-group"></i> All Listings</li>
           <li class="nav-item" onclick="switchView('real-estate', this)"><i class="fa-solid fa-building"></i> Real Estate</li>
           <li class="nav-item" onclick="switchView('logistics', this)"><i class="fa-solid fa-truck-fast"></i> Logistics</li>
-          <li class="nav-item" onclick="switchView('rates', this)"><i class="fa-solid fa-coins"></i> Rates (Pairs)</li>
+          <li class="nav-item" onclick="switchView('rates', this)"><i class="fa-solid fa-money-bill-transfer"></i> Rates (Pairs)</li>
           <li class="nav-item" onclick="switchView('insights', this)"><i class="fa-regular fa-newspaper"></i> Insights</li>
+          <li class="nav-item" onclick="switchView('rss', this)"><i class="fa-solid fa-rss"></i> RSS Sources</li>
           <li class="nav-item" onclick="switchView('requests', this)"><i class="fa-solid fa-inbox"></i> Requests</li>
           <li class="nav-item" onclick="switchView('users', this)"><i class="fa-solid fa-users"></i> Users</li>
         </ul>
@@ -135,8 +147,17 @@
         <!-- OVERVIEW -->
         <div id="view-overview" class="view-section">
           <div class="admin-header">
-            <h1>System Overview</h1>
-            <div class="small" style="color:var(--ok)"><i class="fa-solid fa-shield-halved"></i> Super Admin</div>
+            <div>
+              <h1 style="margin:0">System Overview</h1>
+              <div class="small" style="margin-top:6px;color:var(--muted)">
+                Live DB • Admin-only access
+              </div>
+            </div>
+            <div class="quick-actions">
+              <span class="chip"><i class="fa-solid fa-shield-halved"></i> Super Admin</span>
+              <button class="btn small" onclick="loadStats()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+              <button class="btn small" onclick="syncRssNow()"><i class="fa-solid fa-rss"></i> Sync RSS</button>
+            </div>
           </div>
 
           <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:22px">
@@ -156,7 +177,7 @@
 
           <div class="card">
             <div style="font-weight:950;margin-bottom:6px">Rates (Pairs)</div>
-            <div class="small" style="opacity:.8;line-height:1.7">
+            <div class="small" style="opacity:.85;line-height:1.7">
               Add pairs like <b>BTC/USDT</b>, <b>BTC/NGN</b>, <b>ETH/USDT</b>, <b>ETH/NGN</b>, <b>USDT/NGN</b>.<br/>
               Use Base + Quote. Pair is auto-generated.
             </div>
@@ -222,14 +243,43 @@
         <!-- INSIGHTS -->
         <div id="view-insights" class="view-section" style="display:none">
           <div class="admin-header">
-            <h1>Insights</h1>
-            <button class="btn solid small" onclick="openEditor('insight', null, null)"><i class="fa-solid fa-plus"></i> Add Insight</button>
+            <div>
+              <h1 style="margin:0">Insights</h1>
+              <div class="small" style="margin-top:6px;color:var(--muted)">Admin posts + RSS entries (auto)</div>
+            </div>
+            <div class="quick-actions">
+              <button class="btn small" onclick="syncRssNow()"><i class="fa-solid fa-rss"></i> Sync RSS</button>
+              <button class="btn solid small" onclick="openEditor('insight', null, null)"><i class="fa-solid fa-plus"></i> Add Insight</button>
+            </div>
           </div>
           <div class="data-table-wrapper">
             <table>
               <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th width="170">Actions</th></tr></thead>
               <tbody id="tbody-insights"></tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- RSS SOURCES -->
+        <div id="view-rss" class="view-section" style="display:none">
+          <div class="admin-header">
+            <div>
+              <h1 style="margin:0">RSS Sources</h1>
+              <div class="small" style="margin-top:6px;color:var(--muted)">Feeds for real-estate, logistics, and exchange updates</div>
+            </div>
+            <div class="quick-actions">
+              <button class="btn small" onclick="syncRssNow()"><i class="fa-solid fa-bolt"></i> Run Sync</button>
+              <button class="btn solid small" onclick="openEditor('rss', null, null)"><i class="fa-solid fa-plus"></i> Add Source</button>
+            </div>
+          </div>
+          <div class="data-table-wrapper">
+            <table>
+              <thead><tr><th>Name</th><th>Category</th><th>URL</th><th>Status</th><th width="120">Actions</th></tr></thead>
+              <tbody id="tbody-rss"></tbody>
+            </table>
+          </div>
+          <div class="small" style="margin-top:12px;opacity:.8">
+            Tip: Keep only reputable feeds. RSS sync runs on schedule, but you can also "Run Sync" anytime.
           </div>
         </div>
 
@@ -265,7 +315,7 @@
     </div>
   </div>
 
-  <!-- Quick upload (table editor) -->
+  <!-- Quick upload -->
   <input id="quickUploadInput" type="file" accept="image/*" style="display:none">
 
   <!-- EDITOR MODAL -->
@@ -285,8 +335,11 @@
         <div id="fields-listing" style="display:none">
           <div class="form-group">
             <label class="form-label">Category</label>
-            <input type="text" id="listing_category" class="input" placeholder="e.g. real-estate, logistics, etc" required>
-            <div class="tiny">You can publish to any category. Use <b>real-estate</b> or <b>logistics</b> for main pages.</div>
+            <select id="listing_category" class="input" required>
+              <option value="real-estate">real-estate</option>
+              <option value="logistics">logistics</option>
+            </select>
+            <div class="tiny">Website pages read only <b>real-estate</b> and <b>logistics</b>.</div>
           </div>
 
           <div class="form-group">
@@ -301,10 +354,10 @@
             </div>
             <div class="form-group">
               <label class="form-label">Status</label>
+              <!-- DB-safe: active/inactive -->
               <select id="listing_status" class="input">
                 <option value="active">Active</option>
-                <option value="draft">Draft</option>
-                <option value="sold">Sold</option>
+                <option value="inactive">Inactive (Draft/Sold)</option>
               </select>
             </div>
           </div>
@@ -321,16 +374,30 @@
 
           <div class="form-group">
             <label class="form-label">Images (1–3)</label>
-            <div class="tiny">Upload or paste URLs. First image becomes the main image.</div>
+            <div class="tiny">Upload or paste URLs. First image becomes main.</div>
 
             <div class="img-grid" style="margin-top:10px">
-              ${[1,2,3].map(i=>`
+              <!-- Slot 1 -->
               <div class="img-slot">
-                <div class="slot-head"><b>Image ${i}${i===1?' (Main)':''}</b><button type="button" class="btn small" onclick="clearSlot('listing',${i})">Clear</button></div>
-                <input type="file" id="listing_file_${i}" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_${i}" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="listing_url_${i}" class="input" placeholder="or paste URL"></div>
-              </div>`).join("")}
+                <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('listing',1)">Clear</button></div>
+                <input type="file" id="listing_file_1" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_1" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="listing_url_1" class="input" placeholder="or paste URL"></div>
+              </div>
+              <!-- Slot 2 -->
+              <div class="img-slot">
+                <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('listing',2)">Clear</button></div>
+                <input type="file" id="listing_file_2" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_2" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="listing_url_2" class="input" placeholder="or paste URL"></div>
+              </div>
+              <!-- Slot 3 -->
+              <div class="img-slot">
+                <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('listing',3)">Clear</button></div>
+                <input type="file" id="listing_file_3" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_3" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="listing_url_3" class="input" placeholder="or paste URL"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -351,7 +418,7 @@
           <div class="form-group">
             <label class="form-label">Pair (auto)</label>
             <input type="text" id="rate_pair" class="input" placeholder="BTC/USDT" disabled>
-            <div class="tiny">Pair is generated as BASE/QUOTE. Example: BTC/USDT, ETH/NGN, USDT/NGN.</div>
+            <div class="tiny">Pair is generated as BASE/QUOTE.</div>
           </div>
 
           <div class="row2">
@@ -368,9 +435,10 @@
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Status</label>
+              <!-- DB-safe: active/inactive -->
               <select id="rate_status" class="input">
                 <option value="active">Active</option>
-                <option value="draft">Draft</option>
+                <option value="inactive">Inactive (Draft)</option>
               </select>
             </div>
             <div class="form-group">
@@ -397,18 +465,20 @@
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Category</label>
+              <!-- DB-safe categories -->
               <select id="insight_category" class="input">
                 <option value="real-estate">Real Estate</option>
                 <option value="logistics">Logistics</option>
                 <option value="exchange">Exchange</option>
-                <option value="all">All</option>
+                <option value="general">General</option>
               </select>
             </div>
             <div class="form-group">
               <label class="form-label">Status</label>
+              <!-- DB-safe: active/inactive -->
               <select id="insight_status" class="input">
                 <option value="active">Active</option>
-                <option value="draft">Draft</option>
+                <option value="inactive">Inactive (Draft)</option>
               </select>
             </div>
           </div>
@@ -420,21 +490,68 @@
 
           <div class="form-group">
             <label class="form-label">Images (1–3)</label>
-            <div class="tiny">Upload or paste URLs. First image becomes the main insight image.</div>
+            <div class="tiny">Upload or paste URLs. First image becomes main.</div>
 
             <div class="img-grid" style="margin-top:10px">
-              ${[1,2,3].map(i=>`
+              <!-- Slot 1 -->
               <div class="img-slot">
-                <div class="slot-head"><b>Image ${i}${i===1?' (Main)':''}</b><button type="button" class="btn small" onclick="clearSlot('insight',${i})">Clear</button></div>
-                <input type="file" id="insight_file_${i}" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_${i}" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_${i}" class="input" placeholder="or paste URL"></div>
-              </div>`).join("")}
+                <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('insight',1)">Clear</button></div>
+                <input type="file" id="insight_file_1" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_1" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="insight_url_1" class="input" placeholder="or paste URL"></div>
+              </div>
+              <!-- Slot 2 -->
+              <div class="img-slot">
+                <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('insight',2)">Clear</button></div>
+                <input type="file" id="insight_file_2" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_2" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="insight_url_2" class="input" placeholder="or paste URL"></div>
+              </div>
+              <!-- Slot 3 -->
+              <div class="img-slot">
+                <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('insight',3)">Clear</button></div>
+                <input type="file" id="insight_file_3" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_3" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="insight_url_3" class="input" placeholder="or paste URL"></div>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- REQUEST -->
+        <!-- RSS SOURCE -->
+        <div id="fields-rss" style="display:none">
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" id="rss_name" class="input" placeholder="e.g. CoinDesk" required>
+          </div>
+
+          <div class="row2">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="rss_category" class="input">
+                <option value="real-estate">real-estate</option>
+                <option value="logistics">logistics</option>
+                <option value="exchange">exchange</option>
+                <option value="general">general</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="rss_status" class="input">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Feed URL</label>
+            <input type="url" id="rss_url" class="input" placeholder="https://example.com/feed" required>
+            <div class="tiny">Use RSS/Atom feed URL. RSS sync will pull new items into Insights.</div>
+          </div>
+        </div>
+
+        <!-- REQUEST (read-only) -->
         <div id="fields-request" style="display:none">
           <div class="form-group"><label class="form-label">Category</label><input type="text" id="req_category" class="input" disabled></div>
           <div class="row2">
@@ -461,7 +578,13 @@
     const ONLY_ADMIN_EMAIL = "luckymomodu60@gmail.com";
     let sb = null;
 
-    const CACHE = { listings:new Map(), rates:new Map(), insights:new Map(), requests:new Map() };
+    const CACHE = {
+      listings:new Map(),
+      rates:new Map(),
+      insights:new Map(),
+      requests:new Map(),
+      rss:new Map()
+    };
 
     function toast(msg, type="info"){
       try { if (window.LARMAH && typeof LARMAH.toast === "function") LARMAH.toast(msg, type); } catch {}
@@ -488,25 +611,28 @@
     function badgeClass(status){
       const s = String(status||"").toLowerCase();
       if(s === "active") return "active";
-      if(s === "draft") return "draft";
-      if(s === "sold") return "sold";
+      if(s === "inactive") return "draft";
       if(s === "closed") return "closed";
-      if(s === "processing") return "draft";
-      if(s === "done") return "active";
+      if(s === "open") return "draft";
+      if(s === "new") return "draft";
       return "draft";
     }
 
     function safeDate(d){ try { return new Date(d).toLocaleString(); } catch { return ""; } }
+
     function setFieldsVisible(entity){
-      ["listing","rate","insight","request"].forEach(k => {
+      ["listing","rate","insight","rss","request"].forEach(k => {
         const el = document.getElementById("fields-" + k);
         if(el) el.style.display = (k === entity) ? "block" : "none";
       });
       document.getElementById("saveBtn").style.display = (entity === "request") ? "none" : "";
     }
 
-    // Storage helpers
+    /* ===========================
+       STORAGE HELPERS
+       =========================== */
     function randomId(len=10){ return Math.random().toString(36).slice(2, 2+len); }
+
     async function uploadToStorage(file, folder){
       if(!file) return null;
       const maxMb = 10;
@@ -524,7 +650,6 @@
       return { path, url };
     }
 
-    // Image slots
     function clearSlot(kind, idx){
       const file = document.getElementById(`${kind}_file_${idx}`);
       const url = document.getElementById(`${kind}_url_${idx}`);
@@ -575,7 +700,6 @@
       return "assets/images/larmah-header.jpeg";
     }
 
-    // Quick upload main image
     async function quickUploadMainImage(entity, id, category=null){
       const input = document.getElementById("quickUploadInput");
       if(!input) return;
@@ -620,22 +744,20 @@
       input.click();
     }
 
-    // Admin check
+    /* ===========================
+       ✅ ADMIN GATE (ROLE + EMAIL)
+       =========================== */
     async function assertOnlyAdmin(){
       const { data } = await sb.auth.getSession();
       if(!data?.session) throw new Error("No session");
 
-      const email = (data.session.user.email || "").toLowerCase();
-      if(email !== ONLY_ADMIN_EMAIL){
-        await sb.auth.signOut();
-        throw new Error("Access denied: Admins only.");
-      }
-
       const { data: isAdmin, error } = await sb.rpc("is_admin");
       if(error) throw error;
-      if(!isAdmin){
-        await sb.auth.signOut();
-        throw new Error("Access denied: Admins only.");
+      if(!isAdmin) throw new Error("Access denied: Admins only.");
+
+      const email = (data.session.user.email || "").toLowerCase();
+      if(email !== ONLY_ADMIN_EMAIL.toLowerCase()){
+        throw new Error("Access denied: Admin email mismatch.");
       }
       return true;
     }
@@ -645,32 +767,8 @@
       if(!sb){ showLogin("Supabase not ready."); return; }
 
       const { data } = await sb.auth.getSession();
-      if(!data?.session){ showLogin(); return; }
-
-      try{ await assertOnlyAdmin(); }
-      catch(e){ showLogin(e.message || "Access denied"); window.location.href="auth.html"; return; }
-
-      showAdmin();
-      await loadStats();
-      await fetchListings("all");
-    }
-
-    async function adminLogin(email, password){
-      const btn = document.getElementById("loginBtn");
-      const msg = document.getElementById("loginMsg");
-      msg.style.display = "none";
-
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
-
-      const { error } = await sb.auth.signInWithPassword({ email, password });
-
-      btn.disabled = false;
-      btn.textContent = "Authenticate";
-
-      if(error){
-        msg.textContent = "Invalid Credentials: " + error.message;
-        msg.style.display = "block";
+      if(!data?.session){
+        showLogin();
         return;
       }
 
@@ -678,21 +776,50 @@
         await assertOnlyAdmin();
         showAdmin();
         await loadStats();
+        await fetchListings("all");
+      }catch(e){
+        try { await sb.auth.signOut(); } catch {}
+        window.location.href = "dashboard.html";
+      }
+    }
+
+    async function adminLogin(email, password){
+      const btn = document.getElementById("loginBtn");
+      const msg = document.getElementById("loginMsg");
+      if(msg) msg.style.display = "none";
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+
+      try{
+        const { error } = await sb.auth.signInWithPassword({ email, password });
+        if(error) throw error;
+
+        await assertOnlyAdmin();
+        showAdmin();
+        await loadStats();
         switchView("overview", document.querySelector(".nav-item"));
       }catch(e){
-        await sb.auth.signOut();
-        msg.textContent = e.message || "Access denied";
-        msg.style.display = "block";
-        window.location.href="auth.html";
+        try { await sb.auth.signOut(); } catch {}
+        if(msg){
+          msg.textContent = e?.message || "Access denied";
+          msg.style.display = "block";
+        }
+        window.location.href = "dashboard.html";
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "Authenticate";
       }
     }
 
     async function adminLogout(){
-      await sb.auth.signOut();
+      try { await sb.auth.signOut(); } catch {}
       window.location.href = "auth.html";
     }
 
-    // Nav
+    /* ===========================
+       NAV
+       =========================== */
     function switchView(viewId, el){
       document.querySelectorAll(".view-section").forEach(v => v.style.display = "none");
       const view = document.getElementById("view-" + viewId);
@@ -707,17 +834,47 @@
       if(viewId === "logistics") fetchListings("logistics");
       if(viewId === "rates") fetchRates();
       if(viewId === "insights") fetchInsights();
+      if(viewId === "rss") fetchRssSources();
       if(viewId === "requests") fetchRequests();
       if(viewId === "users") fetchUsers();
     }
 
-    // Stats
-    async function loadStats(){
-      try { const { count } = await sb.from("listings").select("*",{count:"exact", head:true}); document.getElementById("stat_listings").textContent = count ?? 0; }
-      catch { document.getElementById("stat_listings").textContent = "—"; }
+    /* ===========================
+       ✅ RSS SYNC (Little upgrade)
+       =========================== */
+    async function syncRssNow(){
+      try{
+        toast("Running RSS sync…", "info");
+        if (sb.functions && sb.functions.invoke) {
+          const { data, error } = await sb.functions.invoke("rss-sync", { body: {} });
+          if(error) throw error;
+          toast("RSS sync complete ✅", "success");
+          // refresh insights table after sync
+          try { await fetchInsights(); } catch {}
+          try { await fetchRssSources(); } catch {}
+          console.log("rss-sync:", data);
+        } else {
+          toast("Edge Functions not available in client.", "error");
+        }
+      }catch(e){
+        console.warn(e);
+        toast(e?.message || "RSS sync failed", "error");
+      }
+    }
 
-      try { const { count } = await sb.from("profiles").select("*",{count:"exact", head:true}); document.getElementById("stat_users").textContent = count ?? 0; }
-      catch { document.getElementById("stat_users").textContent = "—"; }
+    /* ===========================
+       STATS
+       =========================== */
+    async function loadStats(){
+      try {
+        const { count } = await sb.from("listings").select("*",{count:"exact", head:true});
+        document.getElementById("stat_listings").textContent = count ?? 0;
+      } catch { document.getElementById("stat_listings").textContent = "—"; }
+
+      try {
+        const { count } = await sb.from("profiles").select("*",{count:"exact", head:true});
+        document.getElementById("stat_users").textContent = count ?? 0;
+      } catch { document.getElementById("stat_users").textContent = "—"; }
 
       try{
         const since = new Date(Date.now()-7*24*60*60*1000).toISOString();
@@ -726,7 +883,9 @@
       }catch{ document.getElementById("stat_requests").textContent = "—"; }
     }
 
-    // Listings fetch
+    /* ===========================
+       LISTINGS
+       =========================== */
     async function fetchListings(category){
       const isAll = !category || category === "all";
       const tbody = document.getElementById(
@@ -760,6 +919,9 @@
             </div>
           `;
 
+          const statusText = String(it.status || "inactive");
+          const statusBadge = `<span class="badge ${badgeClass(statusText)}">${LARMAH.escapeHtml(statusText)}</span>`;
+
           if(isAll){
             return `
               <tr>
@@ -767,7 +929,7 @@
                 <td><div style="font-weight:950">${LARMAH.escapeHtml(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div></td>
                 <td>${LARMAH.escapeHtml(cat)}</td>
                 <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price||"")}</td>
-                <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status||"draft")}</span></td>
+                <td>${statusBadge}</td>
                 <td>${actions}</td>
               </tr>
             `;
@@ -778,7 +940,7 @@
               <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
               <td><div style="font-weight:950">${LARMAH.escapeHtml(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div></td>
               <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price||"")}</td>
-              <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status||"draft")}</span></td>
+              <td>${statusBadge}</td>
               <td>${actions}</td>
             </tr>
           `;
@@ -789,7 +951,9 @@
       }
     }
 
-    // ✅ Rates fetch (pairs)
+    /* ===========================
+       RATES
+       =========================== */
     async function fetchRates(){
       const tbody = document.getElementById("tbody-rates");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
@@ -811,7 +975,7 @@
             <td style="font-weight:950">${LARMAH.escapeHtml(String(it.pair || ((it.base||it.asset||"") + "/" + (it.quote||"NGN"))))}</td>
             <td style="color:var(--ok);font-weight:950">${LARMAH.escapeHtml(String(it.buy ?? ""))}</td>
             <td style="color:var(--warn);font-weight:950">${LARMAH.escapeHtml(String(it.sell ?? ""))}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
+            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "inactive")}</span></td>
             <td>
               <div style="display:flex;gap:8px">
                 <button class="action-btn" onclick="openEditor('rate','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
@@ -826,6 +990,9 @@
       }
     }
 
+    /* ===========================
+       INSIGHTS
+       =========================== */
     async function fetchInsights(){
       const tbody = document.getElementById("tbody-insights");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
@@ -844,9 +1011,9 @@
         tbody.innerHTML = data.map(it => `
           <tr>
             <td style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</td>
-            <td>${LARMAH.escapeHtml(it.category || "all")}</td>
+            <td>${LARMAH.escapeHtml(it.category || "general")}</td>
             <td class="small">${it.created_at ? new Date(it.created_at).toLocaleDateString() : ""}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
+            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "inactive")}</span></td>
             <td>
               <div style="display:flex;gap:8px">
                 <button class="action-btn" title="Edit" onclick="openEditor('insight','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
@@ -862,6 +1029,47 @@
       }
     }
 
+    /* ===========================
+       RSS SOURCES
+       =========================== */
+    async function fetchRssSources(){
+      const tbody = document.getElementById("tbody-rss");
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
+      try{
+        const { data, error } = await sb.from("rss_sources").select("*").order("created_at",{ascending:false}).limit(500);
+        if(error) throw error;
+
+        CACHE.rss.clear();
+        (data||[]).forEach(it => CACHE.rss.set(String(it.id), it));
+
+        if(!data?.length){
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No RSS sources yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = data.map(it => `
+          <tr>
+            <td style="font-weight:950">${LARMAH.escapeHtml(it.name || "")}</td>
+            <td>${LARMAH.escapeHtml(it.category || "general")}</td>
+            <td style="font-family:ui-monospace;font-size:.85rem;opacity:.85">${LARMAH.escapeHtml(it.url || "")}</td>
+            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "inactive")}</span></td>
+            <td>
+              <div style="display:flex;gap:8px">
+                <button class="action-btn" onclick="openEditor('rss','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
+                <button class="action-btn danger" onclick="deleteEntity('rss','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        `).join("");
+      }catch(e){
+        console.warn(e);
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading RSS sources.</td></tr>`;
+      }
+    }
+
+    /* ===========================
+       REQUESTS (DB-safe: new/open/closed)
+       =========================== */
     async function fetchRequests(){
       const tbody = document.getElementById("tbody-requests");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
@@ -885,8 +1093,7 @@
             <td>
               <select class="status-select" onchange="updateRequestStatus('${String(it.id)}', this.value)">
                 <option value="new" ${String(it.status||"new")==="new"?"selected":""}>new</option>
-                <option value="processing" ${String(it.status||"")==="processing"?"selected":""}>processing</option>
-                <option value="done" ${String(it.status||"")==="done"?"selected":""}>done</option>
+                <option value="open" ${String(it.status||"")==="open"?"selected":""}>open</option>
                 <option value="closed" ${String(it.status||"")==="closed"?"selected":""}>closed</option>
               </select>
             </td>
@@ -911,6 +1118,9 @@
       }
     }
 
+    /* ===========================
+       USERS
+       =========================== */
     async function fetchUsers(){
       const tbody = document.getElementById("tbody-users");
       tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
@@ -925,7 +1135,10 @@
 
         tbody.innerHTML = data.map(u => `
           <tr>
-            <td><div>${LARMAH.escapeHtml(u.email || "N/A")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(u.id||""))}</div></td>
+            <td>
+              <div>${LARMAH.escapeHtml(u.email || "N/A")}</div>
+              <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(u.id||""))}</div>
+            </td>
             <td>${LARMAH.escapeHtml(u.full_name || "User")}</td>
             <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : ""}</td>
             <td><span class="badge active">Active</span></td>
@@ -936,7 +1149,9 @@
       }
     }
 
-    // Editor
+    /* ===========================
+       EDITOR
+       =========================== */
     function resetEditor(){
       document.getElementById("editorForm").reset();
       document.getElementById("edit_entity").value = "";
@@ -963,15 +1178,17 @@
       if(entity === "listing"){
         document.getElementById("editorTitle").textContent = id ? "Edit Listing" : "New Listing";
         document.getElementById("listing_status").value = "active";
+
         if(id){
           const it = CACHE.listings.get(String(id));
           if(it){
             document.getElementById("listing_category").value = it.category || category || "real-estate";
             document.getElementById("listing_title").value = it.title || "";
             document.getElementById("listing_price").value = it.price || "";
-            document.getElementById("listing_status").value = it.status || "draft";
+            document.getElementById("listing_status").value = (it.status || "inactive");
             document.getElementById("listing_desc").value = it.description || "";
             document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : "";
+
             const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
             for(let i=1;i<=3;i++){
               const u = arr[i-1] || "";
@@ -995,7 +1212,7 @@
             document.getElementById("rate_quote").value = String(it.quote || "NGN").toUpperCase();
             document.getElementById("rate_buy").value = it.buy ?? "";
             document.getElementById("rate_sell").value = it.sell ?? "";
-            document.getElementById("rate_status").value = it.status || "active";
+            document.getElementById("rate_status").value = (it.status || "inactive");
             setRatePairPreview();
           }
         } else {
@@ -1008,19 +1225,36 @@
       if(entity === "insight"){
         document.getElementById("editorTitle").textContent = id ? "Edit Insight" : "New Insight";
         document.getElementById("insight_status").value = "active";
+
         if(id){
           const it = CACHE.insights.get(String(id));
           if(it){
             document.getElementById("insight_title").value = it.title || "";
-            document.getElementById("insight_category").value = it.category || "all";
-            document.getElementById("insight_status").value = it.status || "active";
+            document.getElementById("insight_category").value = it.category || "general";
+            document.getElementById("insight_status").value = (it.status || "inactive");
             document.getElementById("insight_summary").value = it.summary || "";
+
             const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
             for(let i=1;i<=3;i++){
               const u = arr[i-1] || "";
               setSlotUrl("insight", i, u);
               setSlotPreview("insight", i, u);
             }
+          }
+        }
+      }
+
+      if(entity === "rss"){
+        document.getElementById("editorTitle").textContent = id ? "Edit RSS Source" : "New RSS Source";
+        document.getElementById("rss_status").value = "active";
+
+        if(id){
+          const it = CACHE.rss.get(String(id));
+          if(it){
+            document.getElementById("rss_name").value = it.name || "";
+            document.getElementById("rss_category").value = it.category || "general";
+            document.getElementById("rss_status").value = it.status || "inactive";
+            document.getElementById("rss_url").value = it.url || "";
           }
         }
       }
@@ -1039,7 +1273,9 @@
 
     function closeEditor(){ document.getElementById("editorModal").classList.remove("active"); }
 
-    // Save
+    /* ===========================
+       SAVE / DELETE
+       =========================== */
     async function saveEditor(e){
       e.preventDefault();
       if(document.body.classList.contains("saving")) return;
@@ -1057,7 +1293,7 @@
       try{
         if(entity === "listing"){
           const payload = {
-            category: document.getElementById("listing_category").value.trim(),
+            category: document.getElementById("listing_category").value,
             title: document.getElementById("listing_title").value.trim(),
             price: document.getElementById("listing_price").value.trim(),
             status: document.getElementById("listing_status").value,
@@ -1070,6 +1306,7 @@
           const imgs = await collectImages("listing", "listings");
           const urls = imgs.urls.slice(0,3);
           const paths = imgs.paths.slice(0,3);
+
           payload.image_url = urls[0] || "";
           payload.image_path = paths[0] || null;
           payload.image_urls = urls;
@@ -1102,11 +1339,11 @@
             status: document.getElementById("rate_status").value
           };
 
-          // ✅ UPSERT by pair
-          const res = await sb.from("rates")
-            .upsert([payload], { onConflict: "pair" })
-            .select()
-            .single();
+          // Upsert by pair if your DB supports unique pair; otherwise standard insert/update
+          const res = id
+            ? await sb.from("rates").update(payload).eq("id", id).select().single()
+            : await sb.from("rates").insert([payload]).select().single();
+
           if(res.error) throw res.error;
 
           toast("Saved pair ✅","success");
@@ -1142,6 +1379,28 @@
           await fetchInsights();
           return;
         }
+
+        if(entity === "rss"){
+          const payload = {
+            name: document.getElementById("rss_name").value.trim(),
+            category: document.getElementById("rss_category").value,
+            status: document.getElementById("rss_status").value,
+            url: document.getElementById("rss_url").value.trim()
+          };
+          if(!payload.name) throw new Error("Name is required.");
+          if(!payload.url) throw new Error("URL is required.");
+
+          const res = id
+            ? await sb.from("rss_sources").update(payload).eq("id", id).select().single()
+            : await sb.from("rss_sources").insert([payload]).select().single();
+          if(res.error) throw res.error;
+
+          toast("Saved RSS source ✅","success");
+          closeEditor();
+          await fetchRssSources();
+          return;
+        }
+
       }catch(err){
         console.warn("SAVE ERROR:", err);
         toast(err?.message || "Save failed","error");
@@ -1178,19 +1437,29 @@
           await fetchInsights();
           return;
         }
+        if(entity === "rss"){
+          const { error } = await sb.from("rss_sources").delete().eq("id", id);
+          if(error) throw error;
+          toast("Deleted RSS source ✅","success");
+          await fetchRssSources();
+          return;
+        }
       }catch(e){
         toast(e.message || "Delete failed","error");
       }
     }
 
-    // Wire up
+    /* ===========================
+       WIRE UP
+       =========================== */
     document.addEventListener("DOMContentLoaded", async () => {
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       if(!sb){ showLogin("Supabase not ready."); return; }
 
+      // File previews
       ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) bindFilePreview(kind,i); });
 
-      // Rate auto pair preview
+      // Rate pair preview
       document.getElementById("rate_base").addEventListener("input", setRatePairPreview);
       document.getElementById("rate_quote").addEventListener("input", setRatePairPreview);
       document.getElementById("rate_preset").addEventListener("change", () => {
@@ -1202,6 +1471,7 @@
         setRatePairPreview();
       });
 
+      // Login form (fallback)
       document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         await adminLogin(
@@ -1210,16 +1480,18 @@
         );
       });
 
+      // Editor form
       document.getElementById("editorForm").addEventListener("submit", saveEditor);
 
+      // Modal close
       document.getElementById("editorModal").addEventListener("click", (e) => {
         if(e.target.id === "editorModal") closeEditor();
       });
-
       document.addEventListener("keydown", (e) => {
         if(e.key === "Escape") closeEditor();
       });
 
+      // Gate
       await initAdmin();
     });
   </script>
