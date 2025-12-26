@@ -75,28 +75,14 @@
       </div>
       <div class="msheet-body">
         <div class="msheet-links">
-          <a href="real-estate.html" class="msheet-link">
-            <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="logistics.html" class="msheet-link">
-            <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="insights.html" class="msheet-link">
-            <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="exchange.html" class="msheet-link">
-            <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
+          <a href="real-estate.html" class="msheet-link"><span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
+          <a href="logistics.html" class="msheet-link"><span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
+          <a href="insights.html" class="msheet-link"><span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
+          <a href="exchange.html" class="msheet-link"><span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span><i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i></a>
         </div>
         <div class="msheet-footer">
           <div class="msheet-hint">Menu</div>
-          <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-            <span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span>
-          </a>
+          <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)"><span><i class="fa-solid fa-crown" style="width:24px"></i> Premium</span></a>
         </div>
       </div>
     </div>
@@ -136,10 +122,10 @@
     <div class="auth-grid">
       <div class="auth-visual">
         <div>
-          <div class="kicker-pill"><i class="fa-solid fa-shield-halved"></i> Password Accounts + Email Verification</div>
+          <div class="kicker-pill"><i class="fa-solid fa-shield-halved"></i> Secure Access</div>
           <h1 style="margin-top:12px">Access the Ecosystem.</h1>
           <p class="lead" style="max-width: 520px;">
-            Create an account, verify your email, then sign in to your dashboard.
+            Create an account (non-admin by default), verify your email, then sign in.
           </p>
         </div>
       </div>
@@ -150,7 +136,6 @@
           <div class="auth-tab" id="tabRegister">Create Account</div>
         </div>
 
-        <!-- SIGN IN -->
         <form id="loginForm">
           <div style="margin-bottom: 12px;">
             <label class="small">Email Address</label>
@@ -169,11 +154,10 @@
           </button>
 
           <div class="hint">
-            If you get “Email not confirmed”, open your email and click the verification link. 
+            If your email isn’t verified yet, you must verify first before login works.
           </div>
         </form>
 
-        <!-- REGISTER -->
         <form id="registerForm" style="display:none">
           <div style="margin-bottom: 12px;">
             <label class="small">Full Name</label>
@@ -193,7 +177,7 @@
           <button type="submit" class="btn solid" style="width:100%" id="regBtn">Create Account</button>
 
           <div class="hint">
-            You’ll receive a verification email. Your Site URL + Redirect URLs must be set in Supabase Auth settings. 
+            We will email you a verification link. After verification, sign in normally.
           </div>
         </form>
 
@@ -220,7 +204,6 @@
             Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
           </div>
         </div>
-
         <div>
           <b>Navigation</b>
           <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
@@ -229,7 +212,6 @@
           <div class="small"><a href="exchange.html">Exchange</a></div>
           <div class="small"><a href="premium.html">Premium</a></div>
         </div>
-
         <div>
           <b>Contact</b>
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
@@ -237,7 +219,6 @@
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
         </div>
       </div>
-
       <div class="small">© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
     </div>
   </footer>
@@ -252,6 +233,15 @@
       document.getElementById("tabRegister").classList.toggle("active", tab === "register");
       document.getElementById("loginForm").style.display = (tab === "login") ? "block" : "none";
       document.getElementById("registerForm").style.display = (tab === "register") ? "block" : "none";
+    }
+
+    async function redirectByRole(sb){
+      let isAdmin = false;
+      try {
+        const r = await sb.rpc("is_admin");
+        isAdmin = !!r.data;
+      } catch {}
+      location.href = isAdmin ? "admin.html" : "dashboard.html";
     }
 
     async function supportAuth(){
@@ -278,13 +268,26 @@
         return;
       }
 
-      // If already logged in, redirect
+      // handle email verification redirect (?code=...)
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("code");
+      if(code){
+        try {
+          await sb.auth.exchangeCodeForSession(code);
+          url.searchParams.delete("code");
+          window.history.replaceState({}, document.title, url.toString());
+        } catch {}
+      }
+
+      // if session exists, go to dashboard/admin
       try {
         const { data } = await sb.auth.getSession();
-        if (data?.session) location.href = "dashboard.html";
+        if(data?.session){
+          await redirectByRole(sb);
+          return;
+        }
       } catch {}
 
-      // SIGN IN
       document.getElementById("loginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = document.getElementById("loginEmail").value.trim();
@@ -297,7 +300,7 @@
         try {
           const { error } = await sb.auth.signInWithPassword({ email, password });
           if (error) throw error;
-          location.href = "dashboard.html";
+          await redirectByRole(sb);
         } catch (err) {
           LARMAH.toast(err.message || "Sign in failed", "error");
         } finally {
@@ -306,7 +309,6 @@
         }
       });
 
-      // REGISTER (password + email verification)
       document.getElementById("registerForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         const full_name = document.getElementById("regName").value.trim();
@@ -321,10 +323,7 @@
           const { data, error } = await sb.auth.signUp({
             email,
             password,
-            options: {
-              data: { full_name },
-              emailRedirectTo: window.location.origin + "/auth.html"
-            }
+            options: { data: { full_name }, emailRedirectTo: window.location.origin + "/auth.html" }
           });
           if (error) throw error;
 
@@ -340,7 +339,7 @@
             }
           } catch {}
 
-          LARMAH.toast("Account created. Check your email to verify before signing in.", "success");
+          LARMAH.toast("Account created. Verify your email, then sign in.", "success");
           setTab("login");
           document.getElementById("loginEmail").value = email;
         } catch (err) {
@@ -351,7 +350,6 @@
         }
       });
 
-      // RESEND VERIFICATION EMAIL
       document.getElementById("resendBtn").addEventListener("click", async () => {
         const email = document.getElementById("loginEmail").value.trim();
         if(!email){
@@ -364,15 +362,12 @@
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
 
         try {
-          // Sends a magic link / verification email depending on template.
-          // This is the standard way to resend verification. 
           const { error } = await sb.auth.resend({
             type: "signup",
             email,
             options: { emailRedirectTo: window.location.origin + "/auth.html" }
           });
           if(error) throw error;
-
           LARMAH.toast("Verification email sent. Check your inbox.", "success");
         } catch (err) {
           LARMAH.toast(err.message || "Could not resend email", "error");
