@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
   <title>Access | Larmah Enterprise</title>
+
   <meta name="description" content="Sign in or create an account to access your Larmah dashboard." />
   <meta name="theme-color" content="#070A12" />
 
@@ -15,10 +15,24 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- fallback client -->
+  <script>
+    window.SUPABASE_URL = window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
+    window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+    window.ensureSupabaseClient = function () {
+      if (window.supabaseClient) return window.supabaseClient;
+      if (!window.supabase || typeof window.supabase.createClient !== "function") return null;
+      window.supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+      return window.supabaseClient;
+    };
+    window.ensureSupabaseClient();
+  </script>
+
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    .auth-wrap { max-width: 980px; margin: 34px auto 60px; }
+    .auth-wrap { max-width: 1000px; margin: 34px auto 70px; }
     .auth-grid { display:grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
     @media(max-width: 900px){ .auth-grid { grid-template-columns: 1fr; } }
 
@@ -39,10 +53,11 @@
       padding: 22px;
     }
     .auth-tabs { display:flex; gap: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; margin-bottom: 14px; }
-    .auth-tab { font-weight: 900; color: var(--muted); cursor:pointer; }
+    .auth-tab { font-weight: 950; color: var(--muted); cursor:pointer; }
     .auth-tab.active { color: var(--text); border-bottom: 2px solid var(--brand); padding-bottom: 10px; }
     .divider { display:flex; align-items:center; gap:10px; color: var(--muted2); font-size:.8rem; margin: 14px 0; }
     .divider::before, .divider::after { content:""; flex:1; height:1px; background: rgba(255,255,255,0.08); }
+    .hint { font-size:.85rem; opacity:.75; margin-top:10px; line-height:1.5; }
   </style>
 </head>
 
@@ -111,9 +126,7 @@
       </div>
       <script>
         document.addEventListener("DOMContentLoaded", () => {
-          if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") {
-            LARMAH.updateHeaderAuthUI();
-          }
+          if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") LARMAH.updateHeaderAuthUI();
         });
       </script>
     </div>
@@ -123,10 +136,10 @@
     <div class="auth-grid">
       <div class="auth-visual">
         <div>
-          <div class="kicker-pill"><i class="fa-solid fa-shield-halved"></i> Secure Access</div>
+          <div class="kicker-pill"><i class="fa-solid fa-shield-halved"></i> Password Accounts + Email Verification</div>
           <h1 style="margin-top:12px">Access the Ecosystem.</h1>
           <p class="lead" style="max-width: 520px;">
-            Sign in to manage your enquiries, track requests, and move faster with Larmah.
+            Create an account, verify your email, then sign in to your dashboard.
           </p>
         </div>
       </div>
@@ -137,34 +150,57 @@
           <div class="auth-tab" id="tabRegister">Create Account</div>
         </div>
 
-        <form id="authForm">
-          <div id="signupFields" style="display:none; margin-bottom: 12px;">
-            <label class="small">Full Name</label>
-            <input type="text" id="fullName" class="input" placeholder="e.g. John Doe">
-          </div>
-
+        <!-- SIGN IN -->
+        <form id="loginForm">
           <div style="margin-bottom: 12px;">
             <label class="small">Email Address</label>
-            <input type="email" id="email" class="input" placeholder="name@example.com" required>
+            <input type="email" id="loginEmail" class="input" placeholder="name@example.com" required>
           </div>
 
           <div style="margin-bottom: 14px;">
             <label class="small">Password</label>
-            <input type="password" id="password" class="input" placeholder="••••••••" required>
+            <input type="password" id="loginPassword" class="input" placeholder="••••••••" required>
           </div>
 
-          <button type="submit" class="btn solid" style="width:100%" id="submitBtn">Sign In</button>
+          <button type="submit" class="btn solid" style="width:100%" id="loginBtn">Sign In</button>
+
+          <button type="button" class="btn" style="width:100%; margin-top:10px" id="resendBtn">
+            <i class="fa-regular fa-envelope"></i> Resend Verification Email
+          </button>
+
+          <div class="hint">
+            If you get “Email not confirmed”, open your email and click the verification link. 
+          </div>
+        </form>
+
+        <!-- REGISTER -->
+        <form id="registerForm" style="display:none">
+          <div style="margin-bottom: 12px;">
+            <label class="small">Full Name</label>
+            <input type="text" id="regName" class="input" placeholder="e.g. John Doe" required>
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <label class="small">Email Address</label>
+            <input type="email" id="regEmail" class="input" placeholder="name@example.com" required>
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <label class="small">Password</label>
+            <input type="password" id="regPassword" class="input" placeholder="Create a strong password" required>
+          </div>
+
+          <button type="submit" class="btn solid" style="width:100%" id="regBtn">Create Account</button>
+
+          <div class="hint">
+            You’ll receive a verification email. Your Site URL + Redirect URLs must be set in Supabase Auth settings. 
+          </div>
         </form>
 
         <div class="divider">NEED HELP?</div>
-
         <button class="btn" style="width:100%" onclick="supportAuth()">
           <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
         </button>
-
-        <div class="small" style="text-align:center; margin-top: 14px; opacity: 0.7;">
-          Secured by Supabase
-        </div>
       </div>
     </div>
   </main>
@@ -180,16 +216,8 @@
               <div class="small">Real Estate • Logistics • Insights • Exchange</div>
             </div>
           </div>
-
           <div class="small" style="margin-top:8px">
             Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
-          </div>
-
-          <div class="social-row" aria-label="Social links">
-            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-            <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
           </div>
         </div>
 
@@ -207,16 +235,6 @@
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
           <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-
-          <div class="actions" style="margin-top:12px">
-            <button class="btn small" onclick="supportAuth()">
-              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-            </button>
-          </div>
-
-          <div class="small" style="margin-top:10px;opacity:.65">
-            <a href="auth.html">Staff Sign-in</a> • <a href="admin.html">Admin</a>
-          </div>
         </div>
       </div>
 
@@ -229,86 +247,138 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    let mode = "login";
-
-    function setMode(next){
-      mode = next;
-      document.getElementById("tabLogin").classList.toggle("active", mode === "login");
-      document.getElementById("tabRegister").classList.toggle("active", mode === "register");
-      document.getElementById("signupFields").style.display = (mode === "register") ? "block" : "none";
-      document.getElementById("submitBtn").textContent = (mode === "register") ? "Create Account" : "Sign In";
+    function setTab(tab){
+      document.getElementById("tabLogin").classList.toggle("active", tab === "login");
+      document.getElementById("tabRegister").classList.toggle("active", tab === "register");
+      document.getElementById("loginForm").style.display = (tab === "login") ? "block" : "none";
+      document.getElementById("registerForm").style.display = (tab === "register") ? "block" : "none";
     }
 
     async function supportAuth(){
-      const fields = { Message: "Hello Larmah, I need help signing in." };
       if (window.LARMAH && LARMAH.submitRequest) {
-        await LARMAH.submitRequest({ header: "Auth Support", category: "auth", fields });
+        await LARMAH.submitRequest({
+          header: "Auth Support",
+          category: "auth",
+          fields: { Message: "Hello Larmah, I need help with signup/login." },
+          refPrefix: "AUTH"
+        });
       } else {
-        LARMAH.openWhatsApp(LARMAH.buildMessage("Auth Support", fields));
+        LARMAH.openWhatsApp(LARMAH.buildMessage("Auth Support", { Message: "Hello Larmah, I need help with signup/login." }));
       }
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
-      document.getElementById("tabLogin").addEventListener("click", () => setMode("login"));
-      document.getElementById("tabRegister").addEventListener("click", () => setMode("register"));
+      setTab("login");
+      document.getElementById("tabLogin").addEventListener("click", () => setTab("login"));
+      document.getElementById("tabRegister").addEventListener("click", () => setTab("register"));
 
-      const sb = window.supabaseClient;
-      if (!sb) {
+      const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+      if(!sb){
         LARMAH.toast("Supabase not ready. Refresh page.", "error");
         return;
       }
 
-      // If already logged in, go dashboard
+      // If already logged in, redirect
       try {
         const { data } = await sb.auth.getSession();
         if (data?.session) location.href = "dashboard.html";
       } catch {}
 
-      document.getElementById("authForm").addEventListener("submit", async (e) => {
+      // SIGN IN
+      document.getElementById("loginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value;
 
-        const email = document.getElementById("email").value.trim();
-        const pass = document.getElementById("password").value;
-        const name = document.getElementById("fullName").value.trim();
-
-        const btn = document.getElementById("submitBtn");
+        const btn = document.getElementById("loginBtn");
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
 
         try {
-          if (mode === "login") {
-            const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-            if (error) throw error;
-            location.href = "dashboard.html";
-          } else {
-            if (!name) throw new Error("Full name is required for signup.");
-            const { data, error } = await sb.auth.signUp({
-              email,
-              password: pass,
-              options: { data: { full_name: name } }
-            });
-            if (error) throw error;
-
-            // optional profiles upsert (safe if table exists)
-            try {
-              if (data?.user?.id) {
-                await sb.from("profiles").upsert({
-                  id: data.user.id,
-                  email,
-                  full_name: name,
-                  created_at: new Date().toISOString()
-                });
-              }
-            } catch {}
-
-            LARMAH.toast("Account created. Please sign in.", "success");
-            setMode("login");
-          }
+          const { error } = await sb.auth.signInWithPassword({ email, password });
+          if (error) throw error;
+          location.href = "dashboard.html";
         } catch (err) {
-          LARMAH.toast(err.message || "Authentication failed", "error");
+          LARMAH.toast(err.message || "Sign in failed", "error");
         } finally {
           btn.disabled = false;
-          btn.textContent = (mode === "register") ? "Create Account" : "Sign In";
+          btn.textContent = "Sign In";
+        }
+      });
+
+      // REGISTER (password + email verification)
+      document.getElementById("registerForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const full_name = document.getElementById("regName").value.trim();
+        const email = document.getElementById("regEmail").value.trim();
+        const password = document.getElementById("regPassword").value;
+
+        const btn = document.getElementById("regBtn");
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
+
+        try {
+          const { data, error } = await sb.auth.signUp({
+            email,
+            password,
+            options: {
+              data: { full_name },
+              emailRedirectTo: window.location.origin + "/auth.html"
+            }
+          });
+          if (error) throw error;
+
+          // best-effort profile upsert
+          try {
+            if (data?.user?.id) {
+              await sb.from("profiles").upsert({
+                id: data.user.id,
+                email,
+                full_name,
+                created_at: new Date().toISOString()
+              });
+            }
+          } catch {}
+
+          LARMAH.toast("Account created. Check your email to verify before signing in.", "success");
+          setTab("login");
+          document.getElementById("loginEmail").value = email;
+        } catch (err) {
+          LARMAH.toast(err.message || "Signup failed", "error");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Create Account";
+        }
+      });
+
+      // RESEND VERIFICATION EMAIL
+      document.getElementById("resendBtn").addEventListener("click", async () => {
+        const email = document.getElementById("loginEmail").value.trim();
+        if(!email){
+          LARMAH.toast("Enter your email first.", "error");
+          return;
+        }
+
+        const btn = document.getElementById("resendBtn");
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+        try {
+          // Sends a magic link / verification email depending on template.
+          // This is the standard way to resend verification. 
+          const { error } = await sb.auth.resend({
+            type: "signup",
+            email,
+            options: { emailRedirectTo: window.location.origin + "/auth.html" }
+          });
+          if(error) throw error;
+
+          LARMAH.toast("Verification email sent. Check your inbox.", "success");
+        } catch (err) {
+          LARMAH.toast(err.message || "Could not resend email", "error");
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fa-regular fa-envelope"></i> Resend Verification Email';
         }
       });
     });
