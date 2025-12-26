@@ -1,11 +1,3 @@
-/**
- * LARMAH ENTERPRISE | assets/js/app.js (FULL - Admin workflow compatible)
- * - Creates window.supabaseClient reliably
- * - Exposes window.LARMAH globally for inline onclick handlers
- * - Shows Dashboard button when authenticated
- * - WhatsApp-first support + message builder
- * - Request logging ONLY when authenticated (matches requests RLS: user insert own)
- */
 
 window.SUPABASE_URL = window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
 window.SUPABASE_ANON_KEY =
@@ -34,6 +26,7 @@ window.LARMAH = window.LARMAH || {
   businessPhone: "2347063080605",
   user: null,
   session: null,
+  __toastTimer: null,
 
   sb() {
     return ensureSupabaseClient();
@@ -148,7 +141,6 @@ window.LARMAH = window.LARMAH || {
       const { error } = await sb.from("requests").insert([row]);
       if (error) throw error;
     } catch (e) {
-      // Silent fail: WhatsApp still opens
       console.warn("logRequest failed:", e?.message || e);
     }
   },
@@ -165,6 +157,97 @@ window.LARMAH = window.LARMAH || {
     await this.logRequest(category || "general", { header, fields, ref }, "new");
     this.openWhatsApp(msg);
   },
+
+  /**
+   * ✅ REALTIME ENGINE (use on all pages)
+   * Usage:
+   *   LARMAH.realtime.subscribe("listings", () => loadRealEstate(), "re-page");
+   *   LARMAH.realtime.subscribe("rates", () => loadRates(), "ex-page");
+   */
+  realtime: {
+    channels: new Map(),
+    debounceTimers: new Map(),
+
+    _sb() {
+      return ensureSupabaseClient();
+    },
+
+    debounce(key, fn, wait = 650) {
+      const prev = this.debounceTimers.get(key);
+      if (prev) clearTimeout(prev);
+      const t = setTimeout(fn, wait);
+      this.debounceTimers.set(key, t);
+    },
+
+    statusBadge(elId, status) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      if (status === "SUBSCRIBED") {
+        el.innerHTML = `<i class="fa-solid fa-circle fa-beat"></i> Live updates enabled`;
+      } else {
+        el.innerHTML = `<i class="fa-solid fa-circle"></i> Live: ${status}`;
+      }
+    },
+
+    unsubscribe(name) {
+      const sb = this._sb();
+      const ch = this.channels.get(name);
+      if (!sb || !ch) return;
+      try { sb.removeChannel(ch); } catch {}
+      this.channels.delete(name);
+    },
+
+    unsubscribeAll() {
+      const sb = this._sb();
+      if (!sb) return;
+      for (const [name, ch] of this.channels.entries()) {
+        try { sb.removeChannel(ch); } catch {}
+        this.channels.delete(name);
+      }
+    },
+
+    /**
+     * Subscribe to postgres_changes for a table
+     * @param {string} table
+     * @param {(payload:any)=>void} onChange
+     * @param {string} name - unique channel name
+     * @param {object} options
+     *   - schema: default "public"
+     *   - events: default "*"
+     *   - debounceMs: default 650
+     *   - statusElId: optional element id to show live status
+     */
+    subscribe(table, onChange, name, options = {}) {
+      const sb = this._sb();
+      if (!sb) return null;
+
+      const schema = options.schema || "public";
+      const events = options.events || "*";
+      const debounceMs = typeof options.debounceMs === "number" ? options.debounceMs : 650;
+
+      if (!name) name = `${schema}-${table}-default`;
+
+      // prevent duplicates
+      this.unsubscribe(name);
+
+      const channel = sb
+        .channel(name)
+        .on(
+          "postgres_changes",
+          { event: events, schema, table },
+          (payload) => {
+            // debounce by channel name
+            this.debounce(name, () => onChange(payload), debounceMs);
+          }
+        )
+        .subscribe((status) => {
+          if (options.statusElId) this.statusBadge(options.statusElId, status);
+        });
+
+      this.channels.set(name, channel);
+      return channel;
+    },
+  },
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -174,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Close mobile menu when clicking overlay background
+  // Close mobile menu on overlay click
   const overlay = document.getElementById("mobileNavOverlay");
   if (overlay) {
     overlay.addEventListener("click", (e) => {
