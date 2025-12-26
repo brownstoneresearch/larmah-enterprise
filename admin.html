@@ -28,172 +28,194 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    /* --- AUTH GATE STYLES --- */
-    #login-gate {
-      position: fixed; inset: 0; z-index: 10000;
-      background: #050810;
-      display: flex; align-items: center; justify-content: center;
+    #login-gate{
+      position:fixed; inset:0; z-index:10000;
+      background:#050810;
+      display:flex; align-items:center; justify-content:center;
     }
-    .login-box {
-      width: 420px; max-width: 92vw;
-      background: var(--panel); border: 1px solid var(--border);
-      padding: 40px; border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 50px 100px rgba(0,0,0,0.5);
-    }
-
-    /* --- ADMIN LAYOUT --- */
-    #admin-interface { display: none; height: 100vh; }
-    body { padding-bottom: 0; overflow: hidden; }
-
-    .admin-layout { display: grid; grid-template-columns: 260px 1fr; height: 100%; }
-
-    /* Sidebar */
-    .admin-sidebar {
-      background: #050810;
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      padding: 20px;
-      z-index: 10;
-    }
-    .admin-nav { list-style: none; margin: 26px 0 0; padding: 0; display: grid; gap: 8px; }
-    .nav-item {
-      padding: 12px 14px; border-radius: 12px;
-      color: var(--muted); cursor: pointer;
-      display: flex; align-items: center; gap: 12px;
-      font-weight: 800; font-size: 0.92rem;
-      transition: all 0.2s ease;
-      border: 1px solid transparent;
-      user-select: none;
-    }
-    .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--text); }
-    .nav-item.active {
-      background: rgba(0, 217, 129, 0.10);
-      color: var(--brand);
-      border: 1px solid rgba(0, 217, 129, 0.25);
+    .login-box{
+      width:420px; max-width:92vw;
+      background:var(--panel); border:1px solid var(--border);
+      padding:40px; border-radius:20px;
+      text-align:center;
+      box-shadow:0 50px 100px rgba(0,0,0,0.5);
     }
 
-    /* Main */
-    .admin-main { position: relative; overflow-y: auto; padding: 30px; background: var(--bg); }
-    .admin-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 22px; padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
-      gap: 12px; flex-wrap: wrap;
+    #admin-interface{ display:none; height:100vh; }
+    body{ padding-bottom:0; overflow:hidden; }
+
+    .admin-layout{ display:grid; grid-template-columns:260px 1fr; height:100%; }
+
+    .admin-sidebar{
+      background:#050810;
+      border-right:1px solid var(--border);
+      display:flex; flex-direction:column;
+      padding:20px;
+      z-index:10;
+    }
+    .admin-nav{ list-style:none; margin:26px 0 0; padding:0; display:grid; gap:8px; }
+    .nav-item{
+      padding:12px 14px; border-radius:12px;
+      color:var(--muted); cursor:pointer;
+      display:flex; align-items:center; gap:12px;
+      font-weight:900; font-size:.92rem;
+      transition:all .2s ease;
+      border:1px solid transparent;
+      user-select:none;
+    }
+    .nav-item:hover{ background:rgba(255,255,255,0.05); color:var(--text); }
+    .nav-item.active{
+      background:rgba(0,217,129,0.10);
+      color:var(--brand);
+      border:1px solid rgba(0,217,129,0.25);
     }
 
-    /* Tables */
-    .data-table-wrapper {
-      background: var(--panel); border: 1px solid var(--border);
-      border-radius: 16px; overflow: hidden;
-    }
-    table { width: 100%; border-collapse: collapse; }
-    th {
-      text-align: left; padding: 14px 16px;
-      background: rgba(255,255,255,0.03);
-      color: var(--muted); font-size: 0.82rem;
-      text-transform: uppercase; letter-spacing: 1px;
-    }
-    td {
-      padding: 14px 16px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      font-size: 0.93rem;
-      vertical-align: middle;
-    }
-    tr:hover td { background: rgba(255,255,255,0.02); }
-
-    .tbl-thumb { width: 46px; height: 46px; border-radius: 10px; object-fit: cover; background: #000; }
-
-    .badge { padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 900; display: inline-block; }
-    .badge.active { background: rgba(67, 209, 125, 0.2); color: var(--ok); }
-    .badge.draft { background: rgba(255, 176, 32, 0.18); color: var(--warn); }
-    .badge.sold { background: rgba(255, 90, 103, 0.18); color: var(--bad); }
-    .badge.closed { background: rgba(255, 90, 103, 0.18); color: var(--bad); }
-
-    .action-btn {
-      width: 34px; height: 34px; border-radius: 10px;
-      display: inline-flex; align-items: center; justify-content: center;
-      cursor: pointer; border: 1px solid var(--border);
-      background: rgba(255,255,255,0.05); color: var(--text);
-      transition: 0.2s;
-    }
-    .action-btn:hover { background: #fff; color: #000; }
-    .action-btn.danger:hover { background: var(--bad); color: #fff; border-color: var(--bad); }
-
-    /* Modal */
-    .modal {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(5px);
-      z-index: 9999;
-      display: none; align-items: center; justify-content: center;
-      padding: 20px;
-    }
-    .modal.active { display: flex; }
-    .editor-box {
-      width: 760px; max-width: 96vw;
-      background: #0f1218;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 26px;
-      box-shadow: 0 50px 100px rgba(0,0,0,0.6);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .form-group { margin-bottom: 14px; }
-    .form-label {
-      display: block;
-      color: var(--muted);
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-      font-weight: 900;
-    }
-    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media(max-width: 720px){ .row2 { grid-template-columns: 1fr; } }
-
-    .notice-admin {
-      padding: 12px 14px; border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
+    .admin-main{ position:relative; overflow-y:auto; padding:30px; background:var(--bg); }
+    .admin-header{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:22px; padding-bottom:14px;
+      border-bottom:1px solid var(--border);
+      gap:12px; flex-wrap:wrap;
     }
 
-    .status-select {
-      width: 100%;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: #fff;
-      border-radius: 12px;
-      padding: 8px 10px;
-      font-weight: 800;
-      cursor: pointer;
+    .data-table-wrapper{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:16px;
+      overflow:hidden;
+    }
+    table{ width:100%; border-collapse:collapse; }
+    th{
+      text-align:left; padding:14px 16px;
+      background:rgba(255,255,255,0.03);
+      color:var(--muted); font-size:.82rem;
+      text-transform:uppercase; letter-spacing:1px;
+    }
+    td{
+      padding:14px 16px;
+      border-top:1px solid rgba(255,255,255,0.05);
+      font-size:.93rem;
+      vertical-align:middle;
+    }
+    tr:hover td{ background:rgba(255,255,255,0.02); }
+
+    .tbl-thumb{ width:46px; height:46px; border-radius:10px; object-fit:cover; background:#000; }
+
+    .badge{ padding:4px 10px; border-radius:999px; font-size:.75rem; font-weight:900; display:inline-block; }
+    .badge.active{ background:rgba(67,209,125,0.2); color:var(--ok); }
+    .badge.draft{ background:rgba(255,176,32,0.18); color:var(--warn); }
+    .badge.sold{ background:rgba(255,90,103,0.18); color:var(--bad); }
+    .badge.closed{ background:rgba(255,90,103,0.18); color:var(--bad); }
+
+    .action-btn{
+      width:34px; height:34px; border-radius:10px;
+      display:inline-flex; align-items:center; justify-content:center;
+      cursor:pointer;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,0.05);
+      color:var(--text);
+      transition:.2s;
+    }
+    .action-btn:hover{ background:#fff; color:#000; }
+    .action-btn.danger:hover{ background:var(--bad); color:#fff; border-color:var(--bad); }
+
+    .modal{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,0.85);
+      backdrop-filter:blur(5px);
+      z-index:9999;
+      display:none;
+      align-items:center; justify-content:center;
+      padding:20px;
+    }
+    .modal.active{ display:flex; }
+    .editor-box{
+      width:760px; max-width:96vw;
+      background:#0f1218;
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:26px;
+      box-shadow:0 50px 100px rgba(0,0,0,0.6);
+      max-height:90vh;
+      overflow-y:auto;
+    }
+    .form-group{ margin-bottom:14px; }
+    .form-label{
+      display:block;
+      color:var(--muted);
+      font-size:.85rem;
+      margin-bottom:6px;
+      font-weight:900;
+    }
+    .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    @media(max-width:720px){ .row2{ grid-template-columns:1fr; } }
+
+    .notice-admin{
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.1);
+      background:rgba(255,255,255,0.03);
+      color:var(--muted);
     }
 
-    @media(max-width: 900px) { .admin-layout { grid-template-columns: 1fr; } .admin-sidebar { display: none; } }
+    .status-select{
+      width:100%;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12);
+      color:#fff;
+      border-radius:12px;
+      padding:8px 10px;
+      font-weight:800;
+      cursor:pointer;
+    }
+
+    .mini-preview{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      overflow:hidden;
+      background:rgba(255,255,255,0.03);
+    }
+    .mini-preview img{ width:100%; height:180px; object-fit:cover; display:block; }
+    .mini-preview .cap{
+      padding:10px 12px;
+      font-size:.85rem;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+    }
+
+    @media(max-width:900px){
+      .admin-layout{ grid-template-columns:1fr; }
+      .admin-sidebar{ display:none; }
+    }
   </style>
 </head>
 
 <body data-page="admin">
+
   <!-- LOGIN GATE -->
   <div id="login-gate">
     <div class="login-box">
-      <img src="assets/images/larmah-header.jpeg" style="width:60px; border-radius:12px; margin:0 auto 18px; display:block" alt="Larmah">
+      <img src="assets/images/larmah-header.jpeg" style="width:60px;border-radius:12px;margin:0 auto 18px;display:block" alt="Larmah">
       <h2 style="margin-bottom:10px">Admin Access</h2>
       <p class="small" style="margin-bottom:22px">Authorized personnel only.</p>
 
       <form id="adminLoginForm">
-        <div style="margin-bottom:14px; text-align:left">
+        <div style="margin-bottom:14px;text-align:left">
           <label class="form-label">Email</label>
           <input type="email" id="admin_email" class="input" placeholder="luckymomodu60@gmail.com" required>
         </div>
-        <div style="margin-bottom:20px; text-align:left">
+        <div style="margin-bottom:20px;text-align:left">
           <label class="form-label">Password</label>
           <input type="password" id="admin_pass" class="input" placeholder="••••••••" required>
         </div>
         <button type="submit" class="btn solid" style="width:100%" id="loginBtn">Authenticate</button>
       </form>
 
-      <div id="loginMsg" class="small" style="margin-top:14px; color:var(--bad); display:none"></div>
+      <div id="loginMsg" class="small" style="margin-top:14px;color:var(--bad);display:none"></div>
     </div>
   </div>
 
@@ -201,11 +223,11 @@
   <div id="admin-interface">
     <div class="admin-layout">
       <aside class="admin-sidebar">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px">
-          <img src="assets/images/larmah-header.jpeg" style="width:42px; border-radius:12px" alt="Larmah">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px">
+          <img src="assets/images/larmah-header.jpeg" style="width:42px;border-radius:12px" alt="Larmah">
           <div>
-            <div style="font-weight:900; font-size:1rem;">Larmah Admin</div>
-            <div style="font-size:0.75rem; color:var(--muted)">Master Control</div>
+            <div style="font-weight:950;font-size:1rem;">Larmah Admin</div>
+            <div style="font-size:0.75rem;color:var(--muted)">Master Control</div>
           </div>
         </div>
 
@@ -231,26 +253,26 @@
         <div id="view-overview" class="view-section">
           <div class="admin-header">
             <h1>System Overview</h1>
-            <div class="small" style="color:var(--ok)"><i class="fa-solid fa-shield-halved"></i> Secure Session Active</div>
+            <div class="small" style="color:var(--ok)"><i class="fa-solid fa-shield-halved"></i> Admin Session</div>
           </div>
 
           <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:22px">
             <div class="card">
               <div class="small" style="color:var(--muted)">Total Users</div>
-              <div style="font-size:2rem; font-weight:950; margin-top:5px" id="stat_users">—</div>
+              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_users">—</div>
             </div>
             <div class="card">
               <div class="small" style="color:var(--muted)">Total Listings</div>
-              <div style="font-size:2rem; font-weight:950; margin-top:5px" id="stat_listings">—</div>
+              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_listings">—</div>
             </div>
             <div class="card">
               <div class="small" style="color:var(--muted)">Requests (Last 7 Days)</div>
-              <div style="font-size:2rem; font-weight:950; margin-top:5px" id="stat_requests">—</div>
+              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_requests">—</div>
             </div>
           </div>
 
           <div class="notice-admin">
-            You can update request status in the Requests tab: <b>new → processing → done</b>.
+            ✅ You can create, edit, delete, and save items for Listings, Rates, and Insights. Upload images to Supabase Storage bucket <code>larmah-media</code>.
           </div>
         </div>
 
@@ -263,13 +285,13 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-                <tr>
-                  <th width="70">Img</th>
-                  <th>Title</th>
-                  <th>Price</th>
-                  <th>Status</th>
-                  <th width="120">Actions</th>
-                </tr>
+              <tr>
+                <th width="70">Img</th>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th width="120">Actions</th>
+              </tr>
               </thead>
               <tbody id="tbody-real-estate"></tbody>
             </table>
@@ -285,13 +307,13 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-                <tr>
-                  <th width="70">Img</th>
-                  <th>Title</th>
-                  <th>Rate</th>
-                  <th>Status</th>
-                  <th width="120">Actions</th>
-                </tr>
+              <tr>
+                <th width="70">Img</th>
+                <th>Title</th>
+                <th>Rate</th>
+                <th>Status</th>
+                <th width="120">Actions</th>
+              </tr>
               </thead>
               <tbody id="tbody-logistics"></tbody>
             </table>
@@ -307,13 +329,13 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-                <tr>
-                  <th>Asset</th>
-                  <th>Buy</th>
-                  <th>Sell</th>
-                  <th>Status</th>
-                  <th width="120">Actions</th>
-                </tr>
+              <tr>
+                <th>Asset</th>
+                <th>Buy</th>
+                <th>Sell</th>
+                <th>Status</th>
+                <th width="120">Actions</th>
+              </tr>
               </thead>
               <tbody id="tbody-rates"></tbody>
             </table>
@@ -329,13 +351,13 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th width="120">Actions</th>
-                </tr>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th width="120">Actions</th>
+              </tr>
               </thead>
               <tbody id="tbody-insights"></tbody>
             </table>
@@ -348,17 +370,16 @@
             <h1>Requests Inbox</h1>
             <button class="btn small" onclick="fetchRequests()"><i class="fa-solid fa-rotate"></i> Refresh</button>
           </div>
-
           <div class="data-table-wrapper">
             <table>
               <thead>
-                <tr>
-                  <th>Category</th>
-                  <th>Created</th>
-                  <th>Status</th>
-                  <th width="170">Update Status</th>
-                  <th width="70">View</th>
-                </tr>
+              <tr>
+                <th>Category</th>
+                <th>Created</th>
+                <th>Status</th>
+                <th width="170">Update Status</th>
+                <th width="70">View</th>
+              </tr>
               </thead>
               <tbody id="tbody-requests"></tbody>
             </table>
@@ -374,12 +395,12 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-                <tr>
-                  <th>Email / ID</th>
-                  <th>Full Name</th>
-                  <th>Joined</th>
-                  <th>Status</th>
-                </tr>
+              <tr>
+                <th>Email / ID</th>
+                <th>Full Name</th>
+                <th>Joined</th>
+                <th>Status</th>
+              </tr>
               </thead>
               <tbody id="tbody-users"></tbody>
             </table>
@@ -392,7 +413,7 @@
   <!-- EDITOR MODAL -->
   <div id="editorModal" class="modal">
     <div class="editor-box">
-      <div style="display:flex; justify-content:space-between; margin-bottom:18px; align-items:center; gap:12px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:18px;align-items:center;gap:12px">
         <h2 id="editorTitle" style="margin:0">Edit</h2>
         <button class="action-btn" type="button" onclick="closeEditor()"><i class="fa-solid fa-xmark"></i></button>
       </div>
@@ -425,8 +446,22 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Image URL</label>
+            <label class="form-label">Image URL (optional)</label>
             <input type="text" id="listing_image" class="input" placeholder="https://...">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Upload Image (Supabase Storage)</label>
+            <input type="file" id="listing_file" class="input" accept="image/*">
+            <div class="small" style="opacity:.7;margin-top:6px">If you upload, Image URL is auto-filled.</div>
+          </div>
+
+          <div id="listingPreview" class="mini-preview" style="display:none">
+            <img id="listingPreviewImg" src="" alt="Listing preview">
+            <div class="cap">
+              <span>Preview</span>
+              <button type="button" class="btn small" onclick="clearListingImage()">Clear</button>
+            </div>
           </div>
 
           <div class="form-group">
@@ -506,6 +541,20 @@
           </div>
 
           <div class="form-group">
+            <label class="form-label">Upload Image (Supabase Storage)</label>
+            <input type="file" id="insight_file" class="input" accept="image/*">
+            <div class="small" style="opacity:.7;margin-top:6px">If you upload, Image URL is auto-filled.</div>
+          </div>
+
+          <div id="insightPreview" class="mini-preview" style="display:none">
+            <img id="insightPreviewImg" src="" alt="Insight preview">
+            <div class="cap">
+              <span>Preview</span>
+              <button type="button" class="btn small" onclick="clearInsightImage()">Clear</button>
+            </div>
+          </div>
+
+          <div class="form-group">
             <label class="form-label">Summary</label>
             <textarea id="insight_summary" class="input" rows="4"></textarea>
           </div>
@@ -533,7 +582,7 @@
           </div>
         </div>
 
-        <div style="margin-top:18px; display:flex; gap:10px">
+        <div style="margin-top:18px;display:flex;gap:10px">
           <button type="submit" class="btn solid" style="flex:1" id="saveBtn">Save</button>
           <button type="button" class="btn" onclick="closeEditor()">Close</button>
         </div>
@@ -546,11 +595,20 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // ----------- GLOBALS -----------
+    // ---------------------------
+    // GLOBALS
+    // ---------------------------
     let sb = null;
-    const CACHE = { listings:new Map(), rates:new Map(), insights:new Map(), requests:new Map() };
+    const STORAGE_BUCKET = "larmah-media";
 
-    // Minimal safety helpers if app.js didn't load
+    const CACHE = {
+      listings: new Map(),
+      rates: new Map(),
+      insights: new Map(),
+      requests: new Map()
+    };
+
+    // fallback escapeHtml
     window.LARMAH = window.LARMAH || {};
     if (!window.LARMAH.escapeHtml) {
       window.LARMAH.escapeHtml = (str) => {
@@ -559,14 +617,9 @@
         return String(str).replace(/[&<>"']/g, (m) => map[m]);
       };
     }
-    if (!window.LARMAH.toast) {
-      window.LARMAH.toast = (msg) => console.log(msg);
-    }
 
     function toast(msg, type="info"){
-      if (window.LARMAH && typeof LARMAH.toast === "function") {
-        try { LARMAH.toast(msg, type); } catch {}
-      }
+      try { if (window.LARMAH && typeof LARMAH.toast === "function") LARMAH.toast(msg, type); } catch {}
       const t = document.getElementById("toast");
       if(!t) return;
       t.textContent = msg;
@@ -582,6 +635,7 @@
       if(msg){ el.textContent = msg; el.style.display = "block"; }
       else { el.style.display = "none"; }
     }
+
     function showAdmin(){
       document.getElementById("login-gate").style.display = "none";
       document.getElementById("admin-interface").style.display = "block";
@@ -597,17 +651,37 @@
       if(s === "done") return "active";
       return "draft";
     }
-    function safeDate(d){ try { return new Date(d).toLocaleString(); } catch { return ""; } }
 
-    function setFieldsVisible(entity){
-      ["listing","rate","insight","request"].forEach(k => {
-        const el = document.getElementById("fields-" + k);
-        if(el) el.style.display = (k === entity) ? "block" : "none";
+    // ---------------------------
+    // STORAGE
+    // ---------------------------
+    function randomId(len = 10){ return Math.random().toString(36).slice(2, 2 + len); }
+
+    async function uploadToStorage(file, folder){
+      if(!file) return null;
+
+      const maxMb = 8;
+      if(file.size > maxMb * 1024 * 1024) throw new Error(`File too large. Max ${maxMb}MB`);
+
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g,"") || "jpg";
+      const path = `${folder}/${Date.now()}-${randomId(8)}.${ext}`;
+
+      const { error: upErr } = await sb.storage.from(STORAGE_BUCKET).upload(path, file, {
+        cacheControl: "3600",
+        upsert: false
       });
-      document.getElementById("saveBtn").style.display = (entity === "request") ? "none" : "";
+      if(upErr) throw upErr;
+
+      const { data } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+      const url = data?.publicUrl;
+      if(!url) throw new Error("Could not generate public URL");
+
+      return { path, url };
     }
 
-    // ----------- AUTH (ADMIN ONLY) -----------
+    // ---------------------------
+    // AUTH (ADMIN ONLY)
+    // ---------------------------
     async function initAdmin(){
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       if(!sb){
@@ -671,12 +745,13 @@
     }
 
     async function adminLogout(){
-      if(!sb) sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       await sb.auth.signOut();
       location.reload();
     }
 
-    // ----------- NAV -----------
+    // ---------------------------
+    // NAV
+    // ---------------------------
     function switchView(viewId, el){
       document.querySelectorAll(".view-section").forEach(v => v.style.display = "none");
       const view = document.getElementById("view-" + viewId);
@@ -694,7 +769,9 @@
       if(viewId === "users") fetchUsers();
     }
 
-    // ----------- STATS -----------
+    // ---------------------------
+    // STATS
+    // ---------------------------
     async function loadStats(){
       try {
         const { count } = await sb.from("listings").select("*", { count: "exact", head: true });
@@ -713,7 +790,9 @@
       } catch { document.getElementById("stat_requests").textContent = "—"; }
     }
 
-    // ----------- LISTINGS -----------
+    // ---------------------------
+    // FETCH TABLES
+    // ---------------------------
     async function fetchListings(category){
       const tbody = document.getElementById(category === "real-estate" ? "tbody-real-estate" : "tbody-logistics");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
@@ -732,12 +811,15 @@
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(it.image_url || 'assets/images/larmah-header.jpeg')}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
             <td>
-              <div style="font-weight:900">${LARMAH.escapeHtml(it.title || "")}</div>
+              <img class="tbl-thumb" src="${LARMAH.escapeHtml(it.image_url || 'assets/images/larmah-header.jpeg')}"
+                   onerror="this.src='assets/images/larmah-header.jpeg'">
+            </td>
+            <td>
+              <div style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</div>
               <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div>
             </td>
-            <td style="color:var(--accent);font-weight:800">${LARMAH.escapeHtml(it.price || "")}</td>
+            <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price || "")}</td>
             <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
             <td>
               <div style="display:flex;gap:8px">
@@ -747,13 +829,13 @@
             </td>
           </tr>
         `).join("");
+
       } catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading listings. Check RLS + admin rights.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading listings. Check RLS/admin.</td></tr>`;
       }
     }
 
-    // ----------- RATES -----------
     async function fetchRates(){
       const tbody = document.getElementById("tbody-rates");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
@@ -772,9 +854,9 @@
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td style="font-weight:900">${LARMAH.escapeHtml(String(it.asset || ""))}</td>
-            <td style="color:var(--ok);font-weight:900">${LARMAH.escapeHtml(String(it.buy ?? ""))}</td>
-            <td style="color:var(--warn);font-weight:900">${LARMAH.escapeHtml(String(it.sell ?? ""))}</td>
+            <td style="font-weight:950">${LARMAH.escapeHtml(String(it.asset || ""))}</td>
+            <td style="color:var(--ok);font-weight:950">${LARMAH.escapeHtml(String(it.buy ?? ""))}</td>
+            <td style="color:var(--warn);font-weight:950">${LARMAH.escapeHtml(String(it.sell ?? ""))}</td>
             <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
             <td>
               <div style="display:flex;gap:8px">
@@ -784,13 +866,13 @@
             </td>
           </tr>
         `).join("");
+
       } catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading rates. Check RLS + admin rights.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading rates. Check RLS/admin.</td></tr>`;
       }
     }
 
-    // ----------- INSIGHTS -----------
     async function fetchInsights(){
       const tbody = document.getElementById("tbody-insights");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
@@ -809,9 +891,9 @@
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td style="font-weight:900">${LARMAH.escapeHtml(it.title || "")}</td>
+            <td style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</td>
             <td>${LARMAH.escapeHtml(it.category || "all")}</td>
-            <td class="small">${LARMAH.escapeHtml(it.created_at ? new Date(it.created_at).toLocaleDateString() : "")}</td>
+            <td class="small">${it.created_at ? new Date(it.created_at).toLocaleDateString() : ""}</td>
             <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
             <td>
               <div style="display:flex;gap:8px">
@@ -821,19 +903,19 @@
             </td>
           </tr>
         `).join("");
+
       } catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading insights. Check RLS + admin rights.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading insights. Check RLS/admin.</td></tr>`;
       }
     }
 
-    // ----------- REQUESTS with status update -----------
     async function fetchRequests(){
       const tbody = document.getElementById("tbody-requests");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
       try {
-        const { data, error } = await sb.from("requests").select("*").order("created_at", { ascending: false }).limit(400);
+        const { data, error } = await sb.from("requests").select("*").order("created_at", { ascending: false }).limit(500);
         if(error) throw error;
 
         CACHE.requests.clear();
@@ -846,8 +928,8 @@
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td style="font-weight:900">${LARMAH.escapeHtml(it.category || "general")}</td>
-            <td class="small">${LARMAH.escapeHtml(it.created_at ? new Date(it.created_at).toLocaleString() : "")}</td>
+            <td style="font-weight:950">${LARMAH.escapeHtml(it.category || "general")}</td>
+            <td class="small">${it.created_at ? new Date(it.created_at).toLocaleString() : ""}</td>
             <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "new")}</span></td>
             <td>
               <select class="status-select" onchange="updateRequestStatus('${String(it.id)}', this.value)">
@@ -860,35 +942,33 @@
             <td><button class="btn small" onclick="openEditor('request','${String(it.id)}',null)">View</button></td>
           </tr>
         `).join("");
+
       } catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading requests. Check RLS + admin rights.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading requests. Check RLS/admin.</td></tr>`;
       }
     }
 
     async function updateRequestStatus(id, status){
-      try {
+      try{
         const { error } = await sb.from("requests").update({ status }).eq("id", id);
         if(error) throw error;
-        const it = CACHE.requests.get(String(id));
-        if(it){ it.status = status; CACHE.requests.set(String(id), it); }
-        toast("Request updated ✅", "success");
-        loadStats();
-        fetchRequests();
-      } catch(e){
+        toast("Request status updated ✅", "success");
+        await loadStats();
+        await fetchRequests();
+      }catch(e){
         console.warn(e);
-        toast(e.message || "Failed to update status", "error");
-        fetchRequests();
+        toast(e.message || "Failed to update request status", "error");
+        await fetchRequests();
       }
     }
 
-    // ----------- USERS -----------
     async function fetchUsers(){
       const tbody = document.getElementById("tbody-users");
       tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
 
-      try {
-        const { data, error } = await sb.from("profiles").select("*").order("created_at", { ascending: false }).limit(300);
+      try{
+        const { data, error } = await sb.from("profiles").select("*").order("created_at", { ascending: false }).limit(500);
         if(error) throw error;
 
         if(!data || !data.length){
@@ -903,23 +983,44 @@
               <div style="font-size:0.8rem;opacity:0.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(u.id || ""))}</div>
             </td>
             <td>${LARMAH.escapeHtml(u.full_name || "User")}</td>
-            <td>${LARMAH.escapeHtml(u.created_at ? new Date(u.created_at).toLocaleDateString() : "")}</td>
+            <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : ""}</td>
             <td><span class="badge active">Active</span></td>
           </tr>
         `).join("");
-      } catch(e){
+
+      }catch(e){
         console.warn(e);
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading profiles. Check RLS.</td></tr>`;
       }
     }
 
-    // ----------- EDITOR -----------
+    // ---------------------------
+    // EDITOR: previews + clear
+    // ---------------------------
+    function clearListingImage(){
+      document.getElementById("listing_image").value = "";
+      const lf = document.getElementById("listing_file");
+      if(lf) lf.value = "";
+      document.getElementById("listingPreview").style.display = "none";
+      document.getElementById("listingPreviewImg").src = "";
+    }
+
+    function clearInsightImage(){
+      document.getElementById("insight_image").value = "";
+      const inf = document.getElementById("insight_file");
+      if(inf) inf.value = "";
+      document.getElementById("insightPreview").style.display = "none";
+      document.getElementById("insightPreviewImg").src = "";
+    }
+
     function resetEditor(){
       document.getElementById("editorForm").reset();
       document.getElementById("edit_entity").value = "";
       document.getElementById("edit_id").value = "";
       document.getElementById("edit_category").value = "";
       document.getElementById("editorHint").textContent = "";
+      clearListingImage();
+      clearInsightImage();
     }
 
     function openEditor(entity, id=null, category=null){
@@ -933,6 +1034,7 @@
       if(entity === "listing"){
         document.getElementById("editorTitle").textContent = id ? "Edit Listing" : "New Listing";
         document.getElementById("editorHint").textContent = category ? `Category: ${category}` : "";
+
         if(id){
           const it = CACHE.listings.get(String(id));
           if(it){
@@ -942,6 +1044,10 @@
             document.getElementById("listing_image").value = it.image_url || "";
             document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : "";
             document.getElementById("listing_desc").value = it.description || "";
+            if(it.image_url){
+              document.getElementById("listingPreviewImg").src = it.image_url;
+              document.getElementById("listingPreview").style.display = "block";
+            }
           }
         } else {
           document.getElementById("listing_status").value = "active";
@@ -973,6 +1079,10 @@
             document.getElementById("insight_status").value = it.status || "active";
             document.getElementById("insight_image").value = it.image_url || "";
             document.getElementById("insight_summary").value = it.summary || "";
+            if(it.image_url){
+              document.getElementById("insightPreviewImg").src = it.image_url;
+              document.getElementById("insightPreview").style.display = "block";
+            }
           }
         } else {
           document.getElementById("insight_status").value = "active";
@@ -995,7 +1105,9 @@
       document.getElementById("editorModal").classList.remove("active");
     }
 
-    // ✅ Full admin save updates: listings, rates (upsert), insights
+    // ---------------------------
+    // SAVE + DELETE (FULL CRUD)
+    // ---------------------------
     async function saveEditor(e){
       e.preventDefault();
 
@@ -1008,7 +1120,7 @@
       btn.textContent = "Saving...";
 
       try {
-        // LISTINGS
+        // LISTING (insert/update) + storage upload
         if(entity === "listing"){
           const payload = {
             category: category || "real-estate",
@@ -1020,6 +1132,13 @@
             tags: document.getElementById("listing_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
           };
           if(!payload.title) throw new Error("Title is required.");
+
+          const file = document.getElementById("listing_file")?.files?.[0] || null;
+          if(file){
+            const uploaded = await uploadToStorage(file, "listings");
+            payload.image_url = uploaded.url;
+            payload.image_path = uploaded.path; // if column exists
+          }
 
           const res = id
             ? await sb.from("listings").update(payload).eq("id", id).select().single()
@@ -1034,7 +1153,7 @@
           return;
         }
 
-        // RATES (upsert by asset to avoid unique conflicts)
+        // RATE (upsert by asset)
         if(entity === "rate"){
           const payload = {
             asset: document.getElementById("rate_asset").value,
@@ -1057,7 +1176,7 @@
           return;
         }
 
-        // INSIGHTS
+        // INSIGHT (insert/update) + storage upload
         if(entity === "insight"){
           const payload = {
             title: document.getElementById("insight_title").value.trim(),
@@ -1067,6 +1186,13 @@
             summary: document.getElementById("insight_summary").value.trim()
           };
           if(!payload.title) throw new Error("Title is required.");
+
+          const file = document.getElementById("insight_file")?.files?.[0] || null;
+          if(file){
+            const uploaded = await uploadToStorage(file, "insights");
+            payload.image_url = uploaded.url;
+            payload.image_path = uploaded.path; // if column exists
+          }
 
           const res = id
             ? await sb.from("insights").update(payload).eq("id", id).select().single()
@@ -1079,9 +1205,10 @@
           await fetchInsights();
           return;
         }
+
       } catch(err){
         console.warn("SAVE ERROR:", err);
-        toast(err?.message || "Save failed (check RLS/admin)", "error");
+        toast(err?.message || "Save failed (check RLS/admin/storage)", "error");
       } finally {
         btn.disabled = false;
         btn.textContent = "Save";
@@ -1090,7 +1217,8 @@
 
     async function deleteEntity(entity, id, category=null){
       if(!confirm("Delete this item?")) return;
-      try {
+
+      try{
         if(entity === "listing"){
           const { error } = await sb.from("listings").delete().eq("id", id);
           if(error) throw error;
@@ -1099,6 +1227,7 @@
           await loadStats();
           return;
         }
+
         if(entity === "rate"){
           const { error } = await sb.from("rates").delete().eq("id", id);
           if(error) throw error;
@@ -1106,6 +1235,7 @@
           await fetchRates();
           return;
         }
+
         if(entity === "insight"){
           const { error } = await sb.from("insights").delete().eq("id", id);
           if(error) throw error;
@@ -1113,13 +1243,15 @@
           await fetchInsights();
           return;
         }
-      } catch(e){
+      }catch(e){
         console.warn(e);
         toast(e.message || "Delete failed", "error");
       }
     }
 
-    // ----------- WIRE UP -----------
+    // ---------------------------
+    // WIRE UP
+    // ---------------------------
     document.addEventListener("DOMContentLoaded", async () => {
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       if(!sb){
@@ -1127,6 +1259,7 @@
         return;
       }
 
+      // Login
       document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         await adminLogin(
@@ -1135,16 +1268,42 @@
         );
       });
 
+      // Modal submit
       document.getElementById("editorForm").addEventListener("submit", saveEditor);
 
+      // Close modal on backdrop
       document.getElementById("editorModal").addEventListener("click", (e) => {
         if(e.target.id === "editorModal") closeEditor();
       });
 
+      // ESC closes modal
       document.addEventListener("keydown", (e) => {
         if(e.key === "Escape") closeEditor();
       });
 
+      // Live preview when file chosen
+      const lf = document.getElementById("listing_file");
+      if(lf){
+        lf.addEventListener("change", () => {
+          const f = lf.files?.[0];
+          if(!f) return;
+          const url = URL.createObjectURL(f);
+          document.getElementById("listingPreviewImg").src = url;
+          document.getElementById("listingPreview").style.display = "block";
+        });
+      }
+      const inf = document.getElementById("insight_file");
+      if(inf){
+        inf.addEventListener("change", () => {
+          const f = inf.files?.[0];
+          if(!f) return;
+          const url = URL.createObjectURL(f);
+          document.getElementById("insightPreviewImg").src = url;
+          document.getElementById("insightPreview").style.display = "block";
+        });
+      }
+
+      // Init admin gate
       await initAdmin();
     });
   </script>
