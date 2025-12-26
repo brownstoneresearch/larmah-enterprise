@@ -1,7 +1,7 @@
 /**
- * LARMAH ENTERPRISE | assets/js/app.js (FULL)
+ * LARMAH ENTERPRISE | assets/js/app.js (FULL UPDATED)
  * - Creates window.supabaseClient reliably
- * - Exposes window.LARMAH for onclick handlers
+ * - Exposes window.LARMAH for inline onclick handlers
  * - Dashboard button shows when authenticated
  * - WhatsApp-first support
  * - Request logging: ONLY when authenticated (matches requests RLS user insert own)
@@ -24,6 +24,7 @@ function ensureSupabaseClient() {
   return window.supabaseClient;
 }
 
+// expose for pages that want to call it
 window.ensureSupabaseClient = window.ensureSupabaseClient || ensureSupabaseClient;
 
 function __rand(len = 10) {
@@ -125,8 +126,8 @@ window.LARMAH = window.LARMAH || {
   },
 
   /**
-   * requests RLS requires user_id = auth.uid()
-   * so ONLY log if authenticated
+   * Requests RLS: user insert own requires user_id = auth.uid()
+   * => only log when authenticated
    */
   async logRequest(category, payload, status = "new") {
     const sb = this.sb();
@@ -146,6 +147,7 @@ window.LARMAH = window.LARMAH || {
       const { error } = await sb.from("requests").insert([row]);
       if (error) throw error;
     } catch (e) {
+      // silent fail: WhatsApp still opens
       console.warn("logRequest failed:", e?.message || e);
     }
   },
@@ -166,7 +168,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // close mobile menu on overlay click
+  // close menu when clicking overlay background
   const overlay = document.getElementById("mobileNavOverlay");
   if (overlay) {
     overlay.addEventListener("click", (e) => {
@@ -174,6 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // dashboard button visibility
+  // show dashboard button
   if (window.LARMAH?.updateHeaderAuthUI) window.LARMAH.updateHeaderAuthUI();
 });
