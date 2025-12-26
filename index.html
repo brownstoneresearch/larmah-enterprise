@@ -96,8 +96,6 @@
       <div class="header-actions" style="margin-left:auto; display:none;">
           <a href="dashboard.html" class="pill primary">Dashboard</a>
       </div>
-
-      <!-- FIXED: show dashboard only if real session exists -->
       <script>
         document.addEventListener("DOMContentLoaded", () => {
           if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") {
@@ -272,19 +270,27 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
     const __INDEX_CACHE = { "real-estate": [], "logistics": [] };
+    let __homeChannel = null;
+    let __homeDebounce = null;
+
+    function debounce(fn, wait=700){
+      clearTimeout(__homeDebounce);
+      __homeDebounce = setTimeout(fn, wait);
+    }
 
     async function renderPreview(category, mountId){
       const mount = document.getElementById(mountId);
       if(!mount) return;
 
       try {
-        const sb = window.supabaseClient; // ✅ reliable client
+        const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
         if(!sb) throw new Error("supabaseClient not ready");
 
         const { data, error } = await sb
           .from('listings')
-          .select('*')
+          .select('id,title,price,image_url,category,status,created_at')
           .eq('category', category)
           .eq('status', 'active')
           .order('created_at', {ascending: false})
@@ -347,9 +353,30 @@
       }));
     }
 
+    function initHomeRealtime(){
+      const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+      if(!sb) return;
+
+      if(__homeChannel){
+        try { sb.removeChannel(__homeChannel); } catch {}
+        __homeChannel = null;
+      }
+
+      __homeChannel = sb
+        .channel("home-latest-previews")
+        .on("postgres_changes", { event:"*", schema:"public", table:"listings" }, () => {
+          debounce(() => {
+            renderPreview("real-estate", "latestRE");
+            renderPreview("logistics", "latestLG");
+          }, 700);
+        })
+        .subscribe();
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
       renderPreview("real-estate", "latestRE");
       renderPreview("logistics", "latestLG");
+      initHomeRealtime();
     });
   </script>
 </body>
