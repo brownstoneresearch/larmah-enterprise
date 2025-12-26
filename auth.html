@@ -226,169 +226,95 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    .auth.signOut();
+        //   throw new Error("Email not verified yet. Check your inbox and verify first.");
+        // }
 
-    function setTab(tab){
-      document.getElementById("tabLogin").classList.toggle("active", tab === "login");
-      document.getElementById("tabRegister").classList.toggle("active", tab === "register");
-      document.getElementById("loginForm").style.display = (tab === "login") ? "block" : "none";
-      document.getElementById("registerForm").style.display = (tab === "register") ? "block" : "none";
-    }
-
-    async function redirectByRole(sb){
-      let isAdmin = false;
-      try {
-        const r = await sb.rpc("is_admin");
-        isAdmin = !!r.data;
-      } catch {}
-      location.href = isAdmin ? "admin.html" : "dashboard.html";
-    }
-
-    async function supportAuth(){
-      if (window.LARMAH && LARMAH.submitRequest) {
-        await LARMAH.submitRequest({
-          header: "Auth Support",
-          category: "auth",
-          fields: { Message: "Hello Larmah, I need help with signup/login." },
-          refPrefix: "AUTH"
-        });
-      } else {
-        LARMAH.openWhatsApp(LARMAH.buildMessage("Auth Support", { Message: "Hello Larmah, I need help with signup/login." }));
+        await redirectByRole(sb);
+      } catch (err) {
+        LARMAH.toast(err.message || "Sign in failed", "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Sign In";
       }
-    }
+    });
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      setTab("login");
-      document.getElementById("tabLogin").addEventListener("click", () => setTab("login"));
-      document.getElementById("tabRegister").addEventListener("click", () => setTab("register"));
+    // REGISTER (non-admin by default)
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-      const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
-      if(!sb){
-        LARMAH.toast("Supabase not ready. Refresh page.", "error");
+      const full_name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value;
+
+      const btn = document.getElementById("regBtn");
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
+
+      try {
+        const { data, error } = await sb.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { full_name },
+            emailRedirectTo: REDIRECT_TO
+          }
+        });
+        if (error) throw error;
+
+        // Best-effort profile upsert (trigger also creates the profile)
+        try {
+          if (data?.user?.id) {
+            await sb.from("profiles").upsert({
+              id: data.user.id,
+              email,
+              full_name
+            });
+          }
+        } catch (e) {
+          console.warn("profiles upsert failed:", e);
+        }
+
+        LARMAH.toast("Account created. Verify your email, then sign in.", "success");
+        setTab("login");
+        document.getElementById("loginEmail").value = email;
+      } catch (err) {
+        LARMAH.toast(err.message || "Signup failed", "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Create Account";
+      }
+    });
+
+    // RESEND VERIFICATION EMAIL
+    document.getElementById("resendBtn").addEventListener("click", async () => {
+      const email = document.getElementById("loginEmail").value.trim();
+      if(!email){
+        LARMAH.toast("Enter your email first.", "error");
         return;
       }
 
-      // ✅ GitHub Pages-safe redirect URL:
-      // For https://brownstoneresearch.github.io/larmah-enterprise/auth.html
-      // BASE becomes https://brownstoneresearch.github.io/larmah-enterprise/
-      const BASE = new URL(".", window.location.href);
-      const REDIRECT_TO = new URL("auth.html", BASE).toString();
+      const btn = document.getElementById("resendBtn");
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
 
-      // handle email verification redirect (?code=...)
-      const url = new URL(window.location.href);
-      const code = url.searchParams.get("code");
-      if(code){
-        try {
-          await sb.auth.exchangeCodeForSession(code);
-          url.searchParams.delete("code");
-          window.history.replaceState({}, document.title, url.toString());
-        } catch {}
-      }
-
-      // if session exists, go to dashboard/admin
       try {
-        const { data } = await sb.auth.getSession();
-        if(data?.session){
-          await redirectByRole(sb);
-          return;
-        }
-      } catch {}
+        const { error } = await sb.auth.resend({
+          type: "signup",
+          email,
+          options: { emailRedirectTo: REDIRECT_TO }
+        });
+        if(error) throw error;
 
-      // SIGN IN
-      document.getElementById("loginForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const email = document.getElementById("loginEmail").value.trim();
-        const password = document.getElementById("loginPassword").value;
-
-        const btn = document.getElementById("loginBtn");
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in...';
-
-        try {
-          const { error } = await sb.auth.signInWithPassword({ email, password });
-          if (error) throw error;
-          await redirectByRole(sb);
-        } catch (err) {
-          LARMAH.toast(err.message || "Sign in failed", "error");
-        } finally {
-          btn.disabled = false;
-          btn.textContent = "Sign In";
-        }
-      });
-
-      // REGISTER (non-admin by default)
-      document.getElementById("registerForm").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const full_name = document.getElementById("regName").value.trim();
-        const email = document.getElementById("regEmail").value.trim();
-        const password = document.getElementById("regPassword").value;
-
-        const btn = document.getElementById("regBtn");
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Creating...';
-
-        try {
-          const { data, error } = await sb.auth.signUp({
-            email,
-            password,
-            options: {
-              data: { full_name },
-              emailRedirectTo: REDIRECT_TO
-            }
-          });
-          if (error) throw error;
-
-          // best-effort profile upsert (trigger also creates profile)
-          try {
-            if (data?.user?.id) {
-              await sb.from("profiles").upsert({
-                id: data.user.id,
-                email,
-                full_name
-              });
-            }
-          } catch {}
-
-          LARMAH.toast("Account created. Verify your email, then sign in.", "success");
-          setTab("login");
-          document.getElementById("loginEmail").value = email;
-        } catch (err) {
-          LARMAH.toast(err.message || "Signup failed", "error");
-        } finally {
-          btn.disabled = false;
-          btn.textContent = "Create Account";
-        }
-      });
-
-      // RESEND VERIFICATION EMAIL
-      document.getElementById("resendBtn").addEventListener("click", async () => {
-        const email = document.getElementById("loginEmail").value.trim();
-        if(!email){
-          LARMAH.toast("Enter your email first.", "error");
-          return;
-        }
-
-        const btn = document.getElementById("resendBtn");
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
-
-        try {
-          const { error } = await sb.auth.resend({
-            type: "signup",
-            email,
-            options: { emailRedirectTo: REDIRECT_TO }
-          });
-          if(error) throw error;
-
-          LARMAH.toast("Verification email sent. Check your inbox.", "success");
-        } catch (err) {
-          LARMAH.toast(err.message || "Could not resend email", "error");
-        } finally {
-          btn.disabled = false;
-          btn.innerHTML = '<i class="fa-regular fa-envelope"></i> Resend Verification Email';
-        }
-      });
+        LARMAH.toast("Verification email sent. Check your inbox.", "success");
+      } catch (err) {
+        LARMAH.toast(err.message || "Could not resend email", "error");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-regular fa-envelope"></i> Resend Verification Email';
+      }
     });
+  });
   </script>
 </body>
 </html>
