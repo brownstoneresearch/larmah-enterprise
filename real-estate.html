@@ -40,6 +40,19 @@
     .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
     .live-dot i { font-size: 8px; }
 
+    /* ✅ Neat, not-wide listings: centered grid with max width */
+    .catalog-wrap{
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .catalog-grid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media(max-width: 1024px){ .catalog-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media(max-width: 640px){ .catalog-grid{ grid-template-columns: 1fr; } }
+
     .card-media{
       width:100%; height:190px; border-radius:14px; overflow:hidden;
       border: 1px solid rgba(255,255,255,0.08);
@@ -245,9 +258,11 @@
         </div>
       </div>
 
-      <div id="catalogMount">
-        <div class="latest-skel">
-          <div class="skel-line"></div><div class="skel-line short"></div>
+      <div class="catalog-wrap">
+        <div id="catalogMount">
+          <div class="latest-skel">
+            <div class="skel-line"></div><div class="skel-line short"></div>
+          </div>
         </div>
       </div>
     </section>
@@ -427,15 +442,31 @@
       renderRE();
     }
 
-    function renderCards(items){
+    function renderRE(){
       const mount = document.getElementById("catalogMount");
+      const q = norm(document.getElementById("re_q").value);
+      const tf = document.getElementById("re_type_filter").value;
+      const sort = document.getElementById("re_sort").value;
+
+      let items = (__RE_ITEMS||[]).slice();
+
+      if(q){
+        items = items.filter(it => norm((it.title||"") + " " + (it.description||"") + " " + (it.tags||[]).join(" ")).includes(q));
+      }
+      if(tf){
+        items = items.filter(it => inferType(it) === tf);
+      }
+
+      if(sort === "az") items.sort((a,b)=> String(a.title||"").localeCompare(String(b.title||"")));
+      else items.sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
+
       if(!items.length){
         mount.innerHTML = `<div class="notice"><strong>No matches found.</strong> Try adjusting filters or submit a custom request below.</div>`;
         return;
       }
 
       mount.innerHTML = `
-        <div class="grid">
+        <div class="catalog-grid">
           ${items.map(it => {
             const id = String(it.id);
             initCardImages(it);
@@ -481,33 +512,13 @@
       `;
     }
 
-    function renderRE(){
-      const q = norm(document.getElementById("re_q").value);
-      const tf = document.getElementById("re_type_filter").value;
-      const sort = document.getElementById("re_sort").value;
-
-      let items = (__RE_ITEMS||[]).slice();
-
-      if(q){
-        items = items.filter(it => norm((it.title||"") + " " + (it.description||"") + " " + (it.tags||[]).join(" ")).includes(q));
-      }
-      if(tf){
-        items = items.filter(it => inferType(it) === tf);
-      }
-
-      if(sort === "az") items.sort((a,b)=> String(a.title||"").localeCompare(String(b.title||"")));
-      else items.sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
-
-      renderCards(items);
-    }
-
     async function loadRealEstate(){
       const mount = document.getElementById("catalogMount");
       mount.innerHTML = `
-        <div class="grid">
-          <div class="card" style="height:300px;opacity:0.5"></div>
-          <div class="card" style="height:300px;opacity:0.5"></div>
-          <div class="card" style="height:300px;opacity:0.5"></div>
+        <div class="catalog-grid">
+          <div class="card" style="height:320px;opacity:0.5"></div>
+          <div class="card" style="height:320px;opacity:0.5"></div>
+          <div class="card" style="height:320px;opacity:0.5"></div>
         </div>`;
 
       try {
