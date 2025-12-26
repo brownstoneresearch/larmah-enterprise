@@ -60,7 +60,6 @@
     .form-label{display:block;color:var(--muted);font-size:.85rem;margin-bottom:6px;font-weight:900}
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     @media(max-width:720px){.row2{grid-template-columns:1fr}}
-    .notice-admin{padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--muted)}
     .status-select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:8px 10px;font-weight:900;cursor:pointer}
     .img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
     @media(max-width:720px){.img-grid{grid-template-columns:1fr}}
@@ -119,7 +118,7 @@
           <li class="nav-item" onclick="switchView('all-listings', this)"><i class="fa-solid fa-layer-group"></i> All Listings</li>
           <li class="nav-item" onclick="switchView('real-estate', this)"><i class="fa-solid fa-building"></i> Real Estate</li>
           <li class="nav-item" onclick="switchView('logistics', this)"><i class="fa-solid fa-truck-fast"></i> Logistics</li>
-          <li class="nav-item" onclick="switchView('rates', this)"><i class="fa-solid fa-coins"></i> Rates</li>
+          <li class="nav-item" onclick="switchView('rates', this)"><i class="fa-solid fa-coins"></i> Rates (Pairs)</li>
           <li class="nav-item" onclick="switchView('insights', this)"><i class="fa-regular fa-newspaper"></i> Insights</li>
           <li class="nav-item" onclick="switchView('requests', this)"><i class="fa-solid fa-inbox"></i> Requests</li>
           <li class="nav-item" onclick="switchView('users', this)"><i class="fa-solid fa-users"></i> Users</li>
@@ -155,8 +154,12 @@
             </div>
           </div>
 
-          <div class="notice-admin">
-            ✅ Admin can manage postings across <b>all categories</b>. Change the Category field to move a listing to a new category. Images upload to <code>larmah-media</code>.
+          <div class="card">
+            <div style="font-weight:950;margin-bottom:6px">Rates (Pairs)</div>
+            <div class="small" style="opacity:.8;line-height:1.7">
+              Add pairs like <b>BTC/USDT</b>, <b>BTC/NGN</b>, <b>ETH/USDT</b>, <b>ETH/NGN</b>, <b>USDT/NGN</b>.<br/>
+              Use Base + Quote. Pair is auto-generated.
+            </div>
           </div>
         </div>
 
@@ -177,8 +180,8 @@
         <!-- REAL ESTATE -->
         <div id="view-real-estate" class="view-section" style="display:none">
           <div class="admin-header">
-            <h1>Real Estate Catalog</h1>
-            <button class="btn solid small" onclick="openEditor('listing', null, 'real-estate')"><i class="fa-solid fa-plus"></i> Add Property</button>
+            <h1>Real Estate</h1>
+            <button class="btn solid small" onclick="openEditor('listing', null, 'real-estate')"><i class="fa-solid fa-plus"></i> Add</button>
           </div>
           <div class="data-table-wrapper">
             <table>
@@ -191,8 +194,8 @@
         <!-- LOGISTICS -->
         <div id="view-logistics" class="view-section" style="display:none">
           <div class="admin-header">
-            <h1>Logistics Fleet</h1>
-            <button class="btn solid small" onclick="openEditor('listing', null, 'logistics')"><i class="fa-solid fa-plus"></i> Add Service</button>
+            <h1>Logistics</h1>
+            <button class="btn solid small" onclick="openEditor('listing', null, 'logistics')"><i class="fa-solid fa-plus"></i> Add</button>
           </div>
           <div class="data-table-wrapper">
             <table>
@@ -205,12 +208,12 @@
         <!-- RATES -->
         <div id="view-rates" class="view-section" style="display:none">
           <div class="admin-header">
-            <h1>Desk Rates</h1>
-            <button class="btn solid small" onclick="openEditor('rate', null, null)"><i class="fa-solid fa-plus"></i> Add Rate</button>
+            <h1>Rates (Pairs)</h1>
+            <button class="btn solid small" onclick="openEditor('rate', null, null)"><i class="fa-solid fa-plus"></i> Add Pair</button>
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead><tr><th>Asset</th><th>Buy</th><th>Sell</th><th>Status</th><th width="120">Actions</th></tr></thead>
+              <thead><tr><th>Pair</th><th>We Buy</th><th>We Sell</th><th>Status</th><th width="120">Actions</th></tr></thead>
               <tbody id="tbody-rates"></tbody>
             </table>
           </div>
@@ -233,7 +236,7 @@
         <!-- REQUESTS -->
         <div id="view-requests" class="view-section" style="display:none">
           <div class="admin-header">
-            <h1>Requests Inbox</h1>
+            <h1>Requests</h1>
             <button class="btn small" onclick="fetchRequests()"><i class="fa-solid fa-rotate"></i> Refresh</button>
           </div>
           <div class="data-table-wrapper">
@@ -247,7 +250,7 @@
         <!-- USERS -->
         <div id="view-users" class="view-section" style="display:none">
           <div class="admin-header">
-            <h1>User Profiles</h1>
+            <h1>Users</h1>
             <button class="btn small" onclick="fetchUsers()"><i class="fa-solid fa-rotate"></i> Refresh</button>
           </div>
           <div class="data-table-wrapper">
@@ -282,8 +285,8 @@
         <div id="fields-listing" style="display:none">
           <div class="form-group">
             <label class="form-label">Category</label>
-            <input type="text" id="listing_category" class="input" placeholder="e.g. real-estate, logistics, exchange, autos..." required>
-            <div class="tiny">You can type any category. This is how you publish across all categories.</div>
+            <input type="text" id="listing_category" class="input" placeholder="e.g. real-estate, logistics, etc" required>
+            <div class="tiny">You can publish to any category. Use <b>real-estate</b> or <b>logistics</b> for main pages.</div>
           </div>
 
           <div class="form-group">
@@ -318,46 +321,51 @@
 
           <div class="form-group">
             <label class="form-label">Images (1–3)</label>
-            <div class="tiny">Upload or paste URLs. First image becomes the main catalogue image.</div>
+            <div class="tiny">Upload or paste URLs. First image becomes the main image.</div>
 
             <div class="img-grid" style="margin-top:10px">
+              ${[1,2,3].map(i=>`
               <div class="img-slot">
-                <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('listing',1)">Clear</button></div>
-                <input type="file" id="listing_file_1" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_1" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="listing_url_1" class="input" placeholder="or paste URL"></div>
-              </div>
-
-              <div class="img-slot">
-                <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('listing',2)">Clear</button></div>
-                <input type="file" id="listing_file_2" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_2" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="listing_url_2" class="input" placeholder="or paste URL"></div>
-              </div>
-
-              <div class="img-slot">
-                <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('listing',3)">Clear</button></div>
-                <input type="file" id="listing_file_3" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_3" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="listing_url_3" class="input" placeholder="or paste URL"></div>
-              </div>
+                <div class="slot-head"><b>Image ${i}${i===1?' (Main)':''}</b><button type="button" class="btn small" onclick="clearSlot('listing',${i})">Clear</button></div>
+                <input type="file" id="listing_file_${i}" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_${i}" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="listing_url_${i}" class="input" placeholder="or paste URL"></div>
+              </div>`).join("")}
             </div>
           </div>
         </div>
 
-        <!-- RATE -->
+        <!-- RATE (PAIRS) -->
         <div id="fields-rate" style="display:none">
           <div class="row2">
             <div class="form-group">
-              <label class="form-label">Asset</label>
-              <select id="rate_asset" class="input">
-                <option value="USD">USD</option>
-                <option value="GBP">GBP</option>
-                <option value="EUR">EUR</option>
-                <option value="USDT">USDT</option>
-                <option value="BTC">BTC</option>
-              </select>
+              <label class="form-label">Base (e.g. BTC)</label>
+              <input type="text" id="rate_base" class="input" placeholder="BTC" required>
             </div>
+            <div class="form-group">
+              <label class="form-label">Quote (e.g. USDT / NGN)</label>
+              <input type="text" id="rate_quote" class="input" placeholder="USDT" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Pair (auto)</label>
+            <input type="text" id="rate_pair" class="input" placeholder="BTC/USDT" disabled>
+            <div class="tiny">Pair is generated as BASE/QUOTE. Example: BTC/USDT, ETH/NGN, USDT/NGN.</div>
+          </div>
+
+          <div class="row2">
+            <div class="form-group">
+              <label class="form-label">We Buy</label>
+              <input type="number" id="rate_buy" class="input" step="0.01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">We Sell</label>
+              <input type="number" id="rate_sell" class="input" step="0.01">
+            </div>
+          </div>
+
+          <div class="row2">
             <div class="form-group">
               <label class="form-label">Status</label>
               <select id="rate_status" class="input">
@@ -365,16 +373,16 @@
                 <option value="draft">Draft</option>
               </select>
             </div>
-          </div>
-
-          <div class="row2">
             <div class="form-group">
-              <label class="form-label">Buy</label>
-              <input type="number" id="rate_buy" class="input" step="0.01">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Sell</label>
-              <input type="number" id="rate_sell" class="input" step="0.01">
+              <label class="form-label">Quick presets</label>
+              <select id="rate_preset" class="input">
+                <option value="">Select preset…</option>
+                <option value="USDT/NGN">USDT/NGN</option>
+                <option value="BTC/USDT">BTC/USDT</option>
+                <option value="BTC/NGN">BTC/NGN</option>
+                <option value="ETH/USDT">ETH/USDT</option>
+                <option value="ETH/NGN">ETH/NGN</option>
+              </select>
             </div>
           </div>
         </div>
@@ -415,26 +423,13 @@
             <div class="tiny">Upload or paste URLs. First image becomes the main insight image.</div>
 
             <div class="img-grid" style="margin-top:10px">
+              ${[1,2,3].map(i=>`
               <div class="img-slot">
-                <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('insight',1)">Clear</button></div>
-                <input type="file" id="insight_file_1" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_1" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_1" class="input" placeholder="or paste URL"></div>
-              </div>
-
-              <div class="img-slot">
-                <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('insight',2)">Clear</button></div>
-                <input type="file" id="insight_file_2" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_2" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_2" class="input" placeholder="or paste URL"></div>
-              </div>
-
-              <div class="img-slot">
-                <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('insight',3)">Clear</button></div>
-                <input type="file" id="insight_file_3" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_3" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_3" class="input" placeholder="or paste URL"></div>
-              </div>
+                <div class="slot-head"><b>Image ${i}${i===1?' (Main)':''}</b><button type="button" class="btn small" onclick="clearSlot('insight',${i})">Clear</button></div>
+                <input type="file" id="insight_file_${i}" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_${i}" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="insight_url_${i}" class="input" placeholder="or paste URL"></div>
+              </div>`).join("")}
             </div>
           </div>
         </div>
@@ -485,7 +480,6 @@
       if(msg){ el.textContent = msg; el.style.display = "block"; }
       else { el.style.display = "none"; }
     }
-
     function showAdmin(){
       document.getElementById("login-gate").style.display = "none";
       document.getElementById("admin-interface").style.display = "block";
@@ -503,7 +497,6 @@
     }
 
     function safeDate(d){ try { return new Date(d).toLocaleString(); } catch { return ""; } }
-
     function setFieldsVisible(entity){
       ["listing","rate","insight","request"].forEach(k => {
         const el = document.getElementById("fields-" + k);
@@ -512,9 +505,8 @@
       document.getElementById("saveBtn").style.display = (entity === "request") ? "none" : "";
     }
 
-    // ---- Storage helpers
+    // Storage helpers
     function randomId(len=10){ return Math.random().toString(36).slice(2, 2+len); }
-
     async function uploadToStorage(file, folder){
       if(!file) return null;
       const maxMb = 10;
@@ -532,7 +524,7 @@
       return { path, url };
     }
 
-    // ---- Image slots
+    // Image slots
     function clearSlot(kind, idx){
       const file = document.getElementById(`${kind}_file_${idx}`);
       const url = document.getElementById(`${kind}_url_${idx}`);
@@ -541,7 +533,6 @@
       if(url) url.value = "";
       if(prev) prev.src = "";
     }
-
     function bindFilePreview(kind, idx){
       const file = document.getElementById(`${kind}_file_${idx}`);
       const prev = document.getElementById(`${kind}_prev_${idx}`);
@@ -552,7 +543,6 @@
         prev.src = URL.createObjectURL(f);
       });
     }
-
     function getSlotUrl(kind, idx){ return (document.getElementById(`${kind}_url_${idx}`)?.value || "").trim(); }
     function setSlotUrl(kind, idx, v){ const el = document.getElementById(`${kind}_url_${idx}`); if(el) el.value = v || ""; }
     function setSlotPreview(kind, idx, url){ const el = document.getElementById(`${kind}_prev_${idx}`); if(el) el.src = url || ""; }
@@ -585,7 +575,7 @@
       return "assets/images/larmah-header.jpeg";
     }
 
-    // ---- Quick upload on table rows
+    // Quick upload main image
     async function quickUploadMainImage(entity, id, category=null){
       const input = document.getElementById("quickUploadInput");
       if(!input) return;
@@ -630,7 +620,7 @@
       input.click();
     }
 
-    // ---- Strict Admin check: email + is_admin RPC
+    // Admin check
     async function assertOnlyAdmin(){
       const { data } = await sb.auth.getSession();
       if(!data?.session) throw new Error("No session");
@@ -652,24 +642,13 @@
 
     async function initAdmin(){
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
-      if(!sb){
-        showLogin("Supabase not ready. Refresh.");
-        return;
-      }
+      if(!sb){ showLogin("Supabase not ready."); return; }
 
       const { data } = await sb.auth.getSession();
-      if(!data?.session){
-        showLogin();
-        return;
-      }
+      if(!data?.session){ showLogin(); return; }
 
-      try{
-        await assertOnlyAdmin();
-      }catch(e){
-        showLogin(e.message || "Access denied");
-        window.location.href = "auth.html";
-        return;
-      }
+      try{ await assertOnlyAdmin(); }
+      catch(e){ showLogin(e.message || "Access denied"); window.location.href="auth.html"; return; }
 
       showAdmin();
       await loadStats();
@@ -704,7 +683,7 @@
         await sb.auth.signOut();
         msg.textContent = e.message || "Access denied";
         msg.style.display = "block";
-        window.location.href = "auth.html";
+        window.location.href="auth.html";
       }
     }
 
@@ -713,7 +692,7 @@
       window.location.href = "auth.html";
     }
 
-    // ---- Nav
+    // Nav
     function switchView(viewId, el){
       document.querySelectorAll(".view-section").forEach(v => v.style.display = "none");
       const view = document.getElementById("view-" + viewId);
@@ -732,37 +711,34 @@
       if(viewId === "users") fetchUsers();
     }
 
-    // ---- Stats
+    // Stats
     async function loadStats(){
-      try { const { count } = await sb.from("listings").select("*", { count:"exact", head:true }); document.getElementById("stat_listings").textContent = count ?? 0; }
+      try { const { count } = await sb.from("listings").select("*",{count:"exact", head:true}); document.getElementById("stat_listings").textContent = count ?? 0; }
       catch { document.getElementById("stat_listings").textContent = "—"; }
 
-      try { const { count } = await sb.from("profiles").select("*", { count:"exact", head:true }); document.getElementById("stat_users").textContent = count ?? 0; }
+      try { const { count } = await sb.from("profiles").select("*",{count:"exact", head:true}); document.getElementById("stat_users").textContent = count ?? 0; }
       catch { document.getElementById("stat_users").textContent = "—"; }
 
-      try {
+      try{
         const since = new Date(Date.now()-7*24*60*60*1000).toISOString();
         const { count } = await sb.from("requests").select("*",{count:"exact", head:true}).gte("created_at", since);
         document.getElementById("stat_requests").textContent = count ?? 0;
-      } catch { document.getElementById("stat_requests").textContent = "—"; }
+      }catch{ document.getElementById("stat_requests").textContent = "—"; }
     }
 
-    // ---- Fetch listings (ALL or filtered)
+    // Listings fetch
     async function fetchListings(category){
       const isAll = !category || category === "all";
-
       const tbody = document.getElementById(
         isAll ? "tbody-all-listings" :
         (category === "real-estate" ? "tbody-real-estate" : "tbody-logistics")
       );
-
       const colspan = isAll ? 6 : 5;
       tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center">Loading...</td></tr>`;
 
       try{
-        let q = sb.from("listings").select("*").order("created_at", {ascending:false});
+        let q = sb.from("listings").select("*").order("created_at",{ascending:false});
         if(!isAll) q = q.eq("category", category);
-
         const { data, error } = await q;
         if(error) throw error;
 
@@ -788,13 +764,10 @@
             return `
               <tr>
                 <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
-                <td>
-                  <div style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</div>
-                  <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div>
-                </td>
+                <td><div style="font-weight:950">${LARMAH.escapeHtml(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div></td>
                 <td>${LARMAH.escapeHtml(cat)}</td>
-                <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price || "")}</td>
-                <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
+                <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price||"")}</td>
+                <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status||"draft")}</span></td>
                 <td>${actions}</td>
               </tr>
             `;
@@ -803,12 +776,9 @@
           return `
             <tr>
               <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
-              <td>
-                <div style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</div>
-                <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div>
-              </td>
-              <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price || "")}</td>
-              <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
+              <td><div style="font-weight:950">${LARMAH.escapeHtml(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div></td>
+              <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price||"")}</td>
+              <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status||"draft")}</span></td>
               <td>${actions}</td>
             </tr>
           `;
@@ -819,13 +789,13 @@
       }
     }
 
-    // ---- Fetch rates
+    // ✅ Rates fetch (pairs)
     async function fetchRates(){
       const tbody = document.getElementById("tbody-rates");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
       try{
-        const { data, error } = await sb.from("rates").select("*").order("asset",{ascending:true});
+        const { data, error } = await sb.from("rates").select("*").order("pair",{ascending:true});
         if(error) throw error;
 
         CACHE.rates.clear();
@@ -838,7 +808,7 @@
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td style="font-weight:950">${LARMAH.escapeHtml(String(it.asset||""))}</td>
+            <td style="font-weight:950">${LARMAH.escapeHtml(String(it.pair || ((it.base||it.asset||"") + "/" + (it.quote||"NGN"))))}</td>
             <td style="color:var(--ok);font-weight:950">${LARMAH.escapeHtml(String(it.buy ?? ""))}</td>
             <td style="color:var(--warn);font-weight:950">${LARMAH.escapeHtml(String(it.sell ?? ""))}</td>
             <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
@@ -856,11 +826,9 @@
       }
     }
 
-    // ---- Fetch insights
     async function fetchInsights(){
       const tbody = document.getElementById("tbody-insights");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
-
       try{
         const { data, error } = await sb.from("insights").select("*").order("created_at",{ascending:false}).limit(250);
         if(error) throw error;
@@ -894,7 +862,6 @@
       }
     }
 
-    // ---- Requests
     async function fetchRequests(){
       const tbody = document.getElementById("tbody-requests");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
@@ -936,16 +903,14 @@
       try{
         const { error } = await sb.from("requests").update({ status }).eq("id", id);
         if(error) throw error;
-        toast("Request status updated ✅", "success");
+        toast("Request status updated ✅","success");
         await loadStats();
         await fetchRequests();
       }catch(e){
-        toast(e.message || "Failed updating status", "error");
-        await fetchRequests();
+        toast(e.message || "Update failed","error");
       }
     }
 
-    // ---- Users
     async function fetchUsers(){
       const tbody = document.getElementById("tbody-users");
       tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
@@ -960,21 +925,18 @@
 
         tbody.innerHTML = data.map(u => `
           <tr>
-            <td>
-              <div>${LARMAH.escapeHtml(u.email || "N/A")}</div>
-              <div style="font-size:0.8rem;opacity:0.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(u.id || ""))}</div>
-            </td>
+            <td><div>${LARMAH.escapeHtml(u.email || "N/A")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(u.id||""))}</div></td>
             <td>${LARMAH.escapeHtml(u.full_name || "User")}</td>
             <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : ""}</td>
             <td><span class="badge active">Active</span></td>
           </tr>
         `).join("");
       }catch(e){
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading profiles.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading users.</td></tr>`;
       }
     }
 
-    // ---- Editor open/close/reset
+    // Editor
     function resetEditor(){
       document.getElementById("editorForm").reset();
       document.getElementById("edit_entity").value = "";
@@ -982,6 +944,12 @@
       document.getElementById("edit_category").value = "";
       document.getElementById("editorHint").textContent = "";
       ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) clearSlot(kind,i); });
+    }
+
+    function setRatePairPreview(){
+      const base = (document.getElementById("rate_base").value || "").trim().toUpperCase();
+      const quote = (document.getElementById("rate_quote").value || "").trim().toUpperCase();
+      document.getElementById("rate_pair").value = (base && quote) ? `${base}/${quote}` : "";
     }
 
     function openEditor(entity, id=null, category=null){
@@ -995,7 +963,6 @@
       if(entity === "listing"){
         document.getElementById("editorTitle").textContent = id ? "Edit Listing" : "New Listing";
         document.getElementById("listing_status").value = "active";
-
         if(id){
           const it = CACHE.listings.get(String(id));
           if(it){
@@ -1005,7 +972,6 @@
             document.getElementById("listing_status").value = it.status || "draft";
             document.getElementById("listing_desc").value = it.description || "";
             document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : "";
-
             const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
             for(let i=1;i<=3;i++){
               const u = arr[i-1] || "";
@@ -1019,16 +985,23 @@
       }
 
       if(entity === "rate"){
-        document.getElementById("editorTitle").textContent = id ? "Edit Rate" : "New Rate";
+        document.getElementById("editorTitle").textContent = id ? "Edit Pair" : "New Pair";
         document.getElementById("rate_status").value = "active";
+
         if(id){
           const it = CACHE.rates.get(String(id));
           if(it){
-            document.getElementById("rate_asset").value = String(it.asset || "USD");
+            document.getElementById("rate_base").value = String(it.base || it.asset || "").toUpperCase();
+            document.getElementById("rate_quote").value = String(it.quote || "NGN").toUpperCase();
             document.getElementById("rate_buy").value = it.buy ?? "";
             document.getElementById("rate_sell").value = it.sell ?? "";
             document.getElementById("rate_status").value = it.status || "active";
+            setRatePairPreview();
           }
+        } else {
+          document.getElementById("rate_base").value = "";
+          document.getElementById("rate_quote").value = "NGN";
+          setRatePairPreview();
         }
       }
 
@@ -1042,7 +1015,6 @@
             document.getElementById("insight_category").value = it.category || "all";
             document.getElementById("insight_status").value = it.status || "active";
             document.getElementById("insight_summary").value = it.summary || "";
-
             const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
             for(let i=1;i<=3;i++){
               const u = arr[i-1] || "";
@@ -1067,7 +1039,7 @@
 
     function closeEditor(){ document.getElementById("editorModal").classList.remove("active"); }
 
-    // ---- Save (responsive + reliable)
+    // Save
     async function saveEditor(e){
       e.preventDefault();
       if(document.body.classList.contains("saving")) return;
@@ -1098,7 +1070,6 @@
           const imgs = await collectImages("listing", "listings");
           const urls = imgs.urls.slice(0,3);
           const paths = imgs.paths.slice(0,3);
-
           payload.image_url = urls[0] || "";
           payload.image_path = paths[0] || null;
           payload.image_urls = urls;
@@ -1107,10 +1078,9 @@
           const res = id
             ? await sb.from("listings").update(payload).eq("id", id).select().single()
             : await sb.from("listings").insert([payload]).select().single();
-
           if(res.error) throw res.error;
 
-          toast("Saved listing ✅", "success");
+          toast("Saved listing ✅","success");
           closeEditor();
           await fetchListings("all");
           await loadStats();
@@ -1118,21 +1088,28 @@
         }
 
         if(entity === "rate"){
+          const base = (document.getElementById("rate_base").value || "").trim().toUpperCase();
+          const quote = (document.getElementById("rate_quote").value || "").trim().toUpperCase();
+          const pair = (base && quote) ? `${base}/${quote}` : "";
+
+          if(!base || !quote) throw new Error("Base and Quote are required.");
+          if(!pair) throw new Error("Pair is required.");
+
           const payload = {
-            asset: document.getElementById("rate_asset").value,
+            base, quote, pair,
             buy: Number(document.getElementById("rate_buy").value || 0),
             sell: Number(document.getElementById("rate_sell").value || 0),
             status: document.getElementById("rate_status").value
           };
 
+          // ✅ UPSERT by pair
           const res = await sb.from("rates")
-            .upsert([payload], { onConflict: "asset" })
+            .upsert([payload], { onConflict: "pair" })
             .select()
             .single();
-
           if(res.error) throw res.error;
 
-          toast("Saved rate ✅", "success");
+          toast("Saved pair ✅","success");
           closeEditor();
           await fetchRates();
           return;
@@ -1150,7 +1127,6 @@
           const imgs = await collectImages("insight", "insights");
           const urls = imgs.urls.slice(0,3);
           const paths = imgs.paths.slice(0,3);
-
           payload.image_url = urls[0] || "";
           payload.image_path = paths[0] || null;
           payload.image_urls = urls;
@@ -1159,19 +1135,16 @@
           const res = id
             ? await sb.from("insights").update(payload).eq("id", id).select().single()
             : await sb.from("insights").insert([payload]).select().single();
-
           if(res.error) throw res.error;
 
-          toast("Saved insight ✅", "success");
+          toast("Saved insight ✅","success");
           closeEditor();
           await fetchInsights();
           return;
         }
-
       }catch(err){
         console.warn("SAVE ERROR:", err);
-        const msg = err?.message || err?.hint || err?.error_description || "Save failed";
-        toast(msg, "error");
+        toast(err?.message || "Save failed","error");
       }finally{
         document.body.classList.remove("saving");
         btn.disabled = false;
@@ -1185,7 +1158,7 @@
         if(entity === "listing"){
           const { error } = await sb.from("listings").delete().eq("id", id);
           if(error) throw error;
-          toast("Deleted listing ✅", "success");
+          toast("Deleted listing ✅","success");
           await fetchListings("all");
           if(category) await fetchListings(category);
           await loadStats();
@@ -1194,28 +1167,40 @@
         if(entity === "rate"){
           const { error } = await sb.from("rates").delete().eq("id", id);
           if(error) throw error;
-          toast("Deleted rate ✅", "success");
+          toast("Deleted pair ✅","success");
           await fetchRates();
           return;
         }
         if(entity === "insight"){
           const { error } = await sb.from("insights").delete().eq("id", id);
           if(error) throw error;
-          toast("Deleted insight ✅", "success");
+          toast("Deleted insight ✅","success");
           await fetchInsights();
           return;
         }
       }catch(e){
-        toast(e.message || "Delete failed", "error");
+        toast(e.message || "Delete failed","error");
       }
     }
 
-    // ---- Wire up
+    // Wire up
     document.addEventListener("DOMContentLoaded", async () => {
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       if(!sb){ showLogin("Supabase not ready."); return; }
 
       ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) bindFilePreview(kind,i); });
+
+      // Rate auto pair preview
+      document.getElementById("rate_base").addEventListener("input", setRatePairPreview);
+      document.getElementById("rate_quote").addEventListener("input", setRatePairPreview);
+      document.getElementById("rate_preset").addEventListener("change", () => {
+        const v = document.getElementById("rate_preset").value;
+        if(!v) return;
+        const [b,q] = v.split("/");
+        document.getElementById("rate_base").value = (b||"").toUpperCase();
+        document.getElementById("rate_quote").value = (q||"").toUpperCase();
+        setRatePairPreview();
+      });
 
       document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
