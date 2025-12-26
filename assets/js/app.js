@@ -1,175 +1,328 @@
-/**
- * LARMAH ENTERPRISE | app.js (Stable Core)
- * - Keeps header/footer/mobile menu in your HTML (does NOT inject/remove anything)
- * - Creates Supabase client as window.supabaseClient
- * - Exposes window.LARMAH for inline onclick handlers
- * - Adds WhatsApp support + best-effort Supabase request logging
- */
+-- =========================================
+-- 0) EXTENSIONS
+-- =========================================
+create extension if not exists pgcrypto;
 
-/* ---------------------------
-   1) SUPABASE CONFIG
----------------------------- */
-window.SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
-window.SUPABASE_ANON_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+-- =========================================
+-- 1) ADMINS SYSTEM (allow-list)
+-- =========================================
+create table if not exists public.admins (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  created_at timestamptz not null default now()
+);
 
-function ensureSupabaseClient() {
-  // Supabase CDN exposes window.supabase (library)
-  if (!window.supabase || typeof window.supabase.createClient !== "function") {
-    console.error("Supabase library missing. Ensure CDN <script> loads before app.js");
-    return null;
-  }
-  if (!window.supabaseClient) {
-    window.supabaseClient = window.supabase.createClient(
-      window.SUPABASE_URL,
-      window.SUPABASE_ANON_KEY
-    );
-  }
-  return window.supabaseClient;
-}
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+as $$
+  select exists (
+    select 1 from public.admins a
+    where a.user_id = auth.uid()
+  );
+$$;
 
-/* ---------------------------
-   2) LARMAH GLOBAL
----------------------------- */
-window.LARMAH = {
-  businessPhone: "2347063080605",
-  user: null,
-  session: null,
+-- =========================================
+-- 2) updated_at trigger helper
+-- =========================================
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
 
-  sb() {
-    return ensureSupabaseClient();
-  },
+-- =========================================
+-- 3) PROFILES (schema + RLS)
+-- =========================================
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text,
+  full_name text,
+  avatar_url text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
 
-  /* ---------- UI ---------- */
-  toast(msg, type = "info") {
-    const t = document.getElementById("toast");
-    if (!t) return;
-    t.textContent = msg;
-    t.className = `toast show ${type}`;
-    clearTimeout(this.__toastTimer);
-    this.__toastTimer = setTimeout(() => (t.className = "toast"), 4000);
-  },
+create unique index if not exists profiles_email_unique
+on public.profiles (email)
+where email is not null;
 
-  escapeHtml(str) {
-    if (str === null || str === undefined) return "";
-    const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
-    return String(str).replace(/[&<>"']/g, (m) => map[m]);
-  },
+drop trigger if exists set_profiles_updated_at on public.profiles;
+create trigger set_profiles_updated_at
+before update on public.profiles
+for each row execute function public.set_updated_at();
 
-  toggleMenu() {
-    document.body.classList.toggle("nav-open");
-    const overlay = document.getElementById("mobileNavOverlay");
-    if (overlay) overlay.classList.toggle("active");
-  },
+-- Optional: auto-create profile on signup
+create or replace function public.handle_new_user()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  insert into public.profiles (id, email, full_name, avatar_url)
+  values (
+    new.id,
+    new.email,
+    coalesce(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', ''),
+    coalesce(new.raw_user_meta_data->>'avatar_url', '')
+  )
+  on conflict (id) do nothing;
 
-  /* ---------- WhatsApp ---------- */
-  openWhatsApp(text) {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    const baseUrl = isMobile ? "https://api.whatsapp.com/send" : "https://web.whatsapp.com/send";
-    const url = `${baseUrl}?phone=${this.businessPhone}&text=${encodeURIComponent(text)}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-  },
+  return new;
+end;
+$$;
 
-  buildRef(prefix = "WEB") {
-    return `${prefix}-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
-  },
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+after insert on auth.users
+for each row execute function public.handle_new_user();
 
-  buildMessage(header, fields = {}, ref = null) {
-    const rid = ref || this.buildRef("WEB");
-    let msg = `*LARMAH ENTERPRISE | ${String(header || "").toUpperCase()}*\n`;
-    msg += `------------------------------\n`;
-    for (const [k, v] of Object.entries(fields)) {
-      if (v !== null && v !== undefined && String(v).trim() !== "") {
-        msg += `*${k}:* ${v}\n`;
-      }
-    }
-    msg += `------------------------------\n`;
-    msg += `_Sent via heylarmah.tech_\n`;
-    msg += `_Ref: ${rid}_`;
-    return msg;
-  },
+alter table public.profiles enable row level security;
 
-  /* ---------- Auth / Session ---------- */
-  async getSession() {
-    const sb = this.sb();
-    if (!sb) return null;
-    const { data, error } = await sb.auth.getSession();
-    if (error) console.warn("getSession error:", error.message);
-    this.session = data?.session || null;
-    this.user = data?.session?.user || null;
-    return this.session;
-  },
+drop policy if exists "Profiles: read own" on public.profiles;
+create policy "Profiles: read own"
+on public.profiles
+for select
+to authenticated
+using (auth.uid() = id);
 
-  async updateHeaderAuthUI() {
-    // shows/hides dashboard button (your HTML uses .header-actions)
-    const el = document.querySelector(".header-actions");
-    if (!el) return;
-    const session = await this.getSession();
-    el.style.display = session ? "flex" : "none";
-  },
+drop policy if exists "Profiles: insert own" on public.profiles;
+create policy "Profiles: insert own"
+on public.profiles
+for insert
+to authenticated
+with check (auth.uid() = id);
 
-  async signOut(redirect = "auth.html") {
-    const sb = this.sb();
-    if (!sb) return;
-    await sb.auth.signOut();
-    this.user = null;
-    this.session = null;
-    if (redirect) window.location.href = redirect;
-  },
+drop policy if exists "Profiles: update own" on public.profiles;
+create policy "Profiles: update own"
+on public.profiles
+for update
+to authenticated
+using (auth.uid() = id)
+with check (auth.uid() = id);
 
-  /* ---------- Requests logging (best-effort) ---------- */
-  async logRequest(category, payload) {
-    const sb = this.sb();
-    if (!sb) return;
+-- =========================================
+-- 4) LISTINGS (public read active, admin write)
+-- =========================================
+create table if not exists public.listings (
+  id uuid primary key default gen_random_uuid(),
+  category text not null check (category in ('real-estate','logistics')),
+  title text not null,
+  description text,
+  price text,
+  image_url text,
+  tags text[] not null default '{}'::text[],
+  status text not null default 'draft' check (status in ('active','draft','sold')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
 
-    // requires table requests(category text, payload jsonb, created_at timestamptz, user_id uuid nullable, status text)
-    try {
-      await this.getSession(); // ensure this.user is fresh
-      const row = {
-        category: category || "general",
-        payload: payload || {},
-        user_id: this.user?.id || null,
-        status: "new",
-        created_at: new Date().toISOString(),
-      };
-      const { error } = await sb.from("requests").insert([row]);
-      if (error) throw error;
-    } catch (e) {
-      // silent failure — WhatsApp still opens
-      console.warn("Request logging failed:", e?.message || e);
-    }
-  },
+create index if not exists listings_category_idx on public.listings(category);
+create index if not exists listings_status_idx on public.listings(status);
+create index if not exists listings_created_at_idx on public.listings(created_at desc);
 
-  async submitRequest({ header, category, fields, refPrefix = "WEB" }) {
-    const ref = this.buildRef(refPrefix);
-    const msg = this.buildMessage(header, { ...fields }, ref);
+drop trigger if exists set_listings_updated_at on public.listings;
+create trigger set_listings_updated_at
+before update on public.listings
+for each row execute function public.set_updated_at();
 
-    // best-effort log
-    await this.logRequest(category || "general", { header, fields, ref });
+alter table public.listings enable row level security;
 
-    // open WhatsApp
-    this.openWhatsApp(msg);
-  },
-};
+drop policy if exists "Listings: public read active" on public.listings;
+create policy "Listings: public read active"
+on public.listings
+for select
+to anon, authenticated
+using (status = 'active' or public.is_admin());
 
-/* ---------------------------
-   3) INIT
----------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
-  ensureSupabaseClient();
+drop policy if exists "Listings: admin insert" on public.listings;
+create policy "Listings: admin insert"
+on public.listings
+for insert
+to authenticated
+with check (public.is_admin());
 
-  // Close mobile sheet if clicking overlay background
-  const overlay = document.getElementById("mobileNavOverlay");
-  if (overlay) {
-    overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) window.LARMAH.toggleMenu();
-    });
-  }
+drop policy if exists "Listings: admin update" on public.listings;
+create policy "Listings: admin update"
+on public.listings
+for update
+to authenticated
+using (public.is_admin())
+with check (public.is_admin());
 
-  // Footer year
-  const yearEl = document.getElementById("year");
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+drop policy if exists "Listings: admin delete" on public.listings;
+create policy "Listings: admin delete"
+on public.listings
+for delete
+to authenticated
+using (public.is_admin());
 
-  // Header dashboard visibility
-  window.LARMAH.updateHeaderAuthUI();
-});
+-- =========================================
+-- 5) RATES (public read active, admin write)
+-- =========================================
+create table if not exists public.rates (
+  id uuid primary key default gen_random_uuid(),
+  asset text not null check (asset in ('USD','GBP','EUR','USDT','BTC')),
+  buy numeric(18,2),
+  sell numeric(18,2),
+  status text not null default 'active' check (status in ('active','draft')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- Important for admin upsert-by-asset
+create unique index if not exists rates_asset_unique on public.rates(asset);
+
+drop trigger if exists set_rates_updated_at on public.rates;
+create trigger set_rates_updated_at
+before update on public.rates
+for each row execute function public.set_updated_at();
+
+alter table public.rates enable row level security;
+
+drop policy if exists "Rates: public read active" on public.rates;
+create policy "Rates: public read active"
+on public.rates
+for select
+to anon, authenticated
+using (status = 'active' or public.is_admin());
+
+drop policy if exists "Rates: admin insert" on public.rates;
+create policy "Rates: admin insert"
+on public.rates
+for insert
+to authenticated
+with check (public.is_admin());
+
+drop policy if exists "Rates: admin update" on public.rates;
+create policy "Rates: admin update"
+on public.rates
+for update
+to authenticated
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Rates: admin delete" on public.rates;
+create policy "Rates: admin delete"
+on public.rates
+for delete
+to authenticated
+using (public.is_admin());
+
+-- =========================================
+-- 6) INSIGHTS (public read active, admin write)
+-- =========================================
+create table if not exists public.insights (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  category text not null default 'all' check (category in ('all','real-estate','logistics','exchange')),
+  summary text,
+  image_url text,
+  status text not null default 'active' check (status in ('active','draft')),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists insights_status_idx on public.insights(status);
+create index if not exists insights_created_at_idx on public.insights(created_at desc);
+create index if not exists insights_category_idx on public.insights(category);
+
+drop trigger if exists set_insights_updated_at on public.insights;
+create trigger set_insights_updated_at
+before update on public.insights
+for each row execute function public.set_updated_at();
+
+alter table public.insights enable row level security;
+
+drop policy if exists "Insights: public read active" on public.insights;
+create policy "Insights: public read active"
+on public.insights
+for select
+to anon, authenticated
+using (status = 'active' or public.is_admin());
+
+drop policy if exists "Insights: admin insert" on public.insights;
+create policy "Insights: admin insert"
+on public.insights
+for insert
+to authenticated
+with check (public.is_admin());
+
+drop policy if exists "Insights: admin update" on public.insights;
+create policy "Insights: admin update"
+on public.insights
+for update
+to authenticated
+using (public.is_admin())
+with check (public.is_admin());
+
+drop policy if exists "Insights: admin delete" on public.insights;
+create policy "Insights: admin delete"
+on public.insights
+for delete
+to authenticated
+using (public.is_admin());
+
+-- =========================================
+-- 7) REQUESTS (user insert/read own, admin read all + update status + delete)
+-- =========================================
+create table if not exists public.requests (
+  id uuid primary key default gen_random_uuid(),
+  category text not null default 'general',
+  payload jsonb not null default '{}'::jsonb,
+  user_id uuid references auth.users(id) on delete set null,
+  status text not null default 'new',  -- new | processing | done | closed
+  created_at timestamptz not null default now()
+);
+
+create index if not exists requests_user_id_idx on public.requests(user_id);
+create index if not exists requests_created_at_idx on public.requests(created_at desc);
+create index if not exists requests_category_idx on public.requests(category);
+
+alter table public.requests enable row level security;
+
+-- User read own
+drop policy if exists "Requests: user read own" on public.requests;
+create policy "Requests: user read own"
+on public.requests
+for select
+to authenticated
+using (user_id = auth.uid());
+
+-- Admin read all
+drop policy if exists "Requests: admin read all" on public.requests;
+create policy "Requests: admin read all"
+on public.requests
+for select
+to authenticated
+using (public.is_admin());
+
+-- User insert own (THIS is why app.js logs only when authenticated)
+drop policy if exists "Requests: user insert own" on public.requests;
+create policy "Requests: user insert own"
+on public.requests
+for insert
+to authenticated
+with check (user_id = auth.uid());
+
+-- Admin update status (and other fields if needed)
+drop policy if exists "Requests: admin update" on public.requests;
+create policy "Requests: admin update"
+on public.requests
+for update
+to authenticated
+using (public.is_admin())
+with check (public.is_admin());
+
+-- Admin delete
+drop policy if exists "Requests: admin delete" on public.requests;
+create policy "Requests: admin delete"
+on public.requests
+for delete
+to authenticated
+using (public.is_admin());
