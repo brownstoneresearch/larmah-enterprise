@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Command | Larmah Enterprise</title>
 
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- Supabase Library -->
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- ✅ FALLBACK: create supabaseClient even if app.js fails to load -->
+  <!-- ✅ Fallback: create supabaseClient even if app.js fails -->
   <script>
     window.SUPABASE_URL = window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
     window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
@@ -28,175 +28,59 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
-    #login-gate{
-      position:fixed; inset:0; z-index:10000;
-      background:#050810;
-      display:flex; align-items:center; justify-content:center;
-    }
-    .login-box{
-      width:420px; max-width:92vw;
-      background:var(--panel); border:1px solid var(--border);
-      padding:40px; border-radius:20px;
-      text-align:center;
-      box-shadow:0 50px 100px rgba(0,0,0,0.5);
-    }
-
-    #admin-interface{ display:none; height:100vh; }
-    body{ padding-bottom:0; overflow:hidden; }
-
-    .admin-layout{ display:grid; grid-template-columns:260px 1fr; height:100%; }
-
-    .admin-sidebar{
-      background:#050810;
-      border-right:1px solid var(--border);
-      display:flex; flex-direction:column;
-      padding:20px;
-      z-index:10;
-    }
-    .admin-nav{ list-style:none; margin:26px 0 0; padding:0; display:grid; gap:8px; }
-    .nav-item{
-      padding:12px 14px; border-radius:12px;
-      color:var(--muted); cursor:pointer;
-      display:flex; align-items:center; gap:12px;
-      font-weight:900; font-size:.92rem;
-      transition:all .2s ease;
-      border:1px solid transparent;
-      user-select:none;
-    }
-    .nav-item:hover{ background:rgba(255,255,255,0.05); color:var(--text); }
-    .nav-item.active{
-      background:rgba(0,217,129,0.10);
-      color:var(--brand);
-      border:1px solid rgba(0,217,129,0.25);
-    }
-
-    .admin-main{ position:relative; overflow-y:auto; padding:30px; background:var(--bg); }
-    .admin-header{
-      display:flex; justify-content:space-between; align-items:center;
-      margin-bottom:22px; padding-bottom:14px;
-      border-bottom:1px solid var(--border);
-      gap:12px; flex-wrap:wrap;
-    }
-
-    .data-table-wrapper{
-      background:var(--panel);
-      border:1px solid var(--border);
-      border-radius:16px;
-      overflow:hidden;
-    }
-    table{ width:100%; border-collapse:collapse; }
-    th{
-      text-align:left; padding:14px 16px;
-      background:rgba(255,255,255,0.03);
-      color:var(--muted); font-size:.82rem;
-      text-transform:uppercase; letter-spacing:1px;
-    }
-    td{
-      padding:14px 16px;
-      border-top:1px solid rgba(255,255,255,0.05);
-      font-size:.93rem;
-      vertical-align:middle;
-    }
-    tr:hover td{ background:rgba(255,255,255,0.02); }
-
-    .tbl-thumb{ width:46px; height:46px; border-radius:10px; object-fit:cover; background:#000; }
-
-    .badge{ padding:4px 10px; border-radius:999px; font-size:.75rem; font-weight:900; display:inline-block; }
-    .badge.active{ background:rgba(67,209,125,0.2); color:var(--ok); }
-    .badge.draft{ background:rgba(255,176,32,0.18); color:var(--warn); }
-    .badge.sold{ background:rgba(255,90,103,0.18); color:var(--bad); }
-    .badge.closed{ background:rgba(255,90,103,0.18); color:var(--bad); }
-
-    .action-btn{
-      width:34px; height:34px; border-radius:10px;
-      display:inline-flex; align-items:center; justify-content:center;
-      cursor:pointer;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,0.05);
-      color:var(--text);
-      transition:.2s;
-    }
-    .action-btn:hover{ background:#fff; color:#000; }
-    .action-btn.danger:hover{ background:var(--bad); color:#fff; border-color:var(--bad); }
-
-    .modal{
-      position:fixed; inset:0;
-      background:rgba(0,0,0,0.85);
-      backdrop-filter:blur(5px);
-      z-index:9999;
-      display:none;
-      align-items:center; justify-content:center;
-      padding:20px;
-    }
-    .modal.active{ display:flex; }
-    .editor-box{
-      width:760px; max-width:96vw;
-      background:#0f1218;
-      border:1px solid var(--border);
-      border-radius:20px;
-      padding:26px;
-      box-shadow:0 50px 100px rgba(0,0,0,0.6);
-      max-height:90vh;
-      overflow-y:auto;
-    }
-    .form-group{ margin-bottom:14px; }
-    .form-label{
-      display:block;
-      color:var(--muted);
-      font-size:.85rem;
-      margin-bottom:6px;
-      font-weight:900;
-    }
-    .row2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    @media(max-width:720px){ .row2{ grid-template-columns:1fr; } }
-
-    .notice-admin{
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,0.1);
-      background:rgba(255,255,255,0.03);
-      color:var(--muted);
-    }
-
-    .status-select{
-      width:100%;
-      background:rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.12);
-      color:#fff;
-      border-radius:12px;
-      padding:8px 10px;
-      font-weight:800;
-      cursor:pointer;
-    }
-
-    .mini-preview{
-      margin-top:10px;
-      border:1px solid rgba(255,255,255,0.10);
-      border-radius:14px;
-      overflow:hidden;
-      background:rgba(255,255,255,0.03);
-    }
-    .mini-preview img{ width:100%; height:180px; object-fit:cover; display:block; }
-    .mini-preview .cap{
-      padding:10px 12px;
-      font-size:.85rem;
-      color:var(--muted);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-    }
-
-    @media(max-width:900px){
-      .admin-layout{ grid-template-columns:1fr; }
-      .admin-sidebar{ display:none; }
-    }
+    #login-gate{position:fixed;inset:0;z-index:10000;background:#050810;display:flex;align-items:center;justify-content:center}
+    .login-box{width:420px;max-width:92vw;background:var(--panel);border:1px solid var(--border);padding:40px;border-radius:20px;text-align:center;box-shadow:0 50px 100px rgba(0,0,0,.5)}
+    #admin-interface{display:none;height:100vh}
+    body{padding-bottom:0;overflow:hidden}
+    .admin-layout{display:grid;grid-template-columns:260px 1fr;height:100%}
+    .admin-sidebar{background:#050810;border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px;z-index:10}
+    .admin-nav{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:8px}
+    .nav-item{padding:12px 14px;border-radius:12px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:12px;font-weight:900;font-size:.92rem;transition:all .2s ease;border:1px solid transparent;user-select:none}
+    .nav-item:hover{background:rgba(255,255,255,.05);color:var(--text)}
+    .nav-item.active{background:rgba(0,217,129,.10);color:var(--brand);border:1px solid rgba(0,217,129,.25)}
+    .admin-main{position:relative;overflow-y:auto;padding:30px;background:var(--bg)}
+    .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap}
+    .data-table-wrapper{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+    table{width:100%;border-collapse:collapse}
+    th{text-align:left;padding:14px 16px;background:rgba(255,255,255,.03);color:var(--muted);font-size:.82rem;text-transform:uppercase;letter-spacing:1px}
+    td{padding:14px 16px;border-top:1px solid rgba(255,255,255,.05);font-size:.93rem;vertical-align:middle}
+    tr:hover td{background:rgba(255,255,255,.02)}
+    .tbl-thumb{width:46px;height:46px;border-radius:10px;object-fit:cover;background:#000}
+    .badge{padding:4px 10px;border-radius:999px;font-size:.75rem;font-weight:900;display:inline-block}
+    .badge.active{background:rgba(67,209,125,.2);color:var(--ok)}
+    .badge.draft{background:rgba(255,176,32,.18);color:var(--warn)}
+    .badge.sold{background:rgba(255,90,103,.18);color:var(--bad)}
+    .badge.closed{background:rgba(255,90,103,.18);color:var(--bad)}
+    .action-btn{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);transition:.2s}
+    .action-btn:hover{background:#fff;color:#000}
+    .action-btn.danger:hover{background:var(--bad);color:#fff;border-color:var(--bad)}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
+    .modal.active{display:flex}
+    .editor-box{width:780px;max-width:96vw;background:#0f1218;border:1px solid var(--border);border-radius:20px;padding:26px;box-shadow:0 50px 100px rgba(0,0,0,.6);max-height:90vh;overflow-y:auto}
+    .form-group{margin-bottom:14px}
+    .form-label{display:block;color:var(--muted);font-size:.85rem;margin-bottom:6px;font-weight:900}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:720px){.row2{grid-template-columns:1fr}}
+    .notice-admin{padding:12px 14px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:var(--muted)}
+    .status-select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:8px 10px;font-weight:900;cursor:pointer}
+    .mini-preview{margin-top:10px;border:1px solid rgba(255,255,255,.10);border-radius:14px;overflow:hidden;background:rgba(255,255,255,.03)}
+    .mini-preview img{width:100%;height:160px;object-fit:cover;display:block}
+    .mini-preview .cap{padding:10px 12px;font-size:.85rem;color:var(--muted);display:flex;justify-content:space-between;gap:10px;align-items:center}
+    .img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    @media(max-width:720px){.img-grid{grid-template-columns:1fr}}
+    .img-slot{border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:12px;background:rgba(255,255,255,.03)}
+    .img-slot .slot-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:10px}
+    .img-slot .slot-head b{font-size:.85rem}
+    .img-slot .slot-preview{width:100%;height:140px;border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
+    .img-slot .slot-preview img{width:100%;height:100%;object-fit:cover;display:block}
+    .img-slot .slot-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+    .tiny{font-size:.78rem;opacity:.75}
+    @media(max-width:900px){.admin-layout{grid-template-columns:1fr}.admin-sidebar{display:none}}
   </style>
 </head>
 
 <body data-page="admin">
-
-  <!-- LOGIN GATE -->
+  <!-- LOGIN -->
   <div id="login-gate">
     <div class="login-box">
       <img src="assets/images/larmah-header.jpeg" style="width:60px;border-radius:12px;margin:0 auto 18px;display:block" alt="Larmah">
@@ -219,7 +103,7 @@
     </div>
   </div>
 
-  <!-- ADMIN INTERFACE -->
+  <!-- APP -->
   <div id="admin-interface">
     <div class="admin-layout">
       <aside class="admin-sidebar">
@@ -272,7 +156,7 @@
           </div>
 
           <div class="notice-admin">
-            ✅ You can create, edit, delete, and save items for Listings, Rates, and Insights. Upload images to Supabase Storage bucket <code>larmah-media</code>.
+            ✅ Manage Listings, Rates, and Insights (Add / Edit / Save / Delete). Upload up to <b>3 images</b> per Listing/Insight via Supabase Storage bucket <code>larmah-media</code>.
           </div>
         </div>
 
@@ -285,13 +169,7 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-              <tr>
-                <th width="70">Img</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th width="120">Actions</th>
-              </tr>
+                <tr><th width="70">Img</th><th>Title</th><th>Price</th><th>Status</th><th width="120">Actions</th></tr>
               </thead>
               <tbody id="tbody-real-estate"></tbody>
             </table>
@@ -307,13 +185,7 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-              <tr>
-                <th width="70">Img</th>
-                <th>Title</th>
-                <th>Rate</th>
-                <th>Status</th>
-                <th width="120">Actions</th>
-              </tr>
+                <tr><th width="70">Img</th><th>Title</th><th>Rate</th><th>Status</th><th width="120">Actions</th></tr>
               </thead>
               <tbody id="tbody-logistics"></tbody>
             </table>
@@ -329,13 +201,7 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-              <tr>
-                <th>Asset</th>
-                <th>Buy</th>
-                <th>Sell</th>
-                <th>Status</th>
-                <th width="120">Actions</th>
-              </tr>
+                <tr><th>Asset</th><th>Buy</th><th>Sell</th><th>Status</th><th width="120">Actions</th></tr>
               </thead>
               <tbody id="tbody-rates"></tbody>
             </table>
@@ -351,13 +217,7 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-              <tr>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th width="120">Actions</th>
-              </tr>
+                <tr><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th width="120">Actions</th></tr>
               </thead>
               <tbody id="tbody-insights"></tbody>
             </table>
@@ -373,13 +233,7 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-              <tr>
-                <th>Category</th>
-                <th>Created</th>
-                <th>Status</th>
-                <th width="170">Update Status</th>
-                <th width="70">View</th>
-              </tr>
+                <tr><th>Category</th><th>Created</th><th>Status</th><th width="170">Update Status</th><th width="70">View</th></tr>
               </thead>
               <tbody id="tbody-requests"></tbody>
             </table>
@@ -395,17 +249,13 @@
           <div class="data-table-wrapper">
             <table>
               <thead>
-              <tr>
-                <th>Email / ID</th>
-                <th>Full Name</th>
-                <th>Joined</th>
-                <th>Status</th>
-              </tr>
+                <tr><th>Email / ID</th><th>Full Name</th><th>Joined</th><th>Status</th></tr>
               </thead>
               <tbody id="tbody-users"></tbody>
             </table>
           </div>
         </div>
+
       </main>
     </div>
   </div>
@@ -419,21 +269,21 @@
       </div>
 
       <form id="editorForm">
-        <input type="hidden" id="edit_entity">
-        <input type="hidden" id="edit_id">
-        <input type="hidden" id="edit_category">
+        <input type="hidden" id="edit_entity" />
+        <input type="hidden" id="edit_id" />
+        <input type="hidden" id="edit_category" />
 
         <!-- LISTING -->
         <div id="fields-listing" style="display:none">
           <div class="form-group">
             <label class="form-label">Title</label>
-            <input type="text" id="listing_title" class="input" required>
+            <input type="text" id="listing_title" class="input" required />
           </div>
 
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Price / Rate</label>
-              <input type="text" id="listing_price" class="input">
+              <input type="text" id="listing_price" class="input" />
             </div>
             <div class="form-group">
               <label class="form-label">Status</label>
@@ -446,32 +296,56 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Image URL (optional)</label>
-            <input type="text" id="listing_image" class="input" placeholder="https://...">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Upload Image (Supabase Storage)</label>
-            <input type="file" id="listing_file" class="input" accept="image/*">
-            <div class="small" style="opacity:.7;margin-top:6px">If you upload, Image URL is auto-filled.</div>
-          </div>
-
-          <div id="listingPreview" class="mini-preview" style="display:none">
-            <img id="listingPreviewImg" src="" alt="Listing preview">
-            <div class="cap">
-              <span>Preview</span>
-              <button type="button" class="btn small" onclick="clearListingImage()">Clear</button>
-            </div>
+            <label class="form-label">Description</label>
+            <textarea id="listing_desc" class="input" rows="4"></textarea>
           </div>
 
           <div class="form-group">
             <label class="form-label">Tags (comma separated)</label>
-            <input type="text" id="listing_tags" class="input" placeholder="lekki, shortlet, vi">
+            <input type="text" id="listing_tags" class="input" placeholder="lekki, shortlet, vi" />
           </div>
 
           <div class="form-group">
-            <label class="form-label">Description</label>
-            <textarea id="listing_desc" class="input" rows="4"></textarea>
+            <label class="form-label">Images (1–3) via Supabase Storage</label>
+            <div class="tiny">Uploads go to bucket <b>larmah-media</b>. We set the first image as <code>image_url</code> for the website, and store all as <code>image_urls</code> if that column exists.</div>
+            <div class="img-grid" style="margin-top:10px">
+              <!-- slot 1 -->
+              <div class="img-slot">
+                <div class="slot-head">
+                  <b>Image 1 (Main)</b>
+                  <button type="button" class="btn small" onclick="clearSlot('listing',1)">Clear</button>
+                </div>
+                <input type="file" id="listing_file_1" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_1" src="" alt=""></div>
+                <div class="slot-actions">
+                  <input type="text" id="listing_url_1" class="input" placeholder="or paste URL (optional)">
+                </div>
+              </div>
+              <!-- slot 2 -->
+              <div class="img-slot">
+                <div class="slot-head">
+                  <b>Image 2</b>
+                  <button type="button" class="btn small" onclick="clearSlot('listing',2)">Clear</button>
+                </div>
+                <input type="file" id="listing_file_2" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_2" src="" alt=""></div>
+                <div class="slot-actions">
+                  <input type="text" id="listing_url_2" class="input" placeholder="or paste URL (optional)">
+                </div>
+              </div>
+              <!-- slot 3 -->
+              <div class="img-slot">
+                <div class="slot-head">
+                  <b>Image 3</b>
+                  <button type="button" class="btn small" onclick="clearSlot('listing',3)">Clear</button>
+                </div>
+                <input type="file" id="listing_file_3" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_3" src="" alt=""></div>
+                <div class="slot-actions">
+                  <input type="text" id="listing_url_3" class="input" placeholder="or paste URL (optional)">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -500,11 +374,11 @@
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Buy</label>
-              <input type="number" id="rate_buy" class="input" step="0.01">
+              <input type="number" id="rate_buy" class="input" step="0.01" />
             </div>
             <div class="form-group">
               <label class="form-label">Sell</label>
-              <input type="number" id="rate_sell" class="input" step="0.01">
+              <input type="number" id="rate_sell" class="input" step="0.01" />
             </div>
           </div>
         </div>
@@ -513,7 +387,7 @@
         <div id="fields-insight" style="display:none">
           <div class="form-group">
             <label class="form-label">Title</label>
-            <input type="text" id="insight_title" class="input" required>
+            <input type="text" id="insight_title" class="input" required />
           </div>
 
           <div class="row2">
@@ -536,44 +410,50 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Image URL (optional)</label>
-            <input type="text" id="insight_image" class="input" placeholder="https://...">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Upload Image (Supabase Storage)</label>
-            <input type="file" id="insight_file" class="input" accept="image/*">
-            <div class="small" style="opacity:.7;margin-top:6px">If you upload, Image URL is auto-filled.</div>
-          </div>
-
-          <div id="insightPreview" class="mini-preview" style="display:none">
-            <img id="insightPreviewImg" src="" alt="Insight preview">
-            <div class="cap">
-              <span>Preview</span>
-              <button type="button" class="btn small" onclick="clearInsightImage()">Clear</button>
-            </div>
-          </div>
-
-          <div class="form-group">
             <label class="form-label">Summary</label>
             <textarea id="insight_summary" class="input" rows="4"></textarea>
           </div>
+
+          <div class="form-group">
+            <label class="form-label">Images (1–3) via Supabase Storage</label>
+            <div class="tiny">First image becomes <code>image_url</code> used by Insights pages; store all as <code>image_urls</code> if that column exists.</div>
+            <div class="img-grid" style="margin-top:10px">
+              <div class="img-slot">
+                <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('insight',1)">Clear</button></div>
+                <input type="file" id="insight_file_1" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_1" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="insight_url_1" class="input" placeholder="or paste URL (optional)"></div>
+              </div>
+              <div class="img-slot">
+                <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('insight',2)">Clear</button></div>
+                <input type="file" id="insight_file_2" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_2" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="insight_url_2" class="input" placeholder="or paste URL (optional)"></div>
+              </div>
+              <div class="img-slot">
+                <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('insight',3)">Clear</button></div>
+                <input type="file" id="insight_file_3" class="input" accept="image/*">
+                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_3" src="" alt=""></div>
+                <div class="slot-actions"><input type="text" id="insight_url_3" class="input" placeholder="or paste URL (optional)"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- REQUEST VIEW -->
+        <!-- REQUEST (view only) -->
         <div id="fields-request" style="display:none">
           <div class="form-group">
             <label class="form-label">Category</label>
-            <input type="text" id="req_category" class="input" disabled>
+            <input type="text" id="req_category" class="input" disabled />
           </div>
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Created</label>
-              <input type="text" id="req_created" class="input" disabled>
+              <input type="text" id="req_created" class="input" disabled />
             </div>
             <div class="form-group">
               <label class="form-label">Status</label>
-              <input type="text" id="req_status" class="input" disabled>
+              <input type="text" id="req_status" class="input" disabled />
             </div>
           </div>
           <div class="form-group">
@@ -596,10 +476,12 @@
 
   <script>
     // ---------------------------
-    // GLOBALS
+    // SETTINGS
     // ---------------------------
-    let sb = null;
     const STORAGE_BUCKET = "larmah-media";
+    const ONLY_ADMIN_EMAIL = "luckymomodu60@gmail.com";
+
+    let sb = null;
 
     const CACHE = {
       listings: new Map(),
@@ -652,15 +534,27 @@
       return "draft";
     }
 
+    function safeDate(d){
+      try { return new Date(d).toLocaleString(); } catch { return ""; }
+    }
+
+    function setFieldsVisible(entity){
+      ["listing","rate","insight","request"].forEach(k => {
+        const el = document.getElementById("fields-" + k);
+        if(el) el.style.display = (k === entity) ? "block" : "none";
+      });
+      document.getElementById("saveBtn").style.display = (entity === "request") ? "none" : "";
+    }
+
     // ---------------------------
-    // STORAGE
+    // STORAGE HELPERS
     // ---------------------------
     function randomId(len = 10){ return Math.random().toString(36).slice(2, 2 + len); }
 
     async function uploadToStorage(file, folder){
       if(!file) return null;
 
-      const maxMb = 8;
+      const maxMb = 10;
       if(file.size > maxMb * 1024 * 1024) throw new Error(`File too large. Max ${maxMb}MB`);
 
       const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g,"") || "jpg";
@@ -679,9 +573,88 @@
       return { path, url };
     }
 
+    async function removeFromStorage(path){
+      if(!path) return;
+      try { await sb.storage.from(STORAGE_BUCKET).remove([path]); } catch {}
+    }
+
     // ---------------------------
-    // AUTH (ADMIN ONLY)
+    // IMAGES UI (slots 1-3)
     // ---------------------------
+    function clearSlot(kind, idx){
+      const file = document.getElementById(`${kind}_file_${idx}`);
+      const url = document.getElementById(`${kind}_url_${idx}`);
+      const prev = document.getElementById(`${kind}_prev_${idx}`);
+      if(file) file.value = "";
+      if(url) url.value = "";
+      if(prev) prev.src = "";
+    }
+
+    function bindFilePreview(kind, idx){
+      const file = document.getElementById(`${kind}_file_${idx}`);
+      const prev = document.getElementById(`${kind}_prev_${idx}`);
+      if(!file || !prev) return;
+      file.addEventListener("change", () => {
+        const f = file.files?.[0];
+        if(!f) return;
+        prev.src = URL.createObjectURL(f);
+      });
+    }
+
+    function getSlotUrl(kind, idx){
+      return (document.getElementById(`${kind}_url_${idx}`)?.value || "").trim();
+    }
+    function setSlotUrl(kind, idx, v){
+      const el = document.getElementById(`${kind}_url_${idx}`);
+      if(el) el.value = v || "";
+    }
+    function setSlotPreview(kind, idx, url){
+      const prev = document.getElementById(`${kind}_prev_${idx}`);
+      if(prev) prev.src = url || "";
+    }
+
+    // Read up to 3 images from modal:
+    // - If file chosen => upload and use returned url/path
+    // - Else if url field filled => use that url, path null
+    async function collectImages(kind, folder){
+      const urls = [];
+      const paths = [];
+
+      for(let i=1;i<=3;i++){
+        const file = document.getElementById(`${kind}_file_${i}`)?.files?.[0] || null;
+        const manualUrl = getSlotUrl(kind, i);
+
+        if(file){
+          const uploaded = await uploadToStorage(file, folder);
+          urls.push(uploaded.url);
+          paths.push(uploaded.path);
+          // sync UI
+          setSlotUrl(kind, i, uploaded.url);
+          setSlotPreview(kind, i, uploaded.url);
+        } else if(manualUrl){
+          urls.push(manualUrl);
+          paths.push(null);
+          setSlotPreview(kind, i, manualUrl);
+        }
+      }
+
+      return { urls, paths };
+    }
+
+    // ---------------------------
+    // AUTH (ONLY ADMIN EMAIL)
+    // ---------------------------
+    async function assertOnlyAdminEmail(){
+      const { data, error } = await sb.auth.getSession();
+      if(error) throw error;
+      const email = (data?.session?.user?.email || "").toLowerCase();
+      if(email !== ONLY_ADMIN_EMAIL){
+        await sb.auth.signOut();
+        throw new Error("Access denied: Admins only.");
+      }
+      return true;
+    }
+
     async function initAdmin(){
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       if(!sb){
@@ -693,6 +666,15 @@
       if(error){ showLogin("Session error: " + error.message); return; }
       if(!data?.session){ showLogin(); return; }
 
+      // Hard email lock
+      const email = (data.session.user.email || "").toLowerCase();
+      if(email !== ONLY_ADMIN_EMAIL){
+        await sb.auth.signOut();
+        showLogin("Access denied: Admins only.");
+        return;
+      }
+
+      // DB admin check
       const { data: isAdmin, error: adminErr } = await sb.rpc("is_admin");
       if(adminErr){ showLogin("Admin check failed: " + adminErr.message); return; }
       if(!isAdmin){
@@ -719,29 +701,26 @@
       btn.disabled = false;
       btn.textContent = "Authenticate";
 
-      if (error) {
+      if(error){
         msg.textContent = "Invalid Credentials: " + error.message;
         msg.style.display = "block";
         return;
       }
 
-      const { data: isAdmin, error: adminErr } = await sb.rpc("is_admin");
-      if(adminErr){
-        await sb.auth.signOut();
-        msg.textContent = "Admin check failed: " + adminErr.message;
-        msg.style.display = "block";
-        return;
-      }
-      if(!isAdmin){
-        await sb.auth.signOut();
-        msg.textContent = "Access denied: Admins only.";
-        msg.style.display = "block";
-        return;
-      }
+      try{
+        await assertOnlyAdminEmail();
+        const { data: isAdmin, error: adminErr } = await sb.rpc("is_admin");
+        if(adminErr) throw adminErr;
+        if(!isAdmin) throw new Error("Access denied: Admins only.");
 
-      showAdmin();
-      await loadStats();
-      switchView("overview", document.querySelector(".nav-item"));
+        showAdmin();
+        await loadStats();
+        switchView("overview", document.querySelector(".nav-item"));
+      }catch(e){
+        await sb.auth.signOut();
+        msg.textContent = e?.message || "Access denied";
+        msg.style.display = "block";
+      }
     }
 
     async function adminLogout(){
@@ -791,7 +770,7 @@
     }
 
     // ---------------------------
-    // FETCH TABLES
+    // FETCH: LISTINGS
     // ---------------------------
     async function fetchListings(category){
       const tbody = document.getElementById(category === "real-estate" ? "tbody-real-estate" : "tbody-logistics");
@@ -811,10 +790,8 @@
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td>
-              <img class="tbl-thumb" src="${LARMAH.escapeHtml(it.image_url || 'assets/images/larmah-header.jpeg')}"
-                   onerror="this.src='assets/images/larmah-header.jpeg'">
-            </td>
+            <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(it.image_url || 'assets/images/larmah-header.jpeg')}"
+                     onerror="this.src='assets/images/larmah-header.jpeg'"></td>
             <td>
               <div style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</div>
               <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div>
@@ -829,13 +806,15 @@
             </td>
           </tr>
         `).join("");
-
       } catch(e){
         console.warn(e);
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading listings. Check RLS/admin.</td></tr>`;
       }
     }
 
+    // ---------------------------
+    // FETCH: RATES
+    // ---------------------------
     async function fetchRates(){
       const tbody = document.getElementById("tbody-rates");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
@@ -866,19 +845,21 @@
             </td>
           </tr>
         `).join("");
-
       } catch(e){
         console.warn(e);
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading rates. Check RLS/admin.</td></tr>`;
       }
     }
 
+    // ---------------------------
+    // FETCH: INSIGHTS
+    // ---------------------------
     async function fetchInsights(){
       const tbody = document.getElementById("tbody-insights");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
       try {
-        const { data, error } = await sb.from("insights").select("*").order("created_at", { ascending: false }).limit(200);
+        const { data, error } = await sb.from("insights").select("*").order("created_at", { ascending: false }).limit(250);
         if(error) throw error;
 
         CACHE.insights.clear();
@@ -903,17 +884,18 @@
             </td>
           </tr>
         `).join("");
-
       } catch(e){
         console.warn(e);
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading insights. Check RLS/admin.</td></tr>`;
       }
     }
 
+    // ---------------------------
+    // FETCH: REQUESTS + USERS
+    // ---------------------------
     async function fetchRequests(){
       const tbody = document.getElementById("tbody-requests");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
-
       try {
         const { data, error } = await sb.from("requests").select("*").order("created_at", { ascending: false }).limit(500);
         if(error) throw error;
@@ -942,7 +924,6 @@
             <td><button class="btn small" onclick="openEditor('request','${String(it.id)}',null)">View</button></td>
           </tr>
         `).join("");
-
       } catch(e){
         console.warn(e);
         tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading requests. Check RLS/admin.</td></tr>`;
@@ -966,7 +947,6 @@
     async function fetchUsers(){
       const tbody = document.getElementById("tbody-users");
       tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
-
       try{
         const { data, error } = await sb.from("profiles").select("*").order("created_at", { ascending: false }).limit(500);
         if(error) throw error;
@@ -987,7 +967,6 @@
             <td><span class="badge active">Active</span></td>
           </tr>
         `).join("");
-
       }catch(e){
         console.warn(e);
         tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading profiles. Check RLS.</td></tr>`;
@@ -995,32 +974,21 @@
     }
 
     // ---------------------------
-    // EDITOR: previews + clear
+    // EDITOR OPEN/CLOSE
     // ---------------------------
-    function clearListingImage(){
-      document.getElementById("listing_image").value = "";
-      const lf = document.getElementById("listing_file");
-      if(lf) lf.value = "";
-      document.getElementById("listingPreview").style.display = "none";
-      document.getElementById("listingPreviewImg").src = "";
-    }
-
-    function clearInsightImage(){
-      document.getElementById("insight_image").value = "";
-      const inf = document.getElementById("insight_file");
-      if(inf) inf.value = "";
-      document.getElementById("insightPreview").style.display = "none";
-      document.getElementById("insightPreviewImg").src = "";
-    }
-
     function resetEditor(){
       document.getElementById("editorForm").reset();
       document.getElementById("edit_entity").value = "";
       document.getElementById("edit_id").value = "";
       document.getElementById("edit_category").value = "";
       document.getElementById("editorHint").textContent = "";
-      clearListingImage();
-      clearInsightImage();
+
+      // clear previews
+      ["listing","insight"].forEach(kind=>{
+        for(let i=1;i<=3;i++){
+          clearSlot(kind,i);
+        }
+      });
     }
 
     function openEditor(entity, id=null, category=null){
@@ -1041,12 +1009,17 @@
             document.getElementById("listing_title").value = it.title || "";
             document.getElementById("listing_price").value = it.price || "";
             document.getElementById("listing_status").value = it.status || "draft";
-            document.getElementById("listing_image").value = it.image_url || "";
-            document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : "";
             document.getElementById("listing_desc").value = it.description || "";
-            if(it.image_url){
-              document.getElementById("listingPreviewImg").src = it.image_url;
-              document.getElementById("listingPreview").style.display = "block";
+            document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : "";
+
+            // Fill images:
+            // - If `image_urls` exists => use it
+            // - else fallback: use `image_url` as slot1
+            const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
+            for(let i=1;i<=3;i++){
+              const u = arr[i-1] || "";
+              setSlotUrl("listing", i, u);
+              setSlotPreview("listing", i, u);
             }
           }
         } else {
@@ -1077,11 +1050,13 @@
             document.getElementById("insight_title").value = it.title || "";
             document.getElementById("insight_category").value = it.category || "all";
             document.getElementById("insight_status").value = it.status || "active";
-            document.getElementById("insight_image").value = it.image_url || "";
             document.getElementById("insight_summary").value = it.summary || "";
-            if(it.image_url){
-              document.getElementById("insightPreviewImg").src = it.image_url;
-              document.getElementById("insightPreview").style.display = "block";
+
+            const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
+            for(let i=1;i<=3;i++){
+              const u = arr[i-1] || "";
+              setSlotUrl("insight", i, u);
+              setSlotPreview("insight", i, u);
             }
           }
         } else {
@@ -1106,7 +1081,7 @@
     }
 
     // ---------------------------
-    // SAVE + DELETE (FULL CRUD)
+    // SAVE + DELETE
     // ---------------------------
     async function saveEditor(e){
       e.preventDefault();
@@ -1120,31 +1095,54 @@
       btn.textContent = "Saving...";
 
       try {
-        // LISTING (insert/update) + storage upload
+        // LISTING
         if(entity === "listing"){
           const payload = {
             category: category || "real-estate",
             title: document.getElementById("listing_title").value.trim(),
             price: document.getElementById("listing_price").value.trim(),
             status: document.getElementById("listing_status").value,
-            image_url: document.getElementById("listing_image").value.trim(),
             description: document.getElementById("listing_desc").value.trim(),
             tags: document.getElementById("listing_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
           };
           if(!payload.title) throw new Error("Title is required.");
 
-          const file = document.getElementById("listing_file")?.files?.[0] || null;
-          if(file){
-            const uploaded = await uploadToStorage(file, "listings");
-            payload.image_url = uploaded.url;
-            payload.image_path = uploaded.path; // if column exists
+          // Collect images 1–3
+          const imgs = await collectImages("listing", "listings");
+          const urls = imgs.urls.slice(0,3);
+          const paths = imgs.paths.slice(0,3);
+
+          // Backwards compatibility: main image_url is first
+          payload.image_url = urls[0] || "";
+          payload.image_path = paths[0] || null;
+
+          // Optional columns (if exist): image_urls, image_paths
+          payload.image_urls = urls.length ? urls : null;
+          payload.image_paths = paths.length ? paths : null;
+
+          // Remove null optional fields to avoid column errors if those columns don't exist
+          // We'll attempt with them; if it fails due to missing columns, retry without.
+          let res;
+          try{
+            res = id
+              ? await sb.from("listings").update(payload).eq("id", id).select().single()
+              : await sb.from("listings").insert([payload]).select().single();
+            if(res.error) throw res.error;
+          }catch(err){
+            // retry without image_urls/image_paths if schema doesn't have them
+            const msg = (err?.message || "").toLowerCase();
+            if(msg.includes("column") && (msg.includes("image_urls") || msg.includes("image_paths"))){
+              const payload2 = { ...payload };
+              delete payload2.image_urls;
+              delete payload2.image_paths;
+              res = id
+                ? await sb.from("listings").update(payload2).eq("id", id).select().single()
+                : await sb.from("listings").insert([payload2]).select().single();
+              if(res.error) throw res.error;
+            } else {
+              throw err;
+            }
           }
-
-          const res = id
-            ? await sb.from("listings").update(payload).eq("id", id).select().single()
-            : await sb.from("listings").insert([payload]).select().single();
-
-          if(res.error) throw res.error;
 
           toast("Saved listing ✅", "success");
           closeEditor();
@@ -1162,8 +1160,7 @@
             status: document.getElementById("rate_status").value
           };
 
-          const res = await sb
-            .from("rates")
+          const res = await sb.from("rates")
             .upsert([payload], { onConflict: "asset" })
             .select()
             .single();
@@ -1176,29 +1173,45 @@
           return;
         }
 
-        // INSIGHT (insert/update) + storage upload
+        // INSIGHT
         if(entity === "insight"){
           const payload = {
             title: document.getElementById("insight_title").value.trim(),
             category: document.getElementById("insight_category").value,
             status: document.getElementById("insight_status").value,
-            image_url: document.getElementById("insight_image").value.trim(),
             summary: document.getElementById("insight_summary").value.trim()
           };
           if(!payload.title) throw new Error("Title is required.");
 
-          const file = document.getElementById("insight_file")?.files?.[0] || null;
-          if(file){
-            const uploaded = await uploadToStorage(file, "insights");
-            payload.image_url = uploaded.url;
-            payload.image_path = uploaded.path; // if column exists
+          const imgs = await collectImages("insight", "insights");
+          const urls = imgs.urls.slice(0,3);
+          const paths = imgs.paths.slice(0,3);
+
+          payload.image_url = urls[0] || "";
+          payload.image_path = paths[0] || null;
+          payload.image_urls = urls.length ? urls : null;
+          payload.image_paths = paths.length ? paths : null;
+
+          let res;
+          try{
+            res = id
+              ? await sb.from("insights").update(payload).eq("id", id).select().single()
+              : await sb.from("insights").insert([payload]).select().single();
+            if(res.error) throw res.error;
+          }catch(err){
+            const msg = (err?.message || "").toLowerCase();
+            if(msg.includes("column") && (msg.includes("image_urls") || msg.includes("image_paths"))){
+              const payload2 = { ...payload };
+              delete payload2.image_urls;
+              delete payload2.image_paths;
+              res = id
+                ? await sb.from("insights").update(payload2).eq("id", id).select().single()
+                : await sb.from("insights").insert([payload2]).select().single();
+              if(res.error) throw res.error;
+            } else {
+              throw err;
+            }
           }
-
-          const res = id
-            ? await sb.from("insights").update(payload).eq("id", id).select().single()
-            : await sb.from("insights").insert([payload]).select().single();
-
-          if(res.error) throw res.error;
 
           toast("Saved insight ✅", "success");
           closeEditor();
@@ -1220,8 +1233,17 @@
 
       try{
         if(entity === "listing"){
+          const it = CACHE.listings.get(String(id));
+          // try remove storage objects (best-effort)
+          if(it){
+            if(it.image_path) await removeFromStorage(it.image_path);
+            if(Array.isArray(it.image_paths)){
+              for(const p of it.image_paths){ if(p) await removeFromStorage(p); }
+            }
+          }
           const { error } = await sb.from("listings").delete().eq("id", id);
           if(error) throw error;
+
           toast("Deleted listing ✅", "success");
           await fetchListings(category);
           await loadStats();
@@ -1231,18 +1253,28 @@
         if(entity === "rate"){
           const { error } = await sb.from("rates").delete().eq("id", id);
           if(error) throw error;
+
           toast("Deleted rate ✅", "success");
           await fetchRates();
           return;
         }
 
         if(entity === "insight"){
+          const it = CACHE.insights.get(String(id));
+          if(it){
+            if(it.image_path) await removeFromStorage(it.image_path);
+            if(Array.isArray(it.image_paths)){
+              for(const p of it.image_paths){ if(p) await removeFromStorage(p); }
+            }
+          }
           const { error } = await sb.from("insights").delete().eq("id", id);
           if(error) throw error;
+
           toast("Deleted insight ✅", "success");
           await fetchInsights();
           return;
         }
+
       }catch(e){
         console.warn(e);
         toast(e.message || "Delete failed", "error");
@@ -1259,7 +1291,14 @@
         return;
       }
 
-      // Login
+      // Bind previews for all slots
+      ["listing","insight"].forEach(kind=>{
+        for(let i=1;i<=3;i++){
+          bindFilePreview(kind,i);
+        }
+      });
+
+      // Login form
       document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         await adminLogin(
@@ -1268,42 +1307,19 @@
         );
       });
 
-      // Modal submit
+      // Save
       document.getElementById("editorForm").addEventListener("submit", saveEditor);
 
-      // Close modal on backdrop
+      // Close modal
       document.getElementById("editorModal").addEventListener("click", (e) => {
         if(e.target.id === "editorModal") closeEditor();
       });
 
-      // ESC closes modal
       document.addEventListener("keydown", (e) => {
         if(e.key === "Escape") closeEditor();
       });
 
-      // Live preview when file chosen
-      const lf = document.getElementById("listing_file");
-      if(lf){
-        lf.addEventListener("change", () => {
-          const f = lf.files?.[0];
-          if(!f) return;
-          const url = URL.createObjectURL(f);
-          document.getElementById("listingPreviewImg").src = url;
-          document.getElementById("listingPreview").style.display = "block";
-        });
-      }
-      const inf = document.getElementById("insight_file");
-      if(inf){
-        inf.addEventListener("change", () => {
-          const f = inf.files?.[0];
-          if(!f) return;
-          const url = URL.createObjectURL(f);
-          document.getElementById("insightPreviewImg").src = url;
-          document.getElementById("insightPreview").style.display = "block";
-        });
-      }
-
-      // Init admin gate
+      // Start session check
       await initAdmin();
     });
   </script>
