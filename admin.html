@@ -55,7 +55,7 @@
     .action-btn.danger:hover{background:var(--bad);color:#fff;border-color:var(--bad)}
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
     .modal.active{display:flex}
-    .editor-box{width:780px;max-width:96vw;background:#0f1218;border:1px solid var(--border);border-radius:20px;padding:26px;box-shadow:0 50px 100px rgba(0,0,0,.6);max-height:90vh;overflow-y:auto}
+    .editor-box{width:820px;max-width:96vw;background:#0f1218;border:1px solid var(--border);border-radius:20px;padding:26px;box-shadow:0 50px 100px rgba(0,0,0,.6);max-height:90vh;overflow-y:auto}
     .form-group{margin-bottom:14px}
     .form-label{display:block;color:var(--muted);font-size:.85rem;margin-bottom:6px;font-weight:900}
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -116,6 +116,7 @@
 
         <ul class="admin-nav">
           <li class="nav-item active" onclick="switchView('overview', this)"><i class="fa-solid fa-gauge-high"></i> Overview</li>
+          <li class="nav-item" onclick="switchView('all-listings', this)"><i class="fa-solid fa-layer-group"></i> All Listings</li>
           <li class="nav-item" onclick="switchView('real-estate', this)"><i class="fa-solid fa-building"></i> Real Estate</li>
           <li class="nav-item" onclick="switchView('logistics', this)"><i class="fa-solid fa-truck-fast"></i> Logistics</li>
           <li class="nav-item" onclick="switchView('rates', this)"><i class="fa-solid fa-coins"></i> Rates</li>
@@ -155,7 +156,21 @@
           </div>
 
           <div class="notice-admin">
-            ✅ Save is responsive and stores to Supabase. Upload up to <b>3 images</b> per Listing/Insight to Storage bucket <code>larmah-media</code>.
+            ✅ Admin can manage postings across <b>all categories</b>. Change the Category field to move a listing to a new category. Images upload to <code>larmah-media</code>.
+          </div>
+        </div>
+
+        <!-- ALL LISTINGS -->
+        <div id="view-all-listings" class="view-section" style="display:none">
+          <div class="admin-header">
+            <h1>All Listings</h1>
+            <button class="btn solid small" onclick="openEditor('listing', null, 'real-estate')"><i class="fa-solid fa-plus"></i> Add Listing</button>
+          </div>
+          <div class="data-table-wrapper">
+            <table>
+              <thead><tr><th width="70">Img</th><th>Title</th><th>Category</th><th>Price</th><th>Status</th><th width="170">Actions</th></tr></thead>
+              <tbody id="tbody-all-listings"></tbody>
+            </table>
           </div>
         </div>
 
@@ -265,6 +280,12 @@
 
         <!-- LISTING -->
         <div id="fields-listing" style="display:none">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <input type="text" id="listing_category" class="input" placeholder="e.g. real-estate, logistics, exchange, autos..." required>
+            <div class="tiny">You can type any category. This is how you publish across all categories.</div>
+          </div>
+
           <div class="form-group">
             <label class="form-label">Title</label>
             <input type="text" id="listing_title" class="input" required>
@@ -588,19 +609,18 @@
           nextUrls[0] = up.url;
           nextPaths[0] = up.path;
 
-          const payload = {
-            image_url: up.url,
-            image_path: up.path,
-            image_urls: nextUrls,
-            image_paths: nextPaths
-          };
+          const payload = { image_url: up.url, image_path: up.path, image_urls: nextUrls, image_paths: nextPaths };
 
           const res = await sb.from(table).update(payload).eq("id", id).select().single();
           if(res.error) throw res.error;
 
           toast("Image updated ✅", "success");
-          if(entity === "listing") await fetchListings(category);
-          else await fetchInsights();
+          if(entity === "listing"){
+            await fetchListings("all");
+            if(category) await fetchListings(category);
+          } else {
+            await fetchInsights();
+          }
         }catch(e){
           console.warn(e);
           toast(e?.message || "Upload failed", "error");
@@ -637,14 +657,12 @@
         return;
       }
 
-      // If not logged in, keep login gate (auth.html is for normal users too)
       const { data } = await sb.auth.getSession();
       if(!data?.session){
         showLogin();
         return;
       }
 
-      // If logged in but not admin -> redirect to auth
       try{
         await assertOnlyAdmin();
       }catch(e){
@@ -655,7 +673,7 @@
 
       showAdmin();
       await loadStats();
-      await fetchListings("real-estate");
+      await fetchListings("all");
     }
 
     async function adminLogin(email, password){
@@ -705,6 +723,7 @@
       if(el) el.classList.add("active");
 
       if(viewId === "overview") loadStats();
+      if(viewId === "all-listings") fetchListings("all");
       if(viewId === "real-estate") fetchListings("real-estate");
       if(viewId === "logistics") fetchListings("logistics");
       if(viewId === "rates") fetchRates();
@@ -728,44 +747,75 @@
       } catch { document.getElementById("stat_requests").textContent = "—"; }
     }
 
-    // ---- Fetch listings
+    // ---- Fetch listings (ALL or filtered)
     async function fetchListings(category){
-      const tbody = document.getElementById(category === "real-estate" ? "tbody-real-estate" : "tbody-logistics");
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
+      const isAll = !category || category === "all";
+
+      const tbody = document.getElementById(
+        isAll ? "tbody-all-listings" :
+        (category === "real-estate" ? "tbody-real-estate" : "tbody-logistics")
+      );
+
+      const colspan = isAll ? 6 : 5;
+      tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center">Loading...</td></tr>`;
 
       try{
-        const { data, error } = await sb.from("listings").select("*").eq("category", category).order("created_at",{ascending:false});
+        let q = sb.from("listings").select("*").order("created_at", {ascending:false});
+        if(!isAll) q = q.eq("category", category);
+
+        const { data, error } = await q;
         if(error) throw error;
 
         CACHE.listings.clear();
         (data||[]).forEach(it => CACHE.listings.set(String(it.id), it));
 
         if(!data?.length){
-          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No items found.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center">No items found.</td></tr>`;
           return;
         }
 
-        tbody.innerHTML = data.map(it => `
-          <tr>
-            <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
-            <td>
-              <div style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</div>
-              <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div>
-            </td>
-            <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price || "")}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
-            <td>
-              <div style="display:flex;gap:8px">
-                <button class="action-btn" title="Edit" onclick="openEditor('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-pen"></i></button>
-                <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-image"></i></button>
-                <button class="action-btn danger" title="Delete" onclick="deleteEntity('listing','${String(it.id)}','${category}')"><i class="fa-solid fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        `).join("");
+        tbody.innerHTML = data.map(it => {
+          const cat = it.category || "";
+          const actions = `
+            <div style="display:flex;gap:8px">
+              <button class="action-btn" title="Edit" onclick="openEditor('listing','${String(it.id)}','${LARMAH.escapeHtml(cat)}')"><i class="fa-solid fa-pen"></i></button>
+              <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('listing','${String(it.id)}','${LARMAH.escapeHtml(cat)}')"><i class="fa-solid fa-image"></i></button>
+              <button class="action-btn danger" title="Delete" onclick="deleteEntity('listing','${String(it.id)}','${LARMAH.escapeHtml(cat)}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          `;
+
+          if(isAll){
+            return `
+              <tr>
+                <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
+                <td>
+                  <div style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</div>
+                  <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div>
+                </td>
+                <td>${LARMAH.escapeHtml(cat)}</td>
+                <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price || "")}</td>
+                <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
+                <td>${actions}</td>
+              </tr>
+            `;
+          }
+
+          return `
+            <tr>
+              <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
+              <td>
+                <div style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</div>
+                <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div>
+              </td>
+              <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price || "")}</td>
+              <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "draft")}</span></td>
+              <td>${actions}</td>
+            </tr>
+          `;
+        }).join("");
       }catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading listings.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center">Error loading listings.</td></tr>`;
       }
     }
 
@@ -949,6 +999,7 @@
         if(id){
           const it = CACHE.listings.get(String(id));
           if(it){
+            document.getElementById("listing_category").value = it.category || category || "real-estate";
             document.getElementById("listing_title").value = it.title || "";
             document.getElementById("listing_price").value = it.price || "";
             document.getElementById("listing_status").value = it.status || "draft";
@@ -962,6 +1013,8 @@
               setSlotPreview("listing", i, u);
             }
           }
+        } else {
+          document.getElementById("listing_category").value = category || "real-estate";
         }
       }
 
@@ -1021,7 +1074,6 @@
 
       const entity = document.getElementById("edit_entity").value;
       const id = document.getElementById("edit_id").value || null;
-      const category = document.getElementById("edit_category").value || null;
 
       const btn = document.getElementById("saveBtn");
       const original = btn.textContent;
@@ -1033,13 +1085,14 @@
       try{
         if(entity === "listing"){
           const payload = {
-            category: category || "real-estate",
+            category: document.getElementById("listing_category").value.trim(),
             title: document.getElementById("listing_title").value.trim(),
             price: document.getElementById("listing_price").value.trim(),
             status: document.getElementById("listing_status").value,
             description: document.getElementById("listing_desc").value.trim(),
             tags: document.getElementById("listing_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
           };
+          if(!payload.category) throw new Error("Category is required.");
           if(!payload.title) throw new Error("Title is required.");
 
           const imgs = await collectImages("listing", "listings");
@@ -1059,7 +1112,7 @@
 
           toast("Saved listing ✅", "success");
           closeEditor();
-          await fetchListings(payload.category);
+          await fetchListings("all");
           await loadStats();
           return;
         }
@@ -1133,7 +1186,8 @@
           const { error } = await sb.from("listings").delete().eq("id", id);
           if(error) throw error;
           toast("Deleted listing ✅", "success");
-          await fetchListings(category);
+          await fetchListings("all");
+          if(category) await fetchListings(category);
           await loadStats();
           return;
         }
@@ -1161,7 +1215,6 @@
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       if(!sb){ showLogin("Supabase not ready."); return; }
 
-      // slot previews
       ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) bindFilePreview(kind,i); });
 
       document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
