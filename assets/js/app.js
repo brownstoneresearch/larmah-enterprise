@@ -1,8 +1,17 @@
+/**
+ * LARMAH ENTERPRISE | assets/js/app.js (FULL)
+ * - Creates window.supabaseClient reliably
+ * - Exposes window.LARMAH globally for inline onclick handlers
+ * - WhatsApp-first support + message builder
+ * - Auth UI helper
+ * - Request logging when authenticated
+ * - ✅ Realtime engine: subscribe/unsubscribe helpers (use across all pages)
+ */
 
 window.SUPABASE_URL = window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
 window.SUPABASE_ANON_KEY =
   window.SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+  "2396252e4e5cc3e7fdcd639e09a2773f51ecbe15d603d6bdaa627995fcae6c07"; // keep your anon key here
 
 function ensureSupabaseClient() {
   if (window.supabaseClient) return window.supabaseClient;
@@ -129,16 +138,14 @@ window.LARMAH = window.LARMAH || {
     if (!this.user?.id) return;
 
     try {
-      const now = new Date().toISOString();
-      const row = {
-        category: category || "general",
-        payload: payload || {},
-        user_id: this.user.id,
-        status: status || "new",
-        created_at: now,
-        updated_at: now,
-      };
-      const { error } = await sb.from("requests").insert([row]);
+      const { error } = await sb.from("requests").insert([
+        {
+          category: category || "general",
+          payload: payload || {},
+          user_id: this.user.id,
+          status: status || "new",
+        },
+      ]);
       if (error) throw error;
     } catch (e) {
       console.warn("logRequest failed:", e?.message || e);
@@ -160,9 +167,6 @@ window.LARMAH = window.LARMAH || {
 
   /**
    * ✅ REALTIME ENGINE (use on all pages)
-   * Usage:
-   *   LARMAH.realtime.subscribe("listings", () => loadRealEstate(), "re-page");
-   *   LARMAH.realtime.subscribe("rates", () => loadRates(), "ex-page");
    */
   realtime: {
     channels: new Map(),
@@ -193,7 +197,9 @@ window.LARMAH = window.LARMAH || {
       const sb = this._sb();
       const ch = this.channels.get(name);
       if (!sb || !ch) return;
-      try { sb.removeChannel(ch); } catch {}
+      try {
+        sb.removeChannel(ch);
+      } catch {}
       this.channels.delete(name);
     },
 
@@ -201,22 +207,13 @@ window.LARMAH = window.LARMAH || {
       const sb = this._sb();
       if (!sb) return;
       for (const [name, ch] of this.channels.entries()) {
-        try { sb.removeChannel(ch); } catch {}
+        try {
+          sb.removeChannel(ch);
+        } catch {}
         this.channels.delete(name);
       }
     },
 
-    /**
-     * Subscribe to postgres_changes for a table
-     * @param {string} table
-     * @param {(payload:any)=>void} onChange
-     * @param {string} name - unique channel name
-     * @param {object} options
-     *   - schema: default "public"
-     *   - events: default "*"
-     *   - debounceMs: default 650
-     *   - statusElId: optional element id to show live status
-     */
     subscribe(table, onChange, name, options = {}) {
       const sb = this._sb();
       if (!sb) return null;
@@ -224,22 +221,15 @@ window.LARMAH = window.LARMAH || {
       const schema = options.schema || "public";
       const events = options.events || "*";
       const debounceMs = typeof options.debounceMs === "number" ? options.debounceMs : 650;
-
       if (!name) name = `${schema}-${table}-default`;
 
-      // prevent duplicates
       this.unsubscribe(name);
 
       const channel = sb
         .channel(name)
-        .on(
-          "postgres_changes",
-          { event: events, schema, table },
-          (payload) => {
-            // debounce by channel name
-            this.debounce(name, () => onChange(payload), debounceMs);
-          }
-        )
+        .on("postgres_changes", { event: events, schema, table }, (payload) => {
+          this.debounce(name, () => onChange(payload), debounceMs);
+        })
         .subscribe((status) => {
           if (options.statusElId) this.statusBadge(options.statusElId, status);
         });
@@ -253,11 +243,9 @@ window.LARMAH = window.LARMAH || {
 document.addEventListener("DOMContentLoaded", () => {
   ensureSupabaseClient();
 
-  // Footer year convenience
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Close mobile menu on overlay click
   const overlay = document.getElementById("mobileNavOverlay");
   if (overlay) {
     overlay.addEventListener("click", (e) => {
@@ -265,6 +253,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Show dashboard button when logged in
   if (window.LARMAH?.updateHeaderAuthUI) window.LARMAH.updateHeaderAuthUI();
 });
