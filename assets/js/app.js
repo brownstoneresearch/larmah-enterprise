@@ -1,10 +1,10 @@
 /**
- * LARMAH ENTERPRISE | assets/js/app.js (FULL UPDATED)
+ * LARMAH ENTERPRISE | assets/js/app.js (Final)
  * - Creates window.supabaseClient reliably
- * - Exposes window.LARMAH for inline onclick handlers
- * - Dashboard button shows when authenticated
+ * - Exposes window.LARMAH globally (for inline onclick handlers)
+ * - Header dashboard button shows when authenticated
  * - WhatsApp-first support
- * - Request logging: ONLY when authenticated (matches requests RLS user insert own)
+ * - Request logging only when authenticated (matches requests RLS)
  */
 
 window.SUPABASE_URL = window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
@@ -19,12 +19,10 @@ function ensureSupabaseClient() {
     console.error("Supabase library missing. Ensure the CDN script loads before app.js.");
     return null;
   }
-
   window.supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
   return window.supabaseClient;
 }
 
-// expose for pages that want to call it
 window.ensureSupabaseClient = window.ensureSupabaseClient || ensureSupabaseClient;
 
 function __rand(len = 10) {
@@ -90,7 +88,6 @@ window.LARMAH = window.LARMAH || {
   async getSession() {
     const sb = this.sb();
     if (!sb) return null;
-
     try {
       const { data, error } = await sb.auth.getSession();
       if (error) console.warn("getSession:", error.message);
@@ -126,8 +123,8 @@ window.LARMAH = window.LARMAH || {
   },
 
   /**
-   * Requests RLS: user insert own requires user_id = auth.uid()
-   * => only log when authenticated
+   * Requests RLS requires user_id = auth.uid()
+   * So log only when authenticated.
    */
   async logRequest(category, payload, status = "new") {
     const sb = this.sb();
@@ -143,11 +140,11 @@ window.LARMAH = window.LARMAH || {
         user_id: this.user.id,
         status: status || "new",
         created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       };
       const { error } = await sb.from("requests").insert([row]);
       if (error) throw error;
     } catch (e) {
-      // silent fail: WhatsApp still opens
       console.warn("logRequest failed:", e?.message || e);
     }
   },
@@ -156,7 +153,7 @@ window.LARMAH = window.LARMAH || {
     const ref = this.buildRef(refPrefix);
     const msg = this.buildMessage(header, fields || {}, ref);
 
-    await this.logRequest(category || "general", { header, fields, ref });
+    await this.logRequest(category || "general", { header, fields, ref }, "new");
     this.openWhatsApp(msg);
   },
 };
@@ -168,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // close menu when clicking overlay background
+  // close mobile menu on overlay click
   const overlay = document.getElementById("mobileNavOverlay");
   if (overlay) {
     overlay.addEventListener("click", (e) => {
@@ -176,6 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // show dashboard button
+  // dashboard button visibility
   if (window.LARMAH?.updateHeaderAuthUI) window.LARMAH.updateHeaderAuthUI();
 });
