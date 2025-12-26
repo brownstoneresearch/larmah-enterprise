@@ -306,245 +306,76 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-    const sbClient = () => window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
-
-    let __insightsAll = [];
-    let __insightsFilter = "all";
-    let __sourceFilter = "all";
-
-    const __IN_IMG_URLS = {};
-    const __IN_IMG_IDX = {};
-    let __ratesMap = {};
-
-    function normUpper(s){ return String(s||"").trim().toUpperCase(); }
-
-    function normalizeRateRow(r){
-      const base = normUpper(r.base || r.asset || "");
-      const quote = normUpper(r.quote || "NGN");
-      const pair = normUpper(r.pair || (base + "/" + quote));
-      return { ...r, base, quote, pair };
-    }
-
-    function getInsightImages(it){
-      const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
-      if(arr.length) return arr.slice(0,3);
-      if(it.image_url) return [it.image_url];
-      return [];
-    }
-
-    function initInsightImages(it){
-      const id = String(it.id);
-      __IN_IMG_URLS[id] = getInsightImages(it);
-      __IN_IMG_IDX[id] = 0;
-    }
-
-    function cycleInsightImage(id, dir){
-      const urls = __IN_IMG_URLS[id] || [];
-      if(urls.length <= 1) return;
-      const max = urls.length;
-      const cur = __IN_IMG_IDX[id] || 0;
-      __IN_IMG_IDX[id] = (cur + dir + max) % max;
-
-      const img = document.getElementById(`in-img-${id}`);
-      if(img) img.src = urls[__IN_IMG_IDX[id]] || "";
-
-      const dotsWrap = document.getElementById(`in-dots-${id}`);
-      if(dotsWrap){
-        dotsWrap.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===__IN_IMG_IDX[id]));
-      }
-    }
-
-    function setInsightFilter(cat){
-      __insightsFilter = cat;
-      renderInsights();
-    }
-
-    function setSourceFilter(v){
-      __sourceFilter = v;
-      renderInsights();
-    }
-
-    function updateSourceOptions(items){
-      const sel = document.getElementById("sourceFilter");
-      if(!sel) return;
-
-      const sources = (items||[])
-        .map(x => String(x.source_name || "Larmah Desk").trim())
-        .filter(Boolean);
-
-      const uniq = Array.from(new Set(sources)).sort((a,b)=> a.localeCompare(b));
-      const current = sel.value || "all";
-
-      sel.innerHTML = `<option value="all">All sources</option>` +
-        uniq.map(s => `<option value="${LARMAH.escapeHtml(s)}">${LARMAH.escapeHtml(s)}</option>`).join("");
-
-      sel.value = uniq.includes(current) ? current : "all";
-    }
-
-    function renderInsights(){
-      const mount = document.getElementById("newsMount");
-      const items = (__insightsAll||[]).filter(it => {
-        const catOk = (__insightsFilter === "all") ? true : String(it.category||"all") === __insightsFilter;
-        const src = String(it.source_name || "Larmah Desk").trim();
-        const srcOk = (__sourceFilter === "all") ? true : src === __sourceFilter;
-        return catOk && srcOk;
-      });
-
-      document.getElementById("heroInsightCount").textContent = String((__insightsAll||[]).length);
-
-      if(!items.length){
-        mount.innerHTML = `<div class="notice">No updates match this filter.</div>`;
-        return;
-      }
-
-      mount.innerHTML = `
-        <div class="grid">
-          ${items.map(it => {
-            const id = String(it.id);
-            initInsightImages(it);
-            const urls = __IN_IMG_URLS[id];
-            const hasMany = urls.length > 1;
-            const hasImg = urls.length > 0;
-
-            const source = it.source_name || "Larmah Desk";
-            const articleUrl = it.article_url || "";
-            const pub = it.published_at ? new Date(it.published_at).toLocaleString() : new Date(it.created_at).toLocaleString();
-
-            return `
-              <div class="card">
-                ${hasImg ? `
-                  <div class="card-media">
-                    <img id="in-img-${id}" src="${LARMAH.escapeHtml(urls[0])}" alt="${LARMAH.escapeHtml(it.title)}"
-                         loading="lazy" onerror="this.style.display='none'">
-
-                    ${hasMany ? `
-                      <div class="media-nav">
-                        <button class="media-btn" type="button" onclick="cycleInsightImage('${id}', -1)" aria-label="Prev"><i class="fa-solid fa-chevron-left"></i></button>
-                        <button class="media-btn" type="button" onclick="cycleInsightImage('${id}', 1)" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
-                      </div>
-                      <div class="media-dots" id="in-dots-${id}">
-                        ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
-                      </div>
-                    ` : ``}
-                  </div>
-                ` : ``}
-
-                <span class="blog-date">${LARMAH.escapeHtml(pub)} • ${(it.category||"all").toUpperCase()}</span>
-                <h3 style="font-size:1.1rem">${LARMAH.escapeHtml(it.title)}</h3>
-
-                <div class="source-pill"><i class="fa-solid fa-circle-check"></i> Source: ${LARMAH.escapeHtml(source)}</div>
-                <div class="blog-snip">${LARMAH.escapeHtml(it.summary || "")}</div>
-
-                <div class="actions" style="margin-top:12px">
-                  ${articleUrl ? `<a class="btn small" href="${LARMAH.escapeHtml(articleUrl)}" target="_blank" rel="noopener">Read Source</a>` : ``}
-                  <button class="btn small" onclick="openInsightChat('${id}')">Discuss</button>
-                </div>
-              </div>
-            `;
-          }).join("")}
+   
+          <div class="ticker-pair">${r.pair}</div>
+          <div class="ticker-val">${val}</div>
+          <div class="ticker-sub">Buy / Sell</div>
         </div>
       `;
+    }).join("");
+
+    // hero main: prefer USDT/NGN sell if available, else first row
+    const usdtngn = __ratesMap["USDT/NGN"];
+    const main = usdtngn || top[0];
+    document.getElementById("heroRateMain").textContent =
+      main?.sell ? (main.quote === "NGN" ? `₦${fmt(main.sell)}` : `${main.quote} ${fmt(main.sell)}`) : "—";
+  }
+
+  async function loadRates(){
+    const sb = sbClient();
+    if(!sb) return;
+
+    const { data, error } = await sb
+      .from("rates")
+      .select("id,asset,base,quote,pair,buy,sell,status,updated_at,created_at")
+      .eq("status","active");
+
+    if(error){ console.error(error); return; }
+
+    __rates = (data||[]).map(normalizeRateRow);
+    __ratesMap = {};
+    __rates.forEach(r => { __ratesMap[r.pair] = r; });
+
+    renderMarketBoard();
+  }
+
+  async function loadInsights(){
+    const sb = sbClient();
+    const mount = document.getElementById("newsMount");
+    if(!sb){ mount.innerHTML = `<div class="notice">Supabase not ready.</div>`; return; }
+
+    const { data, error } = await sb
+      .from("insights")
+      .select("*")
+      .eq("status","active")
+      .order("published_at",{ascending:false, nullsFirst:false})
+      .order("created_at",{ascending:false})
+      .limit(80);
+
+    if(error){
+      console.error(error);
+      mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)"><strong>Could not load insights.</strong></div>`;
+      return;
     }
 
-    function openInsightChat(id){
-      const it = (__insightsAll||[]).find(x => String(x.id) === String(id));
-      if(!it) return;
+    __insightsAll = data || [];
+    updateSourceOptions(__insightsAll);
+    renderInsights();
+  }
 
-      LARMAH.openWhatsApp(LARMAH.buildMessage("Insight Discussion", {
-        Topic: it.title,
-        Category: it.category || "all",
-        Source: it.source_name || "Larmah Desk",
-        Link: it.article_url || "",
-        Ref: "INS-" + id,
-        Message: "I'd like to know more about this update."
-      }));
+  document.addEventListener("DOMContentLoaded", () => {
+    const sel = document.getElementById("sourceFilter");
+    if(sel) sel.addEventListener("change", () => setSourceFilter(sel.value));
+
+    loadRates();
+    loadInsights();
+
+    // ✅ realtime subscriptions (must have replication enabled)
+    if(window.LARMAH && LARMAH.realtime){
+      LARMAH.realtime.subscribe("insights", () => loadInsights(), "in-insights", { debounceMs: 700, statusElId: "liveStateIN" });
+      LARMAH.realtime.subscribe("rates", () => loadRates(), "in-rates", { debounceMs: 700 });
     }
-
-    function fmt(n){
-      if(n === null || n === undefined || n === "") return "—";
-      const num = Number(n);
-      if(Number.isNaN(num)) return String(n);
-      return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
-    }
-
-    function renderMarketBoard(){
-      const board = document.getElementById("marketBoard");
-      if(!board) return;
-
-      const wanted = ["USDT/NGN","BTC/USDT","BTC/NGN","ETH/USDT"];
-      board.innerHTML = wanted.map(pair => {
-        const r = __ratesMap[pair] || null;
-        const val = (r?.buy != null && r?.sell != null) ? `${fmt(r.buy)} / ${fmt(r.sell)}` : "—";
-        return `
-          <div class="ticker-card">
-            <div class="ticker-pair">${pair}</div>
-            <div class="ticker-val">${val}</div>
-            <div class="ticker-sub">Buy / Sell</div>
-          </div>
-        `;
-      }).join("");
-
-      const main = __ratesMap["USDT/NGN"];
-      document.getElementById("heroRateMain").textContent = main?.sell ? `₦${fmt(main.sell)}` : "—";
-    }
-
-    async function loadRates(){
-      const sb = sbClient();
-      if(!sb) return;
-
-      const { data, error } = await sb
-        .from("rates")
-        .select("id,asset,base,quote,pair,buy,sell,status,updated_at")
-        .eq("status","active");
-
-      if(error){ console.error(error); return; }
-
-      __ratesMap = {};
-      (data||[]).map(normalizeRateRow).forEach(r => { __ratesMap[r.pair] = r; });
-      renderMarketBoard();
-    }
-
-    async function loadInsights(){
-      const sb = sbClient();
-      const mount = document.getElementById("newsMount");
-      if(!sb){ mount.innerHTML = `<div class="notice">Supabase not ready.</div>`; return; }
-
-      const { data, error } = await sb
-        .from("insights")
-        .select("*")
-        .eq("status","active")
-        .order("published_at",{ascending:false, nullsFirst:false})
-        .order("created_at",{ascending:false})
-        .limit(80);
-
-      if(error){
-        console.error(error);
-        mount.innerHTML = `<div class="notice" style="border-color:rgba(255,90,103,.35)"><strong>Could not load insights.</strong></div>`;
-        return;
-      }
-
-      __insightsAll = data || [];
-      updateSourceOptions(__insightsAll);
-      renderInsights();
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      // Source filter UI
-      const sel = document.getElementById("sourceFilter");
-      if(sel){
-        sel.addEventListener("change", () => setSourceFilter(sel.value));
-      }
-
-      loadRates();
-      loadInsights();
-
-      // ✅ realtime for insights + rates
-      if(window.LARMAH && LARMAH.realtime){
-        LARMAH.realtime.subscribe("insights", () => loadInsights(), "in-insights", { debounceMs: 700, statusElId: "liveStateIN" });
-        LARMAH.realtime.subscribe("rates", () => loadRates(), "in-rates", { debounceMs: 700 });
-      }
-    });
+  });
   </script>
 </body>
 </html>
