@@ -81,7 +81,7 @@
     <div class="login-box">
       <img src="assets/images/larmah-header.jpeg" style="width:60px;border-radius:12px;margin:0 auto 18px;display:block" alt="Larmah">
       <h2 style="margin-bottom:10px">Admin Access</h2>
-      <p class="small" style="margin-bottom:22px">Authorized personnel only.</p>
+      <p class="small" style="margin-bottom:18px">Super admin only.</p>
 
       <form id="adminLoginForm">
         <div style="margin-bottom:14px;text-align:left">
@@ -96,6 +96,9 @@
       </form>
 
       <div id="loginMsg" class="small" style="margin-top:14px;color:var(--bad);display:none"></div>
+      <div class="small" style="margin-top:12px;opacity:.75">
+        Not admin? <a href="auth.html" style="color:var(--accent)">Go to Auth</a>
+      </div>
     </div>
   </div>
 
@@ -133,7 +136,7 @@
         <div id="view-overview" class="view-section">
           <div class="admin-header">
             <h1>System Overview</h1>
-            <div class="small" style="color:var(--ok)"><i class="fa-solid fa-shield-halved"></i> Admin Session</div>
+            <div class="small" style="color:var(--ok)"><i class="fa-solid fa-shield-halved"></i> Super Admin</div>
           </div>
 
           <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:22px">
@@ -152,7 +155,7 @@
           </div>
 
           <div class="notice-admin">
-            ✅ Save button is responsive and will store data on Supabase. Upload up to <b>3 images</b> per Listing/Insight to Storage bucket <code>larmah-media</code>.
+            ✅ Save is responsive and stores to Supabase. Upload up to <b>3 images</b> per Listing/Insight to Storage bucket <code>larmah-media</code>.
           </div>
         </div>
 
@@ -164,7 +167,7 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead><tr><th width="70">Img</th><th>Title</th><th>Price</th><th>Status</th><th width="160">Actions</th></tr></thead>
+              <thead><tr><th width="70">Img</th><th>Title</th><th>Price</th><th>Status</th><th width="170">Actions</th></tr></thead>
               <tbody id="tbody-real-estate"></tbody>
             </table>
           </div>
@@ -178,7 +181,7 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead><tr><th width="70">Img</th><th>Title</th><th>Rate</th><th>Status</th><th width="160">Actions</th></tr></thead>
+              <thead><tr><th width="70">Img</th><th>Title</th><th>Rate</th><th>Status</th><th width="170">Actions</th></tr></thead>
               <tbody id="tbody-logistics"></tbody>
             </table>
           </div>
@@ -206,7 +209,7 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th width="160">Actions</th></tr></thead>
+              <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th width="170">Actions</th></tr></thead>
               <tbody id="tbody-insights"></tbody>
             </table>
           </div>
@@ -444,16 +447,6 @@
 
     const CACHE = { listings:new Map(), rates:new Map(), insights:new Map(), requests:new Map() };
 
-    // fallback escapeHtml
-    window.LARMAH = window.LARMAH || {};
-    if (!window.LARMAH.escapeHtml) {
-      window.LARMAH.escapeHtml = (str) => {
-        if (str === null || str === undefined) return "";
-        const map = { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" };
-        return String(str).replace(/[&<>"']/g, m => map[m]);
-      };
-    }
-
     function toast(msg, type="info"){
       try { if (window.LARMAH && typeof LARMAH.toast === "function") LARMAH.toast(msg, type); } catch {}
       const t = document.getElementById("toast");
@@ -503,7 +496,6 @@
 
     async function uploadToStorage(file, folder){
       if(!file) return null;
-
       const maxMb = 10;
       if(file.size > maxMb*1024*1024) throw new Error(`File too large. Max ${maxMb}MB`);
 
@@ -566,7 +558,6 @@
       return { urls, paths };
     }
 
-    // ---- Table thumbnail helper
     function pickThumb(it){
       if (Array.isArray(it.image_urls) && it.image_urls[0]) return it.image_urls[0];
       if (it.image_url) return it.image_url;
@@ -585,7 +576,6 @@
 
         try{
           toast("Uploading image…", "info");
-
           const folder = (entity === "insight") ? "insights" : "listings";
           const up = await uploadToStorage(file, folder);
 
@@ -605,7 +595,7 @@
             image_paths: nextPaths
           };
 
-          let res = await sb.from(table).update(payload).eq("id", id).select().single();
+          const res = await sb.from(table).update(payload).eq("id", id).select().single();
           if(res.error) throw res.error;
 
           toast("Image updated ✅", "success");
@@ -620,14 +610,17 @@
       input.click();
     }
 
-    // ---- Auth lock (email + is_admin)
+    // ---- Strict Admin check: email + is_admin RPC
     async function assertOnlyAdmin(){
       const { data } = await sb.auth.getSession();
-      const email = (data?.session?.user?.email || "").toLowerCase();
+      if(!data?.session) throw new Error("No session");
+
+      const email = (data.session.user.email || "").toLowerCase();
       if(email !== ONLY_ADMIN_EMAIL){
         await sb.auth.signOut();
         throw new Error("Access denied: Admins only.");
       }
+
       const { data: isAdmin, error } = await sb.rpc("is_admin");
       if(error) throw error;
       if(!isAdmin){
@@ -639,15 +632,24 @@
 
     async function initAdmin(){
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
-      if(!sb){ showLogin("Supabase client not ready."); return; }
+      if(!sb){
+        showLogin("Supabase not ready. Refresh.");
+        return;
+      }
 
+      // If not logged in, keep login gate (auth.html is for normal users too)
       const { data } = await sb.auth.getSession();
-      if(!data?.session){ showLogin(); return; }
+      if(!data?.session){
+        showLogin();
+        return;
+      }
 
+      // If logged in but not admin -> redirect to auth
       try{
         await assertOnlyAdmin();
       }catch(e){
-        showLogin(e.message);
+        showLogin(e.message || "Access denied");
+        window.location.href = "auth.html";
         return;
       }
 
@@ -684,12 +686,13 @@
         await sb.auth.signOut();
         msg.textContent = e.message || "Access denied";
         msg.style.display = "block";
+        window.location.href = "auth.html";
       }
     }
 
     async function adminLogout(){
       await sb.auth.signOut();
-      location.reload();
+      window.location.href = "auth.html";
     }
 
     // ---- Nav
@@ -848,6 +851,7 @@
       try{
         const { data, error } = await sb.from("requests").select("*").order("created_at",{ascending:false}).limit(500);
         if(error) throw error;
+
         CACHE.requests.clear();
         (data||[]).forEach(it => CACHE.requests.set(String(it.id), it));
 
