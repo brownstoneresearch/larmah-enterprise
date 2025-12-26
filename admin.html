@@ -24,7 +24,7 @@
     window.ensureSupabaseClient();
   </script>
 
-  <!-- Your global app (optional, but still loaded) -->
+  <!-- Your global app.js (still loaded) -->
   <script defer src="assets/js/app.js"></script>
 
   <style>
@@ -131,7 +131,7 @@
     }
     .modal.active { display: flex; }
     .editor-box {
-      width: 720px; max-width: 96vw;
+      width: 760px; max-width: 96vw;
       background: #0f1218;
       border: 1px solid var(--border);
       border-radius: 20px;
@@ -250,7 +250,7 @@
           </div>
 
           <div class="notice-admin">
-            <b>Tip:</b> You can update request status in the Requests tab: <b>new → processing → done</b>.
+            You can update request status in the Requests tab: <b>new → processing → done</b>.
           </div>
         </div>
 
@@ -550,6 +550,7 @@
     let sb = null;
     const CACHE = { listings:new Map(), rates:new Map(), insights:new Map(), requests:new Map() };
 
+    // Minimal safety helpers if app.js didn't load
     window.LARMAH = window.LARMAH || {};
     if (!window.LARMAH.escapeHtml) {
       window.LARMAH.escapeHtml = (str) => {
@@ -558,9 +559,14 @@
         return String(str).replace(/[&<>"']/g, (m) => map[m]);
       };
     }
+    if (!window.LARMAH.toast) {
+      window.LARMAH.toast = (msg) => console.log(msg);
+    }
 
     function toast(msg, type="info"){
-      if (window.LARMAH && typeof LARMAH.toast === "function") return LARMAH.toast(msg, type);
+      if (window.LARMAH && typeof LARMAH.toast === "function") {
+        try { LARMAH.toast(msg, type); } catch {}
+      }
       const t = document.getElementById("toast");
       if(!t) return;
       t.textContent = msg;
@@ -821,13 +827,13 @@
       }
     }
 
-    // ✅ REQUESTS with status update dropdown
+    // ----------- REQUESTS with status update -----------
     async function fetchRequests(){
       const tbody = document.getElementById("tbody-requests");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
 
       try {
-        const { data, error } = await sb.from("requests").select("*").order("created_at", { ascending: false }).limit(300);
+        const { data, error } = await sb.from("requests").select("*").order("created_at", { ascending: false }).limit(400);
         if(error) throw error;
 
         CACHE.requests.clear();
@@ -864,18 +870,14 @@
       try {
         const { error } = await sb.from("requests").update({ status }).eq("id", id);
         if(error) throw error;
-
-        // Update cache + UI badge quickly
         const it = CACHE.requests.get(String(id));
         if(it){ it.status = status; CACHE.requests.set(String(id), it); }
-
         toast("Request updated ✅", "success");
-        // Refresh stats (7 day count is same, but ok)
         loadStats();
+        fetchRequests();
       } catch(e){
         console.warn(e);
         toast(e.message || "Failed to update status", "error");
-        // Re-fetch to restore true value
         fetchRequests();
       }
     }
@@ -926,8 +928,56 @@
       document.getElementById("edit_entity").value = entity;
       document.getElementById("edit_id").value = id || "";
       document.getElementById("edit_category").value = category || "";
-
       setFieldsVisible(entity);
+
+      if(entity === "listing"){
+        document.getElementById("editorTitle").textContent = id ? "Edit Listing" : "New Listing";
+        document.getElementById("editorHint").textContent = category ? `Category: ${category}` : "";
+        if(id){
+          const it = CACHE.listings.get(String(id));
+          if(it){
+            document.getElementById("listing_title").value = it.title || "";
+            document.getElementById("listing_price").value = it.price || "";
+            document.getElementById("listing_status").value = it.status || "draft";
+            document.getElementById("listing_image").value = it.image_url || "";
+            document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : "";
+            document.getElementById("listing_desc").value = it.description || "";
+          }
+        } else {
+          document.getElementById("listing_status").value = "active";
+        }
+      }
+
+      if(entity === "rate"){
+        document.getElementById("editorTitle").textContent = id ? "Edit Rate" : "New Rate";
+        if(id){
+          const it = CACHE.rates.get(String(id));
+          if(it){
+            document.getElementById("rate_asset").value = String(it.asset || "USD");
+            document.getElementById("rate_buy").value = it.buy ?? "";
+            document.getElementById("rate_sell").value = it.sell ?? "";
+            document.getElementById("rate_status").value = it.status || "active";
+          }
+        } else {
+          document.getElementById("rate_status").value = "active";
+        }
+      }
+
+      if(entity === "insight"){
+        document.getElementById("editorTitle").textContent = id ? "Edit Insight" : "New Insight";
+        if(id){
+          const it = CACHE.insights.get(String(id));
+          if(it){
+            document.getElementById("insight_title").value = it.title || "";
+            document.getElementById("insight_category").value = it.category || "all";
+            document.getElementById("insight_status").value = it.status || "active";
+            document.getElementById("insight_image").value = it.image_url || "";
+            document.getElementById("insight_summary").value = it.summary || "";
+          }
+        } else {
+          document.getElementById("insight_status").value = "active";
+        }
+      }
 
       if(entity === "request"){
         document.getElementById("editorTitle").textContent = "Request Details";
@@ -938,38 +988,133 @@
           document.getElementById("req_status").value = it.status || "";
           document.getElementById("req_payload").value = JSON.stringify(it.payload || {}, null, 2);
         }
-        return;
       }
-
-      // Other entity editors not shown here to keep response tight
-      // You can keep your existing listing/rate/insight editor fills if you want.
-      document.getElementById("editorTitle").textContent = entity === "listing" ? "Listing" : (entity === "rate" ? "Rate" : "Insight");
     }
 
     function closeEditor(){
       document.getElementById("editorModal").classList.remove("active");
     }
 
-    // Save editor for listing/rate/insight (kept compatible; requests are read-only)
+    // ✅ Full admin save updates: listings, rates (upsert), insights
     async function saveEditor(e){
       e.preventDefault();
-      const entity = document.getElementById("edit_entity").value;
-      if(entity === "request") return;
 
-      toast("Use your existing save handlers for listings/rates/insights here.", "info");
+      const entity = document.getElementById("edit_entity").value;
+      const id = document.getElementById("edit_id").value || null;
+      const category = document.getElementById("edit_category").value || null;
+
+      const btn = document.getElementById("saveBtn");
+      btn.disabled = true;
+      btn.textContent = "Saving...";
+
+      try {
+        // LISTINGS
+        if(entity === "listing"){
+          const payload = {
+            category: category || "real-estate",
+            title: document.getElementById("listing_title").value.trim(),
+            price: document.getElementById("listing_price").value.trim(),
+            status: document.getElementById("listing_status").value,
+            image_url: document.getElementById("listing_image").value.trim(),
+            description: document.getElementById("listing_desc").value.trim(),
+            tags: document.getElementById("listing_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
+          };
+          if(!payload.title) throw new Error("Title is required.");
+
+          const res = id
+            ? await sb.from("listings").update(payload).eq("id", id).select().single()
+            : await sb.from("listings").insert([payload]).select().single();
+
+          if(res.error) throw res.error;
+
+          toast("Saved listing ✅", "success");
+          closeEditor();
+          await fetchListings(payload.category);
+          await loadStats();
+          return;
+        }
+
+        // RATES (upsert by asset to avoid unique conflicts)
+        if(entity === "rate"){
+          const payload = {
+            asset: document.getElementById("rate_asset").value,
+            buy: Number(document.getElementById("rate_buy").value || 0),
+            sell: Number(document.getElementById("rate_sell").value || 0),
+            status: document.getElementById("rate_status").value
+          };
+
+          const res = await sb
+            .from("rates")
+            .upsert([payload], { onConflict: "asset" })
+            .select()
+            .single();
+
+          if(res.error) throw res.error;
+
+          toast("Saved rate ✅", "success");
+          closeEditor();
+          await fetchRates();
+          return;
+        }
+
+        // INSIGHTS
+        if(entity === "insight"){
+          const payload = {
+            title: document.getElementById("insight_title").value.trim(),
+            category: document.getElementById("insight_category").value,
+            status: document.getElementById("insight_status").value,
+            image_url: document.getElementById("insight_image").value.trim(),
+            summary: document.getElementById("insight_summary").value.trim()
+          };
+          if(!payload.title) throw new Error("Title is required.");
+
+          const res = id
+            ? await sb.from("insights").update(payload).eq("id", id).select().single()
+            : await sb.from("insights").insert([payload]).select().single();
+
+          if(res.error) throw res.error;
+
+          toast("Saved insight ✅", "success");
+          closeEditor();
+          await fetchInsights();
+          return;
+        }
+      } catch(err){
+        console.warn("SAVE ERROR:", err);
+        toast(err?.message || "Save failed (check RLS/admin)", "error");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Save";
+      }
     }
 
     async function deleteEntity(entity, id, category=null){
       if(!confirm("Delete this item?")) return;
-      try{
-        const table = entity === "listing" ? "listings" : (entity === "rate" ? "rates" : "insights");
-        const { error } = await sb.from(table).delete().eq("id", id);
-        if(error) throw error;
-        toast("Deleted ✅", "success");
-        if(entity === "listing") fetchListings(category);
-        if(entity === "rate") fetchRates();
-        if(entity === "insight") fetchInsights();
-      }catch(e){
+      try {
+        if(entity === "listing"){
+          const { error } = await sb.from("listings").delete().eq("id", id);
+          if(error) throw error;
+          toast("Deleted listing ✅", "success");
+          await fetchListings(category);
+          await loadStats();
+          return;
+        }
+        if(entity === "rate"){
+          const { error } = await sb.from("rates").delete().eq("id", id);
+          if(error) throw error;
+          toast("Deleted rate ✅", "success");
+          await fetchRates();
+          return;
+        }
+        if(entity === "insight"){
+          const { error } = await sb.from("insights").delete().eq("id", id);
+          if(error) throw error;
+          toast("Deleted insight ✅", "success");
+          await fetchInsights();
+          return;
+        }
+      } catch(e){
+        console.warn(e);
         toast(e.message || "Delete failed", "error");
       }
     }
