@@ -7,22 +7,34 @@
   <title>Logistics | Larmah Enterprise</title>
   <meta name="description" content="Premium dispatch, airport pickups, escort-ready movement, and haulage across Nigeria. Verified fleet, instant WhatsApp booking." />
   <meta name="keywords" content="Logistics Nigeria, Airport Pickup Lagos, Haulage Nigeria, Escort Services Lagos, Dispatch Riders" />
+  <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://heylarmah.tech/logistics.html" />
 
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
+  <meta property="og:locale" content="en_NG" />
   <meta property="og:url" content="https://heylarmah.tech/logistics.html" />
   <meta property="og:title" content="Larmah Logistics | Premium Movement" />
   <meta property="og:description" content="Executive Airport Pickups, Haulage, and Security-ready Dispatch. Book instantly via WhatsApp." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
+  <meta property="og:image:alt" content="Larmah Logistics — Premium Movement" />
 
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Larmah Logistics" />
   <meta name="twitter:description" content="Move with confidence. Verified fleet and trackable dispatch across Nigeria." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
-  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
+  <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
+
+  <!-- Performance -->
+  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -30,21 +42,63 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
-  <style>
-    .catalog-head { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
-    .filters-box { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 20px; }
-    .filters { display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-    @media(max-width: 768px) { .filters { grid-template-columns: 1fr; } }
-    .pillbar { display:flex; gap:8px; flex-wrap:wrap; border-top: 1px solid rgba(255,255,255,0.05); padding-top:12px; }
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"CollectionPage",
+    "name":"Larmah Logistics",
+    "url":"https://heylarmah.tech/logistics.html",
+    "isPartOf":{
+      "@type":"WebSite",
+      "name":"Larmah Enterprise",
+      "url":"https://heylarmah.tech/"
+    },
+    "about":{
+      "@type":"Service",
+      "name":"Logistics & Mobility (Verified)",
+      "areaServed":"NG"
+    }
+  }
+  </script>
 
+  <style>
+    /* --- Page polish: premium + structured, without breaking your global style.css --- */
+
+    .catalog-head{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:12px; flex-wrap:wrap; margin-bottom:16px;
+    }
+
+    /* Filters container */
+    .filters-box{
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .filters{
+      display:grid;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    @media(max-width: 768px){
+      .filters{ grid-template-columns: 1fr; }
+    }
+    .pillbar{
+      display:flex; gap:8px; flex-wrap:wrap;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      padding-top:12px;
+    }
+
+    /* Live badge */
     .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
     .live-dot i { font-size: 8px; }
 
-    /* ✅ Neat, not-wide listings: centered grid with max width */
-    .catalog-wrap{
-      max-width: 1120px;
-      margin: 0 auto;
-    }
+    /* ✅ Neat centered catalog */
+    .catalog-wrap{ max-width: 1120px; margin: 0 auto; }
     .catalog-grid{
       display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -53,6 +107,49 @@
     @media(max-width: 1024px){ .catalog-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media(max-width: 640px){ .catalog-grid{ grid-template-columns: 1fr; } }
 
+    /* Cards */
+    .card h3{ margin-top: 6px; }
+    .meta{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .85rem;
+      opacity: .92;
+    }
+    .price{
+      margin-top: 10px;
+      font-weight: 950;
+      color: var(--accent);
+      letter-spacing: .1px;
+    }
+
+    /* ✅ Hero actions alignment (fixes mixed <a> and <button> baseline issues) */
+    .hero .actions{
+      display:flex;
+      align-items:stretch;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    .hero .actions .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      white-space:nowrap;
+      line-height:1;
+      min-height:48px;
+      padding:12px 16px;
+    }
+    .hero .actions .btn i{ line-height:1; }
+    @media (min-width: 920px){
+      .hero .actions .btn{ min-width: 200px; }
+    }
+    @media (max-width: 520px){
+      .hero .actions{ flex-direction:column; }
+      .hero .actions .btn{ width:100%; }
+    }
+
+    /* Media / gallery */
     .card-media{
       width:100%; height:190px; border-radius:14px; overflow:hidden;
       border: 1px solid rgba(255,255,255,0.08);
@@ -60,14 +157,25 @@
       margin-bottom: 12px;
       position: relative;
       user-select:none;
+      isolation:isolate;
     }
-    .card-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .card-media img{ width:100%; height:100%; object-fit:cover; display:block; transform: scale(1.01); }
+
+    /* subtle overlay for readability */
+    .card-media::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,.30), rgba(0,0,0,0) 55%);
+      pointer-events:none;
+      z-index:1;
+    }
 
     .media-nav{
       position:absolute; inset:0;
       display:flex; align-items:center; justify-content:space-between;
       padding: 0 10px;
       pointer-events:none;
+      z-index:2;
     }
     .media-btn{
       width:34px; height:34px; border-radius:12px;
@@ -78,32 +186,59 @@
       pointer-events:auto;
       cursor:pointer;
       backdrop-filter: blur(6px);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
     }
-    .media-btn:hover{ background: rgba(0,0,0,0.55); }
+    .media-btn:hover{
+      background: rgba(0,0,0,0.55);
+      border-color: rgba(212,175,55,.22);
+      transform: translateY(-1px);
+    }
 
     .media-dots{
       position:absolute; left:0; right:0; bottom:10px;
       display:flex; justify-content:center; gap:6px;
       pointer-events:none;
+      z-index:2;
     }
     .media-dot{
       width:7px; height:7px; border-radius:999px;
       background: rgba(255,255,255,0.35);
       border: 1px solid rgba(255,255,255,0.25);
     }
-    .media-dot.active{ background: rgba(255,255,255,0.9); }
+    .media-dot.active{ background: rgba(255,255,255,0.92); }
+
+    /* Notices */
+    .notice{
+      border-radius: 16px;
+      padding: 12px 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+    }
+    .notice strong{ color: var(--text); }
+
+    /* Loading skeleton for mount */
+    .lg-skel{
+      display:grid;
+      gap: 14px;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+    @media(max-width: 1024px){ .lg-skel{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+    @media(max-width: 640px){ .lg-skel{ grid-template-columns: 1fr; } }
+
+    .lg-skel .card{ height:320px; opacity:.55; }
   </style>
 </head>
 
 <body data-page="logistics">
 
-  <div id="mobileNavOverlay">
-    <div class="msheet">
+  <div id="mobileNavOverlay" aria-hidden="true">
+    <div class="msheet" role="dialog" aria-label="Mobile navigation">
       <div class="msheet-head">
         <div class="msheet-brand">
           <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
         </div>
-        <button class="msheet-close" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
+        <button class="msheet-close" type="button" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -142,7 +277,7 @@
         <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
       </a>
 
-      <button class="menu-btn" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
+      <button class="menu-btn" type="button" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
         <i class="fa-solid fa-bars"></i>
       </button>
 
@@ -158,6 +293,7 @@
       <div class="header-actions" style="margin-left:auto; display:none;">
         <a href="dashboard.html" class="pill primary">Dashboard</a>
       </div>
+
       <script>
         document.addEventListener("DOMContentLoaded", () => {
           if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") LARMAH.updateHeaderAuthUI();
@@ -167,7 +303,7 @@
   </header>
 
   <main class="container">
-    <section class="hero">
+    <section class="hero" aria-label="Logistics hero">
       <div class="hero-shell">
         <div class="hero-inner">
           <div>
@@ -183,7 +319,7 @@
               Tap any listing to book instantly via WhatsApp.
             </p>
 
-            <div class="actions">
+            <div class="actions" aria-label="Primary actions">
               <a class="btn solid" href="#catalog"><i class="fa-solid fa-car"></i> View Fleet</a>
               <a class="btn primary" href="#request"><i class="fa-brands fa-whatsapp"></i> Book a Ride</a>
               <a class="btn" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
@@ -196,7 +332,7 @@
             </div>
           </div>
 
-          <div class="hero-badges">
+          <div class="hero-badges" aria-label="Service categories">
             <div class="hero-card">
               <h3><i class="fa-solid fa-plane-arrival" style="color:var(--brand)"></i> Airport Pickup</h3>
               <p>Executive pickup + drop-off with reliable timing.</p>
@@ -219,7 +355,7 @@
         <div>
           <h2>Service Fleet</h2>
           <p class="lead">Select a tier or service and book instantly.</p>
-          <div class="small live-dot" id="liveStateLG" style="margin-top:8px;opacity:.9">
+          <div class="small live-dot" id="liveStateLG" style="margin-top:8px;opacity:.9" aria-live="polite">
             <i class="fa-solid fa-circle fa-beat"></i> Live updates enabled
           </div>
         </div>
@@ -229,11 +365,11 @@
       <div class="filters-box">
         <div class="filters">
           <div>
-            <label class="small">Search</label>
-            <input id="lg_q" class="input" placeholder="Service, vehicle, airport..." />
+            <label class="small" for="lg_q">Search</label>
+            <input id="lg_q" class="input" placeholder="Service, vehicle, airport..." autocomplete="off" />
           </div>
           <div>
-            <label class="small">Tier</label>
+            <label class="small" for="lg_tier_filter">Tier</label>
             <select id="lg_tier_filter" class="input">
               <option value="">All tiers</option>
               <option value="standard">Standard</option>
@@ -243,7 +379,7 @@
             </select>
           </div>
           <div>
-            <label class="small">Sort</label>
+            <label class="small" for="lg_sort">Sort</label>
             <select id="lg_sort" class="input">
               <option value="new">Newest</option>
               <option value="az">Title A–Z</option>
@@ -251,13 +387,13 @@
           </div>
         </div>
 
-        <div class="pillbar">
-          <button class="btn small" onclick="applyQuickTag('Airport')">Airport</button>
-          <button class="btn small" onclick="applyQuickTag('SUV')">SUV</button>
-          <button class="btn small" onclick="applyQuickTag('Escort')">Escort</button>
-          <button class="btn small" onclick="applyQuickTag('Haulage')">Haulage</button>
-          <button class="btn small" onclick="applyQuickTag('Dispatch')">Dispatch</button>
-          <button class="btn small" onclick="clearFilters()" style="color:var(--bad);border-color:rgba(255,90,103,0.3)">
+        <div class="pillbar" aria-label="Quick filters">
+          <button class="btn small" type="button" onclick="applyQuickTag('Airport')">Airport</button>
+          <button class="btn small" type="button" onclick="applyQuickTag('SUV')">SUV</button>
+          <button class="btn small" type="button" onclick="applyQuickTag('Escort')">Escort</button>
+          <button class="btn small" type="button" onclick="applyQuickTag('Haulage')">Haulage</button>
+          <button class="btn small" type="button" onclick="applyQuickTag('Dispatch')">Dispatch</button>
+          <button class="btn small" type="button" onclick="clearFilters()" style="color:var(--bad);border-color:rgba(255,90,103,0.3)">
             <i class="fa-solid fa-rotate-left"></i> Reset
           </button>
         </div>
@@ -265,8 +401,10 @@
 
       <div class="catalog-wrap">
         <div id="catalogMount">
-          <div class="latest-skel">
-            <div class="skel-line"></div><div class="skel-line short"></div>
+          <div class="lg-skel">
+            <div class="card"></div>
+            <div class="card"></div>
+            <div class="card"></div>
           </div>
         </div>
       </div>
@@ -278,19 +416,34 @@
 
       <div class="card" style="max-width:800px">
         <div class="row2">
-          <div><label class="small">Full Name</label><input id="lg_name" class="input" placeholder="Full name" /></div>
-          <div><label class="small">WhatsApp Number</label><input id="lg_phone" class="input" placeholder="+234..." /></div>
-        </div>
-
-        <div class="row2" style="margin-top:12px">
-          <div><label class="small">Pickup Location</label><input id="lg_pickup" class="input" placeholder="e.g., MMA2, Lekki Phase 1..." /></div>
-          <div><label class="small">Drop-off</label><input id="lg_drop" class="input" placeholder="e.g., VI, Ikoyi..." /></div>
-        </div>
-
-        <div class="row2" style="margin-top:12px">
-          <div><label class="small">Date & Time</label><input id="lg_time" class="input" placeholder="e.g., Tomorrow 4:00pm" /></div>
           <div>
-            <label class="small">Tier Preference</label>
+            <label class="small" for="lg_name">Full Name</label>
+            <input id="lg_name" class="input" placeholder="Full name" autocomplete="name" />
+          </div>
+          <div>
+            <label class="small" for="lg_phone">WhatsApp Number</label>
+            <input id="lg_phone" class="input" placeholder="+234..." inputmode="tel" autocomplete="tel" />
+          </div>
+        </div>
+
+        <div class="row2" style="margin-top:12px">
+          <div>
+            <label class="small" for="lg_pickup">Pickup Location</label>
+            <input id="lg_pickup" class="input" placeholder="e.g., MMA2, Lekki Phase 1..." autocomplete="off" />
+          </div>
+          <div>
+            <label class="small" for="lg_drop">Drop-off</label>
+            <input id="lg_drop" class="input" placeholder="e.g., VI, Ikoyi..." autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="row2" style="margin-top:12px">
+          <div>
+            <label class="small" for="lg_time">Date & Time</label>
+            <input id="lg_time" class="input" placeholder="e.g., Tomorrow 4:00pm" autocomplete="off" />
+          </div>
+          <div>
+            <label class="small" for="lg_tier">Tier Preference</label>
             <select id="lg_tier" class="input">
               <option value="Standard">Standard Dispatch / Ride</option>
               <option value="Premium SUV">Premium SUV (Executive)</option>
@@ -301,12 +454,14 @@
         </div>
 
         <div style="margin-top:12px">
-          <label class="small">Extra details</label>
+          <label class="small" for="lg_notes">Extra details</label>
           <textarea id="lg_notes" class="input" placeholder="Passengers, luggage count, cargo details..."></textarea>
         </div>
 
         <div class="actions" style="margin-top:16px">
-          <button class="btn solid" style="flex:1" onclick="sendLGRequest()"><i class="fa-brands fa-whatsapp"></i> Send Booking Request</button>
+          <button class="btn solid" type="button" style="flex:1" onclick="sendLGRequest()">
+            <i class="fa-brands fa-whatsapp"></i> Send Booking Request
+          </button>
           <a class="btn" href="premium.html"><i class="fa-solid fa-star"></i> Go Premium</a>
         </div>
 
@@ -353,16 +508,15 @@
         <div>
           <b>Contact</b>
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
+          <div class="small"><i class="fa-regular fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="375542445e59524444775f524e5b56455a565f194352545f">[email&#160;protected]</a></div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
 
           <div class="actions" style="margin-top:12px">
-            <button class="btn small" onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
+            <button class="btn small" type="button"
+              onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
             </button>
           </div>
-
-          <!-- ✅ Removed: Staff Sign-in • Admin -->
         </div>
       </div>
 
@@ -370,7 +524,9 @@
     </div>
   </footer>
 
-  <div id="toast" class="toast"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
@@ -392,6 +548,8 @@
       __lgDebounce = setTimeout(fn, wait);
     }
 
+    function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
+
     function getImages(it){
       const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
       if(arr.length) return arr.slice(0,3);
@@ -408,13 +566,16 @@
     function setCardImage(id){
       const img = document.getElementById(`lg-img-${id}`);
       if(!img) return;
+
       const urls = __LG_IMG_URLS[id] || ["assets/images/larmah-header.jpeg"];
       const idx = __LG_IMG_IDX[id] || 0;
+
       img.src = urls[idx] || "assets/images/larmah-header.jpeg";
 
       const dotsWrap = document.getElementById(`lg-dots-${id}`);
       if(dotsWrap){
-        dotsWrap.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
+        dotsWrap.querySelectorAll(".media-dot")
+          .forEach((d,i)=> d.classList.toggle("active", i===idx));
       }
     }
 
@@ -458,13 +619,16 @@
       let items = (__LG_ITEMS||[]).slice();
 
       if(q){
-        items = items.filter(it => norm((it.title||"") + " " + (it.description||"") + " " + (it.tags||[]).join(" ")).includes(q));
+        items = items.filter(it =>
+          norm((it.title||"") + " " + (it.description||"") + " " + (it.tags||[]).join(" "))
+            .includes(q)
+        );
       }
       if(tf){
         items = items.filter(it => inferTier(it) === tf);
       }
 
-      if(sort === "az") items.sort((a,b)=> String(a.title||"").localeCompare(String(b.title||"")));
+      if(sort === "az") items.sort((a,b)=> safeText(a.title).localeCompare(safeText(b.title)));
       else items.sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
 
       if(!items.length){
@@ -477,37 +641,42 @@
           ${items.map(it => {
             const id = String(it.id);
             initCardImages(it);
+
             const urls = __LG_IMG_URLS[id];
             const hasMany = urls.length > 1;
+            const title = safeText(it.title) || "Service";
+            const price = safeText(it.price).trim();
 
             return `
               <div class="card">
                 <div class="card-media">
-                  <img id="lg-img-${id}" src="${LARMAH.escapeHtml(urls[0])}" alt="${LARMAH.escapeHtml(it.title)}"
-                       loading="lazy" onerror="this.src='assets/images/larmah-header.jpeg'">
+                  <img id="lg-img-${id}" src="${LARMAH.escapeHtml(urls[0])}"
+                       alt="${LARMAH.escapeHtml(title)}"
+                       loading="lazy"
+                       onerror="this.src='assets/images/larmah-header.jpeg'">
 
                   ${hasMany ? `
                     <div class="media-nav">
-                      <button class="media-btn" type="button" aria-label="Prev image" onclick="cycleImage('${id}', -1)">
+                      <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleImage('${id}', -1)">
                         <i class="fa-solid fa-chevron-left"></i>
                       </button>
                       <button class="media-btn" type="button" aria-label="Next image" onclick="cycleImage('${id}', 1)">
                         <i class="fa-solid fa-chevron-right"></i>
                       </button>
                     </div>
-                    <div class="media-dots" id="lg-dots-${id}">
+                    <div class="media-dots" id="lg-dots-${id}" aria-hidden="true">
                       ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
                     </div>
                   ` : ``}
                 </div>
 
-                <h3>${LARMAH.escapeHtml(it.title)}</h3>
-                <p>${LARMAH.escapeHtml(it.description || "")}</p>
-                ${it.price ? `<div class="price">${LARMAH.escapeHtml(it.price)}</div>` : ``}
+                <h3>${LARMAH.escapeHtml(title)}</h3>
+                <p>${LARMAH.escapeHtml(safeText(it.description || ""))}</p>
+                ${price ? `<div class="price">${LARMAH.escapeHtml(price)}</div>` : ``}
                 <div class="meta">Ready • Ref: WEB-LG-${id}</div>
 
-                <div class="actions">
-                  <button class="btn small primary" onclick="enquireLogistics('${id}')">
+                <div class="actions" style="margin-top:12px">
+                  <button class="btn small primary" type="button" onclick="enquireLogistics('${id}')">
                     <i class="fa-brands fa-whatsapp"></i> Book / Enquire
                   </button>
                 </div>
@@ -518,17 +687,27 @@
       `;
     }
 
+    async function waitForSupabaseClient({ tries = 12, delay = 250 } = {}){
+      for(let i=0;i<tries;i++){
+        const sb = sbClient();
+        if(sb) return sb;
+        await new Promise(r => setTimeout(r, delay));
+      }
+      return null;
+    }
+
     async function loadLogistics(){
       const mount = document.getElementById("catalogMount");
       mount.innerHTML = `
-        <div class="catalog-grid">
-          <div class="card" style="height:320px;opacity:0.5"></div>
-          <div class="card" style="height:320px;opacity:0.5"></div>
-          <div class="card" style="height:320px;opacity:0.5"></div>
-        </div>`;
+        <div class="lg-skel">
+          <div class="card"></div>
+          <div class="card"></div>
+          <div class="card"></div>
+        </div>
+      `;
 
       try {
-        const sb = sbClient();
+        const sb = await waitForSupabaseClient();
         if(!sb) throw new Error("supabaseClient not ready");
 
         const { data, error } = await sb
@@ -559,21 +738,21 @@
       if(!item) return;
 
       LARMAH.openWhatsApp(LARMAH.buildMessage("Logistics Booking / Enquiry", {
-        Service: item.title,
-        Rate: item.price || "Negotiable",
+        Service: safeText(item.title),
+        Rate: safeText(item.price).trim() || "Negotiable",
         Ref: "WEB-LG-" + id
       }));
     }
 
     async function sendLGRequest(){
       const fields = {
-        Name: document.getElementById("lg_name").value,
-        Phone: document.getElementById("lg_phone").value,
-        Pickup: document.getElementById("lg_pickup").value,
-        Dropoff: document.getElementById("lg_drop").value,
-        DateTime: document.getElementById("lg_time").value,
+        Name: document.getElementById("lg_name").value.trim(),
+        Phone: document.getElementById("lg_phone").value.trim(),
+        Pickup: document.getElementById("lg_pickup").value.trim(),
+        Dropoff: document.getElementById("lg_drop").value.trim(),
+        DateTime: document.getElementById("lg_time").value.trim(),
         Tier: document.getElementById("lg_tier").value,
-        Notes: document.getElementById("lg_notes").value
+        Notes: document.getElementById("lg_notes").value.trim()
       };
 
       if(!fields.Phone || !fields.Pickup){
@@ -628,5 +807,10 @@
       initRealtimeLogistics();
     });
   </script>
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+    crossorigin="anonymous"></script>
 </body>
 </html>
