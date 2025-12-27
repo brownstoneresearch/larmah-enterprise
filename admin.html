@@ -50,6 +50,8 @@
     .badge.draft{background:rgba(255,176,32,.18);color:var(--warn)}
     .badge.sold{background:rgba(255,90,103,.18);color:var(--bad)}
     .badge.closed{background:rgba(255,90,103,.18);color:var(--bad)}
+    .badge.rss{background:rgba(212,175,55,.14);color:var(--accent)}
+    .badge.admin{background:rgba(0,217,129,.14);color:var(--brand)}
     .action-btn{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);transition:.2s}
     .action-btn:hover{background:#fff;color:#000}
     .action-btn.danger:hover{background:var(--bad);color:#fff;border-color:var(--bad)}
@@ -149,9 +151,7 @@
           <div class="admin-header">
             <div>
               <h1 style="margin:0">System Overview</h1>
-              <div class="small" style="margin-top:6px;color:var(--muted)">
-                Live DB • Admin-only access
-              </div>
+              <div class="small" style="margin-top:6px;color:var(--muted)">Live DB • Admin-only access</div>
             </div>
             <div class="quick-actions">
               <span class="chip"><i class="fa-solid fa-shield-halved"></i> Super Admin</span>
@@ -245,9 +245,10 @@
           <div class="admin-header">
             <div>
               <h1 style="margin:0">Insights</h1>
-             <div class="small" style="margin-top:6px;color:var(--muted)">
-                Admin posts + RSS feed entries (auto-synced) • <span id="ins_count">—</span> total</div>
-           </div>
+              <div class="small" style="margin-top:6px;color:var(--muted)">
+                Admin posts + RSS feed entries (auto-synced) • <span id="ins_count">—</span> total
+              </div>
+            </div>
             <div class="quick-actions">
               <button class="btn small" onclick="syncRssNow()"><i class="fa-solid fa-rss"></i> Sync RSS</button>
               <button class="btn solid small" onclick="openEditor('insight', null, null)"><i class="fa-solid fa-plus"></i> Add Insight</button>
@@ -255,7 +256,17 @@
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Status</th><th width="170">Actions</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Source</th>
+                  <th>Kind</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th width="170">Actions</th>
+                </tr>
+              </thead>
               <tbody id="tbody-insights"></tbody>
             </table>
           </div>
@@ -316,7 +327,6 @@
     </div>
   </div>
 
-  <!-- Quick upload -->
   <input id="quickUploadInput" type="file" accept="image/*" style="display:none">
 
   <!-- EDITOR MODAL -->
@@ -355,7 +365,6 @@
             </div>
             <div class="form-group">
               <label class="form-label">Status</label>
-              <!-- DB-safe: active/inactive -->
               <select id="listing_status" class="input">
                 <option value="active">Active</option>
                 <option value="inactive">Inactive (Draft/Sold)</option>
@@ -378,21 +387,18 @@
             <div class="tiny">Upload or paste URLs. First image becomes main.</div>
 
             <div class="img-grid" style="margin-top:10px">
-              <!-- Slot 1 -->
               <div class="img-slot">
                 <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('listing',1)">Clear</button></div>
                 <input type="file" id="listing_file_1" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_1" src="" alt=""></div>
                 <div class="slot-actions"><input type="text" id="listing_url_1" class="input" placeholder="or paste URL"></div>
               </div>
-              <!-- Slot 2 -->
               <div class="img-slot">
                 <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('listing',2)">Clear</button></div>
                 <input type="file" id="listing_file_2" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="listing_prev_2" src="" alt=""></div>
                 <div class="slot-actions"><input type="text" id="listing_url_2" class="input" placeholder="or paste URL"></div>
               </div>
-              <!-- Slot 3 -->
               <div class="img-slot">
                 <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('listing',3)">Clear</button></div>
                 <input type="file" id="listing_file_3" class="input" accept="image/*">
@@ -403,7 +409,7 @@
           </div>
         </div>
 
-        <!-- RATE (PAIRS) -->
+        <!-- RATE -->
         <div id="fields-rate" style="display:none">
           <div class="row2">
             <div class="form-group">
@@ -436,10 +442,9 @@
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Status</label>
-              <!-- DB-safe: active/inactive -->
               <select id="rate_status" class="input">
                 <option value="active">Active</option>
-                <option value="inactive">Inactive (Draft)</option>
+                <option value="inactive">Inactive</option>
               </select>
             </div>
             <div class="form-group">
@@ -466,7 +471,6 @@
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Category</label>
-              <!-- DB-safe categories -->
               <select id="insight_category" class="input">
                 <option value="real-estate">Real Estate</option>
                 <option value="logistics">Logistics</option>
@@ -476,10 +480,9 @@
             </div>
             <div class="form-group">
               <label class="form-label">Status</label>
-              <!-- DB-safe: active/inactive -->
               <select id="insight_status" class="input">
                 <option value="active">Active</option>
-                <option value="inactive">Inactive (Draft)</option>
+                <option value="inactive">Inactive</option>
               </select>
             </div>
           </div>
@@ -494,21 +497,18 @@
             <div class="tiny">Upload or paste URLs. First image becomes main.</div>
 
             <div class="img-grid" style="margin-top:10px">
-              <!-- Slot 1 -->
               <div class="img-slot">
                 <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('insight',1)">Clear</button></div>
                 <input type="file" id="insight_file_1" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_1" src="" alt=""></div>
                 <div class="slot-actions"><input type="text" id="insight_url_1" class="input" placeholder="or paste URL"></div>
               </div>
-              <!-- Slot 2 -->
               <div class="img-slot">
                 <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('insight',2)">Clear</button></div>
                 <input type="file" id="insight_file_2" class="input" accept="image/*">
                 <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_2" src="" alt=""></div>
                 <div class="slot-actions"><input type="text" id="insight_url_2" class="input" placeholder="or paste URL"></div>
               </div>
-              <!-- Slot 3 -->
               <div class="img-slot">
                 <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('insight',3)">Clear</button></div>
                 <input type="file" id="insight_file_3" class="input" accept="image/*">
@@ -548,11 +548,11 @@
           <div class="form-group">
             <label class="form-label">Feed URL</label>
             <input type="url" id="rss_url" class="input" placeholder="https://example.com/feed" required>
-            <div class="tiny">Use RSS/Atom feed URL. RSS sync will pull new items into Insights.</div>
+            <div class="tiny">Use RSS/Atom feed URL. RSS sync pulls new items into Insights.</div>
           </div>
         </div>
 
-        <!-- REQUEST (read-only) -->
+        <!-- REQUEST -->
         <div id="fields-request" style="display:none">
           <div class="form-group"><label class="form-label">Category</label><input type="text" id="req_category" class="input" disabled></div>
           <div class="row2">
@@ -575,7 +575,6 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const STORAGE_BUCKET = "larmah-media";
     const ONLY_ADMIN_EMAIL = "luckymomodu60@gmail.com";
     let sb = null;
 
@@ -618,8 +617,18 @@
       if(s === "new") return "draft";
       return "draft";
     }
+    function kindBadge(kind){
+      const k = String(kind||"admin").toLowerCase();
+      if(k === "rss") return "rss";
+      return "admin";
+    }
 
     function safeDate(d){ try { return new Date(d).toLocaleString(); } catch { return ""; } }
+
+    function setInsightsCount(n){
+      const el = document.getElementById("ins_count");
+      if(el) el.textContent = String(n ?? "—");
+    }
 
     function setFieldsVisible(entity){
       ["listing","rate","insight","rss","request"].forEach(k => {
@@ -629,9 +638,7 @@
       document.getElementById("saveBtn").style.display = (entity === "request") ? "none" : "";
     }
 
-    /* ===========================
-       STORAGE HELPERS
-       =========================== */
+    /* ===== Storage helpers ===== */
     function randomId(len=10){ return Math.random().toString(36).slice(2, 2+len); }
 
     async function uploadToStorage(file, folder){
@@ -642,10 +649,10 @@
       const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g,"") || "jpg";
       const path = `${folder}/${Date.now()}-${randomId(8)}.${ext}`;
 
-      const { error: upErr } = await sb.storage.from(STORAGE_BUCKET).upload(path, file, { cacheControl:"3600", upsert:false });
+      const { error: upErr } = await sb.storage.from("larmah-media").upload(path, file, { cacheControl:"3600", upsert:false });
       if(upErr) throw upErr;
 
-      const { data } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+      const { data } = sb.storage.from("larmah-media").getPublicUrl(path);
       const url = data?.publicUrl;
       if(!url) throw new Error("Could not generate public URL");
       return { path, url };
@@ -720,11 +727,9 @@
           const current = cacheMap.get(String(id)) || {};
 
           const nextUrls = Array.isArray(current.image_urls) ? current.image_urls.slice(0,3) : [];
-          const nextPaths = Array.isArray(current.image_paths) ? current.image_paths.slice(0,3) : [];
           nextUrls[0] = up.url;
-          nextPaths[0] = up.path;
 
-          const payload = { image_url: up.url, image_path: up.path, image_urls: nextUrls, image_paths: nextPaths };
+          const payload = { image_url: up.url, image_urls: nextUrls };
 
           const res = await sb.from(table).update(payload).eq("id", id).select().single();
           if(res.error) throw res.error;
@@ -841,42 +846,37 @@
     }
 
     /* ===========================
-       ✅ RSS SYNC (Little upgrade)
+       RSS SYNC
        =========================== */
     async function syncRssNow(){
-  try{
-    toast("Running RSS sync…", "info");
-    const { data, error } = await sb.functions.invoke("rss-sync", { body: {} });
-    if(error) throw error;
+      try{
+        toast("Running RSS sync…", "info");
+        const { data, error } = await sb.functions.invoke("rss-sync", { body: {} });
+        if(error) throw error;
 
-    const inserted = data?.items_inserted_est ?? 0;
-    const fetched = data?.sources_fetched ?? 0;
-    toast(`RSS synced ✅ (${inserted} items, ${fetched} feeds)`, "success");
+        const inserted = data?.items_inserted_est ?? 0;
+        const fetched = data?.sources_fetched ?? 0;
+        toast(`RSS synced ✅ (${inserted} items, ${fetched} feeds)`, "success");
 
-    // refresh views
-    try { await fetchInsights(); } catch {}
-    try { await fetchRssSources(); } catch {}
+        try { await fetchInsights(); } catch {}
+        try { await fetchRssSources(); } catch {}
 
-    console.log("rss-sync result:", data);
-  }catch(e){
-    console.warn(e);
-    toast(e?.message || "RSS sync failed", "error");
-  }
-}
+        console.log("rss-sync:", data);
+      }catch(e){
+        console.warn(e);
+        toast(e?.message || "RSS sync failed", "error");
+      }
+    }
 
     /* ===========================
        STATS
        =========================== */
     async function loadStats(){
-      try {
-        const { count } = await sb.from("listings").select("*",{count:"exact", head:true});
-        document.getElementById("stat_listings").textContent = count ?? 0;
-      } catch { document.getElementById("stat_listings").textContent = "—"; }
+      try { const { count } = await sb.from("listings").select("*",{count:"exact", head:true}); document.getElementById("stat_listings").textContent = count ?? 0; }
+      catch { document.getElementById("stat_listings").textContent = "—"; }
 
-      try {
-        const { count } = await sb.from("profiles").select("*",{count:"exact", head:true});
-        document.getElementById("stat_users").textContent = count ?? 0;
-      } catch { document.getElementById("stat_users").textContent = "—"; }
+      try { const { count } = await sb.from("profiles").select("*",{count:"exact", head:true}); document.getElementById("stat_users").textContent = count ?? 0; }
+      catch { document.getElementById("stat_users").textContent = "—"; }
 
       try{
         const since = new Date(Date.now()-7*24*60*60*1000).toISOString();
@@ -993,41 +993,50 @@
     }
 
     /* ===========================
-       INSIGHTS
+       INSIGHTS (Admin + RSS)
        =========================== */
     async function fetchInsights(){
       const tbody = document.getElementById("tbody-insights");
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">Loading...</td></tr>`;
       try{
-        const { data, error } = await sb.from("insights").select("*").order("created_at",{ascending:false}).limit(250);
+        const { data, error } = await sb.from("insights").select("*").order("created_at",{ascending:false}).limit(500);
         if(error) throw error;
 
         CACHE.insights.clear();
         (data||[]).forEach(it => CACHE.insights.set(String(it.id), it));
+        setInsightsCount((data||[]).length);
 
         if(!data?.length){
-          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No insights found.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">No insights found.</td></tr>`;
           return;
         }
 
-        tbody.innerHTML = data.map(it => `
-          <tr>
-            <td style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</td>
-            <td>${LARMAH.escapeHtml(it.category || "general")}</td>
-            <td class="small">${it.created_at ? new Date(it.created_at).toLocaleDateString() : ""}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "inactive")}</span></td>
-            <td>
-              <div style="display:flex;gap:8px">
-                <button class="action-btn" title="Edit" onclick="openEditor('insight','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
-                <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('insight','${String(it.id)}',null)"><i class="fa-solid fa-image"></i></button>
-                <button class="action-btn danger" title="Delete" onclick="deleteEntity('insight','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        `).join("");
+        tbody.innerHTML = data.map(it => {
+          const kind = String(it.source_kind || "admin").toLowerCase();
+          const kindLabel = kind === "rss" ? "RSS" : "ADMIN";
+          const kindCls = kindBadge(kind);
+
+          return `
+            <tr>
+              <td style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</td>
+              <td>${LARMAH.escapeHtml(it.category || "general")}</td>
+              <td>${LARMAH.escapeHtml(it.source_name || (kind === "rss" ? "RSS" : "Admin"))}</td>
+              <td><span class="badge ${kindCls}">${kindLabel}</span></td>
+              <td class="small">${it.created_at ? new Date(it.created_at).toLocaleDateString() : ""}</td>
+              <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "inactive")}</span></td>
+              <td>
+                <div style="display:flex;gap:8px">
+                  <button class="action-btn" title="Edit" onclick="openEditor('insight','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
+                  <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('insight','${String(it.id)}',null)"><i class="fa-solid fa-image"></i></button>
+                  <button class="action-btn danger" title="Delete" onclick="deleteEntity('insight','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join("");
       }catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading insights.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">Error loading insights.</td></tr>`;
       }
     }
 
@@ -1070,7 +1079,7 @@
     }
 
     /* ===========================
-       REQUESTS (DB-safe: new/open/closed)
+       REQUESTS (new/open/closed)
        =========================== */
     async function fetchRequests(){
       const tbody = document.getElementById("tbody-requests");
@@ -1307,16 +1316,13 @@
 
           const imgs = await collectImages("listing", "listings");
           const urls = imgs.urls.slice(0,3);
-          const paths = imgs.paths.slice(0,3);
-
           payload.image_url = urls[0] || "";
-          payload.image_path = paths[0] || null;
           payload.image_urls = urls;
-          payload.image_paths = paths;
 
           const res = id
             ? await sb.from("listings").update(payload).eq("id", id).select().single()
             : await sb.from("listings").insert([payload]).select().single();
+
           if(res.error) throw res.error;
 
           toast("Saved listing ✅","success");
@@ -1341,7 +1347,7 @@
             status: document.getElementById("rate_status").value
           };
 
-          // Upsert by pair if your DB supports unique pair; otherwise standard insert/update
+          // Prefer update by id; otherwise insert
           const res = id
             ? await sb.from("rates").update(payload).eq("id", id).select().single()
             : await sb.from("rates").insert([payload]).select().single();
@@ -1359,21 +1365,21 @@
             title: document.getElementById("insight_title").value.trim(),
             category: document.getElementById("insight_category").value,
             status: document.getElementById("insight_status").value,
-            summary: document.getElementById("insight_summary").value.trim()
+            summary: document.getElementById("insight_summary").value.trim(),
+            source_kind: "admin",
+            source_name: "Admin"
           };
           if(!payload.title) throw new Error("Title is required.");
 
           const imgs = await collectImages("insight", "insights");
           const urls = imgs.urls.slice(0,3);
-          const paths = imgs.paths.slice(0,3);
           payload.image_url = urls[0] || "";
-          payload.image_path = paths[0] || null;
           payload.image_urls = urls;
-          payload.image_paths = paths;
 
           const res = id
             ? await sb.from("insights").update(payload).eq("id", id).select().single()
             : await sb.from("insights").insert([payload]).select().single();
+
           if(res.error) throw res.error;
 
           toast("Saved insight ✅","success");
@@ -1458,10 +1464,8 @@
       sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
       if(!sb){ showLogin("Supabase not ready."); return; }
 
-      // File previews
       ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) bindFilePreview(kind,i); });
 
-      // Rate pair preview
       document.getElementById("rate_base").addEventListener("input", setRatePairPreview);
       document.getElementById("rate_quote").addEventListener("input", setRatePairPreview);
       document.getElementById("rate_preset").addEventListener("change", () => {
@@ -1473,7 +1477,6 @@
         setRatePairPreview();
       });
 
-      // Login form (fallback)
       document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
         await adminLogin(
@@ -1482,18 +1485,16 @@
         );
       });
 
-      // Editor form
       document.getElementById("editorForm").addEventListener("submit", saveEditor);
 
-      // Modal close
       document.getElementById("editorModal").addEventListener("click", (e) => {
         if(e.target.id === "editorModal") closeEditor();
       });
+
       document.addEventListener("keydown", (e) => {
         if(e.key === "Escape") closeEditor();
       });
 
-      // Gate
       await initAdmin();
     });
   </script>
