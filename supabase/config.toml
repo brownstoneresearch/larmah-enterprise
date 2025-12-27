@@ -1,0 +1,2 @@
+[functions.p2p-sync]
+verify_jwt = false
