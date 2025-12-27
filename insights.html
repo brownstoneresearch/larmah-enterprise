@@ -17,8 +17,9 @@
   <meta property="og:locale" content="en_NG" />
   <meta property="og:url" content="https://heylarmah.tech/insights.html" />
   <meta property="og:title" content="Larmah Insights | Market Intelligence" />
-  <meta property="og:description" content="Live rates + verified Nigerian updates — updated in real-time from Admin + RSS." />
+  <meta property="og:description" content="Desk rates + verified headlines — updated in real-time from Admin + RSS." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
+  <meta property="og:image:alt" content="Larmah Insights — Market Intelligence" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Larmah Insights" />
@@ -26,6 +27,8 @@
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
+  <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
+
   <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -41,9 +44,7 @@
     .live-dot i { font-size: 8px; }
 
     /* Hero actions alignment */
-    .hero .actions{
-      display:flex; align-items:stretch; gap:12px; flex-wrap:wrap; margin-top:16px;
-    }
+    .hero .actions{ display:flex; align-items:stretch; gap:12px; flex-wrap:wrap; margin-top:16px; }
     .hero .actions .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:10px;
       white-space:nowrap; line-height:1; min-height:48px; padding:12px 16px;
@@ -54,13 +55,8 @@
       .hero .actions .btn{ width:100%; }
     }
 
-    /* ===== Rates (desk style, NOT ticker) ===== */
-    .rates-grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 14px;
-      align-items:start;
-    }
+    /* ===== Rates (desk style, not ticker) ===== */
+    .rates-grid{ display:grid; grid-template-columns: 1.2fr .8fr; gap: 14px; align-items:start; }
     @media(max-width: 900px){ .rates-grid{ grid-template-columns: 1fr; } }
 
     .rate-board{
@@ -94,17 +90,14 @@
     .val{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
 
     .rate-meta{ margin-top:10px; color:var(--muted); font-size:.85rem; display:flex; gap:10px; flex-wrap:wrap; }
-
     .pill{
       display:inline-flex; gap:8px; align-items:center; padding:8px 10px; border-radius:999px;
       border:1px solid rgba(255,255,255,0.10); background:rgba(255,255,255,0.03);
       font-weight:900; font-size:.8rem; color:var(--muted);
     }
 
-    /* ===== News feed ===== */
-    .filters-row{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 10px;
-    }
+    /* ===== Feed ===== */
+    .filters-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 10px; }
     .filters-row .input{ min-width: 220px; }
     @media(max-width: 520px){ .filters-row .input{ width:100%; min-width:unset; } }
 
@@ -147,7 +140,6 @@
       transition: transform .15s ease, background .15s ease, border-color .15s ease;
     }
     .media-btn:hover{ background: rgba(0,0,0,0.55); border-color: rgba(212,175,55,.22); transform: translateY(-1px); }
-
     .media-dots{
       position:absolute; left:0; right:0; bottom:10px;
       display:flex; justify-content:center; gap:6px;
@@ -308,7 +300,7 @@
       </div>
     </section>
 
-    <!-- ===== Rates (desk style) ===== -->
+    <!-- ===== Rates ===== -->
     <section class="section" id="rates">
       <div class="section-head-split">
         <div>
@@ -351,7 +343,7 @@
       <div class="section-head-split">
         <div>
           <h2>Latest Insights</h2>
-          <p class="lead">From <code>insights</code> table (Admin + RSS). Live updates enabled.</p>
+          <p class="lead">From <code>insights</code> (Admin + RSS). Live updates enabled.</p>
 
           <div class="filters-row">
             <input id="qFilter" class="input" placeholder="Search headlines…" />
@@ -405,12 +397,6 @@
           <div class="small" style="margin-top:8px">
             Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
           </div>
-          <div class="social-row" aria-label="Social links">
-            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-            <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
         </div>
 
         <div>
@@ -425,14 +411,8 @@
         <div>
           <b>Contact</b>
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="751700061c1b100606351d100c19140718141d5b0110161d">[email&#160;protected]</a></div>
+          <div class="small"><i class="fa-regular fa-envelope"></i> business@heylarmah.tech</div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-          <div class="actions" style="margin-top:12px">
-            <button class="btn small" type="button"
-              onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
-              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-            </button>
-          </div>
         </div>
       </div>
 
@@ -441,8 +421,6 @@
   </footer>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
@@ -464,7 +442,6 @@
 
     // ===== Formatting =====
     function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
-
     function fmt(n){
       if(n === null || n === undefined || n === "") return "—";
       const num = Number(n);
@@ -544,7 +521,6 @@
           </div>
         `).join("")}
       `;
-
       updateHeroRate();
     }
 
@@ -567,11 +543,9 @@
       renderRatesBoard();
     }
 
-    // true-live upsert/delete for rates
     function upsertRate(row){
       const pair = String(row.pair||"").toUpperCase();
       if(!pair) return;
-
       __rates = (__rates||[]).filter(r => String(r.pair||"").toUpperCase() !== pair);
       __rates.push(row);
       __ratesMap[pair] = row;
@@ -594,13 +568,11 @@
         renderRatesBoard();
         return;
       }
-
       if(status !== "active"){
         removeRate(row.pair);
         renderRatesBoard();
         return;
       }
-
       upsertRate(row);
       renderRatesBoard();
     }
@@ -640,12 +612,9 @@
 
       let list = (__insightsAll||[]).slice();
 
-      if(__currentFilter !== "all"){
-        list = list.filter(x => x.category === __currentFilter);
-      }
-      if(__currentSource !== "all"){
-        list = list.filter(x => x.source_name === __currentSource);
-      }
+      if(__currentFilter !== "all") list = list.filter(x => x.category === __currentFilter);
+      if(__currentSource !== "all") list = list.filter(x => x.source_name === __currentSource);
+
       if(__q){
         const qn = __q.toLowerCase();
         list = list.filter(x =>
@@ -655,7 +624,15 @@
         );
       }
 
-      list.sort((a,b)=> new Date(b.published_at || b.created_at || 0) - new Date(a.published_at || a.created_at || 0));
+      // Strong ordering: published_at first, then created_at
+      list.sort((a,b)=> {
+        const ad = new Date(a.published_at || 0).getTime();
+        const bd = new Date(b.published_at || 0).getTime();
+        if (ad !== bd) return bd - ad;
+        const ac = new Date(a.created_at || 0).getTime();
+        const bc = new Date(b.created_at || 0).getTime();
+        return bc - ac;
+      });
 
       document.getElementById("heroInsightCount").textContent = String(list.length);
 
@@ -668,7 +645,7 @@
 
       mount.innerHTML = `
         <div class="feed-grid">
-          ${list.slice(0, 18).map(ins => {
+          ${list.slice(0, 24).map(ins => {
             const dt = ins.published_at || ins.created_at;
             const imgs = Array.isArray(ins.image_urls) && ins.image_urls.length ? ins.image_urls : (ins.image_url ? [ins.image_url] : []);
             const first = imgs[0] || "";
@@ -737,12 +714,16 @@
       const sb = sbClient();
       if(!sb) return;
 
+      // ✅ Corrected ordering:
+      // - published_at DESC (NULLs last)
+      // - then created_at DESC
       const { data, error } = await sb
         .from("insights")
         .select("*")
         .eq("status","active")
-        .order("published_at", { ascending:false })
-        .limit(80);
+        .order("published_at", { ascending:false, nullsFirst:false })
+        .order("created_at", { ascending:false })
+        .limit(120);
 
       if(error){ console.error(error); return; }
 
@@ -779,7 +760,6 @@
         renderInsights();
         return;
       }
-
       if(status !== "active"){
         removeInsight(row.id);
         updateSourceOptions();
