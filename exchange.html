@@ -43,7 +43,34 @@
   <script defer src="assets/js/app.js"></script>
 
   <style>
+    /* ===== Exchange page smart upgrade (safe overrides) ===== */
+    html{ scroll-behavior:smooth; }
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      *{ animation-duration:0.001ms!important; animation-iteration-count:1!important; transition-duration:0.001ms!important; scroll-behavior:auto!important; }
+      .fa-beat{ animation:none!important; }
+    }
+
     .page-wrap{ max-width:1120px; margin:0 auto; }
+
+    /* subtle ambient background */
+    body{ position:relative; overflow-x:hidden; }
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(900px 420px at 18% 6%, rgba(212,175,55,.10), transparent 60%),
+        radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.08), transparent 62%),
+        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.07), transparent 58%);
+      opacity:.85; z-index:-1;
+    }
+
+    :focus-visible{
+      outline:2px solid rgba(212,175,55,.55);
+      outline-offset:3px;
+      border-radius:12px;
+    }
 
     .hero-shell{
       position:relative;
@@ -59,34 +86,103 @@
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(900px 420px at 10% 0%, rgba(212,175,55,.18), transparent 55%),
+        radial-gradient(900px 420px at 10% 0%, rgba(212,175,55,.20), transparent 55%),
         radial-gradient(700px 360px at 90% 10%, rgba(0,217,129,.12), transparent 60%),
         radial-gradient(900px 520px at 50% 100%, rgba(0,122,255,.10), transparent 58%);
       pointer-events:none;
+      filter:saturate(1.06);
+    }
+    .hero-shell::after{
+      content:"";
+      position:absolute; inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.35), transparent 38%),
+        radial-gradient(1200px 600px at 50% 0%, rgba(255,255,255,.06), transparent 62%);
     }
     .hero-inner{ position:relative; }
 
     .hero .actions{
-      display:flex; align-items:stretch; gap:12px; flex-wrap:wrap; margin-top:16px;
+      display:flex;
+      align-items:stretch;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:16px;
     }
     .hero .actions .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      white-space:nowrap; line-height:1; min-height:48px; padding:12px 16px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      white-space:nowrap;
+      line-height:1;
+      min-height:48px;
+      padding:12px 16px;
+      transform: translateZ(0);
+      transition: transform .18s ease, filter .18s ease;
     }
-    @media(min-width: 920px){ .hero .actions .btn{ min-width: 210px; } }
+    .hero .actions .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .hero .actions .btn:active{ transform: translateY(0px) scale(.99); }
+    @media(min-width: 920px){ .hero .actions .btn{ min-width: 220px; } }
     @media(max-width: 520px){ .hero .actions{ flex-direction:column; } .hero .actions .btn{ width:100%; } }
 
-    .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
+    .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:900; font-size:.86rem; color: var(--ok); }
     .live-dot i { font-size: 8px; }
 
     .grid2{
       display:grid;
-      grid-template-columns: 1.3fr .9fr;
+      grid-template-columns: 1.25fr .95fr;
       gap: 14px;
     }
     @media(max-width: 940px){ .grid2{ grid-template-columns: 1fr; } }
 
-    .rates-list{ display:grid; gap:10px; margin-top:10px; }
+    /* rates header controls */
+    .rates-tools{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .rates-tools .left{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+    .search{
+      width:min(340px, 100%);
+      position:relative;
+    }
+    .search input{
+      width:100%;
+      padding-left:40px;
+    }
+    .search i{
+      position:absolute; left:14px; top:50%; transform:translateY(-50%);
+      opacity:.7;
+    }
+    .seg{
+      display:inline-flex;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 999px;
+      overflow:hidden;
+    }
+    .seg button{
+      border:0;
+      background:transparent;
+      color:var(--muted);
+      padding:8px 12px;
+      cursor:pointer;
+      font-weight:850;
+      font-size:.82rem;
+    }
+    .seg button.active{
+      color:var(--text);
+      background: rgba(255,255,255,.06);
+    }
+
+    .rates-list{ display:grid; gap:10px; margin-top:12px; }
+
     .rate-row{
       display:grid;
       grid-template-columns: 1fr auto;
@@ -96,12 +192,26 @@
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.09);
       background: rgba(255,255,255,0.03);
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
     }
+    .rate-row:hover{
+      transform: translateY(-1px);
+      border-color: rgba(212,175,55,.20);
+      background: rgba(255,255,255,0.045);
+    }
+
     .rate-left{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
     .pair{
-      display:flex; gap:8px; align-items:center;
+      display:flex; gap:10px; align-items:center;
       font-weight: 950;
       letter-spacing:.2px;
+    }
+    .pair .icon{
+      width:30px; height:30px;
+      border-radius: 12px;
+      display:grid; place-items:center;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
     }
     .chip{
       display:inline-flex; align-items:center; gap:8px;
@@ -111,17 +221,31 @@
       padding: 6px 10px;
       color: var(--muted);
       font-size: .82rem;
+      white-space:nowrap;
     }
     .mono{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: .85rem;
+      font-size: .86rem;
     }
+
     .rate-right{
       display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
       text-align:right;
+      min-width: 200px;
     }
-    .rate-val{ font-weight: 950; color: var(--accent); }
+    .rate-val{ font-weight: 950; color: var(--accent); font-size: 1.02rem; }
     .rate-sub{ font-size:.82rem; color: var(--muted); opacity:.9; }
+
+    .pill-mini{
+      display:inline-flex; align-items:center; gap:8px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:.8rem;
+      color: var(--muted);
+      white-space:nowrap;
+    }
 
     .notice{
       border-radius: 16px;
@@ -144,7 +268,7 @@
     }
     .calc-out .big{
       font-weight: 950;
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       color: var(--accent);
       margin-top:6px;
     }
@@ -156,6 +280,20 @@
         0 18px 50px rgba(0,0,0,.35),
         0 1px 0 rgba(255,255,255,.04) inset;
     }
+
+    /* top pairs quick chips */
+    .quick-pairs{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+    .quick-pairs button{
+      font-weight:850;
+    }
+
+    /* sticky helper for section jump */
+    #rates{ scroll-margin-top: 90px; }
   </style>
 </head>
 
@@ -239,16 +377,17 @@
             <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-shield-halved"></i> Trust-First Exchange</span>
               <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Transparent Quotes • WhatsApp Confirmation</span>
+              <span class="kicker-sub">Binance P2P Market • WhatsApp Confirmation</span>
             </div>
 
-            <h1>Currency Exchange,<br/>Done Properly.</h1>
+            <h1>Exchange Rates,<br/>Built for Confidence.</h1>
             <p class="lead">
-              Request a quote, confirm via WhatsApp, and keep a clean reference trail for every transaction.
+              View live market rates, estimate conversions, then confirm your final quote via WhatsApp.
+              Every request gets a clean reference ID.
             </p>
 
             <div class="actions">
-              <a class="btn solid" href="#rates"><i class="fa-solid fa-chart-simple"></i> View Rates</a>
+              <a class="btn solid" href="#rates"><i class="fa-solid fa-chart-simple"></i> View Live Board</a>
               <button class="btn primary" type="button" onclick="openFXWhatsApp()">
                 <i class="fa-brands fa-whatsapp"></i> Get Quote
               </button>
@@ -257,9 +396,18 @@
               </button>
             </div>
 
+            <div class="quick-pairs" aria-label="Quick pairs">
+              <button class="btn small" type="button" onclick="quickPair('USD','NGN')">USD/NGN</button>
+              <button class="btn small" type="button" onclick="quickPair('GBP','NGN')">GBP/NGN</button>
+              <button class="btn small" type="button" onclick="quickPair('CAD','NGN')">CAD/NGN</button>
+              <button class="btn small" type="button" onclick="quickPair('USDT','NGN')">USDT/NGN</button>
+              <button class="btn small" type="button" onclick="quickPair('BTC','USDT')">BTC/USDT</button>
+              <button class="btn small" type="button" onclick="quickPair('ETH','USDT')">ETH/USDT</button>
+            </div>
+
             <div class="trust-row">
-              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Clear quoting</div>
-              <div class="trust-badge"><i class="fa-solid fa-lock"></i> Scam-resistant flow</div>
+              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Transparent board</div>
+              <div class="trust-badge"><i class="fa-solid fa-lock"></i> Safer flow</div>
               <div class="trust-badge"><i class="fa-solid fa-receipt"></i> Ref tracking</div>
             </div>
 
@@ -268,14 +416,14 @@
             </div>
           </div>
 
-          <div class="hero-badges" aria-label="Quick actions">
+          <div class="hero-badges" aria-label="Highlights">
             <div class="hero-card">
-              <h3><i class="fa-solid fa-bolt" style="color:var(--brand)"></i> Fast Quote</h3>
-              <p>Request a rate and confirm instantly.</p>
+              <h3><i class="fa-solid fa-bolt" style="color:var(--brand)"></i> Fast Confirmation</h3>
+              <p>Send pair + amount. We confirm on WhatsApp.</p>
             </div>
             <div class="hero-card">
-              <h3><i class="fa-solid fa-user-check" style="color:var(--brand)"></i> Verified Process</h3>
-              <p>We keep it simple, traceable, and clean.</p>
+              <h3><i class="fa-solid fa-chart-line" style="color:var(--brand)"></i> Market-led</h3>
+              <p>P2P + Spot fallback keeps pricing realistic.</p>
             </div>
           </div>
         </div>
@@ -286,8 +434,8 @@
     <section class="section" id="rates" aria-label="Rates and converter">
       <div class="section-head-split">
         <div>
-          <h2>Live Rates</h2>
-          <p class="lead">Reference-only display. Final quote is confirmed via WhatsApp.</p>
+          <h2>Live Market Board</h2>
+          <p class="lead">Reference-only display. Final quote confirmed via WhatsApp.</p>
         </div>
         <a class="btn small" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
       </div>
@@ -295,24 +443,54 @@
       <div class="grid2">
         <!-- Rates -->
         <div class="card">
-          <div class="section-titleline">
-            <h3 style="margin:0"><i class="fa-solid fa-coins" style="color:var(--brand)"></i> Current Market Board</h3>
-            <span class="small" id="fxUpdatedAt" style="opacity:.8"></span>
+          <div class="section-titleline" style="align-items:flex-end">
+            <div>
+              <h3 style="margin:0"><i class="fa-solid fa-coins" style="color:var(--brand)"></i> Rates</h3>
+              <div class="small" id="fxUpdatedAt" style="opacity:.82;margin-top:6px"></div>
+            </div>
+            <div class="pill-mini" title="Source">
+              <i class="fa-solid fa-satellite-dish" style="opacity:.85"></i>
+              <span>DB Live (P2P Sync)</span>
+            </div>
           </div>
 
-          <div id="ratesMount">
+          <div class="rates-tools">
+            <div class="left">
+              <div class="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="rateSearch" class="input" placeholder="Search pair (e.g., USDT/NGN, BTC/USDT)" autocomplete="off" />
+              </div>
+
+              <div class="seg" role="tablist" aria-label="Rate filter">
+                <button type="button" class="active" id="tabAll" onclick="setRateFilter('all')" role="tab">All</button>
+                <button type="button" id="tabFiat" onclick="setRateFilter('fiat')" role="tab">Fiat</button>
+                <button type="button" id="tabCrypto" onclick="setRateFilter('crypto')" role="tab">Crypto</button>
+              </div>
+            </div>
+
+            <div class="right" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+              <button class="btn small" type="button" onclick="refreshBoard(true)">
+                <i class="fa-solid fa-rotate-right"></i> Refresh
+              </button>
+              <button class="btn small" type="button" onclick="openFXWhatsApp(true)">
+                <i class="fa-brands fa-whatsapp"></i> Quote
+              </button>
+            </div>
+          </div>
+
+          <div id="ratesMount" style="margin-top:10px">
             <div class="notice" style="opacity:.85">Loading rates…</div>
           </div>
 
-          <div class="small" style="margin-top:10px;opacity:.7">
-            Note: Rates can change quickly. Confirm final quote via WhatsApp before any transfer.
+          <div class="small" style="margin-top:10px;opacity:.72">
+            Tip: The board is for reference. We confirm the final executable quote via WhatsApp.
           </div>
         </div>
 
         <!-- Converter -->
         <div class="card">
           <div class="section-titleline">
-            <h3 style="margin:0"><i class="fa-solid fa-calculator" style="color:var(--brand)"></i> Quick Converter</h3>
+            <h3 style="margin:0"><i class="fa-solid fa-calculator" style="color:var(--brand)"></i> Smart Converter</h3>
             <span class="small" style="opacity:.8">Estimate</span>
           </div>
 
@@ -321,8 +499,12 @@
               <label class="small" for="fxFrom">From</label>
               <select id="fxFrom" class="input">
                 <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
                 <option value="GBP">GBP</option>
+                <option value="CAD">CAD</option>
+                <option value="EUR">EUR</option>
+                <option value="USDT">USDT</option>
+                <option value="BTC">BTC</option>
+                <option value="ETH">ETH</option>
                 <option value="NGN">NGN</option>
               </select>
             </div>
@@ -331,8 +513,12 @@
               <select id="fxTo" class="input">
                 <option value="NGN">NGN</option>
                 <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
                 <option value="GBP">GBP</option>
+                <option value="CAD">CAD</option>
+                <option value="EUR">EUR</option>
+                <option value="USDT">USDT</option>
+                <option value="BTC">BTC</option>
+                <option value="ETH">ETH</option>
               </select>
             </div>
           </div>
@@ -345,7 +531,7 @@
           <div class="calc-out" id="fxOut">
             <div class="small" style="opacity:.85">Estimated result</div>
             <div class="big">—</div>
-            <div class="small" style="margin-top:8px;opacity:.7">Confirm final quote via WhatsApp.</div>
+            <div class="small" style="margin-top:8px;opacity:.75" id="fxHint">Uses available pairs in your live DB.</div>
           </div>
 
           <div class="actions" style="margin-top:12px">
@@ -365,9 +551,9 @@
       <div class="cta-strip">
         <div>
           <h2 style="margin:0">Need a guaranteed rate?</h2>
-          <p class="lead" style="margin:6px 0 0">Send the currency pair + amount — we’ll respond with a confirmed quote.</p>
+          <p class="lead" style="margin:6px 0 0">Send the pair + amount — we’ll respond with a confirmed quote.</p>
         </div>
-        <button class="btn solid" type="button" onclick="openFXWhatsApp()">
+        <button class="btn solid" type="button" onclick="openFXWhatsApp(true)">
           <i class="fa-brands fa-whatsapp"></i> Get Quote
         </button>
       </div>
@@ -432,11 +618,18 @@
 
     const BUSINESS_EMAIL_BASE = "business@heylarmah.tech";
 
-    // ===== FX data model (safe + flexible) =====
-    // Supports:
-    // 1) Supabase table "rates": { base, quote, buy, sell, mid, updated_at, status }
-    // 2) Or if your app.js defines window.__rates / LARMAH.getRates(), we use that.
+    // Local state
     let __FX = [];
+    let __rateFilter = "all"; // all | fiat | crypto
+
+    function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
+    function upper(v){ return safeText(v).trim().toUpperCase(); }
+
+    function fmtNum(n){
+      const x = Number(n);
+      if(!isFinite(x)) return "—";
+      return x.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    }
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
@@ -451,15 +644,6 @@
       return null;
     }
 
-    function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
-    function upper(v){ return safeText(v).trim().toUpperCase(); }
-
-    function fmtNum(n){
-      const x = Number(n);
-      if(!isFinite(x)) return "—";
-      return x.toLocaleString(undefined, { maximumFractionDigits: 2 });
-    }
-
     function refForFX(base, quote){
       const t = Date.now().toString().slice(-6);
       return `WEB-FX-${upper(base)}-${upper(quote)}-${t}`;
@@ -470,17 +654,27 @@
       window.location.href = href;
     }
 
+    function quickPair(from, to){
+      const f = document.getElementById("fxFrom");
+      const t = document.getElementById("fxTo");
+      if(f) f.value = from;
+      if(t) t.value = to;
+      calcEstimate();
+      document.getElementById("fxAmount")?.focus();
+      try { document.getElementById("rates")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
+    }
+
     function openFXWhatsApp(includeCalc=false){
       const from = document.getElementById("fxFrom")?.value || "USD";
       const to = document.getElementById("fxTo")?.value || "NGN";
       const amt = safeText(document.getElementById("fxAmount")?.value).trim();
       const ref = refForFX(from, to);
 
-      const calcLine = includeCalc && amt ? `Amount: ${amt} ${from} → ${to}` : "";
+      const estimate = includeCalc ? buildEstimateLine(from, to, amt) : "";
 
       const msg = LARMAH.buildMessage("FX Quote Request", {
         Pair: `${from}/${to}`,
-        ...(calcLine ? { Estimate: calcLine } : {}),
+        ...(estimate ? { Estimate: estimate } : {}),
         Ref: ref,
         Email: BUSINESS_EMAIL_BASE
       });
@@ -494,6 +688,8 @@
       const amt = safeText(document.getElementById("fxAmount")?.value).trim();
       const ref = refForFX(from, to);
 
+      const estimate = includeCalc ? buildEstimateLine(from, to, amt) : "";
+
       const subject = `FX Quote Request — ${from}/${to} — ${ref}`;
       const body =
 `Hello Larmah Team,
@@ -501,7 +697,8 @@
 Please confirm a quote for:
 
 Pair: ${from}/${to}
-${includeCalc && amt ? `Amount: ${amt} ${from}` : `Amount: `}
+Amount: ${amt || ""}
+${estimate ? `Estimate: ${estimate}` : ""}
 Ref: ${ref}
 
 My Name:
@@ -513,76 +710,81 @@ Thank you.`;
       openEmailCompose({ to: BUSINESS_EMAIL_BASE, subject, body });
     }
 
-    function renderRates(){
-      const mount = document.getElementById("ratesMount");
-      if(!mount) return;
-
-      if(!__FX.length){
-        mount.innerHTML = `<div class="notice"><strong>No rates available yet.</strong> Please request a quote via WhatsApp.</div>`;
-        return;
-      }
-
-      const updatedAt = __FX
-        .map(r => r.updated_at || r.updatedAt || r.created_at || r.createdAt)
-        .filter(Boolean)
-        .sort()
-        .slice(-1)[0];
-
-      const fxUpdatedAt = document.getElementById("fxUpdatedAt");
-      if(fxUpdatedAt) fxUpdatedAt.textContent = updatedAt ? `Updated: ${new Date(updatedAt).toLocaleString()}` : "";
-
-      mount.innerHTML = `
-        <div class="rates-list">
-          ${__FX.map(r => {
-            const base = upper(r.base || r.from || r.currency_base);
-            const quote = upper(r.quote || r.to || r.currency_quote);
-            const buy = r.buy ?? r.buy_rate ?? r.buyRate ?? r.rate_buy;
-            const sell = r.sell ?? r.sell_rate ?? r.sellRate ?? r.rate_sell;
-            const mid = r.mid ?? r.mid_rate ?? r.midRate ?? r.rate ?? r.value;
-
-            const show = (mid !== undefined && mid !== null && String(mid) !== "") ? mid : (sell ?? buy);
-
-            return `
-              <div class="rate-row">
-                <div class="rate-left">
-                  <div class="pair"><i class="fa-solid fa-arrows-rotate" style="opacity:.85"></i> ${base}/${quote}</div>
-                  ${buy ? `<span class="chip">Buy: <span class="mono">${fmtNum(buy)}</span></span>` : ``}
-                  ${sell ? `<span class="chip">Sell: <span class="mono">${fmtNum(sell)}</span></span>` : ``}
-                </div>
-                <div class="rate-right">
-                  <div>
-                    <div class="rate-val">${fmtNum(show)}</div>
-                    <div class="rate-sub">Reference</div>
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      `;
-
-      // update converter output after render
-      calcEstimate();
+    function isCrypto(code){
+      const c = upper(code);
+      return ["BTC","ETH","USDT","USDC"].includes(c);
     }
 
-    function findRate(from, to){
-      const a = upper(from), b = upper(to);
-      // try direct match
-      const direct = __FX.find(r => upper(r.base||r.from||r.currency_base)===a && upper(r.quote||r.to||r.currency_quote)===b);
-      if(direct) return direct;
-      // try inverse
-      const inv = __FX.find(r => upper(r.base||r.from||r.currency_base)===b && upper(r.quote||r.to||r.currency_quote)===a);
-      if(inv) return { ...inv, _inverse:true };
+    function iconForPair(base, quote){
+      const b = upper(base), q = upper(quote);
+      if(b === "BTC") return `<i class="fa-brands fa-bitcoin"></i>`;
+      if(b === "ETH") return `<i class="fa-brands fa-ethereum"></i>`;
+      if(b === "USDT" || q === "USDT") return `<i class="fa-solid fa-circle-dollar-to-slot"></i>`;
+      if(q === "NGN") return `<i class="fa-solid fa-naira-sign"></i>`;
+      return `<i class="fa-solid fa-coins"></i>`;
+    }
+
+    function pickShowRate(r){
+      // Prefer sell; else buy
+      const sell = Number(r.sell);
+      const buy = Number(r.buy);
+      if(isFinite(sell)) return sell;
+      if(isFinite(buy)) return buy;
       return null;
     }
 
-    function rateValue(r){
-      const mid = r.mid ?? r.mid_rate ?? r.midRate ?? r.rate ?? r.value;
-      const sell = r.sell ?? r.sell_rate ?? r.sellRate ?? r.rate_sell;
-      const buy  = r.buy ?? r.buy_rate ?? r.buyRate ?? r.rate_buy;
-      const v = (mid !== undefined && mid !== null && String(mid) !== "") ? mid : (sell ?? buy);
-      const n = Number(v);
-      return isFinite(n) ? n : null;
+    function buildEstimateLine(from, to, amt){
+      const a = Number(String(amt||"").replace(/,/g,"").trim());
+      if(!isFinite(a) || a <= 0) return "";
+      const val = convertUsingDb(a, from, to);
+      if(val === null) return "";
+      return `${a.toLocaleString()} ${upper(from)} ≈ ${val.toLocaleString(undefined,{maximumFractionDigits:2})} ${upper(to)}`;
+    }
+
+    function convertUsingDb(amount, from, to){
+      const A = upper(from), B = upper(to);
+      if(A === B) return amount;
+
+      // direct & inverse using show-rate
+      const direct = __FX.find(r => upper(r.base)===A && upper(r.quote)===B);
+      if(direct){
+        const v = pickShowRate(direct);
+        if(v === null) return null;
+        return amount * v;
+      }
+
+      const inv = __FX.find(r => upper(r.base)===B && upper(r.quote)===A);
+      if(inv){
+        const v = pickShowRate(inv);
+        if(v === null || v === 0) return null;
+        return amount / v;
+      }
+
+      // bridge using USDT if possible
+      const bridge = "USDT";
+      if(A !== bridge && B !== bridge){
+        const a2u = __FX.find(r => upper(r.base)===A && upper(r.quote)===bridge) || __FX.find(r => upper(r.base)===bridge && upper(r.quote)===A);
+        const u2b = __FX.find(r => upper(r.base)===bridge && upper(r.quote)===B) || __FX.find(r => upper(r.base)===B && upper(r.quote)===bridge);
+        if(a2u && u2b){
+          // amount -> usdt
+          let usdtAmt = null;
+          if(upper(a2u.base)===A && upper(a2u.quote)===bridge){
+            const v = pickShowRate(a2u); if(v!==null) usdtAmt = amount * v;
+          } else {
+            const v = pickShowRate(a2u); if(v!==null && v!==0) usdtAmt = amount / v;
+          }
+          if(usdtAmt === null) return null;
+
+          // usdt -> target
+          if(upper(u2b.base)===bridge && upper(u2b.quote)===B){
+            const v = pickShowRate(u2b); if(v!==null) return usdtAmt * v;
+          } else {
+            const v = pickShowRate(u2b); if(v!==null && v!==0) return usdtAmt / v;
+          }
+        }
+      }
+
+      return null;
     }
 
     function calcEstimate(){
@@ -590,78 +792,157 @@ Thank you.`;
       const to   = document.getElementById("fxTo")?.value || "NGN";
       const amtS = safeText(document.getElementById("fxAmount")?.value).replace(/,/g,"").trim();
       const out = document.getElementById("fxOut");
+      const hint = document.getElementById("fxHint");
       if(!out) return;
 
       const big = out.querySelector(".big");
-      if(!amtS || !big){ big.textContent = "—"; return; }
+      if(!amtS || !big){
+        if(big) big.textContent = "—";
+        if(hint) hint.textContent = "Uses available pairs in your live DB.";
+        return;
+      }
 
       const amt = Number(amtS);
-      if(!isFinite(amt) || amt <= 0){ big.textContent = "—"; return; }
-
-      if(upper(from) === upper(to)){
-        big.textContent = `${amt.toLocaleString()} ${upper(to)}`;
+      if(!isFinite(amt) || amt <= 0){
+        big.textContent = "—";
+        if(hint) hint.textContent = "Enter a valid amount.";
         return;
       }
 
-      const r = findRate(from, to);
-      if(!r){
+      const res = convertUsingDb(amt, from, to);
+      if(res === null){
         big.textContent = "Rate not available";
+        if(hint) hint.textContent = "That pair is not in the board yet. Use WhatsApp to request a quote.";
         return;
       }
 
-      const v = rateValue(r);
-      if(v === null){
-        big.textContent = "Rate not available";
-        return;
-      }
-
-      const res = r._inverse ? (amt / v) : (amt * v);
       big.textContent = `${res.toLocaleString(undefined,{maximumFractionDigits:2})} ${upper(to)}`;
+      if(hint) hint.textContent = `Estimate based on ${upper(from)}/${upper(to)} (or USDT bridge). Confirm final quote on WhatsApp.`;
+    }
+
+    function setRateFilter(mode){
+      __rateFilter = mode;
+
+      const a = document.getElementById("tabAll");
+      const f = document.getElementById("tabFiat");
+      const c = document.getElementById("tabCrypto");
+      if(a) a.classList.toggle("active", mode==="all");
+      if(f) f.classList.toggle("active", mode==="fiat");
+      if(c) c.classList.toggle("active", mode==="crypto");
+
+      renderRates();
+    }
+
+    function applyFilterAndSearch(list){
+      const q = upper(document.getElementById("rateSearch")?.value || "");
+      let out = (list||[]).slice();
+
+      if(__rateFilter === "fiat"){
+        out = out.filter(r => !isCrypto(r.base) && !isCrypto(r.quote));
+      } else if(__rateFilter === "crypto"){
+        out = out.filter(r => isCrypto(r.base) || isCrypto(r.quote));
+      }
+
+      if(q){
+        out = out.filter(r => {
+          const key = upper(r.asset || r.pair || `${r.base}/${r.quote}`);
+          return key.includes(q) || upper(r.base).includes(q) || upper(r.quote).includes(q);
+        });
+      }
+
+      return out;
+    }
+
+    function renderRates(){
+      const mount = document.getElementById("ratesMount");
+      if(!mount) return;
+
+      const list = applyFilterAndSearch(__FX);
+
+      if(!list.length){
+        mount.innerHTML = `<div class="notice"><strong>No matches.</strong> Try another search or switch tabs.</div>`;
+        return;
+      }
+
+      mount.innerHTML = `
+        <div class="rates-list">
+          ${list.map(r => {
+            const base = upper(r.base);
+            const quote = upper(r.quote);
+            const pair = upper(r.asset || r.pair || `${base}/${quote}`);
+            const buy = r.buy;
+            const sell = r.sell;
+
+            const show = pickShowRate(r);
+
+            const tag = (pair.includes("NGN") && (base==="USDT"||base==="BTC"||base==="ETH")) ? "P2P" :
+                        (pair.includes("USDT") && (base==="BTC"||base==="ETH")) ? "Spot" :
+                        "Market";
+
+            return `
+              <div class="rate-row">
+                <div class="rate-left">
+                  <div class="pair">
+                    <span class="icon">${iconForPair(base, quote)}</span>
+                    <span>${base}/${quote}</span>
+                  </div>
+                  ${isFinite(Number(buy)) ? `<span class="chip">Buy: <span class="mono">${fmtNum(buy)}</span></span>` : ``}
+                  ${isFinite(Number(sell)) ? `<span class="chip">Sell: <span class="mono">${fmtNum(sell)}</span></span>` : ``}
+                  <span class="pill-mini"><i class="fa-solid fa-tag" style="opacity:.85"></i> ${tag}</span>
+                </div>
+                <div class="rate-right">
+                  <div>
+                    <div class="rate-val">${show === null ? "—" : fmtNum(show)}</div>
+                    <div class="rate-sub">${pair}</div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function setUpdatedAt(){
+      const el = document.getElementById("fxUpdatedAt");
+      if(!el) return;
+      const ts = (__FX||[])
+        .map(r => r.updated_at || r.updatedAt || r.created_at || r.createdAt)
+        .filter(Boolean)
+        .sort()
+        .slice(-1)[0];
+      el.textContent = ts ? `Updated: ${new Date(ts).toLocaleString()}` : "";
     }
 
     async function loadRates(){
-      // 1) If app.js exposes rates already
       try{
-        if(window.__rates && Array.isArray(window.__rates) && window.__rates.length){
-          __FX = window.__rates;
-          renderRates();
-          return;
-        }
         if(window.LARMAH && typeof LARMAH.getRates === "function"){
-          const rr = await LARMAH.getRates();
-          if(Array.isArray(rr) && rr.length){
-            __FX = rr;
-            renderRates();
-            return;
-          }
+          const rr = await LARMAH.getRates({ force: true });
+          if(Array.isArray(rr)) __FX = rr.filter(x => String(x.status||"active").toLowerCase() === "active");
+          setUpdatedAt();
+          renderRates();
+          calcEstimate();
+          return;
         }
       }catch(e){ console.warn(e); }
 
-      // 2) Supabase fallback
-      const mount = document.getElementById("ratesMount");
+      // fallback read
       try{
         const sb = await waitForSupabaseClient();
         if(!sb) throw new Error("supabaseClient not ready");
-
-        const { data, error } = await sb
-          .from("rates")
-          .select("*")
-          .order("updated_at", { ascending: false });
-
+        const { data, error } = await sb.from("rates").select("*").order("updated_at", { ascending: false });
         if(error) throw error;
-
-        __FX = (data || []).filter(r => {
-          const s = safeText(r.status).toLowerCase();
-          return !s || s === "active" || s === "published";
-        });
-
+        __FX = (data||[]).filter(r => String(r.status||"active").toLowerCase()==="active");
+        setUpdatedAt();
         renderRates();
+        calcEstimate();
       }catch(e){
         console.error(e);
+        const mount = document.getElementById("ratesMount");
         if(mount){
           mount.innerHTML = `
             <div class="notice" style="border-color:rgba(255,90,103,.35)">
-              <strong>Unable to load rates.</strong> Please request a quote via WhatsApp.
+              <strong>Unable to load rates.</strong> Please refresh or request a quote via WhatsApp.
               <div class="actions" style="margin-top:10px">
                 <button class="btn small" type="button" onclick="loadRates()">
                   <i class="fa-solid fa-rotate-right"></i> Retry
@@ -673,17 +954,37 @@ Thank you.`;
       }
     }
 
+    async function refreshBoard(forceSync){
+      // Optionally call edge function to sync P2P -> DB, then refresh the DB list.
+      // This assumes you deployed an Edge Function named "p2p-sync" (auth required if verify_jwt=true).
+      if(forceSync && window.LARMAH && typeof LARMAH.callFn === "function"){
+        try{
+          await LARMAH.callFn("p2p-sync", {}, { method: "POST" });
+        }catch(e){
+          // If JWT verify is on, browser calls may fail; DB cron will still keep it fresh.
+          console.warn("p2p-sync call failed:", e?.message || e);
+        }
+      }
+      await loadRates();
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("rateSearch")?.addEventListener("input", () => renderRates());
+
       document.getElementById("fxFrom")?.addEventListener("change", calcEstimate);
       document.getElementById("fxTo")?.addEventListener("change", calcEstimate);
       document.getElementById("fxAmount")?.addEventListener("input", calcEstimate);
 
+      // initial load
       loadRates();
 
-      // If your app.js provides realtime helper, subscribe
+      // realtime updates (if enabled in app.js)
       if(window.LARMAH && LARMAH.realtime){
         LARMAH.realtime.subscribe("rates", () => loadRates(), "exchange-rates", { debounceMs: 700, statusElId: "liveStateFX" });
       }
+
+      // smart auto refresh (DB-only)
+      setInterval(() => loadRates(), 60000); // every 60s refresh UI from DB
     });
   </script>
 
