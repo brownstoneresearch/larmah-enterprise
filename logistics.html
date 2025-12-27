@@ -13,7 +13,6 @@
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://heylarmah.tech/logistics.html" />
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="en_NG" />
   <meta property="og:url" content="https://heylarmah.tech/logistics.html" />
@@ -22,7 +21,6 @@
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
   <meta property="og:image:alt" content="Larmah Logistics — Premium Movement" />
 
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Larmah Logistics" />
   <meta name="twitter:description" content="Move with confidence. Verified fleet and trackable dispatch across Nigeria." />
@@ -31,7 +29,6 @@
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
 
-  <!-- Performance -->
   <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -42,7 +39,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
-  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -63,10 +59,7 @@
   </script>
 
   <style>
-    .catalog-head{
-      display:flex; align-items:flex-end; justify-content:space-between;
-      gap:12px; flex-wrap:wrap; margin-bottom:16px;
-    }
+    .catalog-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
 
     .filters-box{
       background: var(--panel);
@@ -81,9 +74,7 @@
       gap: 12px;
       margin-bottom: 12px;
     }
-    @media(max-width: 768px){
-      .filters{ grid-template-columns: 1fr; }
-    }
+    @media(max-width: 768px){ .filters{ grid-template-columns: 1fr; } }
     .pillbar{
       display:flex; gap:8px; flex-wrap:wrap;
       border-top: 1px solid rgba(255,255,255,0.05);
@@ -112,9 +103,7 @@
       flex-direction:column;
       gap:6px;
     }
-    .meta-line{
-      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-    }
+    .meta-line{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
     .mono{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       font-size: .82rem;
@@ -138,38 +127,18 @@
     }
     .copy-btn:hover{ transform: translateY(-1px); border-color: rgba(212,175,55,.22); background: rgba(255,255,255,.06); }
 
-    .price{
-      margin-top: 10px;
-      font-weight: 950;
-      color: var(--accent);
-      letter-spacing: .1px;
-    }
+    .price{ margin-top: 10px; font-weight: 950; color: var(--accent); letter-spacing: .1px; }
 
     .hero .actions{
-      display:flex;
-      align-items:stretch;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:16px;
+      display:flex; align-items:stretch; gap:12px; flex-wrap:wrap; margin-top:16px;
     }
     .hero .actions .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      white-space:nowrap;
-      line-height:1;
-      min-height:48px;
-      padding:12px 16px;
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      white-space:nowrap; line-height:1; min-height:48px; padding:12px 16px;
     }
     .hero .actions .btn i{ line-height:1; }
-    @media (min-width: 920px){
-      .hero .actions .btn{ min-width: 200px; }
-    }
-    @media (max-width: 520px){
-      .hero .actions{ flex-direction:column; }
-      .hero .actions .btn{ width:100%; }
-    }
+    @media (min-width: 920px){ .hero .actions .btn{ min-width: 200px; } }
+    @media (max-width: 520px){ .hero .actions{ flex-direction:column; } .hero .actions .btn{ width:100%; } }
 
     .card-media{
       width:100%; height:190px; border-radius:14px; overflow:hidden;
@@ -181,7 +150,6 @@
       isolation:isolate;
     }
     .card-media img{ width:100%; height:100%; object-fit:cover; display:block; transform: scale(1.01); }
-
     .card-media::after{
       content:"";
       position:absolute; inset:0;
@@ -243,7 +211,6 @@
     }
     @media(max-width: 1024px){ .lg-skel{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
     @media(max-width: 640px){ .lg-skel{ grid-template-columns: 1fr; } }
-
     .lg-skel .card{ height:320px; opacity:.55; }
   </style>
 </head>
@@ -520,7 +487,7 @@
         <div>
           <b>Contact</b>
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> <span class="mono">hello@heylarmah.tech</span></div>
+          <div class="small"><i class="fa-regular fa-envelope"></i> <span class="mono">business@heylarmah.tech</span></div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
 
           <div class="actions" style="margin-top:12px">
@@ -541,6 +508,8 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
+    const BUSINESS_EMAIL_BASE = "business@heylarmah.tech";
+
     const norm = (s)=> String(s||"").toLowerCase();
     let __LG_ITEMS = [];
     let __lgChannel = null;
@@ -549,8 +518,8 @@
     const __LG_IMG_URLS = {};
     const __LG_IMG_IDX = {};
 
-    function listingEmailForRef(ref){
-      return `listings+${ref}@heylarmah.tech`;
+    function listingAliasForRef(ref){
+      return `business+${ref}@heylarmah.tech`;
     }
 
     function copyTextToClipboard(txt){
@@ -656,7 +625,8 @@
       if(!item) return;
 
       const ref = "WEB-LG-" + id;
-      const to = listingEmailForRef(ref);
+      const alias = listingAliasForRef(ref);
+
       const title = safeText(item.title) || "Service";
       const rate = safeText(item.price).trim() || "Negotiable";
       const subject = `Logistics Booking / Enquiry — ${ref} — ${title}`;
@@ -668,6 +638,7 @@ I want to book/enquire about this logistics service:
 Ref: ${ref}
 Service: ${title}
 Rate: ${rate}
+Generated Email Alias: ${alias}
 
 Pickup:
 Drop-off:
@@ -679,7 +650,7 @@ Notes:
 
 Thank you.`;
 
-      openEmailCompose({ to, subject, body });
+      openEmailCompose({ to: BUSINESS_EMAIL_BASE, subject, body });
     }
 
     function renderLG(){
@@ -718,8 +689,9 @@ Thank you.`;
             const hasMany = urls.length > 1;
             const title = safeText(it.title) || "Service";
             const price = safeText(it.price).trim();
+
             const ref = `WEB-LG-${id}`;
-            const email = listingEmailForRef(ref);
+            const alias = listingAliasForRef(ref);
 
             return `
               <div class="card">
@@ -758,10 +730,10 @@ Thank you.`;
                   <div class="meta-line">
                     <span class="meta-chip">
                       <i class="fa-regular fa-envelope" style="opacity:.9"></i>
-                      <span class="mono">${LARMAH.escapeHtml(email)}</span>
+                      <span class="mono">${LARMAH.escapeHtml(alias)}</span>
                     </span>
-                    <button class="copy-btn" type="button" title="Copy email" aria-label="Copy email"
-                      onclick="copyTextToClipboard('${LARMAH.escapeHtml(email)}')">
+                    <button class="copy-btn" type="button" title="Copy email alias" aria-label="Copy email alias"
+                      onclick="copyTextToClipboard('${LARMAH.escapeHtml(alias)}')">
                       <i class="fa-regular fa-copy"></i>
                     </button>
                   </div>
@@ -832,11 +804,15 @@ Thank you.`;
       const item = (__LG_ITEMS||[]).find(x => String(x.id) === String(id));
       if(!item) return;
 
+      const ref = "WEB-LG-" + id;
+      const alias = listingAliasForRef(ref);
+
       LARMAH.openWhatsApp(LARMAH.buildMessage("Logistics Booking / Enquiry", {
         Service: safeText(item.title),
         Rate: safeText(item.price).trim() || "Negotiable",
-        Ref: "WEB-LG-" + id,
-        Email: listingEmailForRef("WEB-LG-" + id)
+        Ref: ref,
+        Email: BUSINESS_EMAIL_BASE,
+        Alias: alias
       }));
     }
 
