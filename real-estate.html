@@ -114,7 +114,36 @@
       color: var(--muted);
       font-size: .85rem;
       opacity: .92;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
     }
+    .meta-line{
+      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+    }
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: .82rem;
+      opacity: .95;
+    }
+    .meta-chip{
+      display:inline-flex; align-items:center; gap:8px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
+    .copy-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      width:34px; height:34px; border-radius:12px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--text);
+      cursor:pointer;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .copy-btn:hover{ transform: translateY(-1px); border-color: rgba(212,175,55,.22); background: rgba(255,255,255,.06); }
+
     .price{
       margin-top: 10px;
       font-weight: 950;
@@ -122,7 +151,7 @@
       letter-spacing: .1px;
     }
 
-    /* ✅ Hero actions alignment (fixes mixed <a> and <button> baseline issues) */
+    /* ✅ Hero actions alignment */
     .hero .actions{
       display:flex;
       align-items:stretch;
@@ -161,7 +190,6 @@
     }
     .card-media img{ width:100%; height:100%; object-fit:cover; display:block; transform: scale(1.01); }
 
-    /* subtle overlay for readability */
     .card-media::after{
       content:"";
       position:absolute; inset:0;
@@ -252,10 +280,6 @@
             <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
             <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
           </a>
-          <a href="insights.html" class="msheet-link">
-            <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
           <a href="exchange.html" class="msheet-link">
             <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
             <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
@@ -285,7 +309,6 @@
         <ul>
           <li><a class="nav-link active" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
-          <li><a class="nav-link" href="insights.html">Insights</a></li>
           <li><a class="nav-link" href="exchange.html">Exchange</a></li>
         </ul>
       </nav>
@@ -315,7 +338,7 @@
 
             <h1>Find Your Next Space.</h1>
             <p class="lead">
-              Verified listings across Nigeria. Tap any property to enquire instantly on WhatsApp with a traceable reference ID.
+              Verified listings across Nigeria. Tap any property to enquire instantly on WhatsApp or Email with a traceable reference ID.
             </p>
 
             <div class="actions" aria-label="Primary actions">
@@ -476,7 +499,7 @@
             <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
             <div>
               <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Real Estate • Logistics • Insights • Exchange</div>
+              <div class="small">Real Estate • Logistics • Exchange</div>
             </div>
           </div>
 
@@ -496,7 +519,6 @@
           <b>Navigation</b>
           <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
           <div class="small"><a href="logistics.html">Logistics</a></div>
-          <div class="small"><a href="insights.html">Insights</a></div>
           <div class="small"><a href="exchange.html">Exchange</a></div>
           <div class="small"><a href="premium.html">Premium</a></div>
         </div>
@@ -504,7 +526,7 @@
         <div>
           <b>Contact</b>
           <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="2e4c5b5d47404b5d5d6e464b57424f5c434f46005a4b4d46">[email&#160;protected]</a></div>
+          <div class="small"><i class="fa-regular fa-envelope"></i> <span class="mono">hello@heylarmah.tech</span></div>
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
 
           <div class="actions" style="margin-top:12px">
@@ -522,8 +544,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
@@ -534,6 +554,40 @@
 
     const __RE_IMG_URLS = {};
     const __RE_IMG_IDX = {};
+
+    // ✅ Website-generated (unique) email per listing
+    // Uses plus-addressing so all emails can still route to one mailbox if supported.
+    // Example: listings+WEB-RE-123@heylarmah.tech
+    function listingEmailForRef(ref){
+      return `listings+${ref}@heylarmah.tech`;
+    }
+
+    function copyTextToClipboard(txt){
+      if(!txt) return;
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(() => {
+          if(window.LARMAH && LARMAH.toast) LARMAH.toast("Email copied", "success");
+        }).catch(() => fallbackCopy(txt));
+      } else {
+        fallbackCopy(txt);
+      }
+    }
+    function fallbackCopy(txt){
+      const ta = document.createElement("textarea");
+      ta.value = txt;
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); } catch {}
+      document.body.removeChild(ta);
+      if(window.LARMAH && LARMAH.toast) LARMAH.toast("Email copied", "success");
+    }
+
+    function openEmailCompose({ to, subject, body }){
+      const href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject||"")}&body=${encodeURIComponent(body||"")}`;
+      window.location.href = href;
+    }
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
@@ -611,6 +665,34 @@
       renderRE();
     }
 
+    function emailProperty(id){
+      const item = (__RE_ITEMS||[]).find(x=> String(x.id)===String(id));
+      if(!item) return;
+
+      const ref = "WEB-RE-" + id;
+      const to = listingEmailForRef(ref);
+      const title = safeText(item.title) || "Property";
+      const price = formatPrice(item.price) || "Negotiable";
+      const subject = `Real Estate Enquiry — ${ref} — ${title}`;
+      const body =
+`Hello Larmah Team,
+
+I’m interested in this listing:
+
+Ref: ${ref}
+Title: ${title}
+Price: ${price}
+
+My Name:
+My Phone:
+Preferred Viewing / Move-in Date:
+Notes:
+
+Thank you.`;
+
+      openEmailCompose({ to, subject, body });
+    }
+
     function renderRE(){
       const mount = document.getElementById("catalogMount");
       const q = norm(document.getElementById("re_q").value);
@@ -647,6 +729,8 @@
             const hasMany = urls.length > 1;
             const price = formatPrice(it.price);
             const title = safeText(it.title) || "Property";
+            const ref = `WEB-RE-${id}`;
+            const email = listingEmailForRef(ref);
 
             return `
               <div class="card">
@@ -654,6 +738,7 @@
                   <img id="re-img-${id}" src="${LARMAH.escapeHtml(urls[0])}"
                        alt="${LARMAH.escapeHtml(title)}"
                        loading="lazy"
+                       decoding="async"
                        onerror="this.src='assets/images/larmah-header.jpeg'">
 
                   ${hasMany ? `
@@ -675,11 +760,31 @@
                 <p>${LARMAH.escapeHtml(safeText(it.description || ""))}</p>
 
                 <div class="price">${LARMAH.escapeHtml(price)}</div>
-                <div class="meta">Verified • Ref: WEB-RE-${id}</div>
 
-                <div class="actions" style="margin-top:12px">
+                <div class="meta">
+                  <div class="meta-line">
+                    <span class="meta-chip"><i class="fa-solid fa-circle-check" style="opacity:.9"></i> Verified</span>
+                    <span class="meta-chip"><i class="fa-solid fa-hashtag" style="opacity:.9"></i> Ref: <span class="mono">${LARMAH.escapeHtml(ref)}</span></span>
+                  </div>
+
+                  <div class="meta-line">
+                    <span class="meta-chip">
+                      <i class="fa-regular fa-envelope" style="opacity:.9"></i>
+                      <span class="mono">${LARMAH.escapeHtml(email)}</span>
+                    </span>
+                    <button class="copy-btn" type="button" title="Copy email" aria-label="Copy email"
+                      onclick="copyTextToClipboard('${LARMAH.escapeHtml(email)}')">
+                      <i class="fa-regular fa-copy"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="actions" style="margin-top:12px; gap:10px; flex-wrap:wrap;">
                   <button class="btn small primary" type="button" onclick="enquireProperty('${id}')">
-                    <i class="fa-brands fa-whatsapp"></i> Enquire
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                  </button>
+                  <button class="btn small" type="button" onclick="emailProperty('${id}')">
+                    <i class="fa-regular fa-envelope"></i> Email
                   </button>
                 </div>
               </div>
@@ -742,7 +847,8 @@
       LARMAH.openWhatsApp(LARMAH.buildMessage("Real Estate Enquiry", {
         Property: safeText(item.title),
         Price: formatPrice(item.price) || "Negotiable",
-        Ref: "WEB-RE-" + id
+        Ref: "WEB-RE-" + id,
+        Email: listingEmailForRef("WEB-RE-" + id)
       }));
     }
 
