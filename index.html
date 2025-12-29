@@ -72,7 +72,9 @@
   </script>
 
   <style>
-    /* --- Premium home polish (safe, minimal overrides) --- */
+    /* =========================
+       Mature polish (safe overrides)
+       ========================= */
 
     html{ scroll-behavior:smooth; }
     @media (prefers-reduced-motion: reduce){
@@ -87,13 +89,16 @@
       border-radius: 12px;
     }
 
-    .home-wrap{ max-width: 1120px; margin: 0 auto; }
+    .home-wrap{ max-width: 1160px; margin: 0 auto; }
 
-    /* Subtle background polish */
     body{
       position:relative;
       overflow-x:hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
+
+    /* subtle premium texture */
     body::before{
       content:"";
       position:fixed;
@@ -101,9 +106,22 @@
       pointer-events:none;
       background:
         radial-gradient(900px 420px at 18% 6%, rgba(212,175,55,.10), transparent 60%),
-        radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.08), transparent 62%),
-        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.07), transparent 58%);
-      opacity:.85;
+        radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.07), transparent 62%),
+        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.06), transparent 58%),
+        linear-gradient(180deg, rgba(255,255,255,.02), transparent 26%);
+      opacity:.88;
+      z-index:-2;
+    }
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity:.06;
       z-index:-1;
     }
 
@@ -120,24 +138,24 @@
       backdrop-filter: blur(10px);
     }
 
-    /* Hero glow framing (doesn't assume your CSS) */
+    /* HERO shell */
     .hero-shell{
       position:relative;
       overflow:hidden;
       border-radius: var(--radius2, 28px);
-      border: 1px solid rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.09);
       background: rgba(255,255,255,.02);
       box-shadow:
-        0 22px 60px rgba(0,0,0,.40),
-        0 1px 0 rgba(255,255,255,.04) inset;
+        0 26px 70px rgba(0,0,0,.48),
+        0 1px 0 rgba(255,255,255,.05) inset;
     }
     .hero-shell::before{
       content:"";
       position:absolute; inset:-2px;
       background:
         radial-gradient(900px 420px at 10% 0%, rgba(212,175,55,.18), transparent 55%),
-        radial-gradient(700px 360px at 90% 10%, rgba(0,217,129,.12), transparent 60%),
-        radial-gradient(900px 520px at 50% 100%, rgba(0,122,255,.10), transparent 58%);
+        radial-gradient(700px 360px at 90% 10%, rgba(0,217,129,.10), transparent 60%),
+        radial-gradient(900px 520px at 50% 100%, rgba(0,122,255,.08), transparent 58%);
       pointer-events:none;
       filter:saturate(1.08);
     }
@@ -146,13 +164,13 @@
       position:absolute; inset:0;
       pointer-events:none;
       background:
-        linear-gradient(180deg, rgba(0,0,0,.35), transparent 38%),
+        linear-gradient(180deg, rgba(0,0,0,.38), transparent 40%),
         radial-gradient(1200px 600px at 50% 0%, rgba(255,255,255,.06), transparent 62%);
       mix-blend-mode: normal;
     }
     .hero-inner{ position:relative; }
 
-    /* ✅ HERO buttons: perfect alignment + equal height */
+    /* HERO buttons */
     .hero .actions{
       display:flex;
       align-items:stretch;
@@ -175,54 +193,45 @@
     .hero .actions .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
     .hero .actions .btn:active{ transform: translateY(0px) scale(.99); }
     .hero .actions .btn i{ line-height:1; }
-
-    @media (min-width: 920px){
-      .hero .actions .btn{ min-width: 220px; }
-    }
+    @media (min-width: 920px){ .hero .actions .btn{ min-width: 220px; } }
     @media (max-width: 520px){
       .hero .actions{ flex-direction:column; }
       .hero .actions .btn{ width:100%; }
     }
 
-    /* ✅ Replace hero pillar cards with dynamic photos */
+    /* HERO showcase (auto 5s) */
     .hero-showcase{
       position:relative;
       border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.11);
       background: rgba(255,255,255,.03);
       box-shadow:
-        0 14px 40px rgba(0,0,0,.35),
-        0 1px 0 rgba(255,255,255,.04) inset;
+        0 18px 56px rgba(0,0,0,.42),
+        0 1px 0 rgba(255,255,255,.05) inset;
       overflow:hidden;
-      min-height: 340px;
+      min-height: 352px;
+      isolation:isolate;
     }
     .hero-showcase::before{
       content:"";
       position:absolute; inset:0;
       background:
-        radial-gradient(900px 420px at 10% 0%, rgba(212,175,55,.12), transparent 55%),
-        radial-gradient(700px 360px at 90% 10%, rgba(0,217,129,.08), transparent 60%);
+        radial-gradient(900px 420px at 10% 0%, rgba(212,175,55,.10), transparent 55%),
+        radial-gradient(700px 360px at 90% 10%, rgba(0,217,129,.07), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.04), transparent 20%);
       pointer-events:none;
       z-index:1;
     }
 
-    .hs-stage{
-      position:relative;
-      height: 340px;
-    }
+    .hs-stage{ position:relative; height: 352px; }
     .hs-slide{
-      position:absolute;
-      inset:0;
+      position:absolute; inset:0;
       opacity:0;
       transform: scale(1.02);
-      transition: opacity .55s ease, transform .9s ease;
+      transition: opacity .55s ease, transform .95s ease;
       z-index:0;
     }
-    .hs-slide.is-active{
-      opacity:1;
-      transform: scale(1.00);
-      z-index:0;
-    }
+    .hs-slide.is-active{ opacity:1; transform: scale(1.00); }
     .hs-slide img{
       width:100%;
       height:100%;
@@ -230,18 +239,16 @@
       display:block;
       filter: contrast(1.05) saturate(1.05);
     }
+
     .hs-overlay{
-      position:absolute;
-      inset:0;
-      z-index:2;
-      pointer-events:none;
+      position:absolute; inset:0; z-index:2; pointer-events:none;
       background:
-        linear-gradient(90deg, rgba(0,0,0,.55), rgba(0,0,0,.12) 55%, rgba(0,0,0,.45)),
-        radial-gradient(900px 420px at 20% 10%, rgba(212,175,55,.18), transparent 55%);
+        linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.14) 55%, rgba(0,0,0,.58)),
+        radial-gradient(900px 420px at 20% 10%, rgba(212,175,55,.18), transparent 55%),
+        linear-gradient(180deg, rgba(0,0,0,.22), transparent 45%, rgba(0,0,0,.58));
     }
     .hs-caption{
-      position:absolute;
-      left:16px; right:16px; bottom:14px;
+      position:absolute; left:16px; right:16px; bottom:14px;
       z-index:3;
       display:flex;
       align-items:flex-end;
@@ -249,31 +256,29 @@
       gap:12px;
       pointer-events:none;
     }
-    .hs-cap-left{
-      max-width: 78%;
-    }
+    .hs-cap-left{ max-width: 78%; }
     .hs-tag{
       display:inline-flex;
       gap:8px;
       align-items:center;
       padding:8px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.24);
       backdrop-filter: blur(10px);
-      font-weight: 900;
-      font-size: .85rem;
+      font-weight: 950;
+      font-size: .86rem;
       color: var(--text);
+      letter-spacing:.2px;
     }
     .hs-sub{
       margin-top:8px;
-      color: rgba(255,255,255,.85);
-      font-size: .88rem;
+      color: rgba(255,255,255,.86);
+      font-size: .9rem;
       line-height: 1.35;
     }
     .hs-dots{
-      display:flex;
-      gap:8px;
+      display:flex; gap:8px;
       pointer-events:auto;
       align-items:center;
       justify-content:flex-end;
@@ -281,16 +286,13 @@
     .hs-dot{
       width:10px; height:10px;
       border-radius:999px;
-      border: 1px solid rgba(255,255,255,.22);
+      border: 1px solid rgba(255,255,255,.26);
       background: rgba(255,255,255,.10);
       cursor:pointer;
       transition: transform .18s ease, background .18s ease, border-color .18s ease;
     }
     .hs-dot:hover{ transform: scale(1.08); }
-    .hs-dot.is-active{
-      background: rgba(212,175,55,.55);
-      border-color: rgba(212,175,55,.55);
-    }
+    .hs-dot.is-active{ background: rgba(212,175,55,.60); border-color: rgba(212,175,55,.60); }
 
     .hs-actions{
       display:flex;
@@ -307,101 +309,185 @@
     }
 
     @media (max-width: 540px){
-      .hero-showcase{ min-height: 300px; }
-      .hs-stage{ height: 300px; }
+      .hero-showcase{ min-height: 312px; }
+      .hs-stage{ height: 312px; }
       .hs-cap-left{ max-width: 100%; }
       .hs-actions{ flex-direction:column; }
     }
 
-    /* ✅ Latest Catalogues grid: 3 columns */
+    /* ✅ Latest Catalogues grid: 3 columns overall */
     .home-grid{
       display:grid;
       gap: 14px;
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-    @media (max-width: 980px){
-      .home-grid{ grid-template-columns: 1fr; }
-    }
+    @media (max-width: 980px){ .home-grid{ grid-template-columns: 1fr; } }
 
-    /* Compact catalogue cards */
-    .latest-stack{ display:grid; gap:12px; margin-top:10px; }
-    .latest-item{
-      display:grid;
-      grid-template-columns: 74px 1fr auto;
-      gap: 12px;
-      align-items:center;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.09);
-      background: rgba(255,255,255,0.03);
-      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    /* ✅ Each catalogue card shows ONE listing at a time */
+    .rotator{
+      margin-top: 10px;
+      position:relative;
     }
-    .latest-item:hover{
+    .rotator-card{
+      position:relative;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      overflow:hidden;
+      box-shadow:
+        0 16px 46px rgba(0,0,0,.36),
+        0 1px 0 rgba(255,255,255,.05) inset;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+      min-height: 220px;
+      isolation:isolate;
+    }
+    .rotator-card:hover{
       transform: translateY(-1px);
       border-color: rgba(212,175,55,.20);
       background: rgba(255,255,255,0.045);
     }
-    .latest-thumb{
-      width: 74px; height: 58px;
-      border-radius: 14px;
-      overflow:hidden;
-      background: rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.10);
+    .rotator-media{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      background: rgba(0,0,0,.35);
     }
-    .latest-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .latest-title{
-      font-weight: 950;
-      font-size: 0.98rem;
-      line-height: 1.2;
-      margin-bottom: 6px;
-      letter-spacing: .1px;
-    }
-    .latest-meta{
-      display:flex; gap:10px; flex-wrap:wrap;
-      font-size: .82rem;
-      color: var(--muted);
+    .rotator-media img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+      filter: contrast(1.05) saturate(1.05);
       opacity:.92;
-      align-items:center;
+      transform: scale(1.02);
     }
-    .latest-price{ font-weight: 950; color: var(--accent); }
-    .latest-actions .btn.small{ padding: 8px 10px; border-radius: 12px; }
-
-    /* Load more row */
-    .latest-more{
+    .rotator-shade{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.18) 55%, rgba(0,0,0,.62)),
+        linear-gradient(180deg, rgba(0,0,0,.16), transparent 40%, rgba(0,0,0,.66));
+    }
+    .rotator-body{
+      position:relative;
+      z-index:2;
+      padding: 14px;
       display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap: 12px;
+      height: 220px;
+    }
+    .rotator-top{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .rotator-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      backdrop-filter: blur(10px);
+      font-weight: 950;
+      font-size: .82rem;
+      letter-spacing:.2px;
+      color: var(--text);
+    }
+    .rotator-count{
+      font-weight: 850;
+      font-size: .82rem;
+      color: rgba(255,255,255,.86);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+      white-space:nowrap;
+    }
+    .rotator-title{
+      font-weight: 950;
+      font-size: 1.04rem;
+      line-height: 1.2;
+      letter-spacing: .15px;
+      margin-top: 2px;
+      text-shadow: 0 10px 26px rgba(0,0,0,.5);
+    }
+    .rotator-meta{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: rgba(255,255,255,.88);
+      font-size: .86rem;
+    }
+    .rotator-price{
+      font-weight: 950;
+      color: var(--accent);
+    }
+    .rotator-actions{
+      display:flex;
+      gap: 10px;
       align-items:center;
       justify-content:space-between;
-      gap:10px;
-      margin-top: 12px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(255,255,255,.10);
-      color: var(--muted);
     }
-    .latest-more .btn.small{ min-height: 40px; }
+    .rotator-actions .btn.small{
+      min-height: 42px;
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    .rotator-actions .btn.small.primary{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+    .rotator-hint{
+      font-size: .82rem;
+      color: rgba(255,255,255,.76);
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .rotator-hint i{ opacity:.95; }
 
-    /* Live badge */
-    .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:800; font-size:.85rem; color: var(--ok); }
-    .live-dot i { font-size: 8px; }
+    @media (max-width: 540px){
+      .rotator-body{ height: 230px; }
+      .rotator-card{ min-height: 230px; }
+    }
 
     /* Skeleton */
-    .sk-list{ display:grid; gap:12px; margin-top:10px; }
-    .sk-row{
-      display:grid;
-      grid-template-columns: 74px 1fr auto;
-      gap: 12px;
-      align-items:center;
-      padding: 12px;
-      border-radius: 16px;
+    .sk-one{
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.09);
       background: rgba(255,255,255,0.03);
-      opacity:.65;
+      height: 220px;
+      overflow:hidden;
+      position:relative;
     }
-    .sk-thumb{ width:74px; height:58px; border-radius:14px; background: rgba(255,255,255,0.07); }
-    .sk-line{ height: 10px; border-radius: 999px; background: rgba(255,255,255,0.08); margin: 6px 0; }
-    .sk-line.short{ width: 60%; }
-    .sk-btn{ width:40px; height:34px; border-radius:12px; background: rgba(255,255,255,0.08); }
+    .sk-one::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(110deg, rgba(255,255,255,.03), rgba(255,255,255,.08), rgba(255,255,255,.03));
+      transform: translateX(-40%);
+      animation: skmove 1.2s ease-in-out infinite;
+      opacity:.45;
+    }
+    @keyframes skmove{
+      0%{ transform: translateX(-55%); }
+      100%{ transform: translateX(55%); }
+    }
 
-    /* Tiny utility notice */
+    /* Live badge */
+    .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:850; font-size:.85rem; color: var(--ok); }
+    .live-dot i { font-size: 8px; }
+
+    /* Notice */
     .notice{
       border-radius: 16px;
       padding: 12px 12px;
@@ -416,20 +502,10 @@
       border: 1px solid rgba(255,255,255,.10) !important;
       background: rgba(255,255,255,.03) !important;
       box-shadow:
-        0 18px 50px rgba(0,0,0,.35),
-        0 1px 0 rgba(255,255,255,.04) inset;
+        0 18px 56px rgba(0,0,0,.38),
+        0 1px 0 rgba(255,255,255,.05) inset;
     }
 
-    @media(max-width: 540px){
-      .latest-item{ grid-template-columns: 64px 1fr; }
-      .latest-actions{ grid-column: 1 / -1; display:flex; justify-content:flex-end; }
-      .latest-thumb{ width:64px; height:52px; }
-      .sk-row{ grid-template-columns: 64px 1fr; }
-      .sk-thumb{ width:64px; height:52px; }
-      .sk-btn{ display:none; }
-    }
-
-    /* Improve anchor offsets (in case header is sticky in style.css) */
     #latest{ scroll-margin-top: 90px; }
   </style>
 </head>
@@ -546,7 +622,7 @@
             </div>
           </div>
 
-          <!-- ✅ Dynamic hero photos (replaces pillar cards) -->
+          <!-- ✅ Hero carousel (auto 5s) -->
           <aside class="hero-showcase" aria-label="Service showcase">
             <div class="hs-stage" id="hsStage">
               <div class="hs-slide is-active" data-key="real-estate" data-title="Real Estate" data-sub="Shortlets, rentals, and verified purchase listings.">
@@ -568,7 +644,7 @@
 
               <div class="hs-caption">
                 <div class="hs-cap-left">
-                  <div class="hs-tag" id="hsTag"><i class="fa-solid fa-building-circle-check" style="color:var(--brand)"></i> Real Estate</div>
+                  <div class="hs-tag" id="hsTag"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</div>
                   <div class="hs-sub" id="hsSub">Shortlets, rentals, and verified purchase listings.</div>
                 </div>
 
@@ -594,12 +670,12 @@
       <div class="section-head-split">
         <div>
           <h2>Latest Catalogues</h2>
-          <p class="lead">Real-time updates from verified inventory (Supabase).</p>
+          <p class="lead">Auto-rotating active listings (updates every 5 seconds).</p>
         </div>
         <a class="btn small" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
       </div>
 
-      <!-- ✅ 3 columns preview (RE / Logistics / Exchange) + dynamic “Load more” -->
+      <!-- ✅ 3 columns overall, but ONE listing visible per column (auto rotates every 5s) -->
       <div class="grid home-grid">
         <!-- Real Estate -->
         <div class="card">
@@ -608,12 +684,8 @@
             <a class="mini-link small" href="real-estate.html">View all →</a>
           </div>
 
-          <div id="latestRE">
-            <div class="sk-list" aria-label="Loading real estate items">
-              <div class="sk-row"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-              <div class="sk-row"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-              <div class="sk-row"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-            </div>
+          <div id="latestRE" class="rotator" aria-label="Real Estate rotating preview">
+            <div class="sk-one" aria-hidden="true"></div>
           </div>
         </div>
 
@@ -624,12 +696,8 @@
             <a class="mini-link small" href="logistics.html">View all →</a>
           </div>
 
-          <div id="latestLG">
-            <div class="sk-list" aria-label="Loading logistics items">
-              <div class="sk-row"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-              <div class="sk-row"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-              <div class="sk-row"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-            </div>
+          <div id="latestLG" class="rotator" aria-label="Logistics rotating preview">
+            <div class="sk-one" aria-hidden="true"></div>
           </div>
         </div>
 
@@ -640,12 +708,8 @@
             <a class="mini-link small" href="exchange.html">View all →</a>
           </div>
 
-          <div id="latestEX">
-            <div class="sk-list" aria-label="Loading exchange items">
-              <div class="sk-row"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-              <div class="sk-row"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-              <div class="sk-row"><div class="sk-thumb"></div><div><div class="sk-line"></div><div class="sk-line short"></div></div><div class="sk-btn"></div></div>
-            </div>
+          <div id="latestEX" class="rotator" aria-label="Exchange rotating preview">
+            <div class="sk-one" aria-hidden="true"></div>
           </div>
         </div>
       </div>
@@ -721,8 +785,8 @@
     document.getElementById("year").textContent = new Date().getFullYear();
 
     /* -----------------------------
-       HERO: Dynamic photo showcase
-    ------------------------------ */
+       HERO: Auto carousel (5s)
+       ------------------------------ */
     const LARMAH_HERO = (() => {
       const stage = () => document.getElementById("hsStage");
       const slides = () => Array.from(stage()?.querySelectorAll(".hs-slide") || []);
@@ -732,6 +796,13 @@
 
       let idx = 0;
       let timer = null;
+
+      function iconFor(title){
+        const t = String(title || "").toLowerCase();
+        if(t.includes("real")) return "fa-house";
+        if(t.includes("log")) return "fa-truck";
+        return "fa-money-bill-transfer";
+      }
 
       function apply(i){
         const s = slides();
@@ -747,70 +818,51 @@
         const subtitle = active?.getAttribute("data-sub") || "";
 
         if(tag()){
-          const icon =
-            title.toLowerCase().includes("real") ? 'fa-house' :
-            title.toLowerCase().includes("log") ? 'fa-truck' :
-            'fa-money-bill-transfer';
-
-          tag().innerHTML = `<i class="fa-solid ${icon}" style="color:var(--brand)"></i> ${LARMAH.escapeHtml(title)}`;
+          tag().innerHTML = `<i class="fa-solid ${iconFor(title)}" style="color:var(--brand)"></i> ${LARMAH.escapeHtml(title)}`;
         }
         if(sub()) sub().textContent = subtitle;
       }
 
-      function go(i){
-        apply(i);
-        restart();
-      }
+      function go(i){ apply(i); restart(); }
 
       function start(){
         const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        if(reduce) return; // respect reduced motion
+        if(reduce) return;
         stop();
-        timer = setInterval(() => apply(idx + 1), 4500);
+        timer = setInterval(() => apply(idx + 1), 5000);
       }
 
-      function stop(){
-        if(timer) clearInterval(timer);
-        timer = null;
-      }
-
-      function restart(){
-        stop();
-        start();
-      }
+      function stop(){ if(timer) clearInterval(timer); timer = null; }
+      function restart(){ stop(); start(); }
 
       function init(){
         apply(0);
         start();
+
+        // pause on hover (desktop)
+        const s = stage();
+        if(s){
+          s.addEventListener("mouseenter", () => stop());
+          s.addEventListener("mouseleave", () => start());
+        }
       }
 
       return { init, go, stop };
     })();
 
     /* ---------------------------------------
-       INDEX: 3-column previews + “Load more”
-    ---------------------------------------- */
+       INDEX ROTATORS: one item visible per card
+       Auto-rotate every 5s
+       ---------------------------------------- */
     const __INDEX_CACHE = { "real-estate": [], "logistics": [], "exchange": [] };
-    const __INDEX_STATE = {
-      "real-estate": { pageSize: 3, hasMore: true, loading: false },
-      "logistics":   { pageSize: 3, hasMore: true, loading: false },
-      "exchange":    { pageSize: 3, hasMore: true, loading: false }
+    const __ROT = {
+      "real-estate": { i: 0, t: null, mounted: false, mountId: "latestRE" },
+      "logistics":   { i: 0, t: null, mounted: false, mountId: "latestLG" },
+      "exchange":    { i: 0, t: null, mounted: false, mountId: "latestEX" }
     };
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
-    }
-
-    function pickListingImage(it){
-      if (Array.isArray(it.image_urls) && it.image_urls.length && it.image_urls[0]) return it.image_urls[0];
-      if (it.image_url) return it.image_url;
-
-      // fallback by category (looks nicer)
-      const c = String(it.category || "").toLowerCase();
-      if (c.includes("real")) return "assets/images/larmah-realestate.jpeg";
-      if (c.includes("log")) return "assets/images/larmah-logistics.jpeg";
-      if (c.includes("exch")) return "assets/images/larmah-exchange.jpeg";
-      return "assets/images/larmah-header.jpeg";
     }
 
     function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
@@ -819,6 +871,31 @@
       const s = safeText(raw).trim();
       if(!s) return "Contact for quote";
       return s;
+    }
+
+    function fallbackByCategory(category){
+      if(category === "real-estate") return "assets/images/larmah-realestate.jpeg";
+      if(category === "logistics") return "assets/images/larmah-logistics.jpeg";
+      if(category === "exchange") return "assets/images/larmah-exchange.jpeg";
+      return "assets/images/larmah-header.jpeg";
+    }
+
+    function pickListingImage(category, it){
+      if (Array.isArray(it.image_urls) && it.image_urls.length && it.image_urls[0]) return it.image_urls[0];
+      if (it.image_url) return it.image_url;
+      return fallbackByCategory(category);
+    }
+
+    function iconForCategory(category){
+      if(category === "real-estate") return "fa-house";
+      if(category === "logistics") return "fa-truck";
+      return "fa-money-bill-transfer";
+    }
+
+    function labelForCategory(category){
+      if(category === "real-estate") return "Real Estate";
+      if(category === "logistics") return "Logistics";
+      return "Exchange";
     }
 
     async function waitForSupabaseClient({ tries = 10, delay = 250 } = {}){
@@ -830,7 +907,7 @@
       return null;
     }
 
-    async function fetchListingsPage(category, offset, limit){
+    async function fetchActiveListings(category, limit = 30){
       const sb = await waitForSupabaseClient({ tries: 12, delay: 250 });
       if(!sb) throw new Error("supabaseClient not ready");
 
@@ -840,97 +917,130 @@
         .eq("category", category)
         .eq("status", "active")
         .order("created_at", { ascending: false })
-        .range(offset, offset + limit - 1);
+        .limit(limit);
 
       if(error) throw error;
       return data || [];
     }
 
-    function renderMount(category, mountId){
+    function enquireFromIndex(category, id){
+      const items = __INDEX_CACHE[category] || [];
+      const item = items.find(x => String(x.id) === String(id));
+      if(!item) return;
+
+      LARMAH.openWhatsApp(LARMAH.buildMessage("Enquiry", {
+        Sector: labelForCategory(category).toUpperCase(),
+        Asset: safeText(item.title) || "Listing",
+        Price: formatPrice(item.price) || "Negotiable",
+        Ref: "WEB-INDEX-" + id
+      }));
+    }
+
+    function renderRotator(category){
+      const mountId = __ROT[category]?.mountId;
       const mount = document.getElementById(mountId);
       if(!mount) return;
 
       const items = __INDEX_CACHE[category] || [];
-      const st = __INDEX_STATE[category] || { pageSize: 3, hasMore: false, loading: false };
-
       if(!items.length){
-        mount.innerHTML = `<div class="notice">No items yet. Check back soon.</div>`;
+        mount.innerHTML = `<div class="notice">No active listings yet. Check back soon.</div>`;
         return;
       }
 
+      const st = __ROT[category];
+      const idx = st.i % items.length;
+      const it = items[idx];
+
+      const imgUrl = pickListingImage(category, it);
+      const title = safeText(it.title) || "Listing";
+      const price = formatPrice(it.price);
+      const icon = iconForCategory(category);
+
       mount.innerHTML = `
-        <div class="latest-stack">
-          ${items.map(it => {
-            const imgUrl = pickListingImage(it);
-            const price = formatPrice(it.price);
-            const title = safeText(it.title) || "Listing";
-            return `
-              <div class="latest-item">
-                <div class="latest-thumb">
-                  <img src="${LARMAH.escapeHtml(imgUrl)}"
-                       alt="${LARMAH.escapeHtml(title)}"
-                       loading="lazy"
-                       decoding="async"
-                       onerror="this.src='assets/images/larmah-header.jpeg'">
-                </div>
+        <div class="rotator-card" role="group" aria-label="${LARMAH.escapeHtml(labelForCategory(category))} listing preview">
+          <div class="rotator-media" aria-hidden="true">
+            <img src="${LARMAH.escapeHtml(imgUrl)}" alt="" decoding="async"
+              onerror="this.src='${fallbackByCategory(category)}'">
+          </div>
+          <div class="rotator-shade" aria-hidden="true"></div>
 
-                <div class="latest-info">
-                  <div class="latest-title">${LARMAH.escapeHtml(title)}</div>
-                  <div class="latest-meta">
-                    <span class="latest-price">${LARMAH.escapeHtml(price)}</span>
-                    <span><i class="fa-solid fa-circle-check" style="opacity:.9"></i> Verified</span>
-                  </div>
-                </div>
-
-                <div class="latest-actions">
-                  <button class="btn small primary" type="button" title="Enquire on WhatsApp"
-                    onclick="enquireFromIndex('${category}','${it.id}')">
-                    <i class="fa-brands fa-whatsapp"></i>
-                  </button>
-                </div>
+          <div class="rotator-body">
+            <div>
+              <div class="rotator-top">
+                <div class="rotator-pill"><i class="fa-solid ${icon}" style="color:var(--brand)"></i> ${LARMAH.escapeHtml(labelForCategory(category))}</div>
+                <div class="rotator-count" aria-label="Listing position">${idx + 1} / ${items.length}</div>
               </div>
-            `;
-          }).join("")}
-        </div>
 
-        <div class="latest-more">
-          <span class="small">${items.length} shown${st.hasMore ? " • more available" : ""}</span>
-          ${
-            st.hasMore
-            ? `<button class="btn small" type="button" ${st.loading ? "disabled" : ""} onclick="loadMoreIndex('${category}','${mountId}')">
-                 <i class="fa-solid ${st.loading ? "fa-spinner fa-spin" : "fa-plus"}"></i>
-                 ${st.loading ? "Loading..." : "Load more"}
-               </button>`
-            : `<span class="small" style="opacity:.85">All loaded</span>`
-          }
+              <div class="rotator-title">${LARMAH.escapeHtml(title)}</div>
+
+              <div class="rotator-meta">
+                <span class="rotator-price">${LARMAH.escapeHtml(price)}</span>
+                <span><i class="fa-solid fa-circle-check" style="opacity:.95"></i> Verified</span>
+                <span style="opacity:.9"><i class="fa-solid fa-clock"></i> Auto</span>
+              </div>
+            </div>
+
+            <div class="rotator-actions">
+              <div class="rotator-hint">
+                <i class="fa-solid fa-rotate"></i> Rotates every 5s
+              </div>
+              <button class="btn small primary" type="button"
+                onclick="enquireFromIndex('${category}','${it.id}')">
+                <i class="fa-brands fa-whatsapp"></i> Enquire
+              </button>
+            </div>
+          </div>
         </div>
       `;
     }
 
-    async function renderListingsPreview(category, mountId){
+    function stopRotator(category){
+      const st = __ROT[category];
+      if(st?.t) clearInterval(st.t);
+      if(st) st.t = null;
+    }
+
+    function startRotator(category){
+      const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if(reduce) return; // respect reduced motion
+
+      stopRotator(category);
+      const st = __ROT[category];
+      if(!st) return;
+
+      st.t = setInterval(() => {
+        if(!(__INDEX_CACHE[category] || []).length) return;
+        st.i = (st.i + 1) % __INDEX_CACHE[category].length;
+        renderRotator(category);
+      }, 5000);
+
+      // pause on hover
+      const mount = document.getElementById(st.mountId);
+      if(mount && !st.mounted){
+        st.mounted = true;
+        mount.addEventListener("mouseenter", () => stopRotator(category));
+        mount.addEventListener("mouseleave", () => startRotator(category));
+      }
+    }
+
+    async function initCategoryRotator(category){
+      const mountId = __ROT[category]?.mountId;
       const mount = document.getElementById(mountId);
       if(!mount) return;
 
       try{
-        __INDEX_STATE[category].loading = true;
-
-        const initial = __INDEX_STATE[category].pageSize || 3;
-        const items = await fetchListingsPage(category, 0, initial);
-
+        const items = await fetchActiveListings(category, 30);
         __INDEX_CACHE[category] = items;
-        __INDEX_STATE[category].hasMore = (items.length === initial);
-        __INDEX_STATE[category].loading = false;
-
-        renderMount(category, mountId);
+        __ROT[category].i = 0;
+        renderRotator(category);
+        startRotator(category);
       } catch(e){
         console.error(e);
-        __INDEX_STATE[category].loading = false;
-
         mount.innerHTML = `
           <div class="notice" style="border-color:rgba(255,90,103,.35)">
             <strong>Connection error.</strong> Please refresh, or retry below.
             <div class="actions" style="margin-top:10px">
-              <button class="btn small" type="button" onclick="renderListingsPreview('${category}','${mountId}')">
+              <button class="btn small" type="button" onclick="initCategoryRotator('${category}')">
                 <i class="fa-solid fa-rotate-right"></i> Retry
               </button>
             </div>
@@ -939,74 +1049,30 @@
       }
     }
 
-    async function loadMoreIndex(category, mountId){
-      const st = __INDEX_STATE[category];
-      if(!st || st.loading || !st.hasMore) return;
-
-      st.loading = true;
-
-      try{
-        const offset = (__INDEX_CACHE[category] || []).length;
-        const limit = st.pageSize || 3;
-
-        const next = await fetchListingsPage(category, offset, limit);
-
-        __INDEX_CACHE[category] = (__INDEX_CACHE[category] || []).concat(next);
-        st.hasMore = (next.length === limit);
-        st.loading = false;
-
-        renderMount(category, mountId);
-      } catch(e){
-        console.error(e);
-        st.loading = false;
-
-        const mount = document.getElementById(mountId);
-        if(mount){
-          mount.insertAdjacentHTML("beforeend", `
-            <div class="notice" style="margin-top:10px;border-color:rgba(255,176,32,.35)">
-              <strong>Could not load more.</strong> Try again.
-            </div>
-          `);
-        }
-      }
-    }
-
-    function enquireFromIndex(category, id){
-      const items = __INDEX_CACHE[category] || [];
-      const item = items.find(x => String(x.id) === String(id));
-      if(!item) return;
-
-      const sector =
-        category === "real-estate" ? "REAL ESTATE" :
-        category === "logistics" ? "LOGISTICS" :
-        "EXCHANGE";
-
-      LARMAH.openWhatsApp(LARMAH.buildMessage("Enquiry", {
-        Sector: sector,
-        Asset: safeText(item.title) || "Listing",
-        Price: formatPrice(item.price) || "Negotiable",
-        Ref: "WEB-INDEX-" + id
-      }));
+    function stopAllRotators(){
+      Object.keys(__ROT).forEach(stopRotator);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      // hero showcase
       if(window.LARMAH) LARMAH_HERO.init();
 
-      // previews
-      renderListingsPreview("real-estate","latestRE");
-      renderListingsPreview("logistics","latestLG");
-      renderListingsPreview("exchange","latestEX");
+      initCategoryRotator("real-estate");
+      initCategoryRotator("logistics");
+      initCategoryRotator("exchange");
 
-      // realtime refresh
       if(window.LARMAH && LARMAH.realtime){
         LARMAH.realtime.subscribe("listings", () => {
-          renderListingsPreview("real-estate","latestRE");
-          renderListingsPreview("logistics","latestLG");
-          renderListingsPreview("exchange","latestEX");
-        }, "home-listings", { debounceMs: 600, statusElId: "liveStateHOME" });
+          // refresh caches + restart rotations
+          stopAllRotators();
+          initCategoryRotator("real-estate");
+          initCategoryRotator("logistics");
+          initCategoryRotator("exchange");
+        }, "home-listings", { debounceMs: 650, statusElId: "liveStateHOME" });
       }
     });
+
+    // expose for inline retry buttons
+    window.initCategoryRotator = initCategoryRotator;
   </script>
 
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
