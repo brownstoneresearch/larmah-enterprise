@@ -531,8 +531,10 @@
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="sheet" role="dialog" aria-label="Menu">
       <div class="sheet-head">
-        <div style="display:flex;align-items:center;gap:10px;min-width:0">
-          <div class="logo-wrap" aria-hidden="true"><img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" /></div>
+        <div class="sheet-brandline">
+          <div class="logo-wrap" aria-hidden="true">
+            <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+          </div>
           <div style="min-width:0">
             <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
             <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
@@ -544,13 +546,13 @@
         </button>
       </div>
 
-      <!-- ✅ Home removed -->
-      <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <!-- About is a “page” inside this index.html -->
+      <a href="#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
+      <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+      <div class="sheet-actions">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
         </button>
@@ -560,9 +562,9 @@
 
   <header>
     <div class="container header-inner">
-      <a class="brand" href="index.html#about" aria-label="About Larmah Enterprise">
+      <a class="brand" href="#home" aria-label="Larmah Home">
         <div class="logo-wrap" aria-hidden="true">
-          <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+          <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
         </div>
         <div class="btxt">
           <div class="bname">Larmah Enterprise</div>
@@ -572,10 +574,9 @@
 
       <nav aria-label="Primary navigation">
         <ul>
-          <!-- ✅ Home removed -->
-          <li><a class="nav-link" href="index.html#about">About</a></li>
+          <li><a class="nav-link" data-nav="about" href="#about">About</a></li>
           <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
-          <li><a class="nav-link active" href="logistics.html">Logistics</a></li>
+          <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
         </ul>
       </nav>
@@ -584,6 +585,7 @@
         <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme" title="Toggle theme">
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
+
         <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
           <i class="fa-solid fa-bars"></i>
         </button>
