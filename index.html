@@ -72,63 +72,30 @@
   </script>
 
   <style>
-    /* =========================
-       Mature polish (safe overrides)
-       ========================= */
-
+    /* Simple, mature overrides (keep your global style.css in control) */
     html{ scroll-behavior:smooth; }
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
-      *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
-      .fa-beat{ animation:none !important; }
+      *{ animation:none !important; transition:none !important; }
     }
+    :focus-visible{ outline:2px solid rgba(212,175,55,.55); outline-offset:3px; border-radius:12px; }
 
-    :focus-visible{
-      outline: 2px solid rgba(212,175,55,.55);
-      outline-offset: 3px;
-      border-radius: 12px;
-    }
+    .home-wrap{ max-width: 1120px; margin: 0 auto; }
 
-    .home-wrap{ max-width: 1160px; margin: 0 auto; }
-
-    body{
-      position:relative;
-      overflow-x:hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    /* subtle premium texture */
+    body{ position:relative; overflow-x:hidden; }
     body::before{
       content:"";
-      position:fixed;
-      inset:0;
+      position:fixed; inset:0;
       pointer-events:none;
       background:
         radial-gradient(900px 420px at 18% 6%, rgba(212,175,55,.10), transparent 60%),
         radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.07), transparent 62%),
-        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.06), transparent 58%),
-        linear-gradient(180deg, rgba(255,255,255,.02), transparent 26%);
-      opacity:.88;
-      z-index:-2;
-    }
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background-image:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size: 44px 44px;
-      opacity:.06;
+        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.06), transparent 58%);
+      opacity:.9;
       z-index:-1;
     }
 
-    /* Skip link (a11y) */
-    .skip-link{
-      position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden;
-    }
+    .skip-link{ position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden; }
     .skip-link:focus{
       left:16px; top:16px; width:auto; height:auto; z-index:9999;
       padding:10px 12px; border-radius:12px;
@@ -138,374 +105,204 @@
       backdrop-filter: blur(10px);
     }
 
-    /* HERO shell */
+    /* Hero (simple grid) */
     .hero-shell{
-      position:relative;
-      overflow:hidden;
-      border-radius: var(--radius2, 28px);
-      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.02);
-      box-shadow:
-        0 26px 70px rgba(0,0,0,.48),
-        0 1px 0 rgba(255,255,255,.05) inset;
-    }
-    .hero-shell::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(900px 420px at 10% 0%, rgba(212,175,55,.18), transparent 55%),
-        radial-gradient(700px 360px at 90% 10%, rgba(0,217,129,.10), transparent 60%),
-        radial-gradient(900px 520px at 50% 100%, rgba(0,122,255,.08), transparent 58%);
-      pointer-events:none;
-      filter:saturate(1.08);
-    }
-    .hero-shell::after{
-      content:"";
-      position:absolute; inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.38), transparent 40%),
-        radial-gradient(1200px 600px at 50% 0%, rgba(255,255,255,.06), transparent 62%);
-      mix-blend-mode: normal;
-    }
-    .hero-inner{ position:relative; }
-
-    /* HERO buttons */
-    .hero .actions{
-      display:flex;
-      align-items:stretch;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-    .hero .actions .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      white-space:nowrap;
-      line-height:1;
-      min-height:48px;
-      padding:12px 16px;
-      transform: translateZ(0);
-      transition: transform .18s ease, filter .18s ease;
-    }
-    .hero .actions .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-    .hero .actions .btn:active{ transform: translateY(0px) scale(.99); }
-    .hero .actions .btn i{ line-height:1; }
-    @media (min-width: 920px){ .hero .actions .btn{ min-width: 220px; } }
-    @media (max-width: 520px){
-      .hero .actions{ flex-direction:column; }
-      .hero .actions .btn{ width:100%; }
-    }
-
-    /* HERO showcase (auto 5s) */
-    .hero-showcase{
-      position:relative;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,.11);
-      background: rgba(255,255,255,.03);
-      box-shadow:
-        0 18px 56px rgba(0,0,0,.42),
-        0 1px 0 rgba(255,255,255,.05) inset;
+      box-shadow: 0 22px 60px rgba(0,0,0,.40);
       overflow:hidden;
-      min-height: 352px;
-      isolation:isolate;
     }
-    .hero-showcase::before{
-      content:"";
-      position:absolute; inset:0;
-      background:
-        radial-gradient(900px 420px at 10% 0%, rgba(212,175,55,.10), transparent 55%),
-        radial-gradient(700px 360px at 90% 10%, rgba(0,217,129,.07), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.04), transparent 20%);
-      pointer-events:none;
-      z-index:1;
+    .hero-grid{
+      display:grid;
+      gap: 16px;
+      padding: 18px;
+      align-items:stretch;
+    }
+    @media (min-width: 980px){
+      .hero-grid{ grid-template-columns: 1.05fr .95fr; padding: 22px; }
     }
 
-    .hs-stage{ position:relative; height: 352px; }
-    .hs-slide{
-      position:absolute; inset:0;
-      opacity:0;
-      transform: scale(1.02);
-      transition: opacity .55s ease, transform .95s ease;
-      z-index:0;
+    .hero-kicker{
+      display:flex; flex-wrap:wrap; gap:10px;
+      align-items:center;
+      margin-bottom: 10px;
     }
-    .hs-slide.is-active{ opacity:1; transform: scale(1.00); }
-    .hs-slide img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
+    .kicker-pill{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      font-weight: 900;
+      font-size: .85rem;
+    }
+    .kicker-sub{ color: var(--muted); font-size:.92rem; opacity:.95; }
+
+    .hero-actions{
+      display:flex; gap: 12px; flex-wrap:wrap;
+      margin-top: 14px;
+    }
+    .hero-actions .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      min-height: 48px;
+      padding: 12px 16px;
+    }
+    @media (max-width: 520px){
+      .hero-actions{ flex-direction:column; }
+      .hero-actions .btn{ width:100%; }
+    }
+
+    .trust-row{
+      display:flex; gap: 10px; flex-wrap:wrap;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .trust-badge{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.02);
+    }
+
+    /* Hero carousel (simple) */
+    .hero-carousel{
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      overflow:hidden;
+      position:relative;
+      min-height: 320px;
+    }
+    .hero-carousel img{
+      width:100%; height: 320px;
+      object-fit: cover;
       display:block;
       filter: contrast(1.05) saturate(1.05);
     }
-
-    .hs-overlay{
-      position:absolute; inset:0; z-index:2; pointer-events:none;
-      background:
-        linear-gradient(90deg, rgba(0,0,0,.62), rgba(0,0,0,.14) 55%, rgba(0,0,0,.58)),
-        radial-gradient(900px 420px at 20% 10%, rgba(212,175,55,.18), transparent 55%),
-        linear-gradient(180deg, rgba(0,0,0,.22), transparent 45%, rgba(0,0,0,.58));
-    }
-    .hs-caption{
-      position:absolute; left:16px; right:16px; bottom:14px;
-      z-index:3;
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
+    .hero-carousel .shade{
+      position:absolute; inset:0;
       pointer-events:none;
+      background:
+        linear-gradient(90deg, rgba(0,0,0,.58), rgba(0,0,0,.10) 55%, rgba(0,0,0,.55)),
+        linear-gradient(180deg, rgba(0,0,0,.18), transparent 40%, rgba(0,0,0,.60));
     }
-    .hs-cap-left{ max-width: 78%; }
-    .hs-tag{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding:8px 10px;
+    .hero-carousel .cap{
+      position:absolute; left:14px; right:14px; bottom:12px;
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+    }
+    .hero-carousel .tag{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 8px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.24);
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
       backdrop-filter: blur(10px);
       font-weight: 950;
       font-size: .86rem;
-      color: var(--text);
-      letter-spacing:.2px;
     }
-    .hs-sub{
+    .hero-carousel .sub{
       margin-top:8px;
       color: rgba(255,255,255,.86);
-      font-size: .9rem;
+      font-size: .92rem;
       line-height: 1.35;
-    }
-    .hs-dots{
-      display:flex; gap:8px;
-      pointer-events:auto;
-      align-items:center;
-      justify-content:flex-end;
-    }
-    .hs-dot{
-      width:10px; height:10px;
-      border-radius:999px;
-      border: 1px solid rgba(255,255,255,.26);
-      background: rgba(255,255,255,.10);
-      cursor:pointer;
-      transition: transform .18s ease, background .18s ease, border-color .18s ease;
-    }
-    .hs-dot:hover{ transform: scale(1.08); }
-    .hs-dot.is-active{ background: rgba(212,175,55,.60); border-color: rgba(212,175,55,.60); }
-
-    .hs-actions{
-      display:flex;
-      gap:10px;
-      padding: 14px 14px 14px;
-      border-top: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.02);
-    }
-    .hs-actions a.btn.small{
-      flex:1;
-      justify-content:center;
-      min-height: 42px;
-      border-radius: 14px;
+      max-width: 520px;
     }
 
-    @media (max-width: 540px){
-      .hero-showcase{ min-height: 312px; }
-      .hs-stage{ height: 312px; }
-      .hs-cap-left{ max-width: 100%; }
-      .hs-actions{ flex-direction:column; }
-    }
-
-    /* ✅ Latest Catalogues grid: 3 columns overall */
-    .home-grid{
+    /* Catalogues */
+    .catalog-grid{
       display:grid;
       gap: 14px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: 1fr;
     }
-    @media (max-width: 980px){ .home-grid{ grid-template-columns: 1fr; } }
+    @media (min-width: 980px){
+      .catalog-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
 
-    /* ✅ Each catalogue card shows ONE listing at a time */
-    .rotator{
-      margin-top: 10px;
-      position:relative;
-    }
+    /* Rotator card (one listing at a time, auto 5s) */
     .rotator-card{
-      position:relative;
       border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
       overflow:hidden;
-      box-shadow:
-        0 16px 46px rgba(0,0,0,.36),
-        0 1px 0 rgba(255,255,255,.05) inset;
-      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+      position:relative;
       min-height: 220px;
-      isolation:isolate;
+      box-shadow: 0 18px 50px rgba(0,0,0,.35);
     }
-    .rotator-card:hover{
-      transform: translateY(-1px);
-      border-color: rgba(212,175,55,.20);
-      background: rgba(255,255,255,0.045);
-    }
-    .rotator-media{
-      position:absolute;
-      inset:0;
-      z-index:0;
-      background: rgba(0,0,0,.35);
-    }
-    .rotator-media img{
-      width:100%; height:100%;
-      object-fit:cover;
-      display:block;
+    .rotator-card img{
+      width:100%; height:220px; object-fit:cover; display:block;
       filter: contrast(1.05) saturate(1.05);
       opacity:.92;
-      transform: scale(1.02);
+      transform: scale(1.01);
     }
-    .rotator-shade{
-      position:absolute;
-      inset:0;
-      z-index:1;
-      pointer-events:none;
+    .rotator-card .shade{
+      position:absolute; inset:0; pointer-events:none;
       background:
-        linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.18) 55%, rgba(0,0,0,.62)),
-        linear-gradient(180deg, rgba(0,0,0,.16), transparent 40%, rgba(0,0,0,.66));
+        linear-gradient(90deg, rgba(0,0,0,.68), rgba(0,0,0,.14) 55%, rgba(0,0,0,.58)),
+        linear-gradient(180deg, rgba(0,0,0,.10), transparent 38%, rgba(0,0,0,.65));
     }
-    .rotator-body{
-      position:relative;
-      z-index:2;
+    .rotator-card .content{
+      position:absolute; inset:0;
       padding: 14px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      gap: 12px;
-      height: 220px;
-    }
-    .rotator-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
       gap: 10px;
     }
-    .rotator-pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.22);
-      backdrop-filter: blur(10px);
-      font-weight: 950;
-      font-size: .82rem;
-      letter-spacing:.2px;
-      color: var(--text);
+    .rotator-top{
+      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
     }
-    .rotator-count{
-      font-weight: 850;
-      font-size: .82rem;
-      color: rgba(255,255,255,.86);
+    .rotator-pill{
+      display:inline-flex; gap:8px; align-items:center;
       padding: 8px 10px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
+      background: rgba(0,0,0,.20);
       backdrop-filter: blur(10px);
+      font-weight: 950;
+      font-size: .82rem;
+    }
+    .rotator-count{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      backdrop-filter: blur(10px);
+      font-weight: 900;
+      font-size: .82rem;
+      color: rgba(255,255,255,.88);
       white-space:nowrap;
     }
     .rotator-title{
       font-weight: 950;
-      font-size: 1.04rem;
+      font-size: 1.05rem;
       line-height: 1.2;
-      letter-spacing: .15px;
-      margin-top: 2px;
-      text-shadow: 0 10px 26px rgba(0,0,0,.5);
+      letter-spacing: .1px;
+      text-shadow: 0 10px 28px rgba(0,0,0,.5);
+      margin-top: 6px;
     }
     .rotator-meta{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
       color: rgba(255,255,255,.88);
-      font-size: .86rem;
+      font-size: .88rem;
     }
-    .rotator-price{
-      font-weight: 950;
-      color: var(--accent);
-    }
+    .rotator-price{ font-weight: 950; color: var(--accent); }
     .rotator-actions{
-      display:flex;
-      gap: 10px;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
     }
     .rotator-actions .btn.small{
       min-height: 42px;
       border-radius: 14px;
       padding: 10px 12px;
+      display:inline-flex; align-items:center; gap:10px;
     }
-    .rotator-actions .btn.small.primary{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-    }
-    .rotator-hint{
-      font-size: .82rem;
-      color: rgba(255,255,255,.76);
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-    .rotator-hint i{ opacity:.95; }
+    .small-hint{ font-size:.84rem; color: rgba(255,255,255,.75); }
 
-    @media (max-width: 540px){
-      .rotator-body{ height: 230px; }
-      .rotator-card{ min-height: 230px; }
-    }
-
-    /* Skeleton */
-    .sk-one{
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.09);
-      background: rgba(255,255,255,0.03);
-      height: 220px;
-      overflow:hidden;
-      position:relative;
-    }
-    .sk-one::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background: linear-gradient(110deg, rgba(255,255,255,.03), rgba(255,255,255,.08), rgba(255,255,255,.03));
-      transform: translateX(-40%);
-      animation: skmove 1.2s ease-in-out infinite;
-      opacity:.45;
-    }
-    @keyframes skmove{
-      0%{ transform: translateX(-55%); }
-      100%{ transform: translateX(55%); }
-    }
-
-    /* Live badge */
+    /* live dot */
     .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:850; font-size:.85rem; color: var(--ok); }
     .live-dot i { font-size: 8px; }
-
-    /* Notice */
-    .notice{
-      border-radius: 16px;
-      padding: 12px 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-    }
-    .notice strong{ color: var(--text); }
-
-    /* CTA strip polish */
-    .cta-strip{
-      border: 1px solid rgba(255,255,255,.10) !important;
-      background: rgba(255,255,255,.03) !important;
-      box-shadow:
-        0 18px 56px rgba(0,0,0,.38),
-        0 1px 0 rgba(255,255,255,.05) inset;
-    }
-
     #latest{ scroll-margin-top: 90px; }
   </style>
 </head>
@@ -513,21 +310,13 @@
 <body data-page="home">
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <noscript>
-    <div class="container" style="padding:14px 18px;margin-top:14px">
-      <div class="notice" style="border-color:rgba(255,176,32,.35)">
-        <strong>JavaScript is disabled.</strong> Live catalog updates and WhatsApp actions may not work properly.
-      </div>
-    </div>
-  </noscript>
-
   <div id="mobileNavOverlay" aria-hidden="true">
     <div class="msheet" role="dialog" aria-label="Mobile navigation">
       <div class="msheet-head">
         <div class="msheet-brand">
           <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
         </div>
-        <button class="msheet-close" type="button" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
+        <button class="msheet-close" type="button" onclick="window.LARMAH?.toggleMenu?.()" aria-label="Close Menu">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -562,7 +351,7 @@
         <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
       </a>
 
-      <button class="menu-btn" type="button" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
+      <button class="menu-btn" type="button" onclick="window.LARMAH?.toggleMenu?.()" aria-label="Open menu">
         <i class="fa-solid fa-bars"></i>
       </button>
 
@@ -589,32 +378,30 @@
   <main id="main" class="container home-wrap" tabindex="-1">
     <section class="hero" aria-label="Homepage hero">
       <div class="hero-shell">
-        <div class="hero-inner">
+        <div class="hero-grid">
           <div>
-            <div class="hero-kicker" aria-label="Trust-first positioning">
+            <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-bolt"></i> Nigeria’s Trust-First Hub</span>
-              <span class="kicker-dot" aria-hidden="true">•</span>
               <span class="kicker-sub">Verified Standards • WhatsApp-first</span>
             </div>
 
             <h1>Verified Commerce,<br/>Built for Trust.</h1>
             <p class="lead">
-              Premium <b>Real Estate</b>, <b>Logistics</b>, and <b>Exchange</b> — curated listings, trackable enquiries,
-              and WhatsApp-first support.
+              Real Estate, Logistics, and Exchange — verified listings, trackable enquiries, and WhatsApp-first support.
             </p>
 
-            <div class="actions">
+            <div class="hero-actions">
               <a class="btn solid" href="#latest"><i class="fa-solid fa-sparkles"></i> Browse Catalogues</a>
               <button class="btn primary" type="button"
-                onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('General Enquiry', { Topic:'Real Estate / Logistics / Exchange', Message:'Hello Larmah, I need assistance.' }))">
+                onclick="openWA(buildMsg('General Enquiry', { Topic:'Real Estate / Logistics / Exchange', Message:'Hello Larmah, I need assistance.' }))">
                 <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
               </button>
             </div>
 
             <div class="trust-row" aria-label="Trust assurances">
-              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Verified listings only</div>
-              <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Scam-resistant workflow</div>
-              <div class="trust-badge"><i class="fa-solid fa-headset"></i> Priority options available</div>
+              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Verified listings</div>
+              <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Scam-resistant</div>
+              <div class="trust-badge"><i class="fa-solid fa-headset"></i> Priority options</div>
             </div>
 
             <div class="small live-dot" id="liveStateHOME" style="margin-top:12px;opacity:.9" aria-live="polite">
@@ -622,44 +409,16 @@
             </div>
           </div>
 
-          <!-- ✅ Hero carousel (auto 5s) -->
-          <aside class="hero-showcase" aria-label="Service showcase">
-            <div class="hs-stage" id="hsStage">
-              <div class="hs-slide is-active" data-key="real-estate" data-title="Real Estate" data-sub="Shortlets, rentals, and verified purchase listings.">
-                <img src="assets/images/larmah-realestate.jpeg" alt="Larmah Real Estate" loading="eager" decoding="async"
-                     onerror="this.src='assets/images/larmah-header.jpeg'">
+          <!-- Simple hero carousel (auto 5s) -->
+          <aside class="hero-carousel" aria-label="Service carousel">
+            <img id="heroImg" src="assets/images/larmah-realestate.jpeg" alt="Larmah Real Estate" decoding="async"
+                 onerror="this.src='assets/images/larmah-header.jpeg'">
+            <div class="shade" aria-hidden="true"></div>
+            <div class="cap">
+              <div>
+                <div class="tag" id="heroTag"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</div>
+                <div class="sub" id="heroSub">Shortlets, rentals, and verified purchase listings.</div>
               </div>
-
-              <div class="hs-slide" data-key="logistics" data-title="Logistics" data-sub="Dispatch, pickups, escort-ready movement, and haulage.">
-                <img src="assets/images/larmah-logistics.jpeg" alt="Larmah Logistics" loading="lazy" decoding="async"
-                     onerror="this.src='assets/images/larmah-header.jpeg'">
-              </div>
-
-              <div class="hs-slide" data-key="exchange" data-title="Exchange" data-sub="Fast, trust-first currency exchange with clean references.">
-                <img src="assets/images/larmah-exchange.jpeg" alt="Larmah Exchange" loading="lazy" decoding="async"
-                     onerror="this.src='assets/images/larmah-header.jpeg'">
-              </div>
-
-              <div class="hs-overlay" aria-hidden="true"></div>
-
-              <div class="hs-caption">
-                <div class="hs-cap-left">
-                  <div class="hs-tag" id="hsTag"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</div>
-                  <div class="hs-sub" id="hsSub">Shortlets, rentals, and verified purchase listings.</div>
-                </div>
-
-                <div class="hs-dots" aria-label="Showcase controls">
-                  <button class="hs-dot is-active" type="button" aria-label="Show Real Estate" onclick="LARMAH_HERO.go(0)"></button>
-                  <button class="hs-dot" type="button" aria-label="Show Logistics" onclick="LARMAH_HERO.go(1)"></button>
-                  <button class="hs-dot" type="button" aria-label="Show Exchange" onclick="LARMAH_HERO.go(2)"></button>
-                </div>
-              </div>
-            </div>
-
-            <div class="hs-actions" aria-label="Quick links">
-              <a class="btn small" href="real-estate.html"><i class="fa-solid fa-house"></i> Real Estate</a>
-              <a class="btn small" href="logistics.html"><i class="fa-solid fa-truck"></i> Logistics</a>
-              <a class="btn small" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Exchange</a>
             </div>
           </aside>
         </div>
@@ -670,23 +429,19 @@
       <div class="section-head-split">
         <div>
           <h2>Latest Catalogues</h2>
-          <p class="lead">Auto-rotating active listings (updates every 5 seconds).</p>
+          <p class="lead">Auto-rotating active listings (every 5 seconds).</p>
         </div>
         <a class="btn small" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
       </div>
 
-      <!-- ✅ 3 columns overall, but ONE listing visible per column (auto rotates every 5s) -->
-      <div class="grid home-grid">
+      <div class="catalog-grid">
         <!-- Real Estate -->
         <div class="card">
           <div class="section-titleline">
             <h3 style="margin:0"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</h3>
             <a class="mini-link small" href="real-estate.html">View all →</a>
           </div>
-
-          <div id="latestRE" class="rotator" aria-label="Real Estate rotating preview">
-            <div class="sk-one" aria-hidden="true"></div>
-          </div>
+          <div id="rotRE"></div>
         </div>
 
         <!-- Logistics -->
@@ -695,10 +450,7 @@
             <h3 style="margin:0"><i class="fa-solid fa-truck" style="color:var(--brand)"></i> Logistics</h3>
             <a class="mini-link small" href="logistics.html">View all →</a>
           </div>
-
-          <div id="latestLG" class="rotator" aria-label="Logistics rotating preview">
-            <div class="sk-one" aria-hidden="true"></div>
-          </div>
+          <div id="rotLG"></div>
         </div>
 
         <!-- Exchange -->
@@ -707,10 +459,7 @@
             <h3 style="margin:0"><i class="fa-solid fa-money-bill-transfer" style="color:var(--brand)"></i> Exchange</h3>
             <a class="mini-link small" href="exchange.html">View all →</a>
           </div>
-
-          <div id="latestEX" class="rotator" aria-label="Exchange rotating preview">
-            <div class="sk-one" aria-hidden="true"></div>
-          </div>
+          <div id="rotEX"></div>
         </div>
       </div>
     </section>
@@ -719,10 +468,10 @@
       <div class="cta-strip">
         <div>
           <h2 style="margin:0">Need something specific?</h2>
-          <p class="lead" style="margin:6px 0 0">Tell us your budget, location, and timeline — we’ll respond via WhatsApp.</p>
+          <p class="lead" style="margin:6px 0 0">Share your budget, location, and timeline — we’ll respond via WhatsApp.</p>
         </div>
         <button class="btn solid" type="button"
-          onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Custom Request', { Category:'Real Estate / Logistics / Exchange', Details:'Describe what you need…' }))">
+          onclick="openWA(buildMsg('Custom Request', { Category:'Real Estate / Logistics / Exchange', Details:'Describe what you need…' }))">
           <i class="fa-brands fa-whatsapp"></i> Start Request
         </button>
       </div>
@@ -766,7 +515,7 @@
           <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
           <div class="actions" style="margin-top:12px">
             <button class="btn small" type="button"
-              onclick="LARMAH.openWhatsApp(LARMAH.buildMessage('Support', { Message:'Hello Larmah, I need help.' }))">
+              onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
             </button>
           </div>
@@ -778,127 +527,29 @@
   </footer>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    /* -----------------------------
-       HERO: Auto carousel (5s)
-       ------------------------------ */
-    const LARMAH_HERO = (() => {
-      const stage = () => document.getElementById("hsStage");
-      const slides = () => Array.from(stage()?.querySelectorAll(".hs-slide") || []);
-      const dots = () => Array.from(stage()?.querySelectorAll(".hs-dot") || []);
-      const tag = () => document.getElementById("hsTag");
-      const sub = () => document.getElementById("hsSub");
-
-      let idx = 0;
-      let timer = null;
-
-      function iconFor(title){
-        const t = String(title || "").toLowerCase();
-        if(t.includes("real")) return "fa-house";
-        if(t.includes("log")) return "fa-truck";
-        return "fa-money-bill-transfer";
-      }
-
-      function apply(i){
-        const s = slides();
-        if(!s.length) return;
-
-        idx = (i + s.length) % s.length;
-
-        s.forEach((el, n) => el.classList.toggle("is-active", n === idx));
-        dots().forEach((d, n) => d.classList.toggle("is-active", n === idx));
-
-        const active = s[idx];
-        const title = active?.getAttribute("data-title") || "Service";
-        const subtitle = active?.getAttribute("data-sub") || "";
-
-        if(tag()){
-          tag().innerHTML = `<i class="fa-solid ${iconFor(title)}" style="color:var(--brand)"></i> ${LARMAH.escapeHtml(title)}`;
-        }
-        if(sub()) sub().textContent = subtitle;
-      }
-
-      function go(i){ apply(i); restart(); }
-
-      function start(){
-        const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        if(reduce) return;
-        stop();
-        timer = setInterval(() => apply(idx + 1), 5000);
-      }
-
-      function stop(){ if(timer) clearInterval(timer); timer = null; }
-      function restart(){ stop(); start(); }
-
-      function init(){
-        apply(0);
-        start();
-
-        // pause on hover (desktop)
-        const s = stage();
-        if(s){
-          s.addEventListener("mouseenter", () => stop());
-          s.addEventListener("mouseleave", () => start());
-        }
-      }
-
-      return { init, go, stop };
-    })();
-
-    /* ---------------------------------------
-       INDEX ROTATORS: one item visible per card
-       Auto-rotate every 5s
-       ---------------------------------------- */
-    const __INDEX_CACHE = { "real-estate": [], "logistics": [], "exchange": [] };
-    const __ROT = {
-      "real-estate": { i: 0, t: null, mounted: false, mountId: "latestRE" },
-      "logistics":   { i: 0, t: null, mounted: false, mountId: "latestLG" },
-      "exchange":    { i: 0, t: null, mounted: false, mountId: "latestEX" }
-    };
+    /* --------- tiny safe fallbacks (keep LARMAH as primary) --------- */
+    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    function buildMsg(title, data){
+      if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
+      const lines = [title, "", ...Object.entries(data||{}).map(([k,v]) => `${k}: ${v}`)];
+      return lines.join("\n");
+    }
+    function openWA(text){
+      if(window.LARMAH?.openWhatsApp) return LARMAH.openWhatsApp(text);
+      const phone = "2347063080605";
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
     }
-
-    function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
-
-    function formatPrice(raw){
-      const s = safeText(raw).trim();
-      if(!s) return "Contact for quote";
-      return s;
-    }
-
-    function fallbackByCategory(category){
-      if(category === "real-estate") return "assets/images/larmah-realestate.jpeg";
-      if(category === "logistics") return "assets/images/larmah-logistics.jpeg";
-      if(category === "exchange") return "assets/images/larmah-exchange.jpeg";
-      return "assets/images/larmah-header.jpeg";
-    }
-
-    function pickListingImage(category, it){
-      if (Array.isArray(it.image_urls) && it.image_urls.length && it.image_urls[0]) return it.image_urls[0];
-      if (it.image_url) return it.image_url;
-      return fallbackByCategory(category);
-    }
-
-    function iconForCategory(category){
-      if(category === "real-estate") return "fa-house";
-      if(category === "logistics") return "fa-truck";
-      return "fa-money-bill-transfer";
-    }
-
-    function labelForCategory(category){
-      if(category === "real-estate") return "Real Estate";
-      if(category === "logistics") return "Logistics";
-      return "Exchange";
-    }
-
-    async function waitForSupabaseClient({ tries = 10, delay = 250 } = {}){
+    async function waitForSB({tries=12, delay=250}={}){
       for(let i=0;i<tries;i++){
         const sb = sbClient();
         if(sb) return sb;
@@ -907,85 +558,106 @@
       return null;
     }
 
-    async function fetchActiveListings(category, limit = 30){
-      const sb = await waitForSupabaseClient({ tries: 12, delay: 250 });
-      if(!sb) throw new Error("supabaseClient not ready");
+    const CAT = {
+      "real-estate": { label:"Real Estate", icon:"fa-house", mount:"rotRE", fallback:"assets/images/larmah-realestate.jpeg" },
+      "logistics":   { label:"Logistics",   icon:"fa-truck", mount:"rotLG", fallback:"assets/images/larmah-logistics.jpeg" },
+      "exchange":    { label:"Exchange",    icon:"fa-money-bill-transfer", mount:"rotEX", fallback:"assets/images/larmah-exchange.jpeg" }
+    };
 
+    function pickImg(category, it){
+      if(Array.isArray(it.image_urls) && it.image_urls[0]) return it.image_urls[0];
+      if(it.image_url) return it.image_url;
+      return CAT[category]?.fallback || "assets/images/larmah-header.jpeg";
+    }
+    function formatPrice(raw){
+      const s = (raw ?? "").toString().trim();
+      return s ? s : "Contact for quote";
+    }
+
+    /* ----------------- HERO carousel (5s) ----------------- */
+    const HERO = [
+      { img:"assets/images/larmah-realestate.jpeg", alt:"Larmah Real Estate", icon:"fa-house", title:"Real Estate", sub:"Shortlets, rentals, and verified purchase listings." },
+      { img:"assets/images/larmah-logistics.jpeg",  alt:"Larmah Logistics",  icon:"fa-truck", title:"Logistics",  sub:"Dispatch, pickups, and haulage with verified handling." },
+      { img:"assets/images/larmah-exchange.jpeg",   alt:"Larmah Exchange",   icon:"fa-money-bill-transfer", title:"Exchange", sub:"Fast, trust-first currency exchange with clean references." }
+    ];
+    let heroIdx = 0, heroTimer = null;
+
+    function renderHero(i){
+      const x = HERO[i % HERO.length];
+      const img = document.getElementById("heroImg");
+      const tag = document.getElementById("heroTag");
+      const sub = document.getElementById("heroSub");
+      if(img){ img.src = x.img; img.alt = x.alt; }
+      if(tag){ tag.innerHTML = `<i class="fa-solid ${x.icon}" style="color:var(--brand)"></i> ${esc(x.title)}`; }
+      if(sub){ sub.textContent = x.sub; }
+    }
+    function startHero(){
+      const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if(reduce) return;
+      if(heroTimer) clearInterval(heroTimer);
+      heroTimer = setInterval(() => { heroIdx = (heroIdx+1) % HERO.length; renderHero(heroIdx); }, 5000);
+    }
+
+    /* ----------------- Listing rotators (5s) ----------------- */
+    const CACHE = { "real-estate":[], "logistics":[], "exchange":[] };
+    const ROT = {
+      "real-estate": { i:0, t:null },
+      "logistics":   { i:0, t:null },
+      "exchange":    { i:0, t:null }
+    };
+
+    async function fetchActive(category, limit=24){
+      const sb = await waitForSB();
+      if(!sb) throw new Error("supabaseClient not ready");
       const { data, error } = await sb
         .from("listings")
         .select("id,title,price,image_url,image_urls,category,status,created_at")
         .eq("category", category)
         .eq("status", "active")
-        .order("created_at", { ascending: false })
+        .order("created_at", { ascending:false })
         .limit(limit);
-
       if(error) throw error;
       return data || [];
     }
 
-    function enquireFromIndex(category, id){
-      const items = __INDEX_CACHE[category] || [];
-      const item = items.find(x => String(x.id) === String(id));
-      if(!item) return;
-
-      LARMAH.openWhatsApp(LARMAH.buildMessage("Enquiry", {
-        Sector: labelForCategory(category).toUpperCase(),
-        Asset: safeText(item.title) || "Listing",
-        Price: formatPrice(item.price) || "Negotiable",
-        Ref: "WEB-INDEX-" + id
-      }));
-    }
-
-    function renderRotator(category){
-      const mountId = __ROT[category]?.mountId;
-      const mount = document.getElementById(mountId);
+    function renderRot(category){
+      const meta = CAT[category];
+      const mount = document.getElementById(meta.mount);
       if(!mount) return;
 
-      const items = __INDEX_CACHE[category] || [];
+      const items = CACHE[category] || [];
       if(!items.length){
         mount.innerHTML = `<div class="notice">No active listings yet. Check back soon.</div>`;
         return;
       }
 
-      const st = __ROT[category];
+      const st = ROT[category];
       const idx = st.i % items.length;
       const it = items[idx];
 
-      const imgUrl = pickListingImage(category, it);
-      const title = safeText(it.title) || "Listing";
+      const imgUrl = pickImg(category, it);
+      const title = (it.title || "Listing").toString();
       const price = formatPrice(it.price);
-      const icon = iconForCategory(category);
 
       mount.innerHTML = `
-        <div class="rotator-card" role="group" aria-label="${LARMAH.escapeHtml(labelForCategory(category))} listing preview">
-          <div class="rotator-media" aria-hidden="true">
-            <img src="${LARMAH.escapeHtml(imgUrl)}" alt="" decoding="async"
-              onerror="this.src='${fallbackByCategory(category)}'">
-          </div>
-          <div class="rotator-shade" aria-hidden="true"></div>
-
-          <div class="rotator-body">
+        <div class="rotator-card">
+          <img src="${esc(imgUrl)}" alt="" decoding="async" onerror="this.src='${esc(meta.fallback)}'">
+          <div class="shade" aria-hidden="true"></div>
+          <div class="content">
             <div>
               <div class="rotator-top">
-                <div class="rotator-pill"><i class="fa-solid ${icon}" style="color:var(--brand)"></i> ${LARMAH.escapeHtml(labelForCategory(category))}</div>
-                <div class="rotator-count" aria-label="Listing position">${idx + 1} / ${items.length}</div>
+                <div class="rotator-pill"><i class="fa-solid ${meta.icon}" style="color:var(--brand)"></i> ${esc(meta.label)}</div>
+                <div class="rotator-count">${idx+1} / ${items.length}</div>
               </div>
-
-              <div class="rotator-title">${LARMAH.escapeHtml(title)}</div>
-
+              <div class="rotator-title">${esc(title)}</div>
               <div class="rotator-meta">
-                <span class="rotator-price">${LARMAH.escapeHtml(price)}</span>
+                <span class="rotator-price">${esc(price)}</span>
                 <span><i class="fa-solid fa-circle-check" style="opacity:.95"></i> Verified</span>
-                <span style="opacity:.9"><i class="fa-solid fa-clock"></i> Auto</span>
               </div>
             </div>
-
             <div class="rotator-actions">
-              <div class="rotator-hint">
-                <i class="fa-solid fa-rotate"></i> Rotates every 5s
-              </div>
-              <button class="btn small primary" type="button"
-                onclick="enquireFromIndex('${category}','${it.id}')">
+              <div class="small-hint"><i class="fa-solid fa-rotate"></i> rotates 5s</div>
+              <button class="btn small primary" type="button" onclick="enquire('${category}','${it.id}')">
                 <i class="fa-brands fa-whatsapp"></i> Enquire
               </button>
             </div>
@@ -994,90 +666,84 @@
       `;
     }
 
-    function stopRotator(category){
-      const st = __ROT[category];
-      if(st?.t) clearInterval(st.t);
-      if(st) st.t = null;
+    function enquire(category, id){
+      const items = CACHE[category] || [];
+      const it = items.find(x => String(x.id) === String(id));
+      if(!it) return;
+      openWA(buildMsg("Enquiry", {
+        Sector: CAT[category].label.toUpperCase(),
+        Asset: (it.title || "Listing"),
+        Price: formatPrice(it.price),
+        Ref: "WEB-INDEX-" + id
+      }));
     }
 
-    function startRotator(category){
+    function stopRot(category){
+      if(ROT[category]?.t) clearInterval(ROT[category].t);
+      ROT[category].t = null;
+    }
+    function startRot(category){
       const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if(reduce) return; // respect reduced motion
+      if(reduce) return;
 
-      stopRotator(category);
-      const st = __ROT[category];
-      if(!st) return;
-
-      st.t = setInterval(() => {
-        if(!(__INDEX_CACHE[category] || []).length) return;
-        st.i = (st.i + 1) % __INDEX_CACHE[category].length;
-        renderRotator(category);
+      stopRot(category);
+      ROT[category].t = setInterval(() => {
+        if(!(CACHE[category]||[]).length) return;
+        ROT[category].i = (ROT[category].i + 1) % CACHE[category].length;
+        renderRot(category);
       }, 5000);
-
-      // pause on hover
-      const mount = document.getElementById(st.mountId);
-      if(mount && !st.mounted){
-        st.mounted = true;
-        mount.addEventListener("mouseenter", () => stopRotator(category));
-        mount.addEventListener("mouseleave", () => startRotator(category));
-      }
     }
 
-    async function initCategoryRotator(category){
-      const mountId = __ROT[category]?.mountId;
-      const mount = document.getElementById(mountId);
-      if(!mount) return;
+    async function initRot(category){
+      const meta = CAT[category];
+      const mount = document.getElementById(meta.mount);
+      if(mount) mount.innerHTML = `<div class="notice">Loading…</div>`;
 
       try{
-        const items = await fetchActiveListings(category, 30);
-        __INDEX_CACHE[category] = items;
-        __ROT[category].i = 0;
-        renderRotator(category);
-        startRotator(category);
+        CACHE[category] = await fetchActive(category, 24);
+        ROT[category].i = 0;
+        renderRot(category);
+        startRot(category);
       } catch(e){
         console.error(e);
-        mount.innerHTML = `
-          <div class="notice" style="border-color:rgba(255,90,103,.35)">
-            <strong>Connection error.</strong> Please refresh, or retry below.
-            <div class="actions" style="margin-top:10px">
-              <button class="btn small" type="button" onclick="initCategoryRotator('${category}')">
-                <i class="fa-solid fa-rotate-right"></i> Retry
-              </button>
+        if(mount){
+          mount.innerHTML = `
+            <div class="notice" style="border-color:rgba(255,90,103,.35)">
+              <strong>Connection error.</strong> <span class="small">Please refresh or retry.</span>
+              <div class="actions" style="margin-top:10px">
+                <button class="btn small" type="button" onclick="initRot('${category}')">
+                  <i class="fa-solid fa-rotate-right"></i> Retry
+                </button>
+              </div>
             </div>
-          </div>
-        `;
+          `;
+        }
       }
-    }
-
-    function stopAllRotators(){
-      Object.keys(__ROT).forEach(stopRotator);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      if(window.LARMAH) LARMAH_HERO.init();
+      renderHero(0);
+      startHero();
 
-      initCategoryRotator("real-estate");
-      initCategoryRotator("logistics");
-      initCategoryRotator("exchange");
+      initRot("real-estate");
+      initRot("logistics");
+      initRot("exchange");
 
-      if(window.LARMAH && LARMAH.realtime){
+      if(window.LARMAH?.realtime){
         LARMAH.realtime.subscribe("listings", () => {
-          // refresh caches + restart rotations
-          stopAllRotators();
-          initCategoryRotator("real-estate");
-          initCategoryRotator("logistics");
-          initCategoryRotator("exchange");
+          initRot("real-estate");
+          initRot("logistics");
+          initRot("exchange");
         }, "home-listings", { debounceMs: 650, statusElId: "liveStateHOME" });
       }
     });
 
-    // expose for inline retry buttons
-    window.initCategoryRotator = initCategoryRotator;
+    window.initRot = initRot;
   </script>
 
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
     integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true}}}'
     crossorigin="anonymous"></script>
 </body>
 </html>
