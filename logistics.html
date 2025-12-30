@@ -5,41 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>Logistics | Larmah Enterprise</title>
-  <meta name="description" content="Dispatch, pickups, haulage and delivery across Nigeria — WhatsApp-first support with a trust-first workflow." />
-  <meta name="keywords" content="Logistics Nigeria, Dispatch Lagos, Delivery Nigeria, Haulage, Courier, Larmah Logistics" />
+  <meta name="description" content="Trusted dispatch, pickups, haulage and logistics coordination across Nigeria — WhatsApp-first support with trackable references." />
+  <meta name="keywords" content="Logistics Nigeria, Dispatch Lagos, Haulage Nigeria, Airport Pickup Lagos, Delivery Service Nigeria, Larmah Logistics" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
   <meta name="color-scheme" content="dark light" />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://heylarmah.tech/logistics.html" />
 
-  <!-- Open Graph -->
-  <meta property="og:locale" content="en_NG" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Larmah Logistics | Trusted Dispatch" />
-  <meta property="og:description" content="Dispatch, pickups, and deliveries — trust-first workflow with WhatsApp-first support." />
+  <meta property="og:locale" content="en_NG" />
   <meta property="og:url" content="https://heylarmah.tech/logistics.html" />
+  <meta property="og:title" content="Larmah Logistics | Trusted Movement" />
+  <meta property="og:description" content="Dispatch, pickups, haulage and coordination across Nigeria — WhatsApp-first support." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:alt" content="Larmah Logistics — Trusted Dispatch" />
+  <meta property="og:image:alt" content="Larmah Logistics — Trusted Movement" />
 
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Larmah Logistics" />
-  <meta name="twitter:description" content="Dispatch, pickups, and deliveries — WhatsApp-first support." />
+  <meta name="twitter:description" content="Dispatch, pickups, haulage and coordination — trust-first." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
-  <!-- Icons -->
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
 
-  <!-- Performance -->
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link rel="preconnect" href="https://source.unsplash.com" crossorigin />
-  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
@@ -49,16 +43,8 @@
     "@type":"CollectionPage",
     "name":"Larmah Logistics",
     "url":"https://heylarmah.tech/logistics.html",
-    "isPartOf":{
-      "@type":"WebSite",
-      "name":"Larmah Enterprise",
-      "url":"https://heylarmah.tech/"
-    },
-    "about":{
-      "@type":"Service",
-      "name":"Logistics (Dispatch & Delivery)",
-      "areaServed":"NG"
-    }
+    "isPartOf":{"@type":"WebSite","name":"Larmah Enterprise","url":"https://heylarmah.tech/"},
+    "about":{"@type":"Service","name":"Logistics & Dispatch (Trusted)","areaServed":"NG"}
   }
   </script>
 
@@ -75,8 +61,7 @@
     }
 
     html[data-theme="dark"]{
-      --bg:#070A12;
-      --bg2:#050810;
+      --bg:#070A12; --bg2:#050810;
       --panel: rgba(255,255,255,.03);
       --panel2: rgba(255,255,255,.02);
       --line: rgba(255,255,255,.10);
@@ -90,15 +75,12 @@
       --ctaLine: rgba(255,255,255,.12);
       --good: rgba(0,217,129,.95);
       --bad: rgba(255,90,103,.95);
-
       --logoGlow: 0 0 22px rgba(212,175,55,.14);
       --logoRing: rgba(255,255,255,.12);
       --logoBg: rgba(255,255,255,.03);
     }
-
     html[data-theme="light"]{
-      --bg:#F7F7FB;
-      --bg2:#FFFFFF;
+      --bg:#F7F7FB; --bg2:#FFFFFF;
       --panel: rgba(10,14,26,.04);
       --panel2: rgba(10,14,26,.03);
       --line: rgba(10,14,26,.12);
@@ -112,10 +94,8 @@
       --ctaLine: rgba(10,14,26,.10);
       --good: rgba(0,140,90,.92);
       --bad: rgba(200,34,60,.90);
-
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
-
       --logoGlow: 0 0 0 rgba(0,0,0,0);
       --logoRing: rgba(10,14,26,.10);
       --logoBg: rgba(255,255,255,.65);
@@ -145,27 +125,14 @@
     a:hover{ color: var(--gold); }
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
 
-    /* Header */
     header{
-      position:sticky;
-      top:0;
-      z-index:50;
+      position:sticky; top:0; z-index:50;
       background: var(--headerBg);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line2);
     }
-    .header-inner{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding: 12px 0;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width: 220px;
-    }
+    .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
+    .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
     .logo-wrap{
       position:relative;
       width:44px; height:44px;
@@ -186,7 +153,7 @@
       inset:-10px;
       background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
       filter: blur(12px);
-      opacity: .8;
+      opacity:.8;
       pointer-events:none;
       z-index:-1;
     }
@@ -198,66 +165,28 @@
       border: 1px solid var(--line2);
       background: var(--logoBg);
     }
-    .brand .btxt{
-      display:flex;
-      flex-direction:column;
-      line-height:1.05;
-      gap:4px;
-      min-width:0;
-    }
-    .brand .bname{
-      font-weight: 950;
-      letter-spacing:-0.2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .brand .bsub{
-      font-size:.86rem;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .brand .btxt{ display:flex; flex-direction:column; line-height:1.05; gap:4px; min-width:0; }
+    .brand .bname{ font-weight: 950; letter-spacing:-0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .brand .bsub{ font-size:.86rem; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
     nav{ margin-left:auto; }
-    nav ul{
-      display:flex;
-      list-style:none;
-      gap:18px;
-      padding:0; margin:0;
-      align-items:center;
-    }
-    .nav-link{
-      color: var(--text);
-      opacity:.9;
-      font-weight: 850;
-      font-size: .95rem;
-    }
+    nav ul{ display:flex; list-style:none; gap:18px; padding:0; margin:0; align-items:center; }
+    .nav-link{ color: var(--text); opacity:.9; font-weight: 850; font-size: .95rem; }
     .nav-link:hover{ color: var(--gold); opacity:1; }
     .nav-link.active{ color: var(--gold); opacity:1; }
 
-    .header-actions{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      margin-left: 10px;
-    }
+    .header-actions{ display:flex; gap:10px; align-items:center; margin-left: 10px; }
     .icon-btn{
       width: 42px; height: 42px;
       border-radius: 12px;
       border: 1px solid var(--line);
       background: var(--panel);
       color: var(--text);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
+      display:inline-flex; align-items:center; justify-content:center;
       cursor:pointer;
       transition: transform .16s var(--ease), filter .16s var(--ease);
     }
     .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-    .icon-btn:active{ transform: translateY(0); }
-
     .menu-btn{
       display:none;
       border: 1px solid var(--line);
@@ -273,14 +202,7 @@
       .header-actions{ margin-left:auto; }
     }
 
-    /* Mobile sheet */
-    .overlay{
-      position:fixed; inset:0;
-      background: var(--overlayBg);
-      display:none;
-      align-items:flex-end;
-      z-index:80;
-    }
+    .overlay{ position:fixed; inset:0; background: var(--overlayBg); display:none; align-items:flex-end; z-index:80; }
     .overlay.open{ display:flex; }
     .sheet{
       width:100%;
@@ -297,12 +219,8 @@
       margin-bottom: 10px;
       gap: 10px;
     }
-    .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
     .sheet a{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding: 12px 12px;
       border-radius: 14px;
       border: 1px solid var(--line2);
@@ -311,47 +229,26 @@
       margin-bottom: 10px;
       font-weight: 900;
     }
-    .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
 
-    /* Buttons */
     .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      border-radius: 14px;
-      padding: 12px 16px;
-      min-height: 46px;
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      border-radius: 14px; padding: 12px 16px; min-height: 46px;
       border: 1px solid var(--line);
       background: var(--panel);
       color: var(--text);
       cursor:pointer;
       font-weight: 950;
       transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
-      text-decoration:none;
-      white-space: nowrap;
+      white-space:nowrap;
       user-select:none;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
     .btn:active{ transform: translateY(0); }
-    .btn.solid{
-      background: var(--gold);
-      color: #111;
-      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-    }
-    .btn.primary{
-      background: var(--panel2);
-      border-color: var(--line);
-    }
-    .btn.small{
-      min-height: 40px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-weight: 900;
-    }
+    .btn.solid{ background: var(--gold); color:#111; border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
+    .btn.primary{ background: var(--panel2); border-color: var(--line); }
+    .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
 
-    /* Layout */
-    main{ padding: 18px 0 0; }
+    .page-wrap{ padding: 18px 0 0; }
 
     .hero{
       border-radius: var(--radius2);
@@ -361,53 +258,15 @@
       overflow:hidden;
       padding: 16px;
     }
-    .hero-grid{
-      display:grid;
-      gap: 14px;
-      grid-template-columns: 1.05fr .95fr;
-      align-items:start;
-    }
+    .hero-grid{ display:grid; gap: 14px; grid-template-columns: 1.05fr .95fr; align-items:start; }
     @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
 
-    .kicker{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      color: var(--muted);
-      font-weight: 850;
-      letter-spacing: .1px;
-      margin-bottom: 10px;
-    }
+    .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
     .kicker .dot{ opacity:.65; }
-    h1{
-      margin: 6px 0 10px;
-      font-size: clamp(2.0rem, 4vw, 2.7rem);
-      line-height: 1.06;
-      letter-spacing: -0.6px;
-    }
-    .lead{
-      margin: 0;
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.55;
-    }
-    .hero-actions{
-      display:flex; gap:12px; flex-wrap:wrap;
-      margin-top: 12px;
-    }
-    @media (max-width: 520px){
-      .hero-actions{ flex-direction:column; }
-      .hero-actions .btn{ width:100%; }
-    }
-    .live-dot{
-      display:inline-flex; align-items:center; gap:8px;
-      font-weight: 950;
-      font-size: .86rem;
-      color: var(--good);
-      margin-top: 12px;
-    }
-    .live-dot i{ font-size: 9px; }
+    h1{ margin: 6px 0 10px; font-size: clamp(2.0rem, 4vw, 2.7rem); line-height: 1.06; letter-spacing:-0.6px; }
+    .lead{ margin:0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
+    .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
+    @media (max-width: 520px){ .hero-actions{ flex-direction:column; } .hero-actions .btn{ width:100%; } }
 
     .hero-media{
       border-radius: 14px;
@@ -429,9 +288,8 @@
     }
     .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
     .hero-media .cap{
-      position:absolute;
-      left: 12px; right: 12px; bottom: 10px;
-      padding: 10px 10px;
+      position:absolute; left:16px; right:16px; bottom:12px;
+      padding: 10px;
       border-radius: 12px;
       border: 1px solid var(--ctaLine);
       background: var(--ctaBg);
@@ -440,24 +298,15 @@
     .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
     .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
     .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
-    .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
-    .hero-bar.run{ width: 100%; }
+    .hero-bar{ height:100%; width:0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
+    .hero-bar.run{ width:100%; }
 
-    /* Sections */
     .section{ padding: 18px 0; }
-    .section-head{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 12px;
-      flex-wrap:wrap;
-    }
+    .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom: 12px; flex-wrap:wrap; }
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
-    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
+    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height:1.4; }
 
-    /* Filters + request cards */
-    .panel{
+    .filters{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
       background: var(--panel2);
@@ -465,46 +314,25 @@
       padding: 14px;
       margin-bottom: 14px;
     }
-    .grid4{
-      display:grid;
-      gap: 10px;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-    @media (max-width: 980px){ .grid4{ grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 520px){ .grid4{ grid-template-columns: 1fr; } }
+    .filters-grid{ display:grid; gap: 10px; grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+    @media (max-width: 980px){ .filters-grid{ grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 520px){ .filters-grid{ grid-template-columns: 1fr; } }
     .field{ display:flex; flex-direction:column; gap:6px; }
-    label{
-      font-size: .78rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--muted2);
-    }
+    label{ font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
     input, select, textarea{
       border-radius: 14px;
       border: 1px solid var(--line);
       background: var(--panel);
       color: var(--text);
-      padding: 12px 12px;
+      padding: 12px;
       min-height: 46px;
       outline:none;
-      resize: vertical;
+      font-family: inherit;
     }
-    textarea{ min-height: 96px; }
-    .pillbar{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      padding-top: 12px;
-      margin-top: 10px;
-      border-top: 1px solid var(--line2);
-    }
+    textarea{ min-height: 96px; resize: vertical; }
+    .pillbar{ display:flex; gap:8px; flex-wrap:wrap; padding-top: 12px; margin-top: 10px; border-top: 1px solid var(--line2); }
 
-    /* Catalog grid */
-    .grid{
-      display:grid;
-      gap: 14px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+    .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     @media (max-width: 1024px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 640px){ .grid{ grid-template-columns: 1fr; } }
 
@@ -515,7 +343,6 @@
       overflow:hidden;
       box-shadow: var(--shadow2);
       transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
-      position:relative;
     }
     .card:hover{
       transform: translateY(-1px);
@@ -524,7 +351,7 @@
     }
 
     .media{
-      width:100%;
+      width: calc(100% - 24px);
       height: 190px;
       border-radius: 14px;
       overflow:hidden;
@@ -532,17 +359,15 @@
       background: color-mix(in oklab, var(--bg2) 60%, #000 40%);
       margin: 12px 12px 0;
       position:relative;
-      user-select:none;
       isolation:isolate;
     }
     .media img{
-      width:100%;
-      height:100%;
+      width:100%; height:100%;
       object-fit:cover;
       display:block;
       transform: scale(1.01);
-      transition: opacity .45s var(--ease), transform .7s var(--ease);
       opacity:.95;
+      transition: opacity .45s var(--ease), transform .7s var(--ease);
     }
     .media.is-fading img{ opacity:.18; transform: scale(1.03); }
     .media::after{
@@ -590,50 +415,33 @@
 
     .card-body{ padding: 12px; }
     .title{ font-weight: 950; margin: 2px 0 6px; letter-spacing:-0.2px; }
-    .desc{ margin:0; color: var(--muted); line-height:1.45; font-size: .96rem; }
-    .meta{
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: .88rem;
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      align-items:center;
+    .desc{
+      margin:0; color: var(--muted); line-height:1.45; font-size: .96rem;
+      display:-webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow:hidden;
     }
+    .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
+    .meta{ margin-top: 10px; color: var(--muted); font-size: .88rem; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
     .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 7px 10px; border-radius: 999px;
+      border: 1px solid var(--line2); background: var(--panel2);
       color: color-mix(in oklab, var(--text) 80%, transparent);
-      font-weight: 800;
-      font-size:.84rem;
+      font-weight: 800; font-size:.84rem;
     }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
-    .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
-
-    .actions-row{
-      margin-top:12px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
+    .actions-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
     .actions-row .btn{ flex: 1; }
     @media (max-width: 520px){ .actions-row .btn{ width:100%; flex:unset; } }
 
     .notice{
       border-radius: 16px;
-      padding: 12px 12px;
+      padding: 12px;
       border: 1px solid var(--line);
       background: var(--panel2);
       color: var(--muted);
     }
     .notice strong{ color: var(--text); }
 
-    /* Footer */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
@@ -649,46 +457,29 @@
         var(--panel2);
       box-shadow: var(--shadow);
       padding: 14px;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; gap:12px;
+      align-items:center; justify-content:space-between;
       flex-wrap:wrap;
     }
     .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
     .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
 
-    .footer-grid{
-      display:grid;
-      gap: 16px;
-      padding: 16px 0;
-      grid-template-columns: 1.35fr 1fr 1fr;
-    }
+    .footer-grid{ display:grid; gap: 16px; padding: 16px 0; grid-template-columns: 1.35fr 1fr 1fr; }
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
 
     .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
-    .brandtext{ min-width:0; }
     .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
     .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
 
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    .footer-links a{
-      display:block;
-      padding: 6px 0;
-      color: color-mix(in oklab, var(--text) 84%, transparent);
-      font-weight: 600;
-    }
+    .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
     .footer-links a:hover{ color: var(--gold); }
 
     .contact-stack{ display:grid; gap: 10px; }
     .contact-chip{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
+      display:flex; gap:10px; align-items:flex-start;
+      padding: 10px 12px; border-radius: 14px;
+      border: 1px solid var(--line); background: var(--panel2);
     }
     .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
     .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
@@ -698,28 +489,40 @@
     .social a{
       width: 42px; height: 42px;
       display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--text);
+      border-radius: 12px; border: 1px solid var(--line);
+      background: var(--panel2); color: var(--text);
     }
     .social a:hover{
-      color: #111;
-      background: var(--gold);
+      color:#111; background: var(--gold);
       border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
     }
 
     .footer-bottom{
       border-top: 1px solid var(--line2);
       padding: 12px 0 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
       color: var(--muted2);
       font-size: .9rem;
     }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      min-width: 220px;
+      max-width: min(560px, calc(100vw - 28px));
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 88%, #000 12%);
+      box-shadow: var(--shadow2);
+      color: var(--text);
+      display:none;
+      z-index: 120;
+    }
+    .toast.show{ display:block; }
   </style>
 </head>
 
@@ -728,10 +531,8 @@
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="sheet" role="dialog" aria-label="Menu">
       <div class="sheet-head">
-        <div class="sheet-brandline">
-          <div class="logo-wrap" aria-hidden="true">
-            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
-          </div>
+        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+          <div class="logo-wrap" aria-hidden="true"><img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" /></div>
           <div style="min-width:0">
             <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
             <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
@@ -743,13 +544,13 @@
         </button>
       </div>
 
-      <a href="index.html"><span><i class="fa-solid fa-house" style="color:var(--gold)"></i> Home</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <!-- ✅ Home removed -->
       <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
-      <div class="sheet-actions">
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
         </button>
@@ -759,7 +560,7 @@
 
   <header>
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Home">
+      <a class="brand" href="index.html#about" aria-label="About Larmah Enterprise">
         <div class="logo-wrap" aria-hidden="true">
           <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
         </div>
@@ -771,7 +572,7 @@
 
       <nav aria-label="Primary navigation">
         <ul>
-          <li><a class="nav-link" href="index.html">Home</a></li>
+          <!-- ✅ Home removed -->
           <li><a class="nav-link" href="index.html#about">About</a></li>
           <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link active" href="logistics.html">Logistics</a></li>
@@ -790,175 +591,182 @@
     </div>
   </header>
 
-  <main id="main" class="container" tabindex="-1">
-    <!-- HERO -->
+  <main id="main" class="container page-wrap" tabindex="-1">
     <section class="hero" aria-label="Logistics hero">
       <div class="hero-grid">
         <div>
           <div class="kicker">
-            <span>Trust-first</span><span class="dot">•</span>
-            <span>Dispatch & haulage</span><span class="dot">•</span>
+            <span>Fast dispatch</span><span class="dot">•</span>
+            <span>Trusted movement</span><span class="dot">•</span>
             <span>WhatsApp-first</span>
           </div>
 
-          <h1>Trusted Dispatch & Logistics.</h1>
+          <h1>Trusted Logistics Across Nigeria.</h1>
           <p class="lead">
-            Pickups, deliveries, haulage, and city-to-city movement — coordinated fast with clear references and WhatsApp updates.
+            Dispatch, pickups, haulage, and movement coordination — with clean references and clear confirmations.
           </p>
 
           <div class="hero-actions">
-            <a class="btn solid" href="#book"><i class="fa-brands fa-whatsapp"></i> Book Dispatch</a>
-            <a class="btn primary" href="#catalog"><i class="fa-solid fa-truck-fast"></i> Service Options</a>
-            <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
+            <a class="btn solid" href="#services"><i class="fa-solid fa-list-check"></i> Browse Services</a>
+            <a class="btn primary" href="#quote"><i class="fa-solid fa-receipt"></i> Request Quote</a>
+            <button class="btn primary" type="button" onclick="openWA(buildMsg('Logistics Enquiry', { Message:'Hello Larmah, I need logistics support.' }))">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+            </button>
           </div>
 
-          <div class="live-dot" id="liveStateLG" aria-live="polite">
-            <i class="fa-solid fa-circle"></i> Fast response available
+          <div class="meta" style="margin-top:12px">
+            <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span>
+            <span class="pill"><i class="fa-solid fa-clock" style="color:var(--gold)"></i> Fast response</span>
+            <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> Traceable refs</span>
           </div>
         </div>
 
         <aside class="hero-media" id="heroMedia" aria-label="Logistics showcase">
-          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?logistics,delivery,van&sig=701" alt="Logistics showcase" decoding="async">
+          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=710" alt="Logistics showcase" decoding="async">
           <div class="cap">
             <div class="hero-tag" id="heroTag"><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</div>
-            <div class="hero-sub" id="heroSub">Dispatch, pickups, and trusted movement.</div>
+            <div class="hero-sub" id="heroSub">Dispatch, haulage, and trusted coordination.</div>
           </div>
           <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
         </aside>
       </div>
     </section>
 
-    <!-- SERVICE OPTIONS -->
-    <section class="section" id="catalog" aria-label="Logistics options">
+    <section class="section" id="services" aria-label="Logistics Services">
       <div class="section-head">
         <div>
-          <h2>Service Options</h2>
-          <p class="subhead">Choose a service type and send your details for a quick quote.</p>
+          <h2>Services</h2>
+          <p class="subhead">Filter by service type and coverage — both are separate.</p>
+        </div>
+        <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Handling</a>
+      </div>
+
+      <div class="filters" aria-label="Filters">
+        <div class="filters-grid">
+          <div class="field">
+            <label for="lg_q">Search</label>
+            <input id="lg_q" placeholder="Dispatch, airport pickup, haulage..." autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="lg_type">Service Type</label>
+            <select id="lg_type">
+              <option value="all" selected>All</option>
+              <option value="dispatch">Dispatch</option>
+              <option value="haulage">Haulage</option>
+              <option value="pickup">Pickup</option>
+              <option value="airport">Airport</option>
+              <option value="interstate">Interstate</option>
+              <option value="escort">Escort</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="lg_cov">Coverage</label>
+            <select id="lg_cov">
+              <option value="all" selected>Any</option>
+              <option value="Lagos">Lagos</option>
+              <option value="Abuja">Abuja</option>
+              <option value="Port Harcourt">Port Harcourt</option>
+              <option value="Interstate">Interstate</option>
+              <option value="Nationwide">Nationwide</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="lg_sort">Sort</label>
+            <select id="lg_sort">
+              <option value="new" selected>Newest</option>
+              <option value="az">Title A–Z</option>
+              <option value="za">Title Z–A</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pillbar" aria-label="Quick filters">
+          <button class="btn small" type="button" onclick="lgQuick('Dispatch')">Dispatch</button>
+          <button class="btn small" type="button" onclick="lgQuick('Haulage')">Haulage</button>
+          <button class="btn small" type="button" onclick="lgQuick('Airport')">Airport</button>
+          <button class="btn small" type="button" onclick="lgSetType('interstate')">Interstate</button>
+          <button class="btn small" type="button" onclick="lgSetCoverage('Lagos')">Lagos</button>
+          <button class="btn small" type="button" onclick="lgReset()" style="color:var(--bad);border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+          </button>
         </div>
       </div>
 
-      <div class="panel">
-        <div class="grid4">
-          <div class="field">
-            <label for="svc">Service</label>
-            <select id="svc">
-              <option value="Dispatch / Delivery" selected>Dispatch / Delivery</option>
-              <option value="Pickup / Drop-off">Pickup / Drop-off</option>
-              <option value="Same-day Delivery">Same-day Delivery</option>
-              <option value="Haulage / Heavy Duty">Haulage / Heavy Duty</option>
-              <option value="Interstate Movement">Interstate Movement</option>
-              <option value="Escort-ready Movement">Escort-ready Movement</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="vehicle">Vehicle</label>
-            <select id="vehicle">
-              <option value="Bike" selected>Bike</option>
-              <option value="Car">Car</option>
-              <option value="Van">Van</option>
-              <option value="Mini-Truck">Mini-Truck</option>
-              <option value="Truck">Truck</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="city">City</label>
-            <select id="city">
-              <option value="Lagos" selected>Lagos</option>
-              <option value="Abuja">Abuja</option>
-              <option value="Port Harcourt">Port Harcourt</option>
-              <option value="Ibadan">Ibadan</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="priority">Priority</label>
-            <select id="priority">
-              <option value="Standard" selected>Standard</option>
-              <option value="Priority">Priority</option>
-              <option value="Express">Express</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="pillbar" style="border-top:0; margin-top:12px; padding-top:0;">
-          <button class="btn solid" type="button" onclick="prefillAndBook('Dispatch / Delivery')">Dispatch</button>
-          <button class="btn primary" type="button" onclick="prefillAndBook('Pickup / Drop-off')">Pickup</button>
-          <button class="btn primary" type="button" onclick="prefillAndBook('Haulage / Heavy Duty')">Haulage</button>
-          <button class="btn primary" type="button" onclick="prefillAndBook('Interstate Movement')">Interstate</button>
-        </div>
+      <div id="lg_mount">
+        <div class="notice">Loading active logistics services…</div>
       </div>
     </section>
 
-    <!-- BOOKING FORM -->
-    <section class="section" id="book" aria-label="Book logistics">
+    <section class="section" id="quote" aria-label="Request a Quote">
       <div class="section-head">
         <div>
-          <h2>Book a Delivery</h2>
-          <p class="subhead">Provide pickup & drop-off details — we’ll confirm via WhatsApp.</p>
+          <h2>Request a Quote</h2>
+          <p class="subhead">Share pickup + dropoff + item details for fast pricing.</p>
         </div>
-        <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Support</a>
       </div>
 
-      <div class="panel">
-        <div class="grid4">
+      <div class="filters" style="padding:16px;">
+        <div class="filters-grid" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
           <div class="field" style="grid-column: span 2;">
-            <label for="name">Name</label>
-            <input id="name" placeholder="Full name" autocomplete="name" />
+            <label for="q_name">Name</label>
+            <input id="q_name" placeholder="Full name" autocomplete="name" />
           </div>
           <div class="field" style="grid-column: span 2;">
-            <label for="phone">WhatsApp Number</label>
-            <input id="phone" placeholder="+234..." inputmode="tel" autocomplete="tel" />
+            <label for="q_phone">WhatsApp Number</label>
+            <input id="q_phone" placeholder="+234..." inputmode="tel" autocomplete="tel" />
           </div>
 
           <div class="field" style="grid-column: span 2;">
-            <label for="pickup">Pickup Address</label>
-            <input id="pickup" placeholder="Pickup location" autocomplete="street-address" />
+            <label for="q_pick">Pickup Location</label>
+            <input id="q_pick" placeholder="Pickup address / area" autocomplete="street-address" />
           </div>
           <div class="field" style="grid-column: span 2;">
-            <label for="dropoff">Drop-off Address</label>
-            <input id="dropoff" placeholder="Drop-off location" autocomplete="street-address" />
+            <label for="q_drop">Dropoff Location</label>
+            <input id="q_drop" placeholder="Dropoff address / area" autocomplete="street-address" />
           </div>
 
           <div class="field">
-            <label for="when">Pickup Time</label>
-            <input id="when" placeholder="Now / 2pm / Tomorrow" />
-          </div>
-          <div class="field">
-            <label for="item">Item Type</label>
-            <input id="item" placeholder="Documents, food, parcel..." />
-          </div>
-          <div class="field">
-            <label for="value">Value</label>
-            <input id="value" placeholder="Optional (₦)" inputmode="numeric" />
-          </div>
-          <div class="field">
-            <label for="pay">Payment</label>
-            <select id="pay">
-              <option value="Sender pays" selected>Sender pays</option>
-              <option value="Receiver pays">Receiver pays</option>
+            <label for="q_service">Service</label>
+            <select id="q_service">
+              <option value="Dispatch">Dispatch</option>
+              <option value="Pickup">Pickup</option>
+              <option value="Airport Pickup">Airport Pickup</option>
+              <option value="Haulage">Haulage</option>
+              <option value="Interstate">Interstate</option>
+              <option value="Escort">Escort</option>
             </select>
+          </div>
+          <div class="field">
+            <label for="q_date">Date/Time</label>
+            <input id="q_date" placeholder="e.g., Today 4pm" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="q_item">Item Type</label>
+            <input id="q_item" placeholder="Parcel, luggage, cargo..." autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="q_weight">Weight/Size</label>
+            <input id="q_weight" placeholder="e.g., 5kg / medium" autocomplete="off" />
           </div>
 
           <div class="field" style="grid-column: span 4;">
-            <label for="notes">Notes</label>
-            <textarea id="notes" placeholder="Fragile, gate access, landmark, contact person..."></textarea>
+            <label for="q_notes">Notes</label>
+            <textarea id="q_notes" placeholder="Fragile? Floor level? Special handling?"></textarea>
           </div>
         </div>
 
         <div class="pillbar" style="border-top:0; margin-top:12px; padding-top:0;">
-          <button class="btn solid" type="button" onclick="sendBooking()">
-            <i class="fa-brands fa-whatsapp"></i> Send on WhatsApp
+          <button class="btn solid" type="button" onclick="sendLogisticsQuote()">
+            <i class="fa-brands fa-whatsapp"></i> Send Quote Request
           </button>
-          <button class="btn primary" type="button" onclick="clearBooking()">
-            <i class="fa-solid fa-rotate-left"></i> Clear
-          </button>
+          <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
         </div>
 
-        <div class="notice" style="margin-top:12px">
-          <strong>Tip:</strong> For faster quotes, include vehicle type + distance (or landmark).
+        <div class="notice" style="margin-top:12px;">
+          <strong>Tip:</strong> If you’re booking a shortlet, share your check-in time so we coordinate delivery/pickup smoothly.
         </div>
       </div>
     </section>
@@ -968,8 +776,8 @@
     <div class="container">
       <div class="footer-cta">
         <div>
-          <h3>Fast bookings. Verified stays. WhatsApp-first support.</h3>
-          <p>Confirm availability and arrange logistics — in one chat.</p>
+          <h3>Fast dispatch. Clear confirmation. WhatsApp-first.</h3>
+          <p>We coordinate movement — you stay in control.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <button class="btn solid" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
@@ -987,14 +795,14 @@
             <div class="logo-wrap" aria-hidden="true">
               <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
             </div>
-            <div class="brandtext">
+            <div>
               <div class="brandname">Larmah Enterprise</div>
               <div class="tagline">RC: 9127113</div>
             </div>
           </div>
 
           <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
-            Verified real estate, shortlets, and logistics support.
+            Trusted logistics and verified real estate across Nigeria.
           </div>
 
           <div class="social" aria-label="Social links">
@@ -1008,7 +816,7 @@
         <div>
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
-            <a href="index.html">Home</a>
+            <!-- ✅ Home removed -->
             <a href="index.html#about">About</a>
             <a href="real-estate.html">Real Estate</a>
             <a href="logistics.html">Logistics</a>
@@ -1046,11 +854,11 @@
           </div>
 
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
-              <i class="fa-brands fa-whatsapp"></i> Chat Now
+            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Dispatch Booking', { Message:'Hello Larmah, I want to book dispatch.' }))">
+              <i class="fa-brands fa-whatsapp"></i> Book Now
             </button>
-            <a class="btn small primary" href="premium.html">
-              <i class="fa-solid fa-crown"></i> Priority
+            <a class="btn small primary" href="real-estate.html">
+              <i class="fa-solid fa-building"></i> Browse Stays
             </a>
           </div>
         </div>
@@ -1062,12 +870,10 @@
     </div>
   </footer>
 
-  <script>
-    // Year
-    document.getElementById("year").textContent = new Date().getFullYear();
-    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    // Theme (shared)
+  <script>
+    // Theme (same as index)
     const THEME_KEY = "larmah_theme_shared";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
@@ -1094,7 +900,20 @@
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // WhatsApp helper (uses LARMAH if present)
+    // Helpers
+    document.getElementById("year").textContent = new Date().getFullYear();
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+    function toast(msg){
+      const t = document.getElementById("toast");
+      if(!t) return;
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
+    }
+
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -1110,7 +929,7 @@
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
 
-    // Hero slideshow (logistics-themed)
+    // Hero slideshow (5s)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1118,11 +937,12 @@
     const heroBar = document.getElementById("heroBar");
 
     const HERO_SLIDES = [
-      { img:"https://source.unsplash.com/1600x1000/?delivery,van,courier&sig=801", icon:"fa-truck-fast", label:"Dispatch", sub:"Fast pickups and drop-offs with WhatsApp updates." },
-      { img:"https://source.unsplash.com/1600x1000/?logistics,truck,highway&sig=802", icon:"fa-truck", label:"Interstate", sub:"City-to-city movement with clear references." },
-      { img:"https://source.unsplash.com/1600x1000/?warehouse,packages&sig=803", icon:"fa-warehouse", label:"Handling", sub:"Careful handling for parcels and bulk items." },
-      { img:"https://source.unsplash.com/1600x1000/?cargo,containers,port&sig=804", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Support for heavier movement and loads." },
-      { img:"https://source.unsplash.com/1600x1000/?motorcycle,delivery&sig=805", icon:"fa-motorcycle", label:"Bike Dispatch", sub:"Quick last-mile deliveries when time matters." }
+      { img:"https://source.unsplash.com/1600x1000/?delivery,courier,city&sig=901", icon:"fa-truck-fast", label:"Dispatch", sub:"Fast dispatch across major cities." },
+      { img:"https://source.unsplash.com/1600x1000/?warehouse,logistics,packages&sig=902", icon:"fa-boxes-stacked", label:"Coordination", sub:"Clear confirmations and references." },
+      { img:"https://source.unsplash.com/1600x1000/?cargo,truck,highway&sig=903", icon:"fa-truck-ramp-box", label:"Haulage", sub:"Trusted haulage for heavy movement." },
+      { img:"https://source.unsplash.com/1600x1000/?airport,transport,car&sig=904", icon:"fa-plane-arrival", label:"Airport Pickup", sub:"Pickup coordination for guests and teams." },
+      { img:"https://source.unsplash.com/1600x1000/?shipping,container,port&sig=905", icon:"fa-ship", label:"Interstate", sub:"Interstate and nationwide delivery options." },
+      { img:"https://source.unsplash.com/1600x1000/?motorbike,delivery,africa&sig=906", icon:"fa-motorcycle", label:"Last Mile", sub:"Last-mile delivery with tracking updates." }
     ];
     let heroIdx = 0;
 
@@ -1133,72 +953,336 @@
       heroBar.classList.add("run");
     }
     function setHero(i){
-      if(!heroMedia || !heroImg || !heroTag || !heroSub) return;
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
       heroMedia.classList.add("is-fading");
       runHeroProgress();
       setTimeout(() => {
         heroImg.src = s.img;
         heroImg.alt = s.label;
-        heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${s.label}`;
+        heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
         heroSub.textContent = s.sub;
         setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
       }, 220);
     }
-
     if(!reduceMotion){
       setHero(0);
       setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
-    } else {
-      setHero(0);
+    } else setHero(0);
+
+    // Supabase services
+    const BUSINESS_EMAIL = "business@heylarmah.tech";
+    const __LG = { items: [], imgUrls: {}, imgIdx: {}, imgTimer: {} };
+
+    function sbClient(){
+      return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
+    }
+    async function waitForSB({tries=12, delay=250}={}){
+      for(let i=0;i<tries;i++){
+        const sb = sbClient();
+        if(sb) return sb;
+        await new Promise(r=>setTimeout(r, delay));
+      }
+      return null;
     }
 
-    // Booking helpers
-    function prefillAndBook(service){
-      document.getElementById("svc").value = service;
-      location.hash = "#book";
+    function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
+    function formatPrice(raw){ const s = safeText(raw).trim(); return s ? s : "Contact for quote"; }
+
+    function inferType(it){
+      const hay = (safeText(it.service_type) + " " + safeText(it.type) + " " + safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" "))).toLowerCase();
+      if(hay.includes("haul")) return "haulage";
+      if(hay.includes("airport")) return "airport";
+      if(hay.includes("interstate") || hay.includes("nationwide")) return "interstate";
+      if(hay.includes("escort")) return "escort";
+      if(hay.includes("pickup")) return "pickup";
+      if(hay.includes("dispatch") || hay.includes("delivery") || hay.includes("courier")) return "dispatch";
+      return "";
+    }
+    function inferCoverage(it){
+      return safeText(it.coverage || it.location || it.area || it.city || it.state || "").trim();
+    }
+    function listingRef(id){ return `WEB-LG-${id}`; }
+
+    function getImages(it){
+      const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
+      if(arr.length) return arr.slice(0, 6);
+      if(it.image_url) return [it.image_url];
+      return ["assets/images/larmah-header.jpeg"];
+    }
+    function initImagesFor(it){
+      const id = String(it.id);
+      __LG.imgUrls[id] = getImages(it);
+      __LG.imgIdx[id] = 0;
+    }
+    function setCardImage(id){
+      const img = document.getElementById(`lg-img-${id}`);
+      if(!img) return;
+      const urls = __LG.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
+      const idx = __LG.imgIdx[id] || 0;
+      img.src = urls[idx] || urls[0] || "assets/images/larmah-header.jpeg";
+      const dots = document.getElementById(`lg-dots-${id}`);
+      if(dots) dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
+    }
+    function cycleImage(id, dir){
+      const urls = __LG.imgUrls[id] || [];
+      if(urls.length <= 1) return;
+      const max = urls.length;
+      const cur = __LG.imgIdx[id] || 0;
+      __LG.imgIdx[id] = (cur + dir + max) % max;
+      setCardImage(id);
+    }
+    window.cycleImage = cycleImage;
+
+    function autoRotateImages(id){
+      if(reduceMotion) return;
+      const urls = __LG.imgUrls[id] || [];
+      if(urls.length <= 1) return;
+      clearInterval(__LG.imgTimer[id]);
+      __LG.imgTimer[id] = setInterval(() => {
+        __LG.imgIdx[id] = ((__LG.imgIdx[id]||0) + 1) % urls.length;
+        const media = document.getElementById(`lg-media-${id}`);
+        if(media){
+          media.classList.add("is-fading");
+          setTimeout(() => { setCardImage(id); media.classList.remove("is-fading"); }, 180);
+        } else setCardImage(id);
+      }, 5000);
     }
 
-    function sendBooking(){
-      const payload = {
-        Service: document.getElementById("svc").value,
-        Vehicle: document.getElementById("vehicle").value,
-        City: document.getElementById("city").value,
-        Priority: document.getElementById("priority").value,
+    function renderLogistics(){
+      const mount = document.getElementById("lg_mount");
+      const q = safeText(document.getElementById("lg_q").value).toLowerCase().trim();
+      const type = document.getElementById("lg_type").value;
+      const cov = document.getElementById("lg_cov").value;
+      const sort = document.getElementById("lg_sort").value;
 
-        Name: document.getElementById("name").value.trim(),
-        Phone: document.getElementById("phone").value.trim(),
-        Pickup: document.getElementById("pickup").value.trim(),
-        Dropoff: document.getElementById("dropoff").value.trim(),
-        When: document.getElementById("when").value.trim(),
-        Item: document.getElementById("item").value.trim(),
-        Value: document.getElementById("value").value.trim(),
-        Payment: document.getElementById("pay").value,
-        Notes: document.getElementById("notes").value.trim()
-      };
+      let items = (__LG.items || []).slice();
 
-      if(!payload.Name || !payload.Phone || !payload.Pickup || !payload.Dropoff){
-        openWA(buildMsg("Logistics Booking (Incomplete)", {
-          Message: "Hello Larmah, I want to book logistics. I will send full details now.",
-          Missing: "Name / Phone / Pickup / Dropoff required"
-        }));
+      if(q){
+        items = items.filter(it => {
+          const hay = (safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" ")) + " " + safeText(inferCoverage(it))).toLowerCase();
+          return hay.includes(q);
+        });
+      }
+      if(type !== "all") items = items.filter(it => inferType(it) === type);
+      if(cov !== "all") items = items.filter(it => safeText(inferCoverage(it)).toLowerCase().includes(cov.toLowerCase()));
+
+      if(sort === "az") items.sort((a,b)=> safeText(a.title).localeCompare(safeText(b.title)));
+      else if(sort === "za") items.sort((a,b)=> safeText(b.title).localeCompare(safeText(a.title)));
+      else items.sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
+
+      if(!items.length){
+        mount.innerHTML = `<div class="notice"><strong>No matches found.</strong> Try adjusting filters or request a quote below.</div>`;
         return;
       }
 
-      openWA(buildMsg("Logistics Booking", payload));
+      mount.innerHTML = `
+        <div class="grid">
+          ${items.map(it => {
+            const id = String(it.id);
+            initImagesFor(it);
+            const urls = __LG.imgUrls[id] || [];
+            const hasMany = urls.length > 1;
+
+            const title = safeText(it.title) || "Logistics Service";
+            const desc = safeText(it.description) || "Trusted logistics support.";
+            const price = formatPrice(it.price);
+            const coverage = inferCoverage(it) || "Nigeria";
+            const stype = inferType(it) || "service";
+            const ref = listingRef(id);
+
+            return `
+              <article class="card" aria-label="${esc(title)}">
+                <div class="media" id="lg-media-${id}">
+                  <img id="lg-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
+                       alt="${esc(title)}" loading="lazy" decoding="async"
+                       onerror="this.src='assets/images/larmah-header.jpeg'">
+
+                  ${hasMany ? `
+                    <div class="media-nav">
+                      <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleImage('${id}', -1)">
+                        <i class="fa-solid fa-chevron-left"></i>
+                      </button>
+                      <button class="media-btn" type="button" aria-label="Next image" onclick="cycleImage('${id}', 1)">
+                        <i class="fa-solid fa-chevron-right"></i>
+                      </button>
+                    </div>
+                    <div class="media-dots" id="lg-dots-${id}" aria-hidden="true">
+                      ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
+                    </div>
+                  ` : ``}
+                </div>
+
+                <div class="card-body">
+                  <div class="title">${esc(title)}</div>
+                  <p class="desc">${esc(desc)}</p>
+
+                  <div class="price">${esc(price)}</div>
+
+                  <div class="meta">
+                    <span class="pill"><i class="fa-solid fa-route" style="color:var(--gold)"></i> ${esc(coverage)}</span>
+                    <span class="pill"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(stype)}</span>
+                    <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> <span class="mono">${esc(ref)}</span></span>
+                  </div>
+
+                  <div class="actions-row">
+                    <button class="btn small solid" type="button" onclick="lgEnquire('${id}')">
+                      <i class="fa-brands fa-whatsapp"></i> Enquire
+                    </button>
+                    <button class="btn small primary" type="button" onclick="lgEmail('${id}')">
+                      <i class="fa-regular fa-envelope"></i> Email
+                    </button>
+                  </div>
+                </div>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      `;
+
+      items.forEach(it => autoRotateImages(String(it.id)));
     }
 
-    function clearBooking(){
-      ["name","phone","pickup","dropoff","when","item","value","notes"].forEach(id => document.getElementById(id).value = "");
-      document.getElementById("pay").value = "Sender pays";
+    function lgQuick(word){
+      const el = document.getElementById("lg_q");
+      el.value = (el.value ? el.value + " " : "") + word;
+      renderLogistics();
+    }
+    window.lgQuick = lgQuick;
+
+    function lgSetType(v){ document.getElementById("lg_type").value = v; renderLogistics(); }
+    window.lgSetType = lgSetType;
+
+    function lgSetCoverage(v){ document.getElementById("lg_cov").value = v; renderLogistics(); }
+    window.lgSetCoverage = lgSetCoverage;
+
+    function lgReset(){
+      document.getElementById("lg_q").value = "";
+      document.getElementById("lg_type").value = "all";
+      document.getElementById("lg_cov").value = "all";
+      document.getElementById("lg_sort").value = "new";
+      renderLogistics();
+    }
+    window.lgReset = lgReset;
+
+    function lgEnquire(id){
+      const it = (__LG.items||[]).find(x => String(x.id)===String(id));
+      if(!it) return;
+
+      openWA(buildMsg("Logistics Enquiry", {
+        Ref: listingRef(id),
+        Service: safeText(it.title),
+        Coverage: inferCoverage(it) || "",
+        Type: inferType(it) || "",
+        Quote: formatPrice(it.price),
+        Message: "Hello Larmah, please confirm availability and cost."
+      }));
+    }
+    window.lgEnquire = lgEnquire;
+
+    function lgEmail(id){
+      const it = (__LG.items||[]).find(x => String(x.id)===String(id));
+      if(!it) return;
+
+      const subject = `Logistics Enquiry — ${listingRef(id)} — ${safeText(it.title) || "Service"}`;
+      const body =
+`Hello Larmah Team,
+
+I’m interested in this logistics service:
+
+Ref: ${listingRef(id)}
+Service: ${safeText(it.title)}
+Coverage: ${inferCoverage(it) || ""}
+Type: ${inferType(it) || ""}
+Quote: ${formatPrice(it.price)}
+
+My Name:
+My Phone:
+Pickup:
+Dropoff:
+Date/Time:
+Notes:
+
+Thank you.`;
+      window.location.href = `mailto:${encodeURIComponent(BUSINESS_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    }
+    window.lgEmail = lgEmail;
+
+    async function loadLogistics(){
+      const mount = document.getElementById("lg_mount");
+      mount.innerHTML = `<div class="notice">Loading active logistics services…</div>`;
+
+      try{
+        const sb = await waitForSB();
+        if(!sb) throw new Error("supabase client not ready");
+
+        const { data, error } = await sb
+          .from("listings")
+          .select("id,title,description,price,image_url,image_urls,coverage,location,area,city,state,service_type,type,tags,category,status,created_at")
+          .eq("category", "logistics")
+          .eq("status", "active")
+          .order("created_at", { ascending: false })
+          .limit(120);
+
+        if(error) throw error;
+
+        __LG.items = data || [];
+        if(!__LG.items.length){
+          mount.innerHTML = `<div class="notice"><strong>No active services currently.</strong> Please request a quote below.</div>`;
+          return;
+        }
+
+        renderLogistics();
+
+        if(window.LARMAH?.realtime?.subscribe){
+          LARMAH.realtime.subscribe("listings", () => loadLogistics(), "lg-page", { debounceMs: 800 });
+        }
+      } catch(err){
+        console.error(err);
+        mount.innerHTML = `<div class="notice" style="border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
+          <strong>Could not load services.</strong> Please refresh or try again later.
+        </div>`;
+      }
     }
 
-    // expose
-    window.toggleMenu = toggleMenu;
-    window.toggleTheme = toggleTheme;
-    window.prefillAndBook = prefillAndBook;
-    window.sendBooking = sendBooking;
-    window.clearBooking = clearBooking;
+    async function sendLogisticsQuote(){
+      const fields = {
+        Name: document.getElementById("q_name").value.trim(),
+        Phone: document.getElementById("q_phone").value.trim(),
+        Pickup: document.getElementById("q_pick").value.trim(),
+        Dropoff: document.getElementById("q_drop").value.trim(),
+        Service: document.getElementById("q_service").value,
+        DateTime: document.getElementById("q_date").value.trim(),
+        Item: document.getElementById("q_item").value.trim(),
+        WeightSize: document.getElementById("q_weight").value.trim(),
+        Notes: document.getElementById("q_notes").value.trim()
+      };
+
+      if(!fields.Name || !fields.Phone){
+        toast("Name and WhatsApp number are required.");
+        return;
+      }
+
+      if(window.LARMAH?.submitRequest){
+        await LARMAH.submitRequest({
+          header: "New Logistics Quote Request",
+          category: "logistics",
+          fields,
+          refPrefix: "LG"
+        });
+        return;
+      }
+
+      openWA(buildMsg("Logistics Quote Request", fields));
+    }
+    window.sendLogisticsQuote = sendLogisticsQuote;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("lg_q").addEventListener("input", renderLogistics);
+      document.getElementById("lg_type").addEventListener("change", renderLogistics);
+      document.getElementById("lg_cov").addEventListener("change", renderLogistics);
+      document.getElementById("lg_sort").addEventListener("change", renderLogistics);
+      loadLogistics();
+    });
   </script>
 </body>
 </html>
