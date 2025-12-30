@@ -270,8 +270,6 @@
     .hero-grid{ display:grid; gap: 14px; grid-template-columns: 1.05fr .95fr; align-items:start; }
     @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
 
-    .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
-    .kicker .dot{ opacity:.65; }
     h1{ margin: 6px 0 10px; font-size: clamp(2.0rem, 4vw, 2.7rem); line-height: 1.06; letter-spacing:-0.6px; }
     .lead{ margin:0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
@@ -559,7 +557,7 @@
 
       <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
+      <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
@@ -607,6 +605,12 @@
     <section class="hero" aria-label="Logistics hero">
       <div class="hero-grid">
         <div>
+          <div class="kicker">
+            <span>Fast dispatch</span><span class="dot">•</span>
+            <span>Trusted movement</span><span class="dot">•</span>
+            <span>WhatsApp-first</span>
+          </div>
+
           <h1>Trusted Logistics Across Nigeria.</h1>
           <p class="lead">
             Dispatch, pickups, haulage, and movement coordination — with clean references and clear confirmations.
@@ -891,6 +895,7 @@
       clearTimeout(window.__toastT);
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
+    window.toast = toast;
 
     // ===== theme (SAME AS index.html)
     const THEME_KEY = "larmah_theme_v5";
@@ -910,6 +915,7 @@
       const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
       setTheme(prefersLight ? "light" : "dark");
     })();
+    window.toggleTheme = toggleTheme;
 
     // ===== mobile menu
     const overlay = document.getElementById("overlay");
@@ -918,6 +924,7 @@
       overlay.setAttribute("aria-hidden", open ? "false" : "true");
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
+    window.toggleMenu = toggleMenu;
 
     // ===== WA helpers
     function buildMsg(title, data){
@@ -934,6 +941,8 @@
       const phone = "2347063080605";
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
+    window.buildMsg = buildMsg;
+    window.openWA = openWA;
 
     // ===== hero slideshow (5s)
     const heroMedia = document.getElementById("heroMedia");
@@ -1154,14 +1163,8 @@
       el.value = (el.value ? el.value + " " : "") + word;
       renderLogistics();
     }
-    window.lgQuick = lgQuick;
-
     function lgSetType(v){ document.getElementById("lg_type").value = v; renderLogistics(); }
-    window.lgSetType = lgSetType;
-
     function lgSetCoverage(v){ document.getElementById("lg_cov").value = v; renderLogistics(); }
-    window.lgSetCoverage = lgSetCoverage;
-
     function lgReset(){
       document.getElementById("lg_q").value = "";
       document.getElementById("lg_type").value = "all";
@@ -1169,6 +1172,9 @@
       document.getElementById("lg_sort").value = "new";
       renderLogistics();
     }
+    window.lgQuick = lgQuick;
+    window.lgSetType = lgSetType;
+    window.lgSetCoverage = lgSetCoverage;
     window.lgReset = lgReset;
 
     function lgEnquire(id){
@@ -1184,8 +1190,6 @@
         Message: "Hello Larmah, please confirm availability and cost."
       }));
     }
-    window.lgEnquire = lgEnquire;
-
     function lgEmail(id){
       const it = (__LG.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
@@ -1213,6 +1217,7 @@ Notes:
 Thank you.`;
       window.location.href = `mailto:${encodeURIComponent(BUSINESS_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
+    window.lgEnquire = lgEnquire;
     window.lgEmail = lgEmail;
 
     async function loadLogistics(){
@@ -1221,7 +1226,7 @@ Thank you.`;
 
       try{
         const sb = await waitForSB();
-        if(!sb) throw new Error("supabase client not ready (ensure app.js initializes it)");
+        if(!sb) throw new Error("Supabase not ready. Ensure assets/js/app.js has your SUPABASE_URL + SUPABASE_ANON_KEY.");
 
         const { data, error } = await sb
           .from("listings")
@@ -1293,10 +1298,6 @@ Thank you.`;
       document.getElementById("lg_sort").addEventListener("change", renderLogistics);
       loadLogistics();
     });
-
-    // expose
-    window.toggleMenu = toggleMenu;
-    window.toggleTheme = toggleTheme;
   </script>
 </body>
 </html>
