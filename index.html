@@ -146,9 +146,14 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
+
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+
+    /* Pages router */
+    .page{ display:none; }
+    .page.is-active{ display:block; }
 
     /* Header */
     header{
@@ -171,6 +176,7 @@
       gap:10px;
       min-width: 220px;
     }
+
     .logo-wrap{
       position:relative;
       width:44px;
@@ -242,6 +248,20 @@
       font-size: .95rem;
     }
     .nav-link:hover{ color: var(--gold); opacity:1; }
+    .nav-link.is-active{
+      color: var(--gold);
+      opacity: 1;
+      position:relative;
+    }
+    .nav-link.is-active::after{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      bottom:-12px;
+      height:2px;
+      background: rgba(212,175,55,.65);
+      border-radius: 99px;
+    }
 
     .header-actions{
       display:flex;
@@ -363,7 +383,7 @@
       font-weight: 900;
     }
 
-    /* Hero */
+    /* Hero/Home */
     .hero{ padding: 18px 0 0; }
     .hero-box{
       border-radius: var(--radius2);
@@ -477,12 +497,7 @@
       border-color: rgba(212,175,55,.45);
       box-shadow: var(--shadow2);
     }
-    .logistics-left{
-      display:flex;
-      gap: 10px;
-      align-items:flex-start;
-      min-width: 0;
-    }
+    .logistics-left{ display:flex; gap: 10px; align-items:flex-start; min-width: 0; }
     .logi-icn{
       width:42px; height:42px;
       display:flex; align-items:center; justify-content:center;
@@ -540,31 +555,10 @@
       background: var(--ctaBg);
       backdrop-filter: blur(10px);
     }
-    .hero-tag{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      font-weight: 950;
-      margin-bottom: 6px;
-    }
-    .hero-sub{
-      color: color-mix(in oklab, var(--text) 86%, transparent);
-      font-size: .92rem;
-      line-height: 1.35;
-    }
-    .hero-progress{
-      position:absolute;
-      left:0; right:0; bottom:0;
-      height: 3px;
-      background: color-mix(in oklab, var(--text) 10%, transparent);
-      overflow:hidden;
-    }
-    .hero-bar{
-      height:100%;
-      width: 0%;
-      background: rgba(212,175,55,.75);
-      transition: width 5s linear;
-    }
+    .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
+    .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
+    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
+    .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
     .hero-bar.run{ width: 100%; }
 
     /* Sections */
@@ -595,13 +589,7 @@
       transition: opacity .45s var(--ease), transform .45s var(--ease);
     }
     .card.is-fading{ opacity:.22; transform: translateY(2px); }
-    .card img{
-      width:100%;
-      height: 180px;
-      object-fit: cover;
-      display:block;
-      opacity:.92;
-    }
+    .card img{ width:100%; height: 180px; object-fit: cover; display:block; opacity:.92; }
     .card-body{ padding: 12px; }
     .card-title{ font-weight: 950; margin: 0 0 8px; }
     .meta{ display:flex; gap:10px; flex-wrap:wrap; color: var(--muted); font-size: .9rem; }
@@ -615,6 +603,56 @@
       background: var(--panel2);
       color: color-mix(in oklab, var(--text) 85%, transparent);
       font-weight: 800;
+    }
+
+    /* About page */
+    .about-wrap{
+      margin-top: 18px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .about-hero{
+      display:grid;
+      gap: 14px;
+      padding: 16px;
+      grid-template-columns: 1.15fr .85fr;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .about-hero{ grid-template-columns: 1fr; }
+    }
+    .about-hero h1{ font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
+    .about-card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      overflow:hidden;
+      box-shadow: var(--shadow2);
+    }
+    .about-card img{ width:100%; height: 200px; object-fit: cover; display:block; opacity:.92; }
+    .about-card .card-body{ padding: 12px; }
+    .about-points{ margin-top: 12px; display:grid; gap: 10px; }
+    .ap{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+    }
+    .ap i{ color: var(--gold); margin-top: 2px; width: 18px; }
+    .ap b{ display:block; }
+    .ap span{ color: var(--muted2); font-size: .92rem; display:block; margin-top: 3px; line-height: 1.35; }
+    .notice{
+      border-radius: 14px;
+      padding: 12px 12px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      color: var(--muted);
     }
 
     /* Footer */
@@ -650,12 +688,7 @@
     }
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
 
-    .brandline{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
+    .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
     .brandtext{ min-width:0; }
     .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
     .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
@@ -748,12 +781,12 @@
         </button>
       </div>
 
-      <!-- ✅ About now links to its own page -->
-      <a href="about.html"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="real-estate.html"><span><i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <!-- About is a “page” inside this index.html -->
+      <a href="#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="#home"><span><i class="fa-solid fa-house" style="color:var(--gold)"></i> Home</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="dashboard.html"><span><i class="fa-solid fa-user-shield" style="color:var(--gold)"></i> Dashboard</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
@@ -765,7 +798,7 @@
 
   <header>
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Home">
+      <a class="brand" href="#home" aria-label="Larmah Home">
         <div class="logo-wrap" aria-hidden="true">
           <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
         </div>
@@ -777,8 +810,8 @@
 
       <nav aria-label="Primary navigation">
         <ul>
-          <!-- ✅ About now links to its own page -->
-          <li><a class="nav-link" href="about.html">About</a></li>
+          <li><a class="nav-link" data-nav="home" href="#home">Home</a></li>
+          <li><a class="nav-link" data-nav="about" href="#about">About</a></li>
           <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
@@ -798,159 +831,240 @@
   </header>
 
   <main id="main" class="container" tabindex="-1">
-    <section class="hero" aria-label="Hero">
-      <div class="hero-box">
-        <div class="hero-row">
-          <div>
-            <div class="kicker" aria-label="Trust badges">
-              <span>Trust-first stays</span><span class="dot">•</span>
-              <span>Verified listings</span><span class="dot">•</span>
-              <span>WhatsApp-first</span>
-            </div>
-
-            <h1>Trust-first real estate and logistics across Naija.</h1>
-
-            <p class="lead">
-              Premium shortlets and verified stays in Lagos — scam-resistant workflow, clear pricing, and WhatsApp-first support.
-            </p>
-
-            <div class="hero-actions">
-              <a class="btn solid" href="#browse"><i class="fa-solid fa-sparkles"></i> Browse Shortlets</a>
-              <button class="btn primary" type="button" onclick="openWA(buildMsg('General Enquiry', { Topic:'Real Estate / Logistics', Message:'Hello Larmah, I need assistance.' }))">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-              </button>
-            </div>
-
-            <div class="live-dot" aria-live="polite">
-              <i class="fa-solid fa-circle"></i> Fast responses available
-            </div>
-
-            <div class="search" aria-label="Shortlet search">
-              <div class="form-grid">
-                <div class="field" style="grid-column: span 2;">
-                  <label for="checkin">Check-in</label>
-                  <input id="checkin" type="date" />
-                </div>
-
-                <div class="field" style="grid-column: span 2;">
-                  <label for="checkout">Check-out</label>
-                  <input id="checkout" type="date" />
-                </div>
-
-                <div class="field" style="grid-column: span 1;">
-                  <label for="guests">Guests</label>
-                  <select id="guests">
-                    <option value="1">1</option>
-                    <option value="2" selected>2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5+</option>
-                  </select>
-                </div>
-
-                <!-- Category -->
-                <div class="field" style="grid-column: span 1;">
-                  <label for="category">Category</label>
-                  <select id="category">
-                    <option value="Any" selected>Any</option>
-                    <option value="Studio">Studio</option>
-                    <option value="1 Bedroom">1 Bedroom</option>
-                    <option value="2 Bedroom">2 Bedroom</option>
-                    <option value="3 Bedroom">3 Bedroom</option>
-                    <option value="Family">Family</option>
-                    <option value="Business">Business</option>
-                    <option value="Premium">Premium</option>
-                  </select>
-                </div>
-
-                <!-- Location (separate) -->
-                <div class="field" style="grid-column: span 2;">
-                  <label for="location">Location</label>
-                  <select id="location">
-                    <option value="Any" selected>Any</option>
-                    <option value="Ikoyi">Ikoyi</option>
-                    <option value="Lekki">Lekki</option>
-                    <option value="Victoria Island">Victoria Island</option>
-                    <option value="Yaba">Yaba</option>
-                    <option value="Mainland">Mainland</option>
-                  </select>
-                </div>
+    <!-- ======================
+         HOME PAGE (DEFAULT)
+         ====================== -->
+    <div class="page is-active" id="page-home" data-page="home">
+      <section class="hero" aria-label="Hero">
+        <div class="hero-box">
+          <div class="hero-row">
+            <div>
+              <div class="kicker" aria-label="Trust badges">
+                <span>Trust-first stays</span><span class="dot">•</span>
+                <span>Verified listings</span><span class="dot">•</span>
+                <span>WhatsApp-first</span>
               </div>
 
-              <div class="form-actions">
-                <button class="btn solid" type="button" onclick="submitSearch()">
-                  <i class="fa-solid fa-calendar-check"></i> Check Availability
+              <h1>Trust-first real estate and logistics across Naija.</h1>
+
+              <p class="lead">
+                Premium shortlets and verified stays in Lagos — scam-resistant workflow, clear pricing, and WhatsApp-first support.
+              </p>
+
+              <div class="hero-actions">
+                <a class="btn solid" href="#browse"><i class="fa-solid fa-sparkles"></i> Browse Shortlets</a>
+                <button class="btn primary" type="button" onclick="openWA(buildMsg('General Enquiry', { Topic:'Real Estate / Logistics', Message:'Hello Larmah, I need assistance.' }))">
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
                 </button>
-                <a class="btn small primary" href="real-estate.html">
-                  <i class="fa-solid fa-house"></i> View All Real Estate
-                </a>
               </div>
 
-              <div class="logistics-strip invert" aria-label="Logistics highlight">
-                <div class="logistics-left">
-                  <div class="logi-icn"><i class="fa-solid fa-truck-fast"></i></div>
-                  <div style="min-width:0">
-                    <div class="logistics-title">Need pickup or delivery for your stay?</div>
-                    <p class="logistics-sub">
-                      Larmah Logistics handles dispatch, airport pickup coordination, and trusted movement across Nigeria — all on WhatsApp.
-                    </p>
+              <div class="live-dot" aria-live="polite">
+                <i class="fa-solid fa-circle"></i> Fast responses available
+              </div>
+
+              <div class="search" aria-label="Shortlet search">
+                <div class="form-grid">
+                  <div class="field" style="grid-column: span 2;">
+                    <label for="checkin">Check-in</label>
+                    <input id="checkin" type="date" />
+                  </div>
+
+                  <div class="field" style="grid-column: span 2;">
+                    <label for="checkout">Check-out</label>
+                    <input id="checkout" type="date" />
+                  </div>
+
+                  <div class="field" style="grid-column: span 1;">
+                    <label for="guests">Guests</label>
+                    <select id="guests">
+                      <option value="1">1</option>
+                      <option value="2" selected>2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5+</option>
+                    </select>
+                  </div>
+
+                  <div class="field" style="grid-column: span 1;">
+                    <label for="category">Category</label>
+                    <select id="category">
+                      <option value="Any" selected>Any</option>
+                      <option value="Studio">Studio</option>
+                      <option value="1 Bedroom">1 Bedroom</option>
+                      <option value="2 Bedroom">2 Bedroom</option>
+                      <option value="3 Bedroom">3 Bedroom</option>
+                      <option value="Family">Family</option>
+                      <option value="Business">Business</option>
+                      <option value="Premium">Premium</option>
+                    </select>
+                  </div>
+
+                  <div class="field" style="grid-column: span 2;">
+                    <label for="location">Location</label>
+                    <select id="location">
+                      <option value="Any" selected>Any</option>
+                      <option value="Ikoyi">Ikoyi</option>
+                      <option value="Lekki">Lekki</option>
+                      <option value="Victoria Island">Victoria Island</option>
+                      <option value="Yaba">Yaba</option>
+                      <option value="Mainland">Mainland</option>
+                    </select>
                   </div>
                 </div>
-                <a class="btn small solid" href="logistics.html">
-                  <i class="fa-solid fa-truck"></i> Explore Logistics
-                </a>
-              </div>
 
-              <div style="margin-top:10px; color:var(--muted); font-size:.92rem;">
-                Tip: Share your budget + preferred area for faster matching.
+                <div class="form-actions">
+                  <button class="btn solid" type="button" onclick="submitSearch()">
+                    <i class="fa-solid fa-calendar-check"></i> Check Availability
+                  </button>
+                  <a class="btn small primary" href="real-estate.html">
+                    <i class="fa-solid fa-house"></i> View All Real Estate
+                  </a>
+                </div>
+
+                <div class="logistics-strip invert" aria-label="Logistics highlight">
+                  <div class="logistics-left">
+                    <div class="logi-icn"><i class="fa-solid fa-truck-fast"></i></div>
+                    <div style="min-width:0">
+                      <div class="logistics-title">Need pickup or delivery for your stay?</div>
+                      <p class="logistics-sub">
+                        Larmah Logistics handles dispatch, airport pickup coordination, and trusted movement across Nigeria — all on WhatsApp.
+                      </p>
+                    </div>
+                  </div>
+                  <a class="btn small solid" href="logistics.html">
+                    <i class="fa-solid fa-truck"></i> Explore Logistics
+                  </a>
+                </div>
+
+                <div style="margin-top:10px; color:var(--muted); font-size:.92rem;">
+                  Tip: Share your budget + preferred area for faster matching.
+                </div>
               </div>
             </div>
+
+            <aside class="hero-media" id="heroMedia" aria-label="Real estate and logistics carousel">
+              <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11" alt="Luxury apartment interior" decoding="async">
+              <div class="cap">
+                <div class="hero-tag" id="heroTag">
+                  <i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate
+                </div>
+                <div class="hero-sub" id="heroSub">Verified listings and premium stays.</div>
+              </div>
+              <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
+            </aside>
           </div>
-
-          <aside class="hero-media" id="heroMedia" aria-label="Real estate and logistics carousel">
-            <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11" alt="Luxury apartment interior" decoding="async">
-            <div class="cap">
-              <div class="hero-tag" id="heroTag">
-                <i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate
-              </div>
-              <div class="hero-sub" id="heroSub">Verified listings and premium stays.</div>
-            </div>
-            <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
-          </aside>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section" id="browse" aria-label="Browse shortlets">
-      <div class="section-head">
-        <div>
-          <h2>Featured Shortlets</h2>
-          <p class="subhead">Auto-rotating highlights (every 5 seconds).</p>
-        </div>
-        <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
-      </div>
-
-      <div class="grid" id="featuredGrid">
-        <article class="card" id="feat0" aria-label="Featured listing 1"></article>
-        <article class="card" id="feat1" aria-label="Featured listing 2"></article>
-        <article class="card" id="feat2" aria-label="Featured listing 3"></article>
-      </div>
-    </section>
-
-    <section class="section" aria-label="WhatsApp request CTA">
-      <div class="card" style="padding:14px;">
-        <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+      <section class="section" id="browse" aria-label="Browse shortlets">
+        <div class="section-head">
           <div>
-            <h2 style="margin:0">Need a specific shortlet?</h2>
-            <p class="subhead" style="margin:6px 0 0">Send your dates, location and budget — we’ll respond via WhatsApp.</p>
+            <h2>Featured Shortlets</h2>
+            <p class="subhead">Auto-rotating highlights (every 5 seconds).</p>
           </div>
-          <button class="btn solid" type="button"
-            onclick="openWA(buildMsg('Custom Shortlet Request', { Dates:'', Location:'', Budget:'', Message:'Hello Larmah, I need a shortlet.' }))">
-            <i class="fa-brands fa-whatsapp"></i> Start Request
-          </button>
+          <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
         </div>
-      </div>
-    </section>
+
+        <div class="grid" id="featuredGrid">
+          <article class="card" id="feat0" aria-label="Featured listing 1"></article>
+          <article class="card" id="feat1" aria-label="Featured listing 2"></article>
+          <article class="card" id="feat2" aria-label="Featured listing 3"></article>
+        </div>
+      </section>
+
+      <section class="section" aria-label="WhatsApp request CTA">
+        <div class="card" style="padding:14px;">
+          <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+            <div>
+              <h2 style="margin:0">Need a specific shortlet?</h2>
+              <p class="subhead" style="margin:6px 0 0">Send your dates, location and budget — we’ll respond via WhatsApp.</p>
+            </div>
+            <button class="btn solid" type="button"
+              onclick="openWA(buildMsg('Custom Shortlet Request', { Dates:'', Location:'', Budget:'', Message:'Hello Larmah, I need a shortlet.' }))">
+              <i class="fa-brands fa-whatsapp"></i> Start Request
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ======================
+         ABOUT PAGE (INSIDE INDEX)
+         ====================== -->
+    <div class="page" id="page-about" data-page="about">
+      <section class="section" aria-label="About Larmah Enterprise">
+        <div class="about-wrap">
+          <div class="about-hero">
+            <div>
+              <div class="kicker">
+                <span>Trust-first</span><span class="dot">•</span>
+                <span>Verified operations</span><span class="dot">•</span>
+                <span>WhatsApp-first</span>
+              </div>
+
+              <h1>About Larmah Enterprise</h1>
+              <p class="lead">
+                Larmah Enterprise is a trust-first commerce hub built around two pillars: verified real estate (including shortlets) and dependable logistics.
+                We reduce friction with clear confirmations, clean references, and WhatsApp-first support.
+              </p>
+
+              <div class="hero-actions">
+                <a class="btn solid" href="#home"><i class="fa-solid fa-house"></i> Back to Home</a>
+                <button class="btn primary" type="button"
+                  onclick="openWA(buildMsg('Business Enquiry', { Topic:'Partnership / Listings / Logistics', Message:'Hello Larmah, I’d like to discuss a business enquiry.' }))">
+                  <i class="fa-brands fa-whatsapp"></i> Business Chat
+                </button>
+              </div>
+
+              <div class="about-points">
+                <div class="ap">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div>
+                    <b>Verified Listings</b>
+                    <span>We prioritize clear listing details, basic verification, and scam-resistant confirmations.</span>
+                  </div>
+                </div>
+                <div class="ap">
+                  <i class="fa-solid fa-truck-fast"></i>
+                  <div>
+                    <b>Logistics Support</b>
+                    <span>Dispatch, pickups, and trusted movement across Nigeria with real-time WhatsApp coordination.</span>
+                  </div>
+                </div>
+                <div class="ap">
+                  <i class="fa-solid fa-shield-halved"></i>
+                  <div>
+                    <b>Trust-first Process</b>
+                    <span>Simple workflows, clean references, and customer support focused on speed and clarity.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="notice" style="margin-top:12px;">
+                <b style="color:var(--text)">Business Email:</b> business@heylarmah.tech<br/>
+                <b style="color:var(--text)">WhatsApp:</b> +234 706 308 0605
+              </div>
+            </div>
+
+            <div class="about-card">
+              <img src="https://source.unsplash.com/1200x800/?lagos,real-estate&sig=777" alt="Lagos real estate" loading="lazy" decoding="async">
+              <div class="card-body">
+                <div class="card-title">What we do</div>
+                <div class="meta">
+                  <span class="pill"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Shortlets & listings</span>
+                  <span class="pill"><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Dispatch & pickup</span>
+                </div>
+
+                <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                  <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
+                  <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 
   <footer>
@@ -998,7 +1112,8 @@
         <div>
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
-            <a href="about.html">About</a>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
             <a href="real-estate.html">Real Estate</a>
             <a href="logistics.html">Logistics</a>
             <a href="premium.html">Premium</a>
@@ -1087,7 +1202,7 @@
     }
 
     // Theme (dark/light) with persistence
-    const THEME_KEY = "larmah_theme_v4";
+    const THEME_KEY = "larmah_theme_v5";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem(THEME_KEY, theme);
@@ -1105,20 +1220,40 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
+    // Router: “pages” inside index.html
+    const pages = Array.from(document.querySelectorAll(".page"));
+    const navLinks = Array.from(document.querySelectorAll('[data-nav]'));
+    function setActivePage(name){
+      pages.forEach(p => p.classList.toggle("is-active", p.dataset.page === name));
+      navLinks.forEach(a => a.classList.toggle("is-active", a.dataset.nav === name));
+      toggleMenu(false);
+      // accessibility: move focus into main
+      const main = document.getElementById("main");
+      if(main) main.focus({preventScroll:true});
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    function getRoute(){
+      const h = (location.hash || "#home").replace("#", "").trim().toLowerCase();
+      if(h === "about") return "about";
+      return "home";
+    }
+    window.addEventListener("hashchange", () => setActivePage(getRoute()));
+    document.addEventListener("DOMContentLoaded", () => setActivePage(getRoute()));
+
     // Search submit -> WhatsApp (Category separate from Location)
     function submitSearch(){
       const checkin = document.getElementById("checkin").value || "Not set";
       const checkout = document.getElementById("checkout").value || "Not set";
       const guests = document.getElementById("guests").value || "2";
       const category = document.getElementById("category").value || "Any";
-      const location = document.getElementById("location").value || "Any";
+      const locationVal = document.getElementById("location").value || "Any";
 
       openWA(buildMsg("Shortlet Availability Request", {
         Checkin: checkin,
         Checkout: checkout,
         Guests: guests,
         Category: category,
-        Location: location,
+        Location: locationVal,
         Message: "Hello Larmah, please confirm available verified options and total cost."
       }));
     }
@@ -1126,15 +1261,17 @@
     // Set minimum checkout based on checkin
     const checkinEl = document.getElementById("checkin");
     const checkoutEl = document.getElementById("checkout");
-    checkinEl.addEventListener("change", () => {
-      if(!checkinEl.value) return;
-      checkoutEl.min = checkinEl.value;
-      if(checkoutEl.value && checkoutEl.value < checkinEl.value){
-        checkoutEl.value = checkinEl.value;
-      }
-    });
+    if(checkinEl && checkoutEl){
+      checkinEl.addEventListener("change", () => {
+        if(!checkinEl.value) return;
+        checkoutEl.min = checkinEl.value;
+        if(checkoutEl.value && checkoutEl.value < checkinEl.value){
+          checkoutEl.value = checkinEl.value;
+        }
+      });
+    }
 
-    // HERO carousel: 10 live images, 5s
+    // HERO carousel: 10 live images, 5s (only runs on home page)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1156,11 +1293,13 @@
 
     let heroIdx = 0;
     function runHeroProgress(){
+      if(!heroBar) return;
       heroBar.classList.remove("run");
       void heroBar.offsetWidth;
       heroBar.classList.add("run");
     }
     function setHero(i){
+      if(!heroMedia || !heroImg || !heroTag || !heroSub) return;
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
       heroMedia.classList.add("is-fading");
       runHeroProgress();
@@ -1173,15 +1312,7 @@
       }, 220);
     }
 
-    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if(!reduce){
-      setHero(0);
-      setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
-    } else {
-      setHero(0);
-    }
-
-    // Featured rotation (3 cards)
+    // Featured rotation (3 cards) — only on home
     const FEATURE_LIST = [
       { title:"Verified 1 Bedroom Shortlet", area:"Lekki / VI", tag:"Verified", img:"https://source.unsplash.com/1200x800/?apartment,bedroom,modern&sig=101", type:"1 Bedroom" },
       { title:"Verified 2 Bedroom Shortlet", area:"Ikoyi", tag:"Fast confirm", img:"https://source.unsplash.com/1200x800/?apartment,luxury,living-room&sig=102", type:"2 Bedroom" },
@@ -1213,18 +1344,34 @@
       `;
     }
     function renderFeatured(){
-      featEls.forEach(el => el.classList.add("is-fading"));
+      featEls.forEach(el => el && el.classList.add("is-fading"));
       setTimeout(() => {
         for(let i=0;i<3;i++){
           const it = FEATURE_LIST[(featStart + i) % FEATURE_LIST.length];
-          featEls[i].innerHTML = cardHTML(it);
+          if(featEls[i]) featEls[i].innerHTML = cardHTML(it);
         }
-        requestAnimationFrame(() => featEls.forEach(el => el.classList.remove("is-fading")));
+        requestAnimationFrame(() => featEls.forEach(el => el && el.classList.remove("is-fading")));
       }, 220);
     }
-    renderFeatured();
+
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if(!reduce){
-      setInterval(() => { featStart = (featStart + 1) % FEATURE_LIST.length; renderFeatured(); }, 5000);
+      setHero(0);
+      setInterval(() => {
+        if(getRoute() !== "home") return;
+        heroIdx = (heroIdx + 1) % HERO_SLIDES.length;
+        setHero(heroIdx);
+      }, 5000);
+
+      renderFeatured();
+      setInterval(() => {
+        if(getRoute() !== "home") return;
+        featStart = (featStart + 1) % FEATURE_LIST.length;
+        renderFeatured();
+      }, 5000);
+    } else {
+      setHero(0);
+      renderFeatured();
     }
 
     // Expose
