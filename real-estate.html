@@ -6,7 +6,7 @@
   <meta name="robots" content="index,follow" />
 
   <title>Real Estate | Larmah Enterprise</title>
-  <meta name="description" content="Verified shortlets, rentals, and property sales across Nigeria. Trust-first sourcing with WhatsApp support." />
+  <meta name="description" content="Verified shortlets, rentals, and property sales across Nigeria — trust-first sourcing with WhatsApp support." />
   <meta name="keywords" content="Real Estate Nigeria, Shortlets Lagos, Apartments Lekki, Ikoyi Rentals, Verified Property" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
@@ -28,7 +28,6 @@
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
-
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -50,61 +49,45 @@
 
   <style>
     :root{
-      --gold:#D4AF37;
-      --gold2:#F5D57A;
-      --radius: 18px;
-      --radius2: 22px;
-      --max: 1120px;
-      --ease: cubic-bezier(.2,.8,.2,1);
-      --shadow: 0 18px 50px rgba(0,0,0,.42);
-      --shadow2: 0 12px 34px rgba(0,0,0,.30);
+      --gold:#D4AF37; --gold2:#F5D57A;
+      --radius:18px; --radius2:22px;
+      --max:1120px;
+      --ease:cubic-bezier(.2,.8,.2,1);
+      --shadow:0 18px 50px rgba(0,0,0,.42);
+      --shadow2:0 12px 34px rgba(0,0,0,.30);
     }
     html[data-theme="dark"]{
       --bg:#070A12; --bg2:#050810;
-      --panel: rgba(255,255,255,.03);
-      --panel2: rgba(255,255,255,.02);
-      --line: rgba(255,255,255,.10);
-      --line2: rgba(255,255,255,.08);
-      --text:#E9EDF7;
-      --muted: rgba(233,237,247,.72);
-      --muted2: rgba(233,237,247,.60);
-      --headerBg: rgba(7,10,18,.72);
-      --overlayBg: rgba(0,0,0,.55);
-      --ctaBg: rgba(0,0,0,.28);
-      --ctaLine: rgba(255,255,255,.12);
-      --good: rgba(0,217,129,.95);
-      --bad: rgba(255,90,103,.95);
-      --logoGlow: 0 0 22px rgba(212,175,55,.14);
-      --logoRing: rgba(255,255,255,.12);
-      --logoBg: rgba(255,255,255,.03);
+      --panel:rgba(255,255,255,.03); --panel2:rgba(255,255,255,.02);
+      --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.08);
+      --text:#E9EDF7; --muted:rgba(233,237,247,.72); --muted2:rgba(233,237,247,.60);
+      --headerBg:rgba(7,10,18,.72); --overlayBg:rgba(0,0,0,.55);
+      --ctaBg:rgba(0,0,0,.28); --ctaLine:rgba(255,255,255,.12);
+      --good:rgba(0,217,129,.95); --bad:rgba(255,90,103,.95);
+      --logoGlow:0 0 22px rgba(212,175,55,.14);
+      --logoRing:rgba(255,255,255,.12);
+      --logoBg:rgba(255,255,255,.03);
     }
     html[data-theme="light"]{
       --bg:#F7F7FB; --bg2:#FFFFFF;
-      --panel: rgba(10,14,26,.04);
-      --panel2: rgba(10,14,26,.03);
-      --line: rgba(10,14,26,.12);
-      --line2: rgba(10,14,26,.08);
-      --text:#0E1526;
-      --muted: rgba(14,21,38,.68);
-      --muted2: rgba(14,21,38,.56);
-      --headerBg: rgba(255,255,255,.78);
-      --overlayBg: rgba(0,0,0,.40);
-      --ctaBg: rgba(255,255,255,.78);
-      --ctaLine: rgba(10,14,26,.10);
-      --good: rgba(0,140,90,.92);
-      --bad: rgba(200,34,60,.90);
-      --shadow: 0 16px 46px rgba(0,0,0,.12);
-      --shadow2: 0 10px 26px rgba(0,0,0,.10);
-      --logoGlow: 0 0 0 rgba(0,0,0,0);
-      --logoRing: rgba(10,14,26,.10);
-      --logoBg: rgba(255,255,255,.65);
+      --panel:rgba(10,14,26,.04); --panel2:rgba(10,14,26,.03);
+      --line:rgba(10,14,26,.12); --line2:rgba(10,14,26,.08);
+      --text:#0E1526; --muted:rgba(14,21,38,.68); --muted2:rgba(14,21,38,.56);
+      --headerBg:rgba(255,255,255,.78); --overlayBg:rgba(0,0,0,.40);
+      --ctaBg:rgba(255,255,255,.78); --ctaLine:rgba(10,14,26,.10);
+      --good:rgba(0,140,90,.92); --bad:rgba(200,34,60,.90);
+      --shadow:0 16px 46px rgba(0,0,0,.12);
+      --shadow2:0 10px 26px rgba(0,0,0,.10);
+      --logoGlow:0 0 0 rgba(0,0,0,0);
+      --logoRing:rgba(10,14,26,.10);
+      --logoBg:rgba(255,255,255,.65);
     }
 
-    *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
     @media (prefers-reduced-motion: reduce){
-      html{ scroll-behavior:auto; }
-      *{ animation:none !important; transition:none !important; }
+      html{scroll-behavior:auto}
+      *{animation:none!important;transition:none!important}
     }
 
     body{
@@ -115,415 +98,238 @@
         radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.06), transparent 62%),
         radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.06), transparent 58%),
         linear-gradient(180deg, var(--bg2), var(--bg));
-      color: var(--text);
+      color:var(--text);
       overflow-x:hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
-    a{ color: var(--text); text-decoration:none; }
-    a:hover{ color: var(--gold); }
-    .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+    a{color:var(--text);text-decoration:none}
+    a:hover{color:var(--gold)}
+    .container{max-width:var(--max);margin:0 auto;padding:0 16px}
 
     header{
-      position:sticky; top:0; z-index:50;
-      background: var(--headerBg);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--line2);
+      position:sticky;top:0;z-index:50;
+      background:var(--headerBg);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--line2);
     }
-    .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
-    .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
+    .header-inner{display:flex;align-items:center;gap:12px;padding:12px 0}
+    .brand{display:flex;align-items:center;gap:10px;min-width:220px}
     .logo-wrap{
-      position:relative;
-      width:44px; height:44px;
-      border-radius: 14px;
-      padding: 2px;
+      position:relative;width:44px;height:44px;border-radius:14px;padding:2px;
       background:
         radial-gradient(18px 18px at 25% 20%, rgba(245,213,122,.35), transparent 70%),
         radial-gradient(20px 20px at 85% 80%, rgba(212,175,55,.22), transparent 70%),
         linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
-      box-shadow: var(--logoGlow);
-      border: 1px solid var(--logoRing);
-      flex: 0 0 auto;
+      box-shadow:var(--logoGlow);
+      border:1px solid var(--logoRing);
       isolation:isolate;
+      flex:0 0 auto;
     }
     .logo-wrap::after{
-      content:"";
-      position:absolute;
-      inset:-10px;
-      background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
-      filter: blur(12px);
-      opacity: .8;
-      pointer-events:none;
-      z-index:-1;
+      content:"";position:absolute;inset:-10px;
+      background:radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
+      filter:blur(12px);opacity:.8;pointer-events:none;z-index:-1;
     }
     .logo-wrap img{
-      width:100%; height:100%;
-      object-fit: cover;
-      display:block;
-      border-radius: 12px;
-      border: 1px solid var(--line2);
-      background: var(--logoBg);
+      width:100%;height:100%;object-fit:cover;display:block;
+      border-radius:12px;border:1px solid var(--line2);background:var(--logoBg);
     }
-    .brand .btxt{ display:flex; flex-direction:column; line-height:1.05; gap:4px; min-width:0; }
-    .brand .bname{ font-weight: 950; letter-spacing:-0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .brand .bsub{ font-size:.86rem; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .brand .btxt{display:flex;flex-direction:column;line-height:1.05;gap:4px;min-width:0}
+    .brand .bname{font-weight:950;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand .bsub{font-size:.86rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-    nav{ margin-left:auto; }
-    nav ul{ display:flex; list-style:none; gap:18px; padding:0; margin:0; align-items:center; }
-    .nav-link{ color: var(--text); opacity:.9; font-weight: 850; font-size: .95rem; }
-    .nav-link:hover{ color: var(--gold); opacity:1; }
-    .nav-link.active{ color: var(--gold); opacity:1; }
+    nav{margin-left:auto}
+    nav ul{display:flex;list-style:none;gap:18px;padding:0;margin:0;align-items:center}
+    .nav-link{opacity:.9;font-weight:850;font-size:.95rem}
+    .nav-link:hover{opacity:1}
+    .nav-link.active{color:var(--gold);opacity:1;position:relative}
+    .nav-link.active::after{
+      content:"";position:absolute;left:0;right:0;bottom:-12px;height:2px;
+      background:rgba(212,175,55,.65);border-radius:999px;
+    }
 
-    .header-actions{ display:flex; gap:10px; align-items:center; margin-left: 10px; }
+    .header-actions{display:flex;gap:10px;align-items:center;margin-left:10px}
     .icon-btn{
-      width: 42px; height: 42px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      display:inline-flex; align-items:center; justify-content:center;
-      cursor:pointer;
-      transition: transform .16s var(--ease), filter .16s var(--ease);
+      width:42px;height:42px;border-radius:12px;border:1px solid var(--line);
+      background:var(--panel);color:var(--text);display:inline-flex;align-items:center;justify-content:center;
+      cursor:pointer;transition:transform .16s var(--ease), filter .16s var(--ease);
     }
-    .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .icon-btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
     .menu-btn{
-      display:none;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 10px 12px;
-      cursor:pointer;
+      display:none;border:1px solid var(--line);background:var(--panel);color:var(--text);
+      border-radius:12px;padding:10px 12px;cursor:pointer;
     }
-    @media (max-width: 980px){
-      nav{ display:none; }
-      .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
-      .header-actions{ margin-left:auto; }
+    @media (max-width:980px){
+      nav{display:none}
+      .menu-btn{display:inline-flex;align-items:center;justify-content:center}
+      .header-actions{margin-left:auto}
     }
 
-    .overlay{ position:fixed; inset:0; background: var(--overlayBg); display:none; align-items:flex-end; z-index:80; }
-    .overlay.open{ display:flex; }
-
+    .overlay{position:fixed;inset:0;background:var(--overlayBg);display:none;align-items:flex-end;z-index:80}
+    .overlay.open{display:flex}
     .sheet{
       width:100%;
-      border-radius: 18px 18px 0 0;
-      border: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 82%, #000 18%);
-      box-shadow: var(--shadow);
-      padding: 14px;
+      border-radius:18px 18px 0 0;
+      border:1px solid var(--line);
+      background:color-mix(in oklab, var(--bg2) 82%, #000 18%);
+      box-shadow:var(--shadow);
+      padding:14px;
     }
     .sheet-head{
-      display:flex; align-items:center; justify-content:space-between;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--line2);
-      margin-bottom: 10px;
-      gap: 10px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--line2);
     }
-    /* ✅ Missing in your snippet: add these so layout doesn’t break */
-    .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
-    .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
-
+    .sheet-brandline{display:flex;align-items:center;gap:10px;min-width:0}
     .sheet a{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: var(--text);
-      margin-bottom: 10px;
-      font-weight: 900;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:12px;border-radius:14px;border:1px solid var(--line2);background:var(--panel2);
+      margin-bottom:10px;font-weight:900;
     }
+    .sheet-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
 
     .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      border-radius: 14px; padding: 12px 16px; min-height: 46px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      cursor:pointer;
-      font-weight: 950;
-      transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
-      white-space: nowrap;
-      user-select:none;
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      border-radius:14px;padding:12px 16px;min-height:46px;
+      border:1px solid var(--line);background:var(--panel);color:var(--text);
+      cursor:pointer;font-weight:950;
+      transition:transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
+      white-space:nowrap;user-select:none;
     }
-    .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
-    .btn:active{ transform: translateY(0); }
-    .btn.solid{ background: var(--gold); color:#111; border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
-    .btn.primary{ background: var(--panel2); border-color: var(--line); }
-    .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
+    .btn:hover{transform:translateY(-1px);filter:brightness(1.03)}
+    .btn:active{transform:translateY(0)}
+    .btn.solid{background:var(--gold);color:#111;border-color:color-mix(in oklab, var(--gold) 55%, #000 45%)}
+    .btn.primary{background:var(--panel2);border-color:var(--line)}
+    .btn.small{min-height:40px;padding:10px 12px;border-radius:12px;font-weight:900}
 
-    .page-wrap{ padding: 18px 0 0; }
+    .page-wrap{padding:18px 0 0}
 
     .hero{
-      border-radius: var(--radius2);
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      box-shadow: var(--shadow);
+      border-radius:var(--radius2);
+      border:1px solid var(--line);
+      background:var(--panel2);
+      box-shadow:var(--shadow);
       overflow:hidden;
-      padding: 16px;
+      padding:16px;
     }
-    .hero-grid{ display:grid; gap: 14px; grid-template-columns: 1.05fr .95fr; align-items:start; }
-    @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
+    .hero-grid{display:grid;gap:14px;grid-template-columns:1.05fr .95fr;align-items:start}
+    @media (max-width:980px){.hero-grid{grid-template-columns:1fr}}
 
-    .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
-    .kicker .dot{ opacity:.65; }
-    h1{ margin: 6px 0 10px; font-size: clamp(2.0rem, 4vw, 2.7rem); line-height: 1.06; letter-spacing: -0.6px; }
-    .lead{ margin: 0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
+    .kicker{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--muted);font-weight:850}
+    .kicker .dot{opacity:.65}
+    h1{margin:6px 0 10px;font-size:clamp(2rem,4vw,2.7rem);line-height:1.06;letter-spacing:-.6px}
+    .lead{margin:0;color:var(--muted);font-size:1.02rem;line-height:1.55}
 
-    .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
-    @media (max-width: 520px){
-      .hero-actions{ flex-direction:column; }
-      .hero-actions .btn{ width:100%; }
-    }
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    @media (max-width:520px){.hero-actions{flex-direction:column}.hero-actions .btn{width:100%}}
 
     .hero-media{
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      position:relative;
-      min-height: 300px;
-      isolation:isolate;
+      border-radius:14px;overflow:hidden;border:1px solid var(--line);
+      background:var(--panel);position:relative;min-height:300px;isolation:isolate;
     }
     .hero-media img{
-      width:100%;
-      height: 300px;
-      object-fit: cover;
-      display:block;
-      opacity:.94;
-      transform: scale(1.01);
-      transition: opacity .55s var(--ease), transform .9s var(--ease);
+      width:100%;height:300px;object-fit:cover;display:block;opacity:.94;transform:scale(1.01);
+      transition:opacity .55s var(--ease), transform .9s var(--ease);
     }
-    .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
+    .hero-media.is-fading img{opacity:.18;transform:scale(1.03)}
     .hero-media .cap{
-      position:absolute; left:16px; right:16px; bottom:12px;
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid var(--ctaLine);
-      background: var(--ctaBg);
-      backdrop-filter: blur(10px);
+      position:absolute;left:16px;right:16px;bottom:12px;
+      padding:10px;border-radius:12px;border:1px solid var(--ctaLine);
+      background:var(--ctaBg);backdrop-filter:blur(10px);
     }
-    .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
-    .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
-    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
-    .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
-    .hero-bar.run{ width: 100%; }
+    .hero-tag{display:flex;gap:8px;align-items:center;font-weight:950;margin-bottom:6px}
+    .hero-sub{color:color-mix(in oklab, var(--text) 86%, transparent);font-size:.92rem;line-height:1.35}
+    .hero-progress{position:absolute;left:0;right:0;bottom:0;height:3px;background:color-mix(in oklab, var(--text) 10%, transparent);overflow:hidden}
+    .hero-bar{height:100%;width:0%;background:rgba(212,175,55,.75);transition:width 5s linear}
+    .hero-bar.run{width:100%}
 
-    .section{ padding: 18px 0; }
-    .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom: 12px; flex-wrap:wrap; }
-    h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
-    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
+    .section{padding:18px 0}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    h2{margin:0;font-size:1.35rem;letter-spacing:-.3px}
+    .subhead{color:var(--muted);margin:4px 0 0;font-size:.98rem;line-height:1.4}
 
     .filters{
-      border-radius: var(--radius2);
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      box-shadow: var(--shadow2);
-      padding: 14px;
-      margin-bottom: 14px;
+      border-radius:var(--radius2);
+      border:1px solid var(--line);
+      background:var(--panel2);
+      box-shadow:var(--shadow2);
+      padding:14px;
+      margin-bottom:14px;
     }
-    .filters-grid{ display:grid; gap: 10px; grid-template-columns: 1.4fr 1fr 1fr 1fr; }
-    @media (max-width: 980px){ .filters-grid{ grid-template-columns: 1fr 1fr; } }
-    @media (max-width: 520px){ .filters-grid{ grid-template-columns: 1fr; } }
-    .field{ display:flex; flex-direction:column; gap:6px; }
-    label{ font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
-    input, select{
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      padding: 12px;
-      min-height: 46px;
-      outline:none;
+    .filters-grid{display:grid;gap:10px;grid-template-columns:1.4fr 1fr 1fr 1fr}
+    @media (max-width:980px){.filters-grid{grid-template-columns:1fr 1fr}}
+    @media (max-width:520px){.filters-grid{grid-template-columns:1fr}}
+    .field{display:flex;flex-direction:column;gap:6px}
+    label{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)}
+    input,select,textarea{
+      border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--text);
+      padding:12px;min-height:46px;outline:none;font-family:inherit;
     }
-    .pillbar{ display:flex; gap:8px; flex-wrap:wrap; padding-top: 12px; margin-top: 10px; border-top: 1px solid var(--line2); }
+    textarea{min-height:96px;resize:vertical}
+    .pillbar{display:flex;gap:8px;flex-wrap:wrap;padding-top:12px;margin-top:10px;border-top:1px solid var(--line2)}
 
-    .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    @media (max-width: 1024px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 640px){ .grid{ grid-template-columns: 1fr; } }
+    .grid{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media (max-width:1024px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (max-width:640px){.grid{grid-template-columns:1fr}}
 
     .card{
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: var(--panel);
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:var(--panel);
       overflow:hidden;
-      box-shadow: var(--shadow2);
-      transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+      box-shadow:var(--shadow2);
+      transition:transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
     }
-    .card:hover{
-      transform: translateY(-1px);
-      border-color: color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
-      background: color-mix(in oklab, var(--panel) 94%, white 6%);
-    }
+    .card:hover{transform:translateY(-1px);border-color:color-mix(in oklab, var(--gold) 30%, var(--line) 70%)}
     .media{
-      width: calc(100% - 24px);
-      height: 190px;
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid var(--line2);
-      background: color-mix(in oklab, var(--bg2) 60%, #000 40%);
-      margin: 12px 12px 0;
-      position:relative;
-      isolation:isolate;
+      width:calc(100% - 24px);height:190px;border-radius:14px;overflow:hidden;
+      border:1px solid var(--line2);
+      background:color-mix(in oklab, var(--bg2) 60%, #000 40%);
+      margin:12px 12px 0;position:relative;isolation:isolate;
     }
-    .media img{
-      width:100%; height:100%;
-      object-fit:cover;
-      display:block;
-      transform: scale(1.01);
-      opacity:.95;
-      transition: opacity .45s var(--ease), transform .7s var(--ease);
-    }
-    .media.is-fading img{ opacity:.18; transform: scale(1.03); }
-    .media::after{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(to top, rgba(0,0,0,.32), rgba(0,0,0,0) 55%);
-      pointer-events:none;
-      z-index:1;
-    }
-    .media-nav{
-      position:absolute; inset:0;
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 0 10px;
-      pointer-events:none;
-      z-index:2;
-    }
+    .media img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.01);opacity:.95;transition:opacity .45s var(--ease), transform .7s var(--ease)}
+    .media.is-fading img{opacity:.18;transform:scale(1.03)}
+    .media::after{content:"";position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.32), rgba(0,0,0,0) 55%);pointer-events:none;z-index:1}
+    .media-nav{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 10px;pointer-events:none;z-index:2}
     .media-btn{
-      width:34px; height:34px; border-radius:12px;
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(255,255,255,0.14);
-      display:grid; place-items:center;
-      color:#fff;
-      pointer-events:auto;
-      cursor:pointer;
-      backdrop-filter: blur(6px);
-      transition: transform .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease);
+      width:34px;height:34px;border-radius:12px;background:rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;color:#fff;
+      pointer-events:auto;cursor:pointer;backdrop-filter:blur(6px);
+      transition:transform .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease);
     }
-    .media-btn:hover{
-      background: rgba(0,0,0,0.55);
-      border-color: rgba(212,175,55,.30);
-      transform: translateY(-1px);
-    }
-    .media-dots{
-      position:absolute; left:0; right:0; bottom:10px;
-      display:flex; justify-content:center; gap:6px;
-      pointer-events:none;
-      z-index:2;
-    }
-    .media-dot{
-      width:7px; height:7px; border-radius:999px;
-      background: rgba(255,255,255,0.35);
-      border: 1px solid rgba(255,255,255,0.25);
-    }
-    .media-dot.active{ background: rgba(255,255,255,0.92); }
+    .media-btn:hover{background:rgba(0,0,0,.55);border-color:rgba(212,175,55,.30);transform:translateY(-1px)}
+    .media-dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:6px;pointer-events:none;z-index:2}
+    .media-dot{width:7px;height:7px;border-radius:999px;background:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.25)}
+    .media-dot.active{background:rgba(255,255,255,.92)}
 
-    .card-body{ padding: 12px; }
-    .title{ font-weight: 950; margin: 2px 0 6px; letter-spacing:-0.2px; }
-    .desc{
-      margin:0; color: var(--muted); line-height:1.45; font-size: .96rem;
-      display:-webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow:hidden;
-    }
-    .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
-    .meta{ margin-top: 10px; color: var(--muted); font-size: .88rem; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .card-body{padding:12px}
+    .title{font-weight:950;margin:2px 0 6px;letter-spacing:-.2px}
+    .desc{margin:0;color:var(--muted);line-height:1.45;font-size:.96rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .price{margin-top:10px;font-weight:950;color:var(--gold2);letter-spacing:.1px}
+    .meta{margin-top:10px;color:var(--muted);font-size:.88rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
     .pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding: 7px 10px; border-radius: 999px;
-      border: 1px solid var(--line2); background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 80%, transparent);
-      font-weight: 800; font-size:.84rem;
+      display:inline-flex;gap:8px;align-items:center;
+      padding:7px 10px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);
+      color:color-mix(in oklab, var(--text) 80%, transparent);font-weight:800;font-size:.84rem;
     }
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
-    .actions-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
-    .actions-row .btn{ flex: 1; }
-    @media (max-width: 520px){ .actions-row .btn{ width:100%; flex:unset; } }
-    .notice{
-      border-radius: 16px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--muted);
-    }
-    .notice strong{ color: var(--text); }
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    .actions-row{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+    .actions-row .btn{flex:1}
+    @media (max-width:520px){.actions-row .btn{width:100%;flex:unset}}
 
-    footer{
-      margin-top: 18px;
-      border-top: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
-    }
-    .footer-cta{
-      margin-top: 14px;
-      border-radius: 20px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
-        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
-        var(--panel2);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display:flex; gap: 12px;
-      align-items:center; justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
-    .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
+    .notice{border-radius:16px;padding:12px;border:1px solid var(--line);background:var(--panel2);color:var(--muted)}
+    .notice strong{color:var(--text)}
 
-    .footer-grid{ display:grid; gap: 16px; padding: 16px 0; grid-template-columns: 1.35fr 1fr 1fr; }
-    @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
-
-    .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
-    .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
-    .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
-
-    .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
-    .footer-links a:hover{ color: var(--gold); }
-
-    .contact-stack{ display:grid; gap: 10px; }
-    .contact-chip{
-      display:flex; gap:10px; align-items:flex-start;
-      padding: 10px 12px; border-radius: 14px;
-      border: 1px solid var(--line); background: var(--panel2);
-    }
-    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
-    .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
-    .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
-
-    .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
-    .social a{
-      width: 42px; height: 42px;
-      display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 12px; border: 1px solid var(--line);
-      background: var(--panel2); color: var(--text);
-    }
-    .social a:hover{ color:#111; background: var(--gold); border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
-
-    .footer-bottom{
-      border-top: 1px solid var(--line2);
-      padding: 12px 0 16px;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px; flex-wrap:wrap;
-      color: var(--muted2);
-      font-size: .9rem;
-    }
-
+    footer{margin-top:18px;border-top:1px solid var(--line);background:color-mix(in oklab, var(--bg2) 80%, #000 20%)}
+    .footer-bottom{border-top:1px solid var(--line2);padding:12px 0 16px;color:var(--muted2);font-size:.9rem}
     .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      min-width: 220px;
-      max-width: min(560px, calc(100vw - 28px));
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 88%, #000 12%);
-      box-shadow: var(--shadow2);
-      color: var(--text);
-      display:none;
-      z-index: 120;
+      position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+      min-width:220px;max-width:min(560px, calc(100vw - 28px));
+      padding:10px 12px;border-radius:14px;border:1px solid var(--line);
+      background:color-mix(in oklab, var(--bg2) 88%, #000 12%);
+      box-shadow:var(--shadow2);color:var(--text);display:none;z-index:120;
     }
-    .toast.show{ display:block; }
+    .toast.show{display:block}
   </style>
 </head>
 
@@ -541,20 +347,30 @@
             <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
           </div>
         </div>
-
         <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <!-- ✅ FIX: About is inside index.html, not on this page -->
-      <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="index.html#about">
+        <span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span>
+        <i class="fa-solid fa-chevron-right" style="opacity:.6"></i>
+      </a>
 
-      <!-- ✅ FIX: This page should show active/check -->
-      <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
+      <a href="real-estate.html">
+        <span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span>
+        <i class="fa-solid fa-check" style="opacity:.9"></i>
+      </a>
 
-      <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="logistics.html">
+        <span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span>
+        <i class="fa-solid fa-chevron-right" style="opacity:.6"></i>
+      </a>
+
+      <a href="premium.html">
+        <span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span>
+        <i class="fa-solid fa-chevron-right" style="opacity:.6"></i>
+      </a>
 
       <div class="sheet-actions">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
@@ -566,8 +382,7 @@
 
   <header>
     <div class="container header-inner">
-      <!-- ✅ FIX: don’t link to #home on this page -->
-      <a class="brand" href="index.html#about" aria-label="About Larmah Enterprise">
+      <a class="brand" href="index.html#home" aria-label="Back to Index">
         <div class="logo-wrap" aria-hidden="true">
           <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
         </div>
@@ -579,22 +394,17 @@
 
       <nav aria-label="Primary navigation">
         <ul>
-          <!-- ✅ FIX: About points to index.html -->
           <li><a class="nav-link" href="index.html#about">About</a></li>
-
-          <!-- ✅ FIX: active state -->
           <li><a class="nav-link active" href="real-estate.html">Real Estate</a></li>
-
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
         </ul>
       </nav>
 
       <div class="header-actions">
-        <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme" title="Toggle theme">
+        <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
-
         <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -602,7 +412,7 @@
     </div>
   </header>
 
-  <main id="main" class="container page-wrap" tabindex="-1">
+  <main class="container page-wrap" id="main" tabindex="-1">
     <section class="hero" aria-label="Real Estate hero">
       <div class="hero-grid">
         <div>
@@ -633,7 +443,7 @@
         </div>
 
         <aside class="hero-media" id="heroMedia" aria-label="Real estate showcase">
-          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?apartment,interior,luxury&sig=311" alt="Real estate showcase" decoding="async">
+          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611" alt="Real estate showcase" decoding="async">
           <div class="cap">
             <div class="hero-tag" id="heroTag"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate</div>
             <div class="hero-sub" id="heroSub">Verified shortlets, rentals, and sales.</div>
@@ -709,111 +519,84 @@
         <div class="notice">Loading verified listings…</div>
       </div>
     </section>
-  </main>
 
-  <footer>
-    <div class="container">
-      <div class="footer-cta">
+    <section class="section" id="request" aria-label="Personalized sourcing">
+      <div class="section-head">
         <div>
-          <h3>Fast bookings. Verified stays. WhatsApp-first support.</h3>
-          <p>Confirm availability and arrange logistics — in one chat.</p>
+          <h2>Personalized Sourcing</h2>
+          <p class="subhead">Tell us your budget and location — we’ll shortlist verified options.</p>
         </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+      </div>
+
+      <div class="filters" style="padding:16px;">
+        <div class="filters-grid" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+          <div class="field" style="grid-column: span 2;">
+            <label for="r_name">Name</label>
+            <input id="r_name" placeholder="Full name" autocomplete="name" />
+          </div>
+          <div class="field" style="grid-column: span 2;">
+            <label for="r_phone">WhatsApp Number</label>
+            <input id="r_phone" placeholder="+234..." inputmode="tel" autocomplete="tel" />
+          </div>
+
+          <div class="field" style="grid-column: span 2;">
+            <label for="r_location">Location</label>
+            <input id="r_location" placeholder="Ikoyi, Lekki, VI, Abuja..." autocomplete="address-level2" />
+          </div>
+          <div class="field">
+            <label for="r_cat">Category</label>
+            <select id="r_cat">
+              <option value="Shortlet">Shortlet</option>
+              <option value="Rent">Rent</option>
+              <option value="Buy">Buy</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="r_budget">Budget</label>
+            <input id="r_budget" placeholder="e.g., 250k/night or 5M/year" />
+          </div>
+
+          <div class="field" style="grid-column: span 4;">
+            <label for="r_notes">Notes</label>
+            <textarea id="r_notes" placeholder="24/7 power, security, pool, parking..."></textarea>
+          </div>
+        </div>
+
+        <div class="pillbar" style="border-top:0;margin-top:12px;padding-top:0;">
+          <button class="btn solid" type="button" onclick="sendRequest()">
+            <i class="fa-brands fa-whatsapp"></i> Submit via WhatsApp
           </button>
-          <a class="btn primary" href="logistics.html">
-            <i class="fa-solid fa-truck-fast"></i> Logistics
-          </a>
+          <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
         </div>
       </div>
+    </section>
 
-      <div class="footer-grid">
-        <div>
-          <div class="brandline">
-            <div class="logo-wrap" aria-hidden="true">
-              <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
-            </div>
-            <div>
-              <div class="brandname">Larmah Enterprise</div>
-              <div class="tagline">RC: 9127113</div>
-            </div>
-          </div>
-
-          <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
-            Verified real estate, shortlets, and logistics support.
-          </div>
-
-          <div class="social" aria-label="Social links">
-            <a href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://x.com/heylarmah_tech" aria-label="X" title="X"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Quick Links</div>
-          <div class="footer-links">
-            <a href="index.html#about">About</a>
-            <a href="real-estate.html">Real Estate</a>
-            <a href="logistics.html">Logistics</a>
-            <a href="premium.html">Premium</a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Contact</div>
-
-          <div class="contact-stack">
-            <div class="contact-chip">
-              <i class="fa-brands fa-whatsapp"></i>
-              <div>
-                <div class="txt">+234 706 308 0605</div>
-                <div class="sub">WhatsApp-first support</div>
-              </div>
-            </div>
-
-            <!-- ✅ FIX: Avoid Cloudflare email-protection dependency -->
-            <div class="contact-chip">
-              <i class="fa-regular fa-envelope"></i>
-              <div>
-                <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
-                <div class="sub">Business enquiries</div>
-              </div>
-            </div>
-
-            <div class="contact-chip">
-              <i class="fa-solid fa-location-dot"></i>
-              <div>
-                <div class="txt">Lagos, Nigeria</div>
-                <div class="sub">Serving Nigeria nationwide</div>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
-              <i class="fa-brands fa-whatsapp"></i> Chat Now
-            </button>
-            <a class="btn small primary" href="logistics.html">
-              <i class="fa-solid fa-truck-fast"></i> Book Dispatch
-            </a>
-          </div>
-        </div>
-      </div>
-
+    <footer>
       <div class="footer-bottom">
-        <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+        © <span id="year"></span> Larmah Enterprise. All rights reserved.
       </div>
-    </div>
-  </footer>
+    </footer>
+  </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // Theme (same as index)
-    const THEME_KEY = "larmah_theme_shared";
+    // ---------- shared helpers ----------
+    document.getElementById("year").textContent = new Date().getFullYear();
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+    function toast(msg){
+      const t = document.getElementById("toast");
+      if(!t) return;
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
+    }
+
+    // ---------- theme: SAME as index ----------
+    const THEME_KEY = "larmah_theme_v5";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem(THEME_KEY, theme);
@@ -831,7 +614,7 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // Mobile menu
+    // ---------- mobile menu ----------
     const overlay = document.getElementById("overlay");
     function toggleMenu(open){
       overlay.classList.toggle("open", !!open);
@@ -839,11 +622,7 @@
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // Helpers
-    document.getElementById("year").textContent = new Date().getFullYear();
-    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-
+    // ---------- WhatsApp helpers (uses LARMAH if present) ----------
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -859,7 +638,7 @@
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
 
-    // Hero slideshow (5s)
+    // ---------- hero slideshow (5s) ----------
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -870,17 +649,12 @@
       { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611", icon:"fa-house", label:"Shortlets", sub:"Verified shortlets and premium stays." },
       { img:"https://source.unsplash.com/1600x1000/?real-estate,building,lagos&sig=612", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clear confirmations." },
       { img:"https://source.unsplash.com/1600x1000/?apartment,living-room,modern&sig=613", icon:"fa-house", label:"Rentals", sub:"Quality rentals in high-demand areas." },
-      { img:"https://source.unsplash.com/1600x1000/?villa,luxury,interior&sig=614", icon:"fa-house", label:"Premium", sub:"High-standard options when you need the best." },
-      { img:"https://source.unsplash.com/1600x1000/?condo,interior,design&sig=615", icon:"fa-house", label:"Comfort-first", sub:"Spaces designed for work & rest." }
+      { img:"https://source.unsplash.com/1600x1000/?villa,luxury,interior&sig=614", icon:"fa-house", label:"Purchase", sub:"Verified options and guided checks." },
+      { img:"https://source.unsplash.com/1600x1000/?condo,interior,design&sig=615", icon:"fa-house", label:"Comfort-first", sub:"Spaces designed for work & rest." },
+      { img:"https://source.unsplash.com/1600x1000/?city,lagos,skyline&sig=616", icon:"fa-city", label:"Locations", sub:"Lekki • VI • Ikoyi • Mainland • Abuja." }
     ];
     let heroIdx = 0;
-
-    function runHeroProgress(){
-      if(!heroBar) return;
-      heroBar.classList.remove("run");
-      void heroBar.offsetWidth;
-      heroBar.classList.add("run");
-    }
+    function runHeroProgress(){ heroBar.classList.remove("run"); void heroBar.offsetWidth; heroBar.classList.add("run"); }
     function setHero(i){
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
       heroMedia.classList.add("is-fading");
@@ -893,19 +667,16 @@
         setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
       }, 220);
     }
-    if(!reduceMotion){
-      setHero(0);
-      setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
-    } else setHero(0);
+    if(!reduceMotion){ setHero(0); setInterval(() => { heroIdx=(heroIdx+1)%HERO_SLIDES.length; setHero(heroIdx); }, 5000); }
+    else setHero(0);
 
-    // Listings (Supabase) + card image auto-rotate (5s)
-    const BUSINESS_EMAIL = "business@heylarmah.tech";
-    const __STATE = { items: [], imgUrls: {}, imgIdx: {}, imgTimer: {} };
+    // ---------- Supabase listings ----------
+    const __STATE = { items: [], imgUrls: {}, imgIdx: {}, timers: {} };
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
     }
-    async function waitForSB({tries=12, delay=250}={}){
+    async function waitForSB({tries=14, delay=250}={}){
       for(let i=0;i<tries;i++){
         const sb = sbClient();
         if(sb) return sb;
@@ -935,18 +706,30 @@
     function initImagesFor(it){
       const id = String(it.id);
       __STATE.imgUrls[id] = getImages(it);
-      __STATE.imgIdx[id] = 0;
+      __STATE.imgIdx[id] = __STATE.imgIdx[id] ?? 0;
     }
+
+    function clearAllTimers(){
+      for(const k in __STATE.timers){
+        try{ clearInterval(__STATE.timers[k]); }catch{}
+      }
+      __STATE.timers = {};
+    }
+
     function setCardImage(id){
-      const img = document.getElementById(`img-${id}`);
+      const img = document.getElementById(`re-img-${id}`);
       if(!img) return;
       const urls = __STATE.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
       const idx = __STATE.imgIdx[id] || 0;
       img.src = urls[idx] || urls[0] || "assets/images/larmah-header.jpeg";
-      const dots = document.getElementById(`dots-${id}`);
-      if(dots) dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
+
+      const dots = document.getElementById(`re-dots-${id}`);
+      if(dots){
+        dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
+      }
     }
-    function cycleImage(id, dir){
+
+    function cycleReImage(id, dir){
       const urls = __STATE.imgUrls[id] || [];
       if(urls.length <= 1) return;
       const max = urls.length;
@@ -954,16 +737,16 @@
       __STATE.imgIdx[id] = (cur + dir + max) % max;
       setCardImage(id);
     }
-    window.cycleImage = cycleImage;
+    window.cycleReImage = cycleReImage;
 
     function autoRotateImages(id){
       if(reduceMotion) return;
       const urls = __STATE.imgUrls[id] || [];
       if(urls.length <= 1) return;
-      clearInterval(__STATE.imgTimer[id]);
-      __STATE.imgTimer[id] = setInterval(() => {
+
+      __STATE.timers[id] = setInterval(() => {
         __STATE.imgIdx[id] = ((__STATE.imgIdx[id]||0) + 1) % urls.length;
-        const media = document.getElementById(`media-${id}`);
+        const media = document.getElementById(`re-media-${id}`);
         if(media){
           media.classList.add("is-fading");
           setTimeout(() => { setCardImage(id); media.classList.remove("is-fading"); }, 180);
@@ -994,9 +777,12 @@
       else items.sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
 
       if(!items.length){
+        clearAllTimers();
         mount.innerHTML = `<div class="notice"><strong>No matches found.</strong> Try adjusting filters.</div>`;
         return;
       }
+
+      clearAllTimers();
 
       mount.innerHTML = `
         <div class="grid">
@@ -1015,21 +801,21 @@
 
             return `
               <article class="card" aria-label="${esc(title)}">
-                <div class="media" id="media-${id}">
-                  <img id="img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
+                <div class="media" id="re-media-${id}">
+                  <img id="re-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
                        alt="${esc(title)}" loading="lazy" decoding="async"
                        onerror="this.src='assets/images/larmah-header.jpeg'">
 
                   ${hasMany ? `
                     <div class="media-nav">
-                      <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleImage('${id}', -1)">
+                      <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleReImage('${id}', -1)">
                         <i class="fa-solid fa-chevron-left"></i>
                       </button>
-                      <button class="media-btn" type="button" aria-label="Next image" onclick="cycleImage('${id}', 1)">
+                      <button class="media-btn" type="button" aria-label="Next image" onclick="cycleReImage('${id}', 1)">
                         <i class="fa-solid fa-chevron-right"></i>
                       </button>
                     </div>
-                    <div class="media-dots" id="dots-${id}" aria-hidden="true">
+                    <div class="media-dots" id="re-dots-${id}" aria-hidden="true">
                       ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
                     </div>
                   ` : ``}
@@ -1065,15 +851,11 @@
     }
 
     function quickSearch(tag){
-      const q = document.getElementById("q");
-      q.value = (q.value ? q.value + " " : "") + tag;
+      const el = document.getElementById("q");
+      el.value = (el.value ? el.value + " " : "") + tag;
       render();
     }
-    window.quickSearch = quickSearch;
-
     function setCategory(v){ document.getElementById("cat").value = v; render(); }
-    window.setCategory = setCategory;
-
     function resetFilters(){
       document.getElementById("q").value = "";
       document.getElementById("cat").value = "all";
@@ -1081,6 +863,8 @@
       document.getElementById("sort").value = "new";
       render();
     }
+    window.quickSearch = quickSearch;
+    window.setCategory = setCategory;
     window.resetFilters = resetFilters;
 
     function enquire(id){
@@ -1095,12 +879,11 @@
         Message: "Hello Larmah, please confirm availability and next steps."
       }));
     }
-    window.enquire = enquire;
-
     function email(id){
       const it = (__STATE.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
 
+      const BUSINESS_EMAIL = "business@heylarmah.tech";
       const subject = `Real Estate Enquiry — ${listingRef(id)} — ${safeText(it.title) || "Listing"}`;
       const body =
 `Hello Larmah Team,
@@ -1121,6 +904,7 @@ Notes:
 Thank you.`;
       window.location.href = `mailto:${encodeURIComponent(BUSINESS_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
+    window.enquire = enquire;
     window.email = email;
 
     async function load(){
@@ -1129,11 +913,11 @@ Thank you.`;
 
       try{
         const sb = await waitForSB();
-        if(!sb) throw new Error("supabase client not ready");
+        if(!sb) throw new Error("supabase client not ready (ensure app.js initializes it)");
 
         const { data, error } = await sb
           .from("listings")
-          .select("id,title,description,price,image_url,image_urls,location,area,city,state,listing_type,type,tags,category,status,created_at")
+          .select("id,title,description,price,image_url,image_urls,location,area,city,state,listing_type,type,category2,tags,category,status,created_at")
           .eq("category", "real-estate")
           .eq("status", "active")
           .order("created_at", { ascending: false })
@@ -1143,6 +927,7 @@ Thank you.`;
 
         __STATE.items = data || [];
         if(!__STATE.items.length){
+          clearAllTimers();
           mount.innerHTML = `<div class="notice"><strong>No active listings currently.</strong> Please check back soon.</div>`;
           return;
         }
@@ -1154,24 +939,48 @@ Thank you.`;
         }
       } catch(err){
         console.error(err);
+        clearAllTimers();
         mount.innerHTML = `<div class="notice" style="border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
           <strong>Could not load listings.</strong> Please refresh or try again later.
         </div>`;
       }
     }
 
+    function sendRequest(){
+      const name = document.getElementById("r_name").value.trim();
+      const phone = document.getElementById("r_phone").value.trim();
+      const location = document.getElementById("r_location").value.trim();
+      const cat = document.getElementById("r_cat").value;
+      const budget = document.getElementById("r_budget").value.trim();
+      const notes = document.getElementById("r_notes").value.trim();
+
+      if(!name || !phone){
+        toast("Name and WhatsApp number are required.");
+        return;
+      }
+
+      openWA(buildMsg("Real Estate Sourcing Request", {
+        Name: name,
+        Phone: phone,
+        Location: location,
+        Category: cat,
+        Budget: budget,
+        Notes: notes
+      }));
+    }
+    window.sendRequest = sendRequest;
+
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("q").addEventListener("input", () => render());
-      document.getElementById("cat").addEventListener("change", () => render());
-      document.getElementById("loc").addEventListener("change", () => render());
-      document.getElementById("sort").addEventListener("change", () => render());
+      document.getElementById("q").addEventListener("input", render);
+      document.getElementById("cat").addEventListener("change", render);
+      document.getElementById("loc").addEventListener("change", render);
+      document.getElementById("sort").addEventListener("change", render);
       load();
     });
-  </script>
 
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
-    crossorigin="anonymous"></script>
+    // expose
+    window.toggleTheme = toggleTheme;
+    window.toggleMenu = toggleMenu;
+  </script>
 </body>
 </html>
