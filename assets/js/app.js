@@ -20,7 +20,7 @@
     "https://mskbumvopqnrhddfycfd.supabase.co"; // <-- update if different
   const SUPABASE_ANON_KEY =
     window.LARMAH_SUPABASE_ANON_KEY ||
-    "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY"; // <-- paste your anon key
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4"; // <-- paste your anon key
 
   // WhatsApp number (international, no +)
   const WHATSAPP_NUMBER = "2347063080605";
