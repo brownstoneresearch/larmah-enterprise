@@ -1,10 +1,16 @@
 /* assets/js/app.js
-   Larmah Enterprise — shared client utilities for:
+   Larmah Enterprise — shared client utilities
+
+   Includes:
    - Supabase client bootstrap
    - WhatsApp helpers + message builder
    - Toast UI
    - Request submission (real-estate/logistics/premium)
    - Realtime subscriptions (listings)
+   - Premium gate helpers:
+       * isPremium()
+       * premium.claim()  (binds verified premium payment to logged-in user)
+       * premium.verifyPaystack(reference) (server-side verification via Edge Function)
 */
 
 (function () {
@@ -13,22 +19,25 @@
   // =========================
   // CONFIG (EDIT THESE)
   // =========================
-  // ✅ Your Supabase URL + ANON key (public key is OK in frontend)
-  // If you already had these in a previous app.js, paste them here.
   const SUPABASE_URL =
     window.LARMAH_SUPABASE_URL ||
-    "https://mskbumvopqnrhddfycfd.supabase.co"; // <-- update if different
+    "https://mskbumvopqnrhddfycfd.supabase.co";
+
+  // ✅ Paste your REAL anon key here (safe in frontend)
   const SUPABASE_ANON_KEY =
     window.LARMAH_SUPABASE_ANON_KEY ||
-    "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY"; // <-- paste your anon key
+    "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY";
 
   // WhatsApp number (international, no +)
   const WHATSAPP_NUMBER = "2347063080605";
 
-  // Where requests are stored
+  // Tables
   const REQUESTS_TABLE = "requests";
-  const LISTINGS_TABLE = "listings";
-  const PAYMENTS_TABLE = "premium_payments";
+  const PREMIUM_SUBSCRIBERS_TABLE = "premium_subscribers";
+
+  // Edge Function names
+  const FN_PAYSTACK_VERIFY = "paystack-verify";
+  const FN_PREMIUM_CLAIM = "premium-claim";
 
   // =========================
   // INTERNAL STATE
@@ -61,7 +70,7 @@
     });
   }
 
-  function reduceMotion() {
+  function prefersReduceMotion() {
     return (
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -101,10 +110,7 @@
     el.classList.add("show");
     el.dataset.type = type;
     clearTimeout(window.__larmahToastT);
-    window.__larmahToastT = setTimeout(
-      () => el.classList.remove("show"),
-      2400
-    );
+    window.__larmahToastT = setTimeout(() => el.classList.remove("show"), 2400);
   }
 
   function buildMessage(title, data) {
@@ -130,7 +136,11 @@
   function ensureSupabaseClient() {
     if (__sb) return __sb;
 
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("REPLACE_WITH")) {
+    if (
+      !SUPABASE_URL ||
+      !SUPABASE_ANON_KEY ||
+      SUPABASE_ANON_KEY.includes("REPLACE_WITH")
+    ) {
       console.warn(
         "[LARMAH] Supabase config missing. Set SUPABASE_URL and SUPABASE_ANON_KEY in assets/js/app.js"
       );
@@ -139,7 +149,7 @@
 
     if (!window.supabase || typeof window.supabase.createClient !== "function") {
       console.warn(
-        "[LARMAH] Supabase JS not loaded. Ensure <script src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'></script> exists."
+        "[LARMAH] Supabase JS not loaded. Ensure you have: https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
       );
       return null;
     }
@@ -151,31 +161,114 @@
         detectSessionInUrl: true,
       },
       realtime: {
-        params: {
-          eventsPerSecond: 10,
-        },
+        params: { eventsPerSecond: 10 },
       },
     });
 
-    // expose for pages that look for it
     window.supabaseClient = __sb;
-
     return __sb;
   }
 
-  async function getAuthedUserId() {
-    try {
-      const sb = ensureSupabaseClient();
-      if (!sb) return null;
-      const { data } = await sb.auth.getUser();
-      return data?.user?.id || null;
-    } catch {
-      return null;
-    }
+  async function getSession() {
+    const sb = ensureSupabaseClient();
+    if (!sb) return null;
+    const { data } = await sb.auth.getSession();
+    return data?.session || null;
+  }
+
+  async function getUser() {
+    const sb = ensureSupabaseClient();
+    if (!sb) return null;
+    const { data } = await sb.auth.getUser();
+    return data?.user || null;
   }
 
   // =========================
-  // REALTIME (LISTINGS)
+  // PREMIUM GATE (Premium-only accounts)
+  // =========================
+  async function isPremium() {
+    const sb = ensureSupabaseClient();
+    if (!sb) return false;
+
+    const user = await getUser();
+    if (!user?.id) return false;
+
+    const { data, error } = await sb
+      .from(PREMIUM_SUBSCRIBERS_TABLE)
+      .select("active,tier,end_at")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      console.warn("[LARMAH] isPremium() error:", error.message);
+      return false;
+    }
+    if (!data?.active) return false;
+    if (data.end_at && new Date(data.end_at) <= new Date()) return false;
+    return true;
+  }
+
+  // =========================
+  // EDGE FUNCTION CALLER
+  // =========================
+  async function callFunction(name, body, { useAuth = true } = {}) {
+    const sb = ensureSupabaseClient();
+    if (!sb) throw new Error("Supabase not initialized");
+
+    const url = `${SUPABASE_URL}/functions/v1/${name}`;
+
+    const headers = {
+      "Content-Type": "application/json",
+      apikey: SUPABASE_ANON_KEY,
+    };
+
+    if (useAuth) {
+      const session = await getSession();
+      if (session?.access_token) {
+        headers.Authorization = `Bearer ${session.access_token}`;
+      }
+    }
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body || {}),
+    });
+
+    const txt = await res.text();
+    let json = null;
+    try {
+      json = txt ? JSON.parse(txt) : null;
+    } catch {
+      // ignore
+    }
+
+    if (!res.ok) {
+      const msg = json?.error || json?.message || txt || `HTTP ${res.status}`;
+      throw new Error(msg);
+    }
+
+    return json;
+  }
+
+  // Verify Paystack reference server-side (does not create account)
+  async function verifyPaystack(reference) {
+    if (!reference) throw new Error("Missing reference");
+    return callFunction(
+      FN_PAYSTACK_VERIFY,
+      { reference },
+      { useAuth: false }
+    );
+  }
+
+  // Claim Premium for logged-in user
+  // This binds a paid premium_payment (by email/ref) -> auth user_id and activates premium_subscribers
+  async function claimPremium({ reference = null } = {}) {
+    return callFunction(FN_PREMIUM_CLAIM, { reference }, { useAuth: true });
+  }
+
+  // =========================
+  // REALTIME
   // =========================
   function realtimeSubscribe(table, onChange, key = "default", opts = {}) {
     const sb = ensureSupabaseClient();
@@ -185,12 +278,11 @@
       schema = "public",
       debounceMs = 800,
       statusElId = null,
-      filter = null, // optional filter: (payload)=>boolean
+      filter = null,
     } = opts;
 
     const channelKey = `${table}:${key}`;
 
-    // clean existing
     if (__channels.has(channelKey)) {
       try {
         sb.removeChannel(__channels.get(channelKey));
@@ -202,20 +294,16 @@
 
     const ch = sb
       .channel(channelKey)
-      .on(
-        "postgres_changes",
-        { event: "*", schema, table },
-        (payload) => {
-          if (typeof filter === "function") {
-            try {
-              if (!filter(payload)) return;
-            } catch (e) {
-              console.error(e);
-            }
+      .on("postgres_changes", { event: "*", schema, table }, (payload) => {
+        if (typeof filter === "function") {
+          try {
+            if (!filter(payload)) return;
+          } catch (e) {
+            console.error(e);
           }
-          debounce(channelKey, onChange, debounceMs);
         }
-      )
+        debounce(channelKey, onChange, debounceMs);
+      })
       .subscribe((status) => {
         if (!statusEl) return;
         if (status === "SUBSCRIBED") {
@@ -249,7 +337,6 @@
     const sb = ensureSupabaseClient();
     const ref = makeRequestRef(refPrefix);
 
-    // Always build WA message for fallback or user visibility
     const waMsg = buildMessage(header, {
       Ref: ref,
       Category: category,
@@ -258,14 +345,14 @@
       Time: nowISO(),
     });
 
-    // If no supabase, fallback to WhatsApp
+    // If Supabase not ready, just WhatsApp
     if (!sb) {
       openWhatsApp(waMsg);
       return { ok: false, ref, fallback: "whatsapp" };
     }
 
     try {
-      const userId = await getAuthedUserId();
+      const user = await getUser();
       const payload = {
         ref,
         category,
@@ -273,11 +360,12 @@
         fields,
         source,
         status: "new",
-        user_id: userId,
+        user_id: user?.id || null,
         page,
         user_agent: navigator.userAgent || null,
       };
 
+      // NOTE: You should allow public inserts to requests (or authenticated-only) via RLS.
       const { error } = await sb.from(REQUESTS_TABLE).insert(payload);
       if (error) throw error;
 
@@ -293,24 +381,38 @@
   }
 
   // =========================
-  // OPTIONAL: HEADER AUTH UI (safe no-op)
+  // HEADER AUTH UI (Premium-gated)
   // =========================
   async function updateHeaderAuthUI() {
-    // This is a lightweight helper; it won’t break pages that don’t use it.
     const sb = ensureSupabaseClient();
     if (!sb) return;
 
-    try {
-      const { data } = await sb.auth.getSession();
-      const authed = !!data?.session;
+    // Default hide premium-only controls until proven premium
+    document
+      .querySelectorAll("[data-premium='true']")
+      .forEach((el) => (el.style.display = "none"));
 
+    try {
+      const session = await getSession();
+      const authed = !!session;
+
+      // Only show "guest" elements if NOT authed
+      document
+        .querySelectorAll("[data-auth='guest']")
+        .forEach((el) => (el.style.display = authed ? "none" : ""));
+
+      // Only show "authed" elements if authed (still not premium)
       document
         .querySelectorAll("[data-auth='authed']")
         .forEach((el) => (el.style.display = authed ? "" : "none"));
 
-      document
-        .querySelectorAll("[data-auth='guest']")
-        .forEach((el) => (el.style.display = authed ? "none" : ""));
+      // Premium gate: only show premium-only UI if premium is active
+      if (authed) {
+        const ok = await isPremium();
+        document
+          .querySelectorAll("[data-premium='true']")
+          .forEach((el) => (el.style.display = ok ? "" : "none"));
+      }
     } catch (e) {
       console.error(e);
     }
@@ -320,21 +422,24 @@
   // EXPORT GLOBAL API
   // =========================
   window.ensureSupabaseClient = ensureSupabaseClient;
+  window.supabaseClient = window.supabaseClient || null;
 
   window.LARMAH = window.LARMAH || {};
   window.LARMAH.escapeHtml = escapeHtml;
   window.LARMAH.toast = toast;
   window.LARMAH.buildMessage = buildMessage;
   window.LARMAH.openWhatsApp = openWhatsApp;
-
   window.LARMAH.submitRequest = submitRequest;
 
   window.LARMAH.realtime = window.LARMAH.realtime || {};
   window.LARMAH.realtime.subscribe = realtimeSubscribe;
 
-  window.LARMAH.updateHeaderAuthUI = updateHeaderAuthUI;
+  window.LARMAH.premium = window.LARMAH.premium || {};
+  window.LARMAH.premium.isPremium = isPremium;
+  window.LARMAH.premium.verifyPaystack = verifyPaystack;
+  window.LARMAH.premium.claim = claimPremium;
 
-  // Convenience: quick WA builders
+  window.LARMAH.updateHeaderAuthUI = updateHeaderAuthUI;
   window.LARMAH.buildRef = makeRequestRef;
 
   // =========================
