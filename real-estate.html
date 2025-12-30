@@ -203,6 +203,7 @@
 
     .overlay{ position:fixed; inset:0; background: var(--overlayBg); display:none; align-items:flex-end; z-index:80; }
     .overlay.open{ display:flex; }
+
     .sheet{
       width:100%;
       border-radius: 18px 18px 0 0;
@@ -218,6 +219,10 @@
       margin-bottom: 10px;
       gap: 10px;
     }
+    /* ✅ Missing in your snippet: add these so layout doesn’t break */
+    .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
+    .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+
     .sheet a{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding: 12px 12px;
@@ -529,7 +534,7 @@
       <div class="sheet-head">
         <div class="sheet-brandline">
           <div class="logo-wrap" aria-hidden="true">
-            <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
           </div>
           <div style="min-width:0">
             <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
@@ -542,9 +547,12 @@
         </button>
       </div>
 
-      <!-- About is a “page” inside this index.html -->
-      <a href="#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <!-- ✅ FIX: About is inside index.html, not on this page -->
+      <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+
+      <!-- ✅ FIX: This page should show active/check -->
+      <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
+
       <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
@@ -558,9 +566,10 @@
 
   <header>
     <div class="container header-inner">
-      <a class="brand" href="#home" aria-label="Larmah Home">
+      <!-- ✅ FIX: don’t link to #home on this page -->
+      <a class="brand" href="index.html#about" aria-label="About Larmah Enterprise">
         <div class="logo-wrap" aria-hidden="true">
-          <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+          <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
         </div>
         <div class="btxt">
           <div class="bname">Larmah Enterprise</div>
@@ -570,8 +579,12 @@
 
       <nav aria-label="Primary navigation">
         <ul>
-          <li><a class="nav-link" data-nav="about" href="#about">About</a></li>
-          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+          <!-- ✅ FIX: About points to index.html -->
+          <li><a class="nav-link" href="index.html#about">About</a></li>
+
+          <!-- ✅ FIX: active state -->
+          <li><a class="nav-link active" href="real-estate.html">Real Estate</a></li>
+
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
         </ul>
@@ -742,7 +755,6 @@
         <div>
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
-            <!-- ✅ Home removed -->
             <a href="index.html#about">About</a>
             <a href="real-estate.html">Real Estate</a>
             <a href="logistics.html">Logistics</a>
@@ -762,10 +774,11 @@
               </div>
             </div>
 
+            <!-- ✅ FIX: Avoid Cloudflare email-protection dependency -->
             <div class="contact-chip">
               <i class="fa-regular fa-envelope"></i>
               <div>
-                <div class="txt">business@heylarmah.tech</div>
+                <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
                 <div class="sub">Business enquiries</div>
               </div>
             </div>
@@ -1155,5 +1168,10 @@ Thank you.`;
       load();
     });
   </script>
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+    crossorigin="anonymous"></script>
 </body>
 </html>
