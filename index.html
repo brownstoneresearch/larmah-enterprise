@@ -6,7 +6,7 @@
 
   <title>Larmah Enterprise — Verified Shortlets & Real Estate</title>
   <meta name="description" content="Book verified shortlet apartments and premium stays in Lagos — scam-resistant workflow, WhatsApp-first support, and fast confirmations." />
-  <meta name="keywords" content="Larmah Enterprise, Shortlets Lagos, Verified Apartments, Ikoyi Shortlet, Lekki Shortlet, Real Estate Nigeria" />
+  <meta name="keywords" content="Larmah Enterprise, Shortlets Lagos, Verified Apartments, Ikoyi Shortlet, Lekki Shortlet, Real Estate Nigeria, Logistics Nigeria" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
   <meta name="color-scheme" content="dark" />
@@ -37,9 +37,9 @@
 
   <!-- Performance -->
   <link rel="preload" href="https://heylarmah.tech/assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
-  <link rel="preload" href="https://heylarmah.tech/assets/images/larmah-realestate.jpeg" as="image" />
-  <link rel="preload" href="https://heylarmah.tech/assets/images/larmah-logistics.jpeg" as="image" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preconnect" href="https://source.unsplash.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -71,8 +71,6 @@
     :root{
       --bg:#070A12;
       --bg2:#050810;
-      --card: rgba(255,255,255,.03);
-      --card2: rgba(255,255,255,.02);
       --line: rgba(255,255,255,.10);
       --text:#E9EDF7;
       --muted: rgba(233,237,247,.72);
@@ -101,9 +99,7 @@
     a:hover{ color: var(--gold); }
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
 
-    .skip-link{
-      position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden;
-    }
+    .skip-link{ position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden; }
     .skip-link:focus{
       left:16px; top:16px; width:auto; height:auto; z-index:9999;
       padding:10px 12px; border-radius: 12px;
@@ -153,7 +149,7 @@
     .nav-link{
       color: var(--text);
       opacity:.9;
-      font-weight: 800;
+      font-weight: 850;
       font-size: .95rem;
     }
     .nav-link:hover{ color: var(--gold2); opacity:1; }
@@ -195,6 +191,11 @@
       padding-bottom: 10px;
       border-bottom: 1px solid rgba(255,255,255,.08);
       margin-bottom: 10px;
+    }
+    .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
+    .sheet-brandline img{
+      height: 44px; width:auto; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.02);
     }
     .sheet a{
       display:flex;
@@ -264,16 +265,21 @@
     @media (min-width: 980px){
       .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; }
     }
+
+    /* ✅ blended hero kicker */
     .kicker{
-      display:flex; gap:10px; flex-wrap:wrap;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
       align-items:center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       color: var(--muted);
-      font-size:.92rem;
+      font-weight: 850;
+      letter-spacing: .1px;
     }
-    .kicker b{ color: var(--text); }
+    .kicker .dot{ opacity:.65; }
     h1{
-      margin: 8px 0 10px;
+      margin: 6px 0 10px;
       font-size: clamp(2.0rem, 4vw, 3.0rem);
       line-height: 1.02;
       letter-spacing: -0.6px;
@@ -309,14 +315,18 @@
       background: rgba(255,255,255,.03);
       position:relative;
       min-height: 300px;
+      isolation:isolate;
     }
     .hero-media img{
       width:100%;
       height: 300px;
       object-fit: cover;
       display:block;
-      opacity:.92;
+      opacity:.94;
+      transform: scale(1.01);
+      transition: opacity .55s ease, transform .9s ease;
     }
+    .hero-media.is-fading img{ opacity:.15; transform: scale(1.03); }
     .hero-media .cap{
       position:absolute;
       left: 12px; right: 12px; bottom: 10px;
@@ -338,6 +348,20 @@
       font-size: .92rem;
       line-height: 1.35;
     }
+    .hero-progress{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height: 3px;
+      background: rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+    .hero-bar{
+      height:100%;
+      width: 0%;
+      background: rgba(212,175,55,.75);
+      transition: width 5s linear;
+    }
+    .hero-bar.run{ width: 100%; }
 
     /* Booking Search */
     .search{
@@ -385,7 +409,7 @@
       flex-wrap:wrap;
     }
 
-    /* Logistics highlight */
+    /* ✅ Logistics highlight (inverted colors) */
     .logistics-strip{
       margin-top: 14px;
       border-radius: 16px;
@@ -397,6 +421,12 @@
       align-items:center;
       justify-content:space-between;
       padding: 12px;
+    }
+    .logistics-strip.invert{
+      background:
+        linear-gradient(135deg, rgba(212,175,55,.95), rgba(245,213,122,.86));
+      border-color: rgba(212,175,55,.45);
+      box-shadow: 0 16px 44px rgba(0,0,0,.35);
     }
     .logistics-left{
       display:flex;
@@ -413,6 +443,11 @@
       color: var(--gold2);
       flex: 0 0 auto;
     }
+    .logistics-strip.invert .logi-icn{
+      background: rgba(0,0,0,.12);
+      border-color: rgba(0,0,0,.18);
+      color: #111;
+    }
     .logistics-title{
       font-weight: 950;
       margin: 0 0 2px;
@@ -424,6 +459,17 @@
       font-size: .94rem;
       line-height: 1.35;
     }
+    .logistics-strip.invert .logistics-title{ color:#111; }
+    .logistics-strip.invert .logistics-sub{ color: rgba(0,0,0,.78); }
+
+    /* invert button inside logistics strip */
+    .logistics-strip.invert .btn.solid{
+      background: #0b0f1a;
+      color: var(--gold2);
+      border-color: rgba(0,0,0,.35);
+    }
+    .logistics-strip.invert .btn.solid:hover{ filter: brightness(1.06); }
+
     @media (max-width: 520px){
       .logistics-strip{ flex-direction:column; align-items:stretch; }
       .logistics-strip .btn{ width:100%; }
@@ -453,7 +499,9 @@
       background: rgba(255,255,255,.03);
       overflow:hidden;
       box-shadow: 0 12px 34px rgba(0,0,0,.30);
+      transition: opacity .45s ease, transform .45s ease;
     }
+    .card.is-fading{ opacity:.22; transform: translateY(2px); }
     .card img{
       width:100%;
       height: 180px;
@@ -474,17 +522,14 @@
       background: rgba(255,255,255,.02);
     }
 
-    /* Exquisite Footer */
+    /* ✅ Exquisite Footer (aligned + no duplicates) */
     footer{
       margin-top: 18px;
       border-top: 1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.18);
     }
-    .footer-topline{
-      padding: 14px 0 0;
-      margin-bottom: 10px;
-    }
     .footer-cta{
+      margin-top: 14px;
       border-radius: 20px;
       border: 1px solid rgba(255,255,255,.10);
       background:
@@ -498,18 +543,9 @@
       align-items:center;
       justify-content:space-between;
       flex-wrap:wrap;
-      overflow:hidden;
     }
-    .footer-cta h3{
-      margin:0;
-      font-size: 1.12rem;
-      letter-spacing:-0.2px;
-    }
-    .footer-cta p{
-      margin: 6px 0 0;
-      color: var(--muted);
-      line-height: 1.4;
-    }
+    .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
+    .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
 
     .footer-grid{
       display:grid;
@@ -519,31 +555,34 @@
     }
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
 
-    .brandline{ display:flex; align-items:center; gap:10px; }
+    .brandline{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
     .brandline img{
       height: 46px; width:auto;
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.02);
+      flex: 0 0 auto;
     }
+    .brandtext{ min-width:0; }
+    .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
+    .tagline{ color: rgba(233,237,247,.78); font-weight: 800; font-size: .92rem; margin-top: 4px; }
+
     .small{ font-size: .92rem; color: var(--muted); line-height: 1.55; }
-    .footer-col-title{
-      font-weight: 950;
-      margin: 0 0 10px;
-      letter-spacing: -0.2px;
-    }
+    .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
     .footer-links a{
       display:block;
       padding: 6px 0;
       color: rgba(233,237,247,.80);
-      font-weight: 700;
+      font-weight: 750;
     }
     .footer-links a:hover{ color: var(--gold2); }
 
-    .contact-stack{
-      display:grid;
-      gap: 10px;
-    }
+    .contact-stack{ display:grid; gap: 10px; }
     .contact-chip{
       display:flex;
       gap:10px;
@@ -553,19 +592,11 @@
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.02);
     }
-    .contact-chip i{
-      width: 18px;
-      margin-top: 2px;
-      color: var(--gold2);
-      opacity:.95;
-    }
-    .contact-chip .txt{ color: rgba(233,237,247,.86); font-weight: 750; }
+    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold2); opacity:.95; }
+    .contact-chip .txt{ color: rgba(233,237,247,.90); font-weight: 850; }
     .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
 
-    .social{
-      display:flex; gap:10px; flex-wrap:wrap;
-      margin-top: 10px;
-    }
+    .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
     .social a{
       width: 42px; height: 42px;
       display:inline-flex; align-items:center; justify-content:center;
@@ -587,13 +618,7 @@
       color: rgba(233,237,247,.66);
       font-size: .9rem;
     }
-    .footer-badges{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
+    .footer-badges{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
     .badge{
       display:inline-flex;
       gap:8px;
@@ -603,7 +628,7 @@
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.02);
       color: rgba(233,237,247,.82);
-      font-weight: 800;
+      font-weight: 850;
       font-size: .84rem;
     }
     .badge i{ color: var(--gold2); }
@@ -617,11 +642,11 @@
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="sheet" role="dialog" aria-label="Menu">
       <div class="sheet-head">
-        <div class="brandline">
+        <div class="sheet-brandline">
           <img src="https://heylarmah.tech/assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-          <div>
-            <div style="font-weight:950">Larmah Enterprise</div>
-            <div class="small">Connecting People, Business & Possibilities</div>
+          <div style="min-width:0">
+            <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
+            <div class="small" style="margin-top:4px">Connecting People, Business & Possibilities • RC: 9127113</div>
           </div>
         </div>
         <button class="btn small" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
@@ -662,15 +687,15 @@
       <div class="hero-box">
         <div class="hero-row">
           <div>
-            <div class="kicker">
-              <span><i class="fa-solid fa-bolt"></i> <b>Trust-first stays</b></span>
-              <span>•</span>
-              <span>Verified listings</span>
-              <span>•</span>
+            <!-- ✅ blended line -->
+            <div class="kicker" aria-label="Trust badges">
+              <span>Trust-first stays</span><span class="dot">•</span>
+              <span>Verified listings</span><span class="dot">•</span>
               <span>WhatsApp-first</span>
             </div>
 
             <h1>Book Verified Shortlets — Fast.</h1>
+
             <p class="lead">
               Premium shortlets and verified stays in Lagos — scam-resistant workflow, clear pricing, and WhatsApp-first support.
             </p>
@@ -682,11 +707,11 @@
               </button>
             </div>
 
-            <div class="live-dot" id="liveDot" aria-live="polite">
+            <div class="live-dot" aria-live="polite">
               <i class="fa-solid fa-circle"></i> Fast responses available
             </div>
 
-            <!-- Simple booking/search (WhatsApp-first) -->
+            <!-- Search -->
             <div class="search" aria-label="Shortlet search">
               <div class="form-grid">
                 <div class="field" style="grid-column: span 2;">
@@ -735,8 +760,8 @@
                 </a>
               </div>
 
-              <!-- ✅ Stylish Logistics Reference -->
-              <div class="logistics-strip" aria-label="Logistics highlight">
+              <!-- ✅ Inverted Logistics Reference (aligned + inverted colors) -->
+              <div class="logistics-strip invert" aria-label="Logistics highlight">
                 <div class="logistics-left">
                   <div class="logi-icn"><i class="fa-solid fa-truck-fast"></i></div>
                   <div style="min-width:0">
@@ -757,88 +782,37 @@
             </div>
           </div>
 
-          <!-- HERO carousel (auto 5s) — Real Estate + Logistics only -->
-          <aside class="hero-media" aria-label="Service carousel">
-            <img id="heroImg" src="https://heylarmah.tech/assets/images/larmah-realestate.jpeg" alt="Larmah Real Estate" decoding="async"
+          <!-- HERO carousel (auto 5s) — 10 real-life images (real estate + logistics) -->
+          <aside class="hero-media" id="heroMedia" aria-label="Real estate and logistics carousel">
+            <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=1" alt="Luxury apartment interior" decoding="async"
                  onerror="this.src='https://heylarmah.tech/assets/images/larmah-header.jpeg'">
             <div class="cap">
               <div class="hero-tag" id="heroTag">
-                <i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate
+                <i class="fa-solid fa-house" style="color:var(--gold)"></i> Verified Shortlets
               </div>
-              <div class="hero-sub" id="heroSub">Verified shortlets, rentals, and premium stays.</div>
+              <div class="hero-sub" id="heroSub">Premium stays, clean pricing, WhatsApp-first support.</div>
             </div>
+            <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
           </aside>
         </div>
       </div>
     </section>
 
-    <!-- BROWSE -->
+    <!-- FEATURED -->
     <section class="section" id="browse" aria-label="Browse shortlets">
       <div class="section-head">
         <div>
           <h2>Featured Shortlets</h2>
-          <p class="subhead">A quick preview — message us to confirm availability and pricing.</p>
+          <p class="subhead">Auto-rotating highlights (every 5 seconds). Tap Enquire to confirm availability.</p>
         </div>
         <a class="btn small" href="https://heylarmah.tech/premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
       </div>
 
-      <div class="grid">
-        <article class="card">
-          <img src="https://heylarmah.tech/assets/images/larmah-realestate.jpeg" alt="Verified Shortlet" loading="lazy" decoding="async"
-               onerror="this.src='https://heylarmah.tech/assets/images/larmah-header.jpeg'">
-          <div class="card-body">
-            <div class="card-title">Verified 1 Bedroom Shortlet</div>
-            <div class="meta">
-              <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> Lekki / VI</span>
-              <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Verified</span>
-            </div>
-            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn small solid" type="button"
-                onclick="openWA(buildMsg('Shortlet Enquiry', { Type:'1 Bedroom', Area:'Lekki / VI', Message:'Hello Larmah, please share available options.' }))">
-                <i class="fa-brands fa-whatsapp"></i> Enquire
-              </button>
-              <a class="btn small" href="https://heylarmah.tech/real-estate.html">View</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <img src="https://heylarmah.tech/assets/images/larmah-realestate.jpeg" alt="Verified Shortlet" loading="lazy" decoding="async"
-               onerror="this.src='https://heylarmah.tech/assets/images/larmah-header.jpeg'">
-          <div class="card-body">
-            <div class="card-title">Verified 2 Bedroom Shortlet</div>
-            <div class="meta">
-              <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> Ikoyi</span>
-              <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Fast confirm</span>
-            </div>
-            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn small solid" type="button"
-                onclick="openWA(buildMsg('Shortlet Enquiry', { Type:'2 Bedroom', Area:'Ikoyi', Message:'Hello Larmah, I need a verified 2 bedroom shortlet.' }))">
-                <i class="fa-brands fa-whatsapp"></i> Enquire
-              </button>
-              <a class="btn small" href="https://heylarmah.tech/real-estate.html">View</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <img src="https://heylarmah.tech/assets/images/larmah-realestate.jpeg" alt="Verified Shortlet" loading="lazy" decoding="async"
-               onerror="this.src='https://heylarmah.tech/assets/images/larmah-header.jpeg'">
-          <div class="card-body">
-            <div class="card-title">Studio / Budget Shortlet</div>
-            <div class="meta">
-              <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> Mainland (Yaba)</span>
-              <span class="pill"><i class="fa-solid fa-headset" style="color:var(--gold)"></i> Support</span>
-            </div>
-            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn small solid" type="button"
-                onclick="openWA(buildMsg('Shortlet Enquiry', { Type:'Studio', Area:'Yaba / Mainland', Message:'Hello Larmah, please send studio options.' }))">
-                <i class="fa-brands fa-whatsapp"></i> Enquire
-              </button>
-              <a class="btn small" href="https://heylarmah.tech/real-estate.html">View</a>
-            </div>
-          </div>
-        </article>
+      <div class="grid" id="featuredGrid">
+        <!-- 3 slots, content injected by JS -->
+        <article class="card" id="feat0" aria-label="Featured listing 1"></article>
+        <article class="card" id="feat1" aria-label="Featured listing 2"></article>
+        <article class="card" id="feat2" aria-label="Featured listing 3"></article>
       </div>
     </section>
 
@@ -859,9 +833,9 @@
     </section>
   </main>
 
-  <!-- ✅ Exquisite Footer (fixed & upgraded) -->
+  <!-- Footer (aligned, exquisite, no duplicates) -->
   <footer>
-    <div class="container footer-topline">
+    <div class="container">
       <div class="footer-cta">
         <div>
           <h3>Fast bookings. Verified stays. WhatsApp-first support.</h3>
@@ -873,20 +847,18 @@
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </button>
           <a class="btn primary" href="https://heylarmah.tech/logistics.html">
-            <i class="fa-solid fa-truck"></i> Logistics
+            <i class="fa-solid fa-truck-fast"></i> Logistics
           </a>
         </div>
       </div>
-    </div>
 
-    <div class="container">
       <div class="footer-grid">
         <div>
           <div class="brandline">
             <img src="https://heylarmah.tech/assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-            <div>
-              <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Connecting People, Business & Possibilities • RC: 9127113</div>
+            <div class="brandtext">
+              <div class="brandname">Larmah Enterprise</div>
+              <div class="tagline">Connecting People, Business & Possibilities • RC: 9127113</div>
             </div>
           </div>
 
@@ -932,7 +904,7 @@
             <div class="contact-chip">
               <i class="fa-solid fa-globe"></i>
               <div>
-                <div class="txt"><a href="https://heylarmah.tech/" style="color:rgba(233,237,247,.86)">heylarmah.tech</a></div>
+                <div class="txt"><a href="https://heylarmah.tech/" style="color:rgba(233,237,247,.90)">heylarmah.tech</a></div>
                 <div class="sub">Official website</div>
               </div>
             </div>
@@ -998,30 +970,16 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
-    // Hero carousel (auto 5s) — Real Estate + Logistics only (no exchange)
-    const HERO = [
-      { img:"https://heylarmah.tech/assets/images/larmah-realestate.jpeg", alt:"Larmah Real Estate", icon:"fa-house", title:"Real Estate", sub:"Verified shortlets, rentals, and premium stays." },
-      { img:"https://heylarmah.tech/assets/images/larmah-logistics.jpeg",  alt:"Larmah Logistics",  icon:"fa-truck-fast", title:"Logistics",  sub:"Dispatch, pickups, and trusted movement across Nigeria." }
-    ];
-    let heroIdx = 0;
-    const heroImg = document.getElementById("heroImg");
-    const heroTag = document.getElementById("heroTag");
-    const heroSub = document.getElementById("heroSub");
-
-    function renderHero(i){
-      const x = HERO[i % HERO.length];
-      heroImg.src = x.img;
-      heroImg.alt = x.alt;
-      heroTag.innerHTML = `<i class="fa-solid ${x.icon}" style="color:var(--gold)"></i> ${esc(x.title)}`;
-      heroSub.textContent = x.sub;
-    }
-    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if(!reduce){
-      setInterval(() => {
-        heroIdx = (heroIdx + 1) % HERO.length;
-        renderHero(heroIdx);
-      }, 5000);
-    }
+    // Set minimum checkout based on checkin
+    const checkinEl = document.getElementById("checkin");
+    const checkoutEl = document.getElementById("checkout");
+    checkinEl.addEventListener("change", () => {
+      if(!checkinEl.value) return;
+      checkoutEl.min = checkinEl.value;
+      if(checkoutEl.value && checkoutEl.value < checkinEl.value){
+        checkoutEl.value = checkinEl.value;
+      }
+    });
 
     // Search submit -> WhatsApp
     function submitSearch(){
@@ -1038,21 +996,135 @@
         Message: "Hello Larmah, please confirm available verified options and total cost."
       }));
     }
+
+    // ✅ HERO carousel: 10 real-life images (real estate + logistics), auto-change every 5s
+    const heroMedia = document.getElementById("heroMedia");
+    const heroImg = document.getElementById("heroImg");
+    const heroTag = document.getElementById("heroTag");
+    const heroSub = document.getElementById("heroSub");
+    const heroBar = document.getElementById("heroBar");
+
+    const HERO_SLIDES = [
+      { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11", icon:"fa-house", label:"Verified Shortlets", sub:"Premium interiors, clean pricing, WhatsApp-first support." },
+      { img:"https://source.unsplash.com/1600x1000/?apartment,living-room,modern&sig=12", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays across Lagos." },
+      { img:"https://source.unsplash.com/1600x1000/?condo,interior,design&sig=13", icon:"fa-house", label:"Shortlets", sub:"Fast confirmations for verified options." },
+      { img:"https://source.unsplash.com/1600x1000/?villa,interior,luxury&sig=14", icon:"fa-house", label:"Premium Stays", sub:"Comfort-first spaces for work & rest." },
+      { img:"https://source.unsplash.com/1600x1000/?hotel,room,luxury&sig=15", icon:"fa-house", label:"Verified Stays", sub:"High-standard rooms and suites." },
+
+      { img:"https://source.unsplash.com/1600x1000/?logistics,truck,highway&sig=21", icon:"fa-truck-fast", label:"Logistics", sub:"Dispatch, pickup coordination, and trusted delivery." },
+      { img:"https://source.unsplash.com/1600x1000/?delivery,van,courier&sig=22", icon:"fa-truck", label:"Dispatch", sub:"City-wide movement with WhatsApp updates." },
+      { img:"https://source.unsplash.com/1600x1000/?warehouse,forklift&sig=23", icon:"fa-warehouse", label:"Warehousing", sub:"Reliable handling and movement support." },
+      { img:"https://source.unsplash.com/1600x1000/?cargo,containers,port&sig=24", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support when needed." },
+      { img:"https://source.unsplash.com/1600x1000/?shipping,delivery,packages&sig=25", icon:"fa-box", label:"Last-mile Delivery", sub:"Fast, trackable drop-offs." }
+    ];
+
+    let heroIdx = 0;
+
+    function runHeroProgress(){
+      heroBar.classList.remove("run");
+      // force reflow
+      void heroBar.offsetWidth;
+      heroBar.classList.add("run");
+    }
+
+    function setHero(i){
+      const s = HERO_SLIDES[i % HERO_SLIDES.length];
+      heroMedia.classList.add("is-fading");
+
+      // progress bar restart immediately
+      runHeroProgress();
+
+      setTimeout(() => {
+        heroImg.src = s.img;
+        heroImg.alt = s.label;
+        heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
+        heroSub.textContent = s.sub;
+
+        // end fade shortly after swap
+        setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
+      }, 220);
+    }
+
+    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(!reduce){
+      setHero(0);
+      setInterval(() => {
+        heroIdx = (heroIdx + 1) % HERO_SLIDES.length;
+        setHero(heroIdx);
+      }, 5000);
+
+      heroMedia.addEventListener("mouseenter", () => heroBar.classList.remove("run"));
+      heroMedia.addEventListener("mouseleave", () => runHeroProgress());
+    }
+
+    // ✅ Featured Shortlets: dynamic flow/change (5s) showing 3 at a time
+    const FEATURE_LIST = [
+      { title:"Verified 1 Bedroom Shortlet", area:"Lekki / VI", tag:"Verified", img:"https://source.unsplash.com/1200x800/?apartment,bedroom,modern&sig=101", type:"1 Bedroom" },
+      { title:"Verified 2 Bedroom Shortlet", area:"Ikoyi", tag:"Fast confirm", img:"https://source.unsplash.com/1200x800/?apartment,luxury,living-room&sig=102", type:"2 Bedroom" },
+      { title:"Studio / Budget Shortlet", area:"Yaba / Mainland", tag:"Support", img:"https://source.unsplash.com/1200x800/?studio,apartment,interior&sig=103", type:"Studio" },
+      { title:"Premium Shortlet — City View", area:"Victoria Island", tag:"Premium", img:"https://source.unsplash.com/1200x800/?penthouse,interior,city&sig=104", type:"Premium" },
+      { title:"Family Shortlet — Spacious", area:"Lekki", tag:"Spacious", img:"https://source.unsplash.com/1200x800/?apartment,kitchen,open-concept&sig=105", type:"Family" },
+      { title:"Business Stay — Quiet & Clean", area:"Ikoyi / VI", tag:"Business", img:"https://source.unsplash.com/1200x800/?apartment,modern,design&sig=106", type:"Business" }
+    ];
+
+    const featEls = [
+      document.getElementById("feat0"),
+      document.getElementById("feat1"),
+      document.getElementById("feat2")
+    ];
+
+    let featStart = 0;
+
+    function cardHTML(it){
+      return `
+        <img src="${esc(it.img)}" alt="${esc(it.title)}" loading="lazy" decoding="async"
+             onerror="this.src='https://heylarmah.tech/assets/images/larmah-realestate.jpeg'">
+        <div class="card-body">
+          <div class="card-title">${esc(it.title)}</div>
+          <div class="meta">
+            <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(it.area)}</span>
+            <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> ${esc(it.tag)}</span>
+          </div>
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn small solid" type="button"
+              onclick="openWA(buildMsg('Shortlet Enquiry', { Type:'${esc(it.type)}', Area:'${esc(it.area)}', Message:'Hello Larmah, please share available verified options.' }))">
+              <i class="fa-brands fa-whatsapp"></i> Enquire
+            </button>
+            <a class="btn small" href="https://heylarmah.tech/real-estate.html">View</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFeatured(){
+      // fade out
+      featEls.forEach(el => el.classList.add("is-fading"));
+
+      setTimeout(() => {
+        for(let i=0;i<3;i++){
+          const it = FEATURE_LIST[(featStart + i) % FEATURE_LIST.length];
+          featEls[i].innerHTML = cardHTML(it);
+        }
+        // fade in
+        requestAnimationFrame(() => featEls.forEach(el => el.classList.remove("is-fading")));
+      }, 220);
+    }
+
+    if(!reduce){
+      renderFeatured();
+      setInterval(() => {
+        featStart = (featStart + 1) % FEATURE_LIST.length;
+        renderFeatured();
+      }, 5000);
+    } else {
+      renderFeatured();
+    }
+
+    // expose
     window.submitSearch = submitSearch;
     window.openWA = openWA;
     window.buildMsg = buildMsg;
     window.toggleMenu = toggleMenu;
-
-    // Set minimum checkout based on checkin
-    const checkinEl = document.getElementById("checkin");
-    const checkoutEl = document.getElementById("checkout");
-    checkinEl.addEventListener("change", () => {
-      if(!checkinEl.value) return;
-      checkoutEl.min = checkinEl.value;
-      if(checkoutEl.value && checkoutEl.value < checkinEl.value){
-        checkoutEl.value = checkinEl.value;
-      }
-    });
   </script>
 </body>
 </html>
