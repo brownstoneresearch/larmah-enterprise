@@ -1,45 +1,43 @@
 <!DOCTYPE html>
-<html lang="en-NG">
+<html lang="en-NG" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-  <title>Larmah Enterprise — Verified Shortlets & Real Estate</title>
-  <meta name="description" content="Book verified shortlet apartments and premium stays in Lagos — scam-resistant workflow, WhatsApp-first support, and fast confirmations." />
+  <title>Larmah Enterprise — Verified Shortlets & Logistics</title>
+  <meta name="description" content="Book verified shortlets and premium stays in Lagos — WhatsApp-first support, scam-resistant workflow, fast confirmations. Plus trusted logistics for pickups & deliveries." />
   <meta name="keywords" content="Larmah Enterprise, Shortlets Lagos, Verified Apartments, Ikoyi Shortlet, Lekki Shortlet, Real Estate Nigeria, Logistics Nigeria" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
-  <meta name="color-scheme" content="dark" />
+  <meta name="color-scheme" content="dark light" />
   <meta name="robots" content="index,follow" />
-  <link rel="canonical" href="https://heylarmah.tech/real-estate.html" />
+  <link rel="canonical" href="https://heylarmah.tech/" />
 
   <!-- Open Graph -->
   <meta property="og:locale" content="en_NG" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Larmah Enterprise — Verified Shortlets & Real Estate" />
-  <meta property="og:description" content="Verified shortlets and premium stays in Lagos — WhatsApp-first support and trust-first standards." />
-  <meta property="og:url" content="https://heylarmah.tech/real-estate.html" />
+  <meta property="og:title" content="Larmah Enterprise — Verified Shortlets & Logistics" />
+  <meta property="og:description" content="Verified shortlets and trusted logistics — WhatsApp-first support and trust-first standards." />
+  <meta property="og:url" content="https://heylarmah.tech/" />
   <meta property="og:site_name" content="Larmah Enterprise" />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:alt" content="Larmah Enterprise — Connecting People, Business & Possibilities" />
+  <meta property="og:image:alt" content="Larmah Enterprise" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Larmah Enterprise — Verified Shortlets" />
-  <meta name="twitter:description" content="Verified shortlets and premium stays in Lagos — WhatsApp-first support and trust-first standards." />
+  <meta name="twitter:title" content="Larmah Enterprise — Verified Shortlets & Logistics" />
+  <meta name="twitter:description" content="Verified shortlets and trusted logistics — WhatsApp-first support and trust-first standards." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <!-- Icons -->
-  <link rel="icon" href="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" sizes="32x32" />
-  <link rel="icon" href="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" sizes="192x192" />
+  <link rel="icon" href="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" />
-  <meta name="msapplication-TileImage" content="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" />
 
   <!-- Performance -->
-  <link rel="preload" href="https://heylarmah.tech/assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://source.unsplash.com" crossorigin />
   <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+  <link rel="preload" href="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -59,6 +57,7 @@
     ],
     "contactPoint":[{
       "@type":"ContactPoint",
+      "email":"business@heylarmah.tech",
       "telephone":"+2347063080605",
       "contactType":"customer support",
       "availableLanguage":["en"]
@@ -68,22 +67,73 @@
   </script>
 
   <style>
+    /* ===============================
+       THEME TOKENS (dark + light)
+       =============================== */
     :root{
-      --bg:#070A12;
-      --bg2:#050810;
-      --line: rgba(255,255,255,.10);
-      --text:#E9EDF7;
-      --muted: rgba(233,237,247,.72);
       --gold:#D4AF37;
       --gold2:#F5D57A;
-      --shadow: 0 18px 50px rgba(0,0,0,.42);
+
       --radius: 18px;
       --radius2: 22px;
       --max: 1120px;
+
+      --ease: cubic-bezier(.2,.8,.2,1);
+      --shadow: 0 18px 50px rgba(0,0,0,.42);
+      --shadow2: 0 12px 34px rgba(0,0,0,.30);
+    }
+
+    html[data-theme="dark"]{
+      --bg:#070A12;
+      --bg2:#050810;
+      --panel: rgba(255,255,255,.03);
+      --panel2: rgba(255,255,255,.02);
+      --line: rgba(255,255,255,.10);
+      --line2: rgba(255,255,255,.08);
+      --text:#E9EDF7;
+      --muted: rgba(233,237,247,.72);
+      --muted2: rgba(233,237,247,.60);
+      --chip: rgba(255,255,255,.02);
+      --chipLine: rgba(255,255,255,.10);
+      --headerBg: rgba(7,10,18,.72);
+      --overlayBg: rgba(0,0,0,.55);
+      --ctaBg: rgba(0,0,0,.28);
+      --ctaLine: rgba(255,255,255,.12);
+      --iconBg: rgba(212,175,55,.10);
+      --iconLine: rgba(212,175,55,.25);
+      --good: rgba(0,217,129,.95);
+    }
+
+    html[data-theme="light"]{
+      --bg:#F7F7FB;
+      --bg2:#FFFFFF;
+      --panel: rgba(10,14,26,.04);
+      --panel2: rgba(10,14,26,.03);
+      --line: rgba(10,14,26,.12);
+      --line2: rgba(10,14,26,.08);
+      --text:#0E1526;
+      --muted: rgba(14,21,38,.68);
+      --muted2: rgba(14,21,38,.56);
+      --chip: rgba(10,14,26,.03);
+      --chipLine: rgba(10,14,26,.10);
+      --headerBg: rgba(255,255,255,.72);
+      --overlayBg: rgba(0,0,0,.40);
+      --ctaBg: rgba(255,255,255,.78);
+      --ctaLine: rgba(10,14,26,.10);
+      --iconBg: rgba(212,175,55,.16);
+      --iconLine: rgba(212,175,55,.35);
+      --good: rgba(0,140,90,.92);
+      --shadow: 0 16px 46px rgba(0,0,0,.12);
+      --shadow2: 0 10px 26px rgba(0,0,0,.10);
     }
 
     *{ box-sizing:border-box; }
     html{ scroll-behavior:smooth; }
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      *{ animation:none !important; transition:none !important; }
+    }
+
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
@@ -94,29 +144,35 @@
         linear-gradient(180deg, var(--bg2), var(--bg));
       color: var(--text);
       overflow-x:hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
-    a{ color: var(--gold2); text-decoration:none; }
+
+    a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
+
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
 
     .skip-link{ position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden; }
     .skip-link:focus{
       left:16px; top:16px; width:auto; height:auto; z-index:9999;
       padding:10px 12px; border-radius: 12px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.18);
+      background: var(--panel);
+      border: 1px solid var(--line);
       color: var(--text);
       backdrop-filter: blur(10px);
     }
 
-    /* Header */
+    /* ===============================
+       HEADER
+       =============================== */
     header{
       position:sticky;
       top:0;
       z-index:50;
-      background: rgba(7,10,18,.72);
+      background: var(--headerBg);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid var(--line2);
     }
     .header-inner{
       display:flex;
@@ -128,16 +184,39 @@
       display:flex;
       align-items:center;
       gap:10px;
-      min-width: 220px;
+      min-width: 200px;
     }
     .brand img{
-      height: 44px;
-      width:auto;
+      height: 40px;
+      width: 40px;
+      object-fit: cover;
       display:block;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
     }
+    .brand .btxt{
+      display:flex;
+      flex-direction:column;
+      line-height:1.05;
+      gap:4px;
+      min-width:0;
+    }
+    .brand .bname{
+      font-weight: 950;
+      letter-spacing:-0.2px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .brand .bsub{
+      font-size:.86rem;
+      color: var(--muted);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
     nav{ margin-left:auto; }
     nav ul{
       display:flex;
@@ -152,27 +231,38 @@
       font-weight: 850;
       font-size: .95rem;
     }
-    .nav-link:hover{ color: var(--gold2); opacity:1; }
+    .nav-link:hover{ color: var(--gold); opacity:1; }
+
+    .header-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      margin-left: 10px;
+    }
 
     .menu-btn{
       display:none;
       margin-left:auto;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      background: var(--panel);
       color: var(--text);
       border-radius: 12px;
       padding: 10px 12px;
       cursor:pointer;
     }
-    @media (max-width: 920px){
+
+    @media (max-width: 980px){
       nav{ display:none; }
-      .menu-btn{ display:inline-flex; align-items:center; justify-content:center; gap:10px; }
+      .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
+      .header-actions{ margin-left: auto; }
     }
 
-    /* Mobile sheet */
+    /* ===============================
+       MOBILE SHEET
+       =============================== */
     .overlay{
       position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
+      background: var(--overlayBg);
       display:none;
       align-items:flex-end;
       z-index:80;
@@ -181,21 +271,25 @@
     .sheet{
       width:100%;
       border-radius: 18px 18px 0 0;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(10,14,26,.96);
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 82%, #000 18%);
       box-shadow: var(--shadow);
       padding: 14px;
     }
     .sheet-head{
       display:flex; align-items:center; justify-content:space-between;
       padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
+      border-bottom: 1px solid var(--line2);
       margin-bottom: 10px;
+      gap: 10px;
     }
     .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
     .sheet-brandline img{
-      height: 44px; width:auto; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.02);
+      height: 44px; width: 44px; object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      flex: 0 0 auto;
     }
     .sheet a{
       display:flex;
@@ -204,14 +298,23 @@
       gap:10px;
       padding: 12px 12px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line2);
+      background: var(--panel2);
       color: var(--text);
       margin-bottom: 10px;
       font-weight: 900;
     }
+    .sheet .sheet-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 8px;
+    }
+    .sheet .sheet-actions .btn{ width: 100%; }
 
-    /* Buttons */
+    /* ===============================
+       BUTTONS
+       =============================== */
     .btn{
       display:inline-flex;
       align-items:center;
@@ -220,25 +323,26 @@
       border-radius: 14px;
       padding: 12px 16px;
       min-height: 46px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      background: var(--panel);
       color: var(--text);
       cursor:pointer;
       font-weight: 950;
-      transition: transform .16s ease, filter .16s ease;
+      transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
       text-decoration:none;
       white-space: nowrap;
+      user-select:none;
     }
-    .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
     .btn:active{ transform: translateY(0); }
     .btn.solid{
       background: var(--gold);
       color: #111;
-      border-color: rgba(212,175,55,.35);
+      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
     }
     .btn.primary{
-      background: rgba(255,255,255,.05);
-      border-color: rgba(255,255,255,.14);
+      background: var(--panel2);
+      border-color: var(--line);
     }
     .btn.small{
       min-height: 40px;
@@ -247,12 +351,30 @@
       font-weight: 900;
     }
 
-    /* Hero */
+    .icon-btn{
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
+    }
+    .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .icon-btn:active{ transform: translateY(0); }
+
+    /* ===============================
+       HERO
+       =============================== */
     .hero{ padding: 18px 0 0; }
     .hero-box{
       border-radius: var(--radius2);
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      background: var(--panel2);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
@@ -265,17 +387,15 @@
     @media (min-width: 980px){
       .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; }
     }
-
-    /* ✅ blended hero kicker */
     .kicker{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
-      margin-bottom: 10px;
       color: var(--muted);
       font-weight: 850;
       letter-spacing: .1px;
+      margin-bottom: 10px;
     }
     .kicker .dot{ opacity:.65; }
     h1{
@@ -302,71 +422,15 @@
       display:inline-flex; align-items:center; gap:8px;
       font-weight: 950;
       font-size: .86rem;
-      color: rgba(0,217,129,.95);
+      color: var(--good);
       margin-top: 12px;
     }
     .live-dot i{ font-size: 9px; }
 
-    /* Hero media slideshow */
-    .hero-media{
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      position:relative;
-      min-height: 300px;
-      isolation:isolate;
-    }
-    .hero-media img{
-      width:100%;
-      height: 300px;
-      object-fit: cover;
-      display:block;
-      opacity:.94;
-      transform: scale(1.01);
-      transition: opacity .55s ease, transform .9s ease;
-    }
-    .hero-media.is-fading img{ opacity:.15; transform: scale(1.03); }
-    .hero-media .cap{
-      position:absolute;
-      left: 12px; right: 12px; bottom: 10px;
-      padding: 10px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.28);
-      backdrop-filter: blur(8px);
-    }
-    .hero-tag{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      font-weight: 950;
-      margin-bottom: 6px;
-    }
-    .hero-sub{
-      color: rgba(255,255,255,.86);
-      font-size: .92rem;
-      line-height: 1.35;
-    }
-    .hero-progress{
-      position:absolute;
-      left:0; right:0; bottom:0;
-      height: 3px;
-      background: rgba(255,255,255,.10);
-      overflow:hidden;
-    }
-    .hero-bar{
-      height:100%;
-      width: 0%;
-      background: rgba(212,175,55,.75);
-      transition: width 5s linear;
-    }
-    .hero-bar.run{ width: 100%; }
-
-    /* Booking Search */
+    /* Search */
     .search{
       margin-top: 14px;
-      border-top: 1px solid rgba(255,255,255,.08);
+      border-top: 1px solid var(--line2);
       padding-top: 14px;
     }
     .form-grid{
@@ -389,18 +453,18 @@
       font-size: .78rem;
       letter-spacing: .12em;
       text-transform: uppercase;
-      color: rgba(233,237,247,.78);
+      color: var(--muted2);
     }
     input, select{
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      background: var(--panel);
       color: var(--text);
       padding: 12px 12px;
       min-height: 46px;
       outline:none;
     }
-    input::placeholder{ color: rgba(233,237,247,.55); }
+    input::placeholder{ color: var(--muted2); }
     .form-actions{
       margin-top: 12px;
       display:flex;
@@ -408,13 +472,16 @@
       align-items:center;
       flex-wrap:wrap;
     }
+    @media (max-width: 520px){
+      .form-actions .btn{ width:100%; }
+    }
 
-    /* ✅ Logistics highlight (inverted colors) */
+    /* Logistics strip (inverted) */
     .logistics-strip{
       margin-top: 14px;
       border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      background: var(--panel);
       overflow:hidden;
       display:flex;
       gap: 12px;
@@ -423,10 +490,9 @@
       padding: 12px;
     }
     .logistics-strip.invert{
-      background:
-        linear-gradient(135deg, rgba(212,175,55,.95), rgba(245,213,122,.86));
+      background: linear-gradient(135deg, rgba(212,175,55,.95), rgba(245,213,122,.86));
       border-color: rgba(212,175,55,.45);
-      box-shadow: 0 16px 44px rgba(0,0,0,.35);
+      box-shadow: var(--shadow2);
     }
     .logistics-left{
       display:flex;
@@ -438,8 +504,8 @@
       width:42px; height:42px;
       display:flex; align-items:center; justify-content:center;
       border-radius: 14px;
-      background: rgba(212,175,55,.10);
-      border: 1px solid rgba(212,175,55,.25);
+      background: var(--iconBg);
+      border: 1px solid var(--iconLine);
       color: var(--gold2);
       flex: 0 0 auto;
     }
@@ -448,32 +514,75 @@
       border-color: rgba(0,0,0,.18);
       color: #111;
     }
-    .logistics-title{
-      font-weight: 950;
-      margin: 0 0 2px;
-      letter-spacing: -0.2px;
-    }
-    .logistics-sub{
-      margin: 0;
-      color: var(--muted);
-      font-size: .94rem;
-      line-height: 1.35;
-    }
+    .logistics-title{ font-weight: 950; margin: 0 0 2px; letter-spacing: -0.2px; }
+    .logistics-sub{ margin: 0; font-size: .94rem; line-height: 1.35; color: var(--muted); }
     .logistics-strip.invert .logistics-title{ color:#111; }
     .logistics-strip.invert .logistics-sub{ color: rgba(0,0,0,.78); }
-
-    /* invert button inside logistics strip */
     .logistics-strip.invert .btn.solid{
       background: #0b0f1a;
       color: var(--gold2);
       border-color: rgba(0,0,0,.35);
     }
-    .logistics-strip.invert .btn.solid:hover{ filter: brightness(1.06); }
-
     @media (max-width: 520px){
       .logistics-strip{ flex-direction:column; align-items:stretch; }
       .logistics-strip .btn{ width:100%; }
     }
+
+    /* Hero carousel */
+    .hero-media{
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      position:relative;
+      min-height: 300px;
+      isolation:isolate;
+    }
+    .hero-media img{
+      width:100%;
+      height: 300px;
+      object-fit: cover;
+      display:block;
+      opacity:.94;
+      transform: scale(1.01);
+      transition: opacity .55s var(--ease), transform .9s var(--ease);
+    }
+    .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
+    .hero-media .cap{
+      position:absolute;
+      left: 12px; right: 12px; bottom: 10px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--ctaLine);
+      background: var(--ctaBg);
+      backdrop-filter: blur(10px);
+    }
+    .hero-tag{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      font-weight: 950;
+      margin-bottom: 6px;
+    }
+    .hero-sub{
+      color: color-mix(in oklab, var(--text) 86%, transparent);
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+    .hero-progress{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height: 3px;
+      background: color-mix(in oklab, var(--text) 10%, transparent);
+      overflow:hidden;
+    }
+    .hero-bar{
+      height:100%;
+      width: 0%;
+      background: rgba(212,175,55,.75);
+      transition: width 5s linear;
+    }
+    .hero-bar.run{ width: 100%; }
 
     /* Sections */
     .section{ padding: 18px 0; }
@@ -486,6 +595,7 @@
     }
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
+
     .grid{
       display:grid;
       gap: 14px;
@@ -495,11 +605,11 @@
 
     .card{
       border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
+      border: 1px solid var(--line);
+      background: var(--panel);
       overflow:hidden;
-      box-shadow: 0 12px 34px rgba(0,0,0,.30);
-      transition: opacity .45s ease, transform .45s ease;
+      box-shadow: var(--shadow2);
+      transition: opacity .45s var(--ease), transform .45s var(--ease);
     }
     .card.is-fading{ opacity:.22; transform: translateY(2px); }
     .card img{
@@ -518,25 +628,28 @@
       gap:8px;
       padding: 7px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
+      border: 1px solid var(--chipLine);
+      background: var(--chip);
+      color: color-mix(in oklab, var(--text) 85%, transparent);
+      font-weight: 800;
     }
 
-    /* ✅ Exquisite Footer (aligned + no duplicates) */
+    /* Footer (exquisite) */
     footer{
       margin-top: 18px;
-      border-top: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
+      border-top: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
     }
+
     .footer-cta{
       margin-top: 14px;
       border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.10);
+      border: 1px solid var(--line);
       background:
-        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.14), transparent 55%),
+        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
         radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
-        rgba(255,255,255,.02);
-      box-shadow: 0 18px 50px rgba(0,0,0,.38);
+        var(--panel2);
+      box-shadow: var(--shadow);
       padding: 14px;
       display:flex;
       gap: 12px;
@@ -562,25 +675,24 @@
       min-width:0;
     }
     .brandline img{
-      height: 46px; width:auto;
+      height: 46px; width: 46px; object-fit: cover;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      background: var(--panel2);
       flex: 0 0 auto;
     }
     .brandtext{ min-width:0; }
     .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
-    .tagline{ color: rgba(233,237,247,.78); font-weight: 800; font-size: .92rem; margin-top: 4px; }
+    .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
 
-    .small{ font-size: .92rem; color: var(--muted); line-height: 1.55; }
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
     .footer-links a{
       display:block;
       padding: 6px 0;
-      color: rgba(233,237,247,.80);
-      font-weight: 750;
+      color: color-mix(in oklab, var(--text) 84%, transparent);
+      font-weight: 800;
     }
-    .footer-links a:hover{ color: var(--gold2); }
+    .footer-links a:hover{ color: var(--gold); }
 
     .contact-stack{ display:grid; gap: 10px; }
     .contact-chip{
@@ -589,11 +701,11 @@
       align-items:flex-start;
       padding: 10px 12px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      background: var(--panel2);
     }
-    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold2); opacity:.95; }
-    .contact-chip .txt{ color: rgba(233,237,247,.90); font-weight: 850; }
+    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
+    .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
     .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
 
     .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
@@ -601,21 +713,25 @@
       width: 42px; height: 42px;
       display:inline-flex; align-items:center; justify-content:center;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line);
+      background: var(--panel2);
       color: var(--text);
     }
-    .social a:hover{ color:#111; background: var(--gold); border-color: rgba(212,175,55,.35); }
+    .social a:hover{
+      color: #111;
+      background: var(--gold);
+      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
+    }
 
     .footer-bottom{
-      border-top: 1px solid rgba(255,255,255,.08);
+      border-top: 1px solid var(--line2);
       padding: 12px 0 16px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
       flex-wrap:wrap;
-      color: rgba(233,237,247,.66);
+      color: var(--muted2);
       font-size: .9rem;
     }
     .footer-badges{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
@@ -625,13 +741,22 @@
       align-items:center;
       padding: 7px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
-      color: rgba(233,237,247,.82);
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 80%, transparent);
       font-weight: 850;
       font-size: .84rem;
     }
-    .badge i{ color: var(--gold2); }
+    .badge i{ color: var(--gold); }
+
+    /* UX niceties */
+    .notice{
+      border-radius: 14px;
+      padding: 12px 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--muted);
+    }
   </style>
 </head>
 
@@ -643,13 +768,14 @@
     <div class="sheet" role="dialog" aria-label="Menu">
       <div class="sheet-head">
         <div class="sheet-brandline">
-          <img src="https://heylarmah.tech/assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+          <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
           <div style="min-width:0">
             <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
-            <div class="small" style="margin-top:4px">Connecting People, Business & Possibilities • RC: 9127113</div>
+            <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">RC: 9127113</div>
           </div>
         </div>
-        <button class="btn small" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
+
+        <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -658,18 +784,25 @@
       <a href="https://heylarmah.tech/logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="https://heylarmah.tech/premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="https://heylarmah.tech/dashboard.html"><span><i class="fa-solid fa-user-shield" style="color:var(--gold)"></i> Dashboard</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+
+      <div class="sheet-actions">
+        <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
+          <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
+        </button>
+      </div>
     </div>
   </div>
 
   <header>
     <div class="container header-inner">
       <a class="brand" href="https://heylarmah.tech/" aria-label="Larmah Home">
-        <img src="https://heylarmah.tech/assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+        <!-- ✅ header logo = favicon -->
+        <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+        <div class="btxt">
+          <div class="bname">Larmah Enterprise</div>
+          <div class="bsub">Verified Shortlets • Logistics</div>
+        </div>
       </a>
-
-      <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
 
       <nav aria-label="Primary navigation">
         <ul>
@@ -678,6 +811,17 @@
           <li><a class="nav-link" href="https://heylarmah.tech/premium.html">Premium</a></li>
         </ul>
       </nav>
+
+      <div class="header-actions">
+        <!-- Theme toggle (desktop) -->
+        <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme" title="Toggle theme">
+          <i class="fa-solid fa-circle-half-stroke"></i>
+        </button>
+
+        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -687,7 +831,6 @@
       <div class="hero-box">
         <div class="hero-row">
           <div>
-            <!-- ✅ blended line -->
             <div class="kicker" aria-label="Trust badges">
               <span>Trust-first stays</span><span class="dot">•</span>
               <span>Verified listings</span><span class="dot">•</span>
@@ -760,7 +903,7 @@
                 </a>
               </div>
 
-              <!-- ✅ Inverted Logistics Reference (aligned + inverted colors) -->
+              <!-- Inverted Logistics Reference -->
               <div class="logistics-strip invert" aria-label="Logistics highlight">
                 <div class="logistics-left">
                   <div class="logi-icn"><i class="fa-solid fa-truck-fast"></i></div>
@@ -776,16 +919,15 @@
                 </a>
               </div>
 
-              <div class="small" style="margin-top:10px">
+              <div class="small" style="margin-top:10px; color:var(--muted);">
                 Tip: Share your budget + preferred area for faster matching.
               </div>
             </div>
           </div>
 
-          <!-- HERO carousel (auto 5s) — 10 real-life images (real estate + logistics) -->
+          <!-- HERO carousel (auto 5s) — 10 “real-time” images (Unsplash live) -->
           <aside class="hero-media" id="heroMedia" aria-label="Real estate and logistics carousel">
-            <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=1" alt="Luxury apartment interior" decoding="async"
-                 onerror="this.src='https://heylarmah.tech/assets/images/larmah-header.jpeg'">
+            <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11" alt="Luxury apartment interior" decoding="async">
             <div class="cap">
               <div class="hero-tag" id="heroTag">
                 <i class="fa-solid fa-house" style="color:var(--gold)"></i> Verified Shortlets
@@ -798,7 +940,7 @@
       </div>
     </section>
 
-    <!-- FEATURED -->
+    <!-- FEATURED (dynamic rotation every 5s) -->
     <section class="section" id="browse" aria-label="Browse shortlets">
       <div class="section-head">
         <div>
@@ -809,7 +951,6 @@
       </div>
 
       <div class="grid" id="featuredGrid">
-        <!-- 3 slots, content injected by JS -->
         <article class="card" id="feat0" aria-label="Featured listing 1"></article>
         <article class="card" id="feat1" aria-label="Featured listing 2"></article>
         <article class="card" id="feat2" aria-label="Featured listing 3"></article>
@@ -833,7 +974,7 @@
     </section>
   </main>
 
-  <!-- Footer (aligned, exquisite, no duplicates) -->
+  <!-- FOOTER (updated per request) -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -855,10 +996,11 @@
       <div class="footer-grid">
         <div>
           <div class="brandline">
-            <img src="https://heylarmah.tech/assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
+            <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
             <div class="brandtext">
               <div class="brandname">Larmah Enterprise</div>
-              <div class="tagline">Connecting People, Business & Possibilities • RC: 9127113</div>
+              <!-- ✅ removed: “Connecting People, Business & Possibilities •” -->
+              <div class="tagline">RC: 9127113</div>
             </div>
           </div>
 
@@ -901,11 +1043,12 @@
               </div>
             </div>
 
+            <!-- ✅ replaced website chip with business email -->
             <div class="contact-chip">
-              <i class="fa-solid fa-globe"></i>
+              <i class="fa-regular fa-envelope"></i>
               <div>
-                <div class="txt"><a href="https://heylarmah.tech/" style="color:rgba(233,237,247,.90)">heylarmah.tech</a></div>
-                <div class="sub">Official website</div>
+                <div class="txt">business@heylarmah.tech</div>
+                <div class="sub">Business enquiries</div>
               </div>
             </div>
 
@@ -970,6 +1113,34 @@
       window.open(url, "_blank", "noopener,noreferrer");
     }
 
+    // Theme (dark/light) with persistence
+    const THEME_KEY = "larmah_theme_v1";
+    function setTheme(theme){
+      const html = document.documentElement;
+      html.setAttribute("data-theme", theme);
+      localStorage.setItem(THEME_KEY, theme);
+
+      // update theme-color for nicer mobile browser chrome
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if(metaTheme){
+        metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
+      }
+    }
+    function toggleTheme(){
+      const cur = document.documentElement.getAttribute("data-theme") || "dark";
+      setTheme(cur === "dark" ? "light" : "dark");
+    }
+    // init theme: saved -> system -> default dark
+    (function initTheme(){
+      const saved = localStorage.getItem(THEME_KEY);
+      if(saved === "light" || saved === "dark"){
+        setTheme(saved);
+        return;
+      }
+      const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+      setTheme(prefersLight ? "light" : "dark");
+    })();
+
     // Set minimum checkout based on checkin
     const checkinEl = document.getElementById("checkin");
     const checkoutEl = document.getElementById("checkout");
@@ -997,41 +1168,38 @@
       }));
     }
 
-    // ✅ HERO carousel: 10 real-life images (real estate + logistics), auto-change every 5s
+    // ✅ HERO carousel: 10 “real-time” images (Unsplash live), auto-change every 5s
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
     const heroSub = document.getElementById("heroSub");
     const heroBar = document.getElementById("heroBar");
 
+    // NOTE: These are live/real photos served dynamically by Unsplash based on queries.
+    // The "sig" ensures you get different images.
     const HERO_SLIDES = [
-      { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11", icon:"fa-house", label:"Verified Shortlets", sub:"Premium interiors, clean pricing, WhatsApp-first support." },
+      { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11", icon:"fa-house", label:"Verified Shortlets", sub:"Premium stays, clean pricing, WhatsApp-first support." },
       { img:"https://source.unsplash.com/1600x1000/?apartment,living-room,modern&sig=12", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays across Lagos." },
       { img:"https://source.unsplash.com/1600x1000/?condo,interior,design&sig=13", icon:"fa-house", label:"Shortlets", sub:"Fast confirmations for verified options." },
       { img:"https://source.unsplash.com/1600x1000/?villa,interior,luxury&sig=14", icon:"fa-house", label:"Premium Stays", sub:"Comfort-first spaces for work & rest." },
       { img:"https://source.unsplash.com/1600x1000/?hotel,room,luxury&sig=15", icon:"fa-house", label:"Verified Stays", sub:"High-standard rooms and suites." },
 
-      { img:"https://source.unsplash.com/1600x1000/?logistics,truck,highway&sig=21", icon:"fa-truck-fast", label:"Logistics", sub:"Dispatch, pickup coordination, and trusted delivery." },
-      { img:"https://source.unsplash.com/1600x1000/?delivery,van,courier&sig=22", icon:"fa-truck", label:"Dispatch", sub:"City-wide movement with WhatsApp updates." },
-      { img:"https://source.unsplash.com/1600x1000/?warehouse,forklift&sig=23", icon:"fa-warehouse", label:"Warehousing", sub:"Reliable handling and movement support." },
-      { img:"https://source.unsplash.com/1600x1000/?cargo,containers,port&sig=24", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support when needed." },
-      { img:"https://source.unsplash.com/1600x1000/?shipping,delivery,packages&sig=25", icon:"fa-box", label:"Last-mile Delivery", sub:"Fast, trackable drop-offs." }
+      { img:"https://source.unsplash.com/1600x1000/?logistics,truck,highway&sig=21", icon:"fa-truck-fast", label:"Logistics", sub:"Dispatch, pickups, and trusted movement." },
+      { img:"https://source.unsplash.com/1600x1000/?delivery,van,courier&sig=22", icon:"fa-truck", label:"Dispatch", sub:"City-wide movement with updates." },
+      { img:"https://source.unsplash.com/1600x1000/?warehouse,forklift&sig=23", icon:"fa-warehouse", label:"Warehousing", sub:"Reliable handling support when needed." },
+      { img:"https://source.unsplash.com/1600x1000/?cargo,containers,port&sig=24", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." },
+      { img:"https://source.unsplash.com/1600x1000/?shipping,delivery,packages&sig=25", icon:"fa-box", label:"Last-mile Delivery", sub:"Fast drop-offs and pickups." }
     ];
 
     let heroIdx = 0;
-
     function runHeroProgress(){
       heroBar.classList.remove("run");
-      // force reflow
-      void heroBar.offsetWidth;
+      void heroBar.offsetWidth; // reflow
       heroBar.classList.add("run");
     }
-
     function setHero(i){
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
       heroMedia.classList.add("is-fading");
-
-      // progress bar restart immediately
       runHeroProgress();
 
       setTimeout(() => {
@@ -1040,7 +1208,6 @@
         heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
         heroSub.textContent = s.sub;
 
-        // end fade shortly after swap
         setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
       }, 220);
     }
@@ -1055,9 +1222,11 @@
 
       heroMedia.addEventListener("mouseenter", () => heroBar.classList.remove("run"));
       heroMedia.addEventListener("mouseleave", () => runHeroProgress());
+    } else {
+      setHero(0);
     }
 
-    // ✅ Featured Shortlets: dynamic flow/change (5s) showing 3 at a time
+    // ✅ Featured Shortlets: dynamic flow/change (5s) of 3 listings (rotates)
     const FEATURE_LIST = [
       { title:"Verified 1 Bedroom Shortlet", area:"Lekki / VI", tag:"Verified", img:"https://source.unsplash.com/1200x800/?apartment,bedroom,modern&sig=101", type:"1 Bedroom" },
       { title:"Verified 2 Bedroom Shortlet", area:"Ikoyi", tag:"Fast confirm", img:"https://source.unsplash.com/1200x800/?apartment,luxury,living-room&sig=102", type:"2 Bedroom" },
@@ -1072,13 +1241,11 @@
       document.getElementById("feat1"),
       document.getElementById("feat2")
     ];
-
     let featStart = 0;
 
     function cardHTML(it){
       return `
-        <img src="${esc(it.img)}" alt="${esc(it.title)}" loading="lazy" decoding="async"
-             onerror="this.src='https://heylarmah.tech/assets/images/larmah-realestate.jpeg'">
+        <img src="${esc(it.img)}" alt="${esc(it.title)}" loading="lazy" decoding="async">
         <div class="card-body">
           <div class="card-title">${esc(it.title)}</div>
           <div class="meta">
@@ -1090,41 +1257,37 @@
               onclick="openWA(buildMsg('Shortlet Enquiry', { Type:'${esc(it.type)}', Area:'${esc(it.area)}', Message:'Hello Larmah, please share available verified options.' }))">
               <i class="fa-brands fa-whatsapp"></i> Enquire
             </button>
-            <a class="btn small" href="https://heylarmah.tech/real-estate.html">View</a>
+            <a class="btn small primary" href="https://heylarmah.tech/real-estate.html">View</a>
           </div>
         </div>
       `;
     }
 
     function renderFeatured(){
-      // fade out
       featEls.forEach(el => el.classList.add("is-fading"));
-
       setTimeout(() => {
         for(let i=0;i<3;i++){
           const it = FEATURE_LIST[(featStart + i) % FEATURE_LIST.length];
           featEls[i].innerHTML = cardHTML(it);
         }
-        // fade in
         requestAnimationFrame(() => featEls.forEach(el => el.classList.remove("is-fading")));
       }, 220);
     }
 
+    renderFeatured();
     if(!reduce){
-      renderFeatured();
       setInterval(() => {
         featStart = (featStart + 1) % FEATURE_LIST.length;
         renderFeatured();
       }, 5000);
-    } else {
-      renderFeatured();
     }
 
-    // expose
+    // Expose
     window.submitSearch = submitSearch;
     window.openWA = openWA;
     window.buildMsg = buildMsg;
     window.toggleMenu = toggleMenu;
+    window.toggleTheme = toggleTheme;
   </script>
 </body>
 </html>
