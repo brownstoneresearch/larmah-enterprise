@@ -72,7 +72,7 @@
   </script>
 
   <style>
-    /* Simple, mature overrides (keep your global style.css in control) */
+    /* OPTION B — Ultra Simple (keeps your style.css in control) */
     html{ scroll-behavior:smooth; }
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
@@ -80,138 +80,81 @@
     }
     :focus-visible{ outline:2px solid rgba(212,175,55,.55); outline-offset:3px; border-radius:12px; }
 
-    .home-wrap{ max-width: 1120px; margin: 0 auto; }
+    .home-wrap{ max-width: 1100px; margin: 0 auto; }
+    #latest{ scroll-margin-top: 90px; }
 
-    body{ position:relative; overflow-x:hidden; }
-    body::before{
-      content:"";
-      position:fixed; inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(900px 420px at 18% 6%, rgba(212,175,55,.10), transparent 60%),
-        radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.07), transparent 62%),
-        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.06), transparent 58%);
-      opacity:.9;
-      z-index:-1;
-    }
-
-    .skip-link{ position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden; }
-    .skip-link:focus{
-      left:16px; top:16px; width:auto; height:auto; z-index:9999;
-      padding:10px 12px; border-radius:12px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.18);
-      color: var(--text);
-      backdrop-filter: blur(10px);
-    }
-
-    /* Hero (simple grid) */
-    .hero-shell{
-      border-radius: 26px;
+    /* Simple hero layout */
+    .hero-simple{
+      border-radius: 18px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.02);
-      box-shadow: 0 22px 60px rgba(0,0,0,.40);
       overflow:hidden;
     }
-    .hero-grid{
+    .hero-row{
       display:grid;
-      gap: 16px;
-      padding: 18px;
-      align-items:stretch;
+      gap: 14px;
+      padding: 16px;
+      align-items:start;
     }
     @media (min-width: 980px){
-      .hero-grid{ grid-template-columns: 1.05fr .95fr; padding: 22px; }
+      .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; }
     }
 
-    .hero-kicker{
-      display:flex; flex-wrap:wrap; gap:10px;
+    .kicker{
+      display:flex; gap:10px; flex-wrap:wrap;
       align-items:center;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size:.92rem;
     }
-    .kicker-pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.03);
-      font-weight: 900;
-      font-size: .85rem;
-    }
-    .kicker-sub{ color: var(--muted); font-size:.92rem; opacity:.95; }
+    .kicker b{ color: var(--text); }
 
     .hero-actions{
-      display:flex; gap: 12px; flex-wrap:wrap;
-      margin-top: 14px;
-    }
-    .hero-actions .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      min-height: 48px;
-      padding: 12px 16px;
+      display:flex; gap:12px; flex-wrap:wrap;
+      margin-top: 12px;
     }
     @media (max-width: 520px){
       .hero-actions{ flex-direction:column; }
       .hero-actions .btn{ width:100%; }
     }
 
-    .trust-row{
-      display:flex; gap: 10px; flex-wrap:wrap;
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: .9rem;
-    }
-    .trust-badge{
-      display:inline-flex; gap:8px; align-items:center;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.02);
-    }
-
-    /* Hero carousel (simple) */
-    .hero-carousel{
-      border-radius: 22px;
+    /* Simple hero carousel (5s) */
+    .hero-media{
+      border-radius: 14px;
+      overflow:hidden;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
-      overflow:hidden;
       position:relative;
-      min-height: 320px;
     }
-    .hero-carousel img{
-      width:100%; height: 320px;
+    .hero-media img{
+      width:100%;
+      height: 300px;
       object-fit: cover;
       display:block;
-      filter: contrast(1.05) saturate(1.05);
     }
-    .hero-carousel .shade{
-      position:absolute; inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg, rgba(0,0,0,.58), rgba(0,0,0,.10) 55%, rgba(0,0,0,.55)),
-        linear-gradient(180deg, rgba(0,0,0,.18), transparent 40%, rgba(0,0,0,.60));
+    .hero-media .cap{
+      position:absolute;
+      left: 12px; right: 12px; bottom: 10px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.28);
+      backdrop-filter: blur(8px);
     }
-    .hero-carousel .cap{
-      position:absolute; left:14px; right:14px; bottom:12px;
-      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+    .hero-tag{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      font-weight: 900;
+      margin-bottom: 6px;
     }
-    .hero-carousel .tag{
-      display:inline-flex; gap:8px; align-items:center;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.22);
-      backdrop-filter: blur(10px);
-      font-weight: 950;
-      font-size: .86rem;
-    }
-    .hero-carousel .sub{
-      margin-top:8px;
+    .hero-sub{
       color: rgba(255,255,255,.86);
       font-size: .92rem;
       line-height: 1.35;
-      max-width: 520px;
     }
 
-    /* Catalogues */
+    /* Catalogues grid */
     .catalog-grid{
       display:grid;
       gap: 14px;
@@ -221,89 +164,101 @@
       .catalog-grid{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
-    /* Rotator card (one listing at a time, auto 5s) */
-    .rotator-card{
-      border-radius: 18px;
+    /* One listing card (auto 5s) */
+    .rot-card{
+      position:relative;
+      border-radius: 16px;
       border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
       overflow:hidden;
-      position:relative;
-      min-height: 220px;
-      box-shadow: 0 18px 50px rgba(0,0,0,.35);
+      min-height: 210px;
     }
-    .rotator-card img{
-      width:100%; height:220px; object-fit:cover; display:block;
-      filter: contrast(1.05) saturate(1.05);
+    .rot-card img{
+      width:100%;
+      height: 210px;
+      object-fit: cover;
+      display:block;
       opacity:.92;
-      transform: scale(1.01);
     }
-    .rotator-card .shade{
-      position:absolute; inset:0; pointer-events:none;
-      background:
-        linear-gradient(90deg, rgba(0,0,0,.68), rgba(0,0,0,.14) 55%, rgba(0,0,0,.58)),
-        linear-gradient(180deg, rgba(0,0,0,.10), transparent 38%, rgba(0,0,0,.65));
+    .rot-overlay{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background: linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.55));
     }
-    .rotator-card .content{
-      position:absolute; inset:0;
-      padding: 14px;
+    .rot-body{
+      position:absolute;
+      inset:0;
+      padding: 12px;
       display:flex;
       flex-direction:column;
       justify-content:space-between;
       gap: 10px;
     }
-    .rotator-top{
-      display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+    .rot-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
     }
-    .rotator-pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding: 8px 10px;
+    .rot-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.20);
-      backdrop-filter: blur(10px);
-      font-weight: 950;
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(8px);
+      font-weight: 900;
       font-size: .82rem;
     }
-    .rotator-count{
-      padding: 8px 10px;
+    .rot-count{
+      padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-      backdrop-filter: blur(10px);
-      font-weight: 900;
+      background: rgba(0,0,0,.14);
+      backdrop-filter: blur(8px);
+      font-weight: 850;
       font-size: .82rem;
       color: rgba(255,255,255,.88);
       white-space:nowrap;
     }
-    .rotator-title{
+    .rot-title{
       font-weight: 950;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       line-height: 1.2;
-      letter-spacing: .1px;
-      text-shadow: 0 10px 28px rgba(0,0,0,.5);
-      margin-top: 6px;
+      margin-top: 8px;
+      text-shadow: 0 10px 20px rgba(0,0,0,.45);
     }
-    .rotator-meta{
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+    .rot-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
       color: rgba(255,255,255,.88);
       font-size: .88rem;
     }
-    .rotator-price{ font-weight: 950; color: var(--accent); }
-    .rotator-actions{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    .rot-price{ font-weight: 950; color: var(--accent); }
+    .rot-actions{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
     }
-    .rotator-actions .btn.small{
-      min-height: 42px;
-      border-radius: 14px;
-      padding: 10px 12px;
-      display:inline-flex; align-items:center; gap:10px;
-    }
-    .small-hint{ font-size:.84rem; color: rgba(255,255,255,.75); }
+    .rot-hint{ font-size: .84rem; color: rgba(255,255,255,.74); }
 
-    /* live dot */
+    .notice{
+      border-radius: 14px;
+      padding: 12px 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      color: var(--muted);
+    }
+    .notice strong{ color: var(--text); }
+
     .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:850; font-size:.85rem; color: var(--ok); }
     .live-dot i { font-size: 8px; }
-    #latest{ scroll-margin-top: 90px; }
   </style>
 </head>
 
@@ -377,18 +332,19 @@
 
   <main id="main" class="container home-wrap" tabindex="-1">
     <section class="hero" aria-label="Homepage hero">
-      <div class="hero-shell">
-        <div class="hero-grid">
+      <div class="hero-simple">
+        <div class="hero-row">
           <div>
-            <div class="hero-kicker">
-              <span class="kicker-pill"><i class="fa-solid fa-bolt"></i> Nigeria’s Trust-First Hub</span>
-              <span class="kicker-sub">Verified Standards • WhatsApp-first</span>
+            <div class="kicker">
+              <span><i class="fa-solid fa-bolt"></i> <b>Nigeria’s Trust-First Hub</b></span>
+              <span>•</span>
+              <span>Verified Standards</span>
+              <span>•</span>
+              <span>WhatsApp-first</span>
             </div>
 
             <h1>Verified Commerce,<br/>Built for Trust.</h1>
-            <p class="lead">
-              Real Estate, Logistics, and Exchange — verified listings, trackable enquiries, and WhatsApp-first support.
-            </p>
+            <p class="lead">Real Estate, Logistics & Exchange — curated listings, trackable enquiries, and WhatsApp-first support.</p>
 
             <div class="hero-actions">
               <a class="btn solid" href="#latest"><i class="fa-solid fa-sparkles"></i> Browse Catalogues</a>
@@ -398,27 +354,17 @@
               </button>
             </div>
 
-            <div class="trust-row" aria-label="Trust assurances">
-              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Verified listings</div>
-              <div class="trust-badge"><i class="fa-solid fa-shield-halved"></i> Scam-resistant</div>
-              <div class="trust-badge"><i class="fa-solid fa-headset"></i> Priority options</div>
-            </div>
-
             <div class="small live-dot" id="liveStateHOME" style="margin-top:12px;opacity:.9" aria-live="polite">
               <i class="fa-solid fa-circle fa-beat"></i> Live updates enabled
             </div>
           </div>
 
-          <!-- Simple hero carousel (auto 5s) -->
-          <aside class="hero-carousel" aria-label="Service carousel">
+          <aside class="hero-media" aria-label="Service carousel">
             <img id="heroImg" src="assets/images/larmah-realestate.jpeg" alt="Larmah Real Estate" decoding="async"
                  onerror="this.src='assets/images/larmah-header.jpeg'">
-            <div class="shade" aria-hidden="true"></div>
             <div class="cap">
-              <div>
-                <div class="tag" id="heroTag"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</div>
-                <div class="sub" id="heroSub">Shortlets, rentals, and verified purchase listings.</div>
-              </div>
+              <div class="hero-tag" id="heroTag"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</div>
+              <div class="hero-sub" id="heroSub">Shortlets, rentals, and verified purchase listings.</div>
             </div>
           </aside>
         </div>
@@ -435,7 +381,6 @@
       </div>
 
       <div class="catalog-grid">
-        <!-- Real Estate -->
         <div class="card">
           <div class="section-titleline">
             <h3 style="margin:0"><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</h3>
@@ -444,7 +389,6 @@
           <div id="rotRE"></div>
         </div>
 
-        <!-- Logistics -->
         <div class="card">
           <div class="section-titleline">
             <h3 style="margin:0"><i class="fa-solid fa-truck" style="color:var(--brand)"></i> Logistics</h3>
@@ -453,7 +397,6 @@
           <div id="rotLG"></div>
         </div>
 
-        <!-- Exchange -->
         <div class="card">
           <div class="section-titleline">
             <h3 style="margin:0"><i class="fa-solid fa-money-bill-transfer" style="color:var(--brand)"></i> Exchange</h3>
@@ -532,7 +475,7 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    /* --------- tiny safe fallbacks (keep LARMAH as primary) --------- */
+    /* --------- tiny safe fallbacks (keeps LARMAH as primary) --------- */
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
@@ -542,8 +485,7 @@
     function openWA(text){
       if(window.LARMAH?.openWhatsApp) return LARMAH.openWhatsApp(text);
       const phone = "2347063080605";
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
 
     function sbClient(){
@@ -574,7 +516,7 @@
       return s ? s : "Contact for quote";
     }
 
-    /* ----------------- HERO carousel (5s) ----------------- */
+    /* ----------------- HERO carousel (auto 5s) ----------------- */
     const HERO = [
       { img:"assets/images/larmah-realestate.jpeg", alt:"Larmah Real Estate", icon:"fa-house", title:"Real Estate", sub:"Shortlets, rentals, and verified purchase listings." },
       { img:"assets/images/larmah-logistics.jpeg",  alt:"Larmah Logistics",  icon:"fa-truck", title:"Logistics",  sub:"Dispatch, pickups, and haulage with verified handling." },
@@ -595,10 +537,13 @@
       const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if(reduce) return;
       if(heroTimer) clearInterval(heroTimer);
-      heroTimer = setInterval(() => { heroIdx = (heroIdx+1) % HERO.length; renderHero(heroIdx); }, 5000);
+      heroTimer = setInterval(() => {
+        heroIdx = (heroIdx + 1) % HERO.length;
+        renderHero(heroIdx);
+      }, 5000);
     }
 
-    /* ----------------- Listing rotators (5s) ----------------- */
+    /* ----------------- Listing rotators (one item, auto 5s) ----------------- */
     const CACHE = { "real-estate":[], "logistics":[], "exchange":[] };
     const ROT = {
       "real-estate": { i:0, t:null },
@@ -618,6 +563,17 @@
         .limit(limit);
       if(error) throw error;
       return data || [];
+    }
+
+    function enquire(category, id){
+      const it = (CACHE[category] || []).find(x => String(x.id) === String(id));
+      if(!it) return;
+      openWA(buildMsg("Enquiry", {
+        Sector: CAT[category].label.toUpperCase(),
+        Asset: (it.title || "Listing"),
+        Price: formatPrice(it.price),
+        Ref: "WEB-INDEX-" + id
+      }));
     }
 
     function renderRot(category){
@@ -640,23 +596,23 @@
       const price = formatPrice(it.price);
 
       mount.innerHTML = `
-        <div class="rotator-card">
+        <div class="rot-card">
           <img src="${esc(imgUrl)}" alt="" decoding="async" onerror="this.src='${esc(meta.fallback)}'">
-          <div class="shade" aria-hidden="true"></div>
-          <div class="content">
+          <div class="rot-overlay" aria-hidden="true"></div>
+          <div class="rot-body">
             <div>
-              <div class="rotator-top">
-                <div class="rotator-pill"><i class="fa-solid ${meta.icon}" style="color:var(--brand)"></i> ${esc(meta.label)}</div>
-                <div class="rotator-count">${idx+1} / ${items.length}</div>
+              <div class="rot-top">
+                <div class="rot-pill"><i class="fa-solid ${meta.icon}" style="color:var(--brand)"></i> ${esc(meta.label)}</div>
+                <div class="rot-count">${idx+1} / ${items.length}</div>
               </div>
-              <div class="rotator-title">${esc(title)}</div>
-              <div class="rotator-meta">
-                <span class="rotator-price">${esc(price)}</span>
+              <div class="rot-title">${esc(title)}</div>
+              <div class="rot-meta">
+                <span class="rot-price">${esc(price)}</span>
                 <span><i class="fa-solid fa-circle-check" style="opacity:.95"></i> Verified</span>
               </div>
             </div>
-            <div class="rotator-actions">
-              <div class="small-hint"><i class="fa-solid fa-rotate"></i> rotates 5s</div>
+            <div class="rot-actions">
+              <div class="rot-hint"><i class="fa-solid fa-rotate"></i> rotates 5s</div>
               <button class="btn small primary" type="button" onclick="enquire('${category}','${it.id}')">
                 <i class="fa-brands fa-whatsapp"></i> Enquire
               </button>
@@ -666,18 +622,6 @@
       `;
     }
 
-    function enquire(category, id){
-      const items = CACHE[category] || [];
-      const it = items.find(x => String(x.id) === String(id));
-      if(!it) return;
-      openWA(buildMsg("Enquiry", {
-        Sector: CAT[category].label.toUpperCase(),
-        Asset: (it.title || "Listing"),
-        Price: formatPrice(it.price),
-        Ref: "WEB-INDEX-" + id
-      }));
-    }
-
     function stopRot(category){
       if(ROT[category]?.t) clearInterval(ROT[category].t);
       ROT[category].t = null;
@@ -685,7 +629,6 @@
     function startRot(category){
       const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if(reduce) return;
-
       stopRot(category);
       ROT[category].t = setInterval(() => {
         if(!(CACHE[category]||[]).length) return;
@@ -709,7 +652,7 @@
         if(mount){
           mount.innerHTML = `
             <div class="notice" style="border-color:rgba(255,90,103,.35)">
-              <strong>Connection error.</strong> <span class="small">Please refresh or retry.</span>
+              <strong>Connection error.</strong> Please refresh or retry.
               <div class="actions" style="margin-top:10px">
                 <button class="btn small" type="button" onclick="initRot('${category}')">
                   <i class="fa-solid fa-rotate-right"></i> Retry
@@ -739,6 +682,7 @@
     });
 
     window.initRot = initRot;
+    window.enquire = enquire;
   </script>
 
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
