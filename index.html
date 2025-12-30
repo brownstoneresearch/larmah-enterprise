@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
 <head>
@@ -151,16 +150,7 @@
     a:hover{ color: var(--gold); }
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
 
-    .skip-link{ position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden; }
-    .skip-link:focus{
-      left:16px; top:16px; width:auto; height:auto; z-index:9999;
-      padding:10px 12px; border-radius: 12px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      color: var(--text);
-      backdrop-filter: blur(10px);
-    }
-
+    /* Header */
     header{
       position:sticky;
       top:0;
@@ -181,8 +171,6 @@
       gap:10px;
       min-width: 220px;
     }
-
-    /* logo used everywhere */
     .logo-wrap{
       position:relative;
       width:44px;
@@ -217,7 +205,6 @@
       border: 1px solid var(--line2);
       background: var(--logoBg);
     }
-
     .brand .btxt{
       display:flex;
       flex-direction:column;
@@ -443,7 +430,7 @@
     .form-grid{
       display:grid;
       gap: 10px;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
+      grid-template-columns: repeat(8, minmax(0, 1fr));
     }
     @media (max-width: 980px){ .form-grid{ grid-template-columns: 1fr 1fr; } }
     @media (max-width: 520px){ .form-grid{ grid-template-columns: 1fr; } }
@@ -472,7 +459,7 @@
     }
     @media (max-width: 520px){ .form-actions .btn{ width:100%; } }
 
-    /* Logistics strip (inverted) */
+    /* Logistics strip */
     .logistics-strip{
       margin-top: 14px;
       border-radius: 16px;
@@ -630,52 +617,6 @@
       font-weight: 800;
     }
 
-    /* ✅ About section */
-    .about{
-      border-radius: var(--radius2);
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      box-shadow: var(--shadow2);
-      overflow:hidden;
-    }
-    .about-inner{
-      display:grid;
-      gap: 14px;
-      padding: 14px;
-      grid-template-columns: 1.2fr .8fr;
-      align-items:start;
-    }
-    @media (max-width: 980px){
-      .about-inner{ grid-template-columns: 1fr; }
-    }
-    .about h3{
-      margin:0;
-      font-size: 1.25rem;
-      letter-spacing: -0.2px;
-    }
-    .about p{
-      margin: 10px 0 0;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-    .about-points{
-      margin-top: 12px;
-      display:grid;
-      gap: 10px;
-    }
-    .ap{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line2);
-      background: var(--panel);
-    }
-    .ap i{ color: var(--gold); margin-top: 2px; width: 18px; }
-    .ap b{ display:block; }
-    .ap span{ color: var(--muted2); font-size: .92rem; display:block; margin-top: 3px; line-height: 1.35; }
-
     /* Footer */
     footer{
       margin-top: 18px;
@@ -807,11 +748,12 @@
         </button>
       </div>
 
-      <a href="#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="https://heylarmah.tech/real-estate.html"><span><i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="https://heylarmah.tech/logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="https://heylarmah.tech/premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="https://heylarmah.tech/dashboard.html"><span><i class="fa-solid fa-user-shield" style="color:var(--gold)"></i> Dashboard</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <!-- ✅ About now links to its own page -->
+      <a href="about.html"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="real-estate.html"><span><i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="dashboard.html"><span><i class="fa-solid fa-user-shield" style="color:var(--gold)"></i> Dashboard</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
@@ -823,7 +765,7 @@
 
   <header>
     <div class="container header-inner">
-      <a class="brand" href="https://heylarmah.tech/" aria-label="Larmah Home">
+      <a class="brand" href="index.html" aria-label="Larmah Home">
         <div class="logo-wrap" aria-hidden="true">
           <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
         </div>
@@ -835,10 +777,11 @@
 
       <nav aria-label="Primary navigation">
         <ul>
-          <li><a class="nav-link" href="#about">About</a></li>
-          <li><a class="nav-link" href="https://heylarmah.tech/real-estate.html">Real Estate</a></li>
-          <li><a class="nav-link" href="https://heylarmah.tech/logistics.html">Logistics</a></li>
-          <li><a class="nav-link" href="https://heylarmah.tech/premium.html">Premium</a></li>
+          <!-- ✅ About now links to its own page -->
+          <li><a class="nav-link" href="about.html">About</a></li>
+          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+          <li><a class="nav-link" href="logistics.html">Logistics</a></li>
+          <li><a class="nav-link" href="premium.html">Premium</a></li>
         </ul>
       </nav>
 
@@ -859,6 +802,12 @@
       <div class="hero-box">
         <div class="hero-row">
           <div>
+            <div class="kicker" aria-label="Trust badges">
+              <span>Trust-first stays</span><span class="dot">•</span>
+              <span>Verified listings</span><span class="dot">•</span>
+              <span>WhatsApp-first</span>
+            </div>
+
             <h1>Trust-first real estate and logistics across Naija.</h1>
 
             <p class="lead">
@@ -888,7 +837,7 @@
                   <input id="checkout" type="date" />
                 </div>
 
-                <div class="field">
+                <div class="field" style="grid-column: span 1;">
                   <label for="guests">Guests</label>
                   <select id="guests">
                     <option value="1">1</option>
@@ -899,8 +848,8 @@
                   </select>
                 </div>
 
-                <!-- ✅ Category now separate from location -->
-                <div class="field">
+                <!-- Category -->
+                <div class="field" style="grid-column: span 1;">
                   <label for="category">Category</label>
                   <select id="category">
                     <option value="Any" selected>Any</option>
@@ -914,6 +863,7 @@
                   </select>
                 </div>
 
+                <!-- Location (separate) -->
                 <div class="field" style="grid-column: span 2;">
                   <label for="location">Location</label>
                   <select id="location">
@@ -931,7 +881,7 @@
                 <button class="btn solid" type="button" onclick="submitSearch()">
                   <i class="fa-solid fa-calendar-check"></i> Check Availability
                 </button>
-                <a class="btn small primary" href="https://heylarmah.tech/real-estate.html">
+                <a class="btn small primary" href="real-estate.html">
                   <i class="fa-solid fa-house"></i> View All Real Estate
                 </a>
               </div>
@@ -946,7 +896,7 @@
                     </p>
                   </div>
                 </div>
-                <a class="btn small solid" href="https://heylarmah.tech/logistics.html">
+                <a class="btn small solid" href="logistics.html">
                   <i class="fa-solid fa-truck"></i> Explore Logistics
                 </a>
               </div>
@@ -971,90 +921,13 @@
       </div>
     </section>
 
-    <!-- ✅ About section added -->
-    <section class="section" id="about" aria-label="About Larmah Enterprise">
-      <div class="section-head">
-        <div>
-          <h2>About Larmah Enterprise</h2>
-          <p class="subhead">A trust-first commerce hub focused on verified real estate and reliable logistics.</p>
-        </div>
-        <button class="btn small primary" type="button"
-          onclick="openWA(buildMsg('Business Enquiry', { Topic:'Partnership / Listings / Logistics', Message:'Hello Larmah, I’d like to discuss a business enquiry.' }))">
-          <i class="fa-brands fa-whatsapp"></i> Business Chat
-        </button>
-      </div>
-
-      <div class="about">
-        <div class="about-inner">
-          <div>
-            <h3>Verified standards. Clear process. Fast coordination.</h3>
-            <p>
-              Larmah Enterprise connects people, property, and movement with a simple goal: reduce friction and increase trust.
-              We curate verified listings for shortlets and real estate needs, and we support your stay with dependable logistics —
-              from dispatch to pickups — via WhatsApp-first assistance.
-            </p>
-
-            <div class="about-points">
-              <div class="ap">
-                <i class="fa-solid fa-circle-check"></i>
-                <div>
-                  <b>Verified Listings</b>
-                  <span>Scam-resistant workflow with clear references and confirmation steps.</span>
-                </div>
-              </div>
-              <div class="ap">
-                <i class="fa-solid fa-truck-fast"></i>
-                <div>
-                  <b>Logistics Support</b>
-                  <span>Dispatch, pickups, and trusted movement across Nigeria as needed.</span>
-                </div>
-              </div>
-              <div class="ap">
-                <i class="fa-brands fa-whatsapp"></i>
-                <div>
-                  <b>WhatsApp-first</b>
-                  <span>Fast support, quick matching, and direct confirmations.</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div class="card" style="border-radius: var(--radius2); overflow:hidden;">
-              <img src="https://source.unsplash.com/1200x800/?lagos,real-estate&sig=222" alt="Lagos real estate" loading="lazy" decoding="async">
-              <div class="card-body">
-                <div class="card-title">Work with Larmah</div>
-                <div class="meta">
-                  <span class="pill"><i class="fa-solid fa-house" style="color:var(--gold)"></i> List a property</span>
-                  <span class="pill"><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Dispatch support</span>
-                </div>
-                <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-                  <button class="btn small solid" type="button"
-                    onclick="openWA(buildMsg('List a Property', { Message:'Hello Larmah, I want to list a property/shortlet.' }))">
-                    <i class="fa-brands fa-whatsapp"></i> List
-                  </button>
-                  <a class="btn small primary" href="https://heylarmah.tech/logistics.html">
-                    <i class="fa-solid fa-truck-fast"></i> Logistics
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div class="notice" style="margin-top:12px">
-              <b style="color:var(--text)">Business Email:</b> business@heylarmah.tech
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="section" id="browse" aria-label="Browse shortlets">
       <div class="section-head">
         <div>
           <h2>Featured Shortlets</h2>
           <p class="subhead">Auto-rotating highlights (every 5 seconds).</p>
         </div>
-        <a class="btn small primary" href="https://heylarmah.tech/premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
+        <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
       </div>
 
       <div class="grid" id="featuredGrid">
@@ -1092,7 +965,7 @@
             onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </button>
-          <a class="btn primary" href="https://heylarmah.tech/logistics.html">
+          <a class="btn primary" href="logistics.html">
             <i class="fa-solid fa-truck-fast"></i> Logistics
           </a>
         </div>
@@ -1125,10 +998,10 @@
         <div>
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
-            <a href="#about">About</a>
-            <a href="https://heylarmah.tech/real-estate.html">Real Estate</a>
-            <a href="https://heylarmah.tech/logistics.html">Logistics</a>
-            <a href="https://heylarmah.tech/premium.html">Premium</a>
+            <a href="about.html">About</a>
+            <a href="real-estate.html">Real Estate</a>
+            <a href="logistics.html">Logistics</a>
+            <a href="premium.html">Premium</a>
           </div>
         </div>
 
@@ -1166,7 +1039,7 @@
               onclick="openWA(buildMsg('Shortlet Support', { Message:'Hello Larmah, I need help with a shortlet.' }))">
               <i class="fa-brands fa-whatsapp"></i> Chat Now
             </button>
-            <a class="btn small primary" href="https://heylarmah.tech/logistics.html">
+            <a class="btn small primary" href="logistics.html">
               <i class="fa-solid fa-truck-fast"></i> Book Dispatch
             </a>
           </div>
@@ -1214,7 +1087,7 @@
     }
 
     // Theme (dark/light) with persistence
-    const THEME_KEY = "larmah_theme_v3";
+    const THEME_KEY = "larmah_theme_v4";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem(THEME_KEY, theme);
@@ -1334,7 +1207,7 @@
               onclick="openWA(buildMsg('Shortlet Enquiry', { Type:'${esc(it.type)}', Area:'${esc(it.area)}', Message:'Hello Larmah, please share available verified options.' }))">
               <i class="fa-brands fa-whatsapp"></i> Enquire
             </button>
-            <a class="btn small primary" href="https://heylarmah.tech/real-estate.html">View</a>
+            <a class="btn small primary" href="real-estate.html">View</a>
           </div>
         </div>
       `;
@@ -1361,4 +1234,3 @@
   </script>
 </body>
 </html>
-```
