@@ -155,6 +155,16 @@
     a:hover{ color: var(--gold); }
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
 
+    .skip-link{ position:absolute; left:-999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    .skip-link:focus{
+      left:16px; top:16px; width:auto; height:auto; z-index:9999;
+      padding:10px 12px; border-radius: 12px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--text);
+      backdrop-filter: blur(10px);
+    }
+
     /* ===============================
        HEADER
        =============================== */
@@ -179,7 +189,7 @@
       min-width: 220px;
     }
 
-    /* ✅ Beautiful blended logo */
+    /* ✅ Beautiful blended logo (used in header + footer) */
     .logo-wrap{
       position:relative;
       width:44px;
@@ -193,6 +203,7 @@
       box-shadow: var(--logoGlow);
       border: 1px solid var(--logoRing);
       flex: 0 0 auto;
+      isolation:isolate;
     }
     .logo-wrap::after{
       content:"";
@@ -202,8 +213,9 @@
       filter: blur(12px);
       opacity: .8;
       pointer-events:none;
+      z-index:-1;
     }
-    .brand img{
+    .logo-wrap img{
       width:100%;
       height:100%;
       object-fit: cover;
@@ -316,7 +328,6 @@
       gap: 10px;
     }
     .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
-    .sheet-brandline .logo-wrap{ width:46px; height:46px; border-radius: 16px; }
     .sheet a{
       display:flex;
       align-items:center;
@@ -671,18 +682,16 @@
       gap:12px;
       min-width:0;
     }
-    .brandline .logo-wrap{ width:46px; height:46px; }
     .brandtext{ min-width:0; }
     .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
     .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
 
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    /* ✅ quick links NOT bold */
     .footer-links a{
       display:block;
       padding: 6px 0;
       color: color-mix(in oklab, var(--text) 84%, transparent);
-      font-weight: 600;
+      font-weight: 600; /* ✅ not bold */
     }
     .footer-links a:hover{ color: var(--gold); }
 
@@ -751,7 +760,7 @@
     <div class="sheet" role="dialog" aria-label="Menu">
       <div class="sheet-head">
         <div class="sheet-brandline">
-          <div class="logo-wrap">
+          <div class="logo-wrap" aria-hidden="true">
             <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
           </div>
           <div style="min-width:0">
@@ -786,7 +795,6 @@
         </div>
         <div class="btxt">
           <div class="bname">Larmah Enterprise</div>
-          <!-- ✅ replaced -->
           <div class="bsub">Real Estate • Logistics</div>
         </div>
       </a>
@@ -822,7 +830,6 @@
               <span>WhatsApp-first</span>
             </div>
 
-            <!-- ✅ replaced hero headline -->
             <h1>Trust-first real estate and logistics across Naija.</h1>
 
             <p class="lead">
@@ -972,6 +979,7 @@
 
       <div class="footer-grid">
         <div>
+          <!-- ✅ footer logo now styled EXACTLY like header logo -->
           <div class="brandline">
             <div class="logo-wrap" aria-hidden="true">
               <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
@@ -982,7 +990,6 @@
             </div>
           </div>
 
-          <!-- ✅ reduced footer caption -->
           <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
             Verified real estate, shortlets, and logistics support.
           </div>
@@ -1110,17 +1117,6 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // Set minimum checkout based on checkin
-    const checkinEl = document.getElementById("checkin");
-    const checkoutEl = document.getElementById("checkout");
-    checkinEl.addEventListener("change", () => {
-      if(!checkinEl.value) return;
-      checkoutEl.min = checkinEl.value;
-      if(checkoutEl.value && checkoutEl.value < checkinEl.value){
-        checkoutEl.value = checkinEl.value;
-      }
-    });
-
     // Search submit -> WhatsApp
     function submitSearch(){
       const checkin = document.getElementById("checkin").value || "Not set";
@@ -1136,6 +1132,17 @@
         Message: "Hello Larmah, please confirm available verified options and total cost."
       }));
     }
+
+    // Set minimum checkout based on checkin
+    const checkinEl = document.getElementById("checkin");
+    const checkoutEl = document.getElementById("checkout");
+    checkinEl.addEventListener("change", () => {
+      if(!checkinEl.value) return;
+      checkoutEl.min = checkinEl.value;
+      if(checkoutEl.value && checkoutEl.value < checkinEl.value){
+        checkoutEl.value = checkinEl.value;
+      }
+    });
 
     // HERO carousel: 10 live images, 5s
     const heroMedia = document.getElementById("heroMedia");
