@@ -6,7 +6,7 @@
   <meta name="robots" content="index,follow" />
 
   <title>Real Estate | Larmah Enterprise</title>
-  <meta name="description" content="Verified shortlets, rentals, and property sales across Nigeria — trust-first sourcing with WhatsApp support." />
+  <meta name="description" content="Verified shortlets, rentals, and property sales across Nigeria. Trust-first sourcing with WhatsApp-first support." />
   <meta name="keywords" content="Real Estate Nigeria, Shortlets Lagos, Apartments Lekki, Ikoyi Rentals, Verified Property" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
@@ -50,8 +50,7 @@
   <style>
     :root{
       --gold:#D4AF37; --gold2:#F5D57A;
-      --radius:18px; --radius2:22px;
-      --max:1120px;
+      --radius:18px; --radius2:22px; --max:1120px;
       --ease:cubic-bezier(.2,.8,.2,1);
       --shadow:0 18px 50px rgba(0,0,0,.42);
       --shadow2:0 12px 34px rgba(0,0,0,.30);
@@ -152,12 +151,14 @@
     .header-actions{display:flex;gap:10px;align-items:center;margin-left:10px}
     .icon-btn{
       width:42px;height:42px;border-radius:12px;border:1px solid var(--line);
-      background:var(--panel);color:var(--text);display:inline-flex;align-items:center;justify-content:center;
+      background:var(--panel);color:var(--text);
+      display:inline-flex;align-items:center;justify-content:center;
       cursor:pointer;transition:transform .16s var(--ease), filter .16s var(--ease);
     }
     .icon-btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
     .menu-btn{
-      display:none;border:1px solid var(--line);background:var(--panel);color:var(--text);
+      display:none;border:1px solid var(--line);
+      background:var(--panel);color:var(--text);
       border-radius:12px;padding:10px 12px;cursor:pointer;
     }
     @media (max-width:980px){
@@ -261,11 +262,10 @@
     @media (max-width:520px){.filters-grid{grid-template-columns:1fr}}
     .field{display:flex;flex-direction:column;gap:6px}
     label{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2)}
-    input,select,textarea{
+    input,select{
       border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--text);
       padding:12px;min-height:46px;outline:none;font-family:inherit;
     }
-    textarea{min-height:96px;resize:vertical}
     .pillbar{display:flex;gap:8px;flex-wrap:wrap;padding-top:12px;margin-top:10px;border-top:1px solid var(--line2)}
 
     .grid{display:grid;gap:14px;grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -281,30 +281,69 @@
       transition:transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
     }
     .card:hover{transform:translateY(-1px);border-color:color-mix(in oklab, var(--gold) 30%, var(--line) 70%)}
+
     .media{
-      width:calc(100% - 24px);height:190px;border-radius:14px;overflow:hidden;
+      width:calc(100% - 24px);
+      height:190px;
+      border-radius:14px;
+      overflow:hidden;
       border:1px solid var(--line2);
       background:color-mix(in oklab, var(--bg2) 60%, #000 40%);
-      margin:12px 12px 0;position:relative;isolation:isolate;
+      margin:12px 12px 0;
+      position:relative;
+      isolation:isolate;
+      user-select:none;
     }
-    .media img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.01);opacity:.95;transition:opacity .45s var(--ease), transform .7s var(--ease)}
+    .media img{
+      width:100%;height:100%;
+      object-fit:cover;
+      display:block;
+      transform:scale(1.01);
+      opacity:.95;
+      transition:opacity .45s var(--ease), transform .7s var(--ease);
+    }
     .media.is-fading img{opacity:.18;transform:scale(1.03)}
-    .media::after{content:"";position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.32), rgba(0,0,0,0) 55%);pointer-events:none;z-index:1}
-    .media-nav{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 10px;pointer-events:none;z-index:2}
+    .media::after{
+      content:"";position:absolute;inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,.32), rgba(0,0,0,0) 55%);
+      pointer-events:none;z-index:1;
+    }
+    .media-nav{
+      position:absolute;inset:0;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 10px;
+      pointer-events:none;z-index:2;
+    }
     .media-btn{
-      width:34px;height:34px;border-radius:12px;background:rgba(0,0,0,.35);
-      border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;color:#fff;
-      pointer-events:auto;cursor:pointer;backdrop-filter:blur(6px);
+      width:34px;height:34px;border-radius:12px;
+      background:rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.14);
+      display:grid;place-items:center;
+      color:#fff;
+      pointer-events:auto;
+      cursor:pointer;
+      backdrop-filter:blur(6px);
       transition:transform .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease);
     }
     .media-btn:hover{background:rgba(0,0,0,.55);border-color:rgba(212,175,55,.30);transform:translateY(-1px)}
-    .media-dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:6px;pointer-events:none;z-index:2}
-    .media-dot{width:7px;height:7px;border-radius:999px;background:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.25)}
+    .media-dots{
+      position:absolute;left:0;right:0;bottom:10px;
+      display:flex;justify-content:center;gap:6px;
+      pointer-events:none;z-index:2;
+    }
+    .media-dot{
+      width:7px;height:7px;border-radius:999px;
+      background:rgba(255,255,255,.35);
+      border:1px solid rgba(255,255,255,.25);
+    }
     .media-dot.active{background:rgba(255,255,255,.92)}
 
     .card-body{padding:12px}
     .title{font-weight:950;margin:2px 0 6px;letter-spacing:-.2px}
-    .desc{margin:0;color:var(--muted);line-height:1.45;font-size:.96rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .desc{
+      margin:0;color:var(--muted);line-height:1.45;font-size:.96rem;
+      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+    }
     .price{margin-top:10px;font-weight:950;color:var(--gold2);letter-spacing:.1px}
     .meta{margin-top:10px;color:var(--muted);font-size:.88rem;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
     .pill{
@@ -321,7 +360,38 @@
     .notice strong{color:var(--text)}
 
     footer{margin-top:18px;border-top:1px solid var(--line);background:color-mix(in oklab, var(--bg2) 80%, #000 20%)}
-    .footer-bottom{border-top:1px solid var(--line2);padding:12px 0 16px;color:var(--muted2);font-size:.9rem}
+    .footer-cta{
+      margin-top:14px;border-radius:20px;border:1px solid var(--line);
+      background:
+        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
+        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
+        var(--panel2);
+      box-shadow:var(--shadow);
+      padding:14px;
+      display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    }
+    .footer-cta h3{margin:0;font-size:1.12rem;letter-spacing:-.2px}
+    .footer-cta p{margin:6px 0 0;color:var(--muted);line-height:1.4}
+    .footer-grid{display:grid;gap:16px;padding:16px 0;grid-template-columns:1.35fr 1fr 1fr}
+    @media (max-width:980px){.footer-grid{grid-template-columns:1fr}}
+    .footer-col-title{font-weight:950;margin:0 0 10px;letter-spacing:-.2px}
+    .footer-links a{display:block;padding:6px 0;color:color-mix(in oklab, var(--text) 84%, transparent);font-weight:600}
+    .contact-chip{
+      display:flex;gap:10px;align-items:flex-start;
+      padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--panel2)
+    }
+    .contact-chip i{width:18px;margin-top:2px;color:var(--gold);opacity:.95}
+    .contact-chip .txt{font-weight:900}
+    .contact-chip .sub{color:var(--muted);font-size:.9rem;margin-top:2px}
+    .contact-stack{display:grid;gap:10px}
+    .social{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .social a{
+      width:42px;height:42px;display:inline-flex;align-items:center;justify-content:center;
+      border-radius:12px;border:1px solid var(--line);background:var(--panel2)
+    }
+    .social a:hover{color:#111;background:var(--gold);border-color:color-mix(in oklab, var(--gold) 55%, #000 45%)}
+    .footer-bottom{border-top:1px solid var(--line2);padding:12px 0 16px;color:var(--muted2);font-size:.9rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
     .toast{
       position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
       min-width:220px;max-width:min(560px, calc(100vw - 28px));
@@ -347,30 +417,16 @@
             <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
           </div>
         </div>
+
         <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <a href="index.html#about">
-        <span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span>
-        <i class="fa-solid fa-chevron-right" style="opacity:.6"></i>
-      </a>
-
-      <a href="real-estate.html">
-        <span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span>
-        <i class="fa-solid fa-check" style="opacity:.9"></i>
-      </a>
-
-      <a href="logistics.html">
-        <span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span>
-        <i class="fa-solid fa-chevron-right" style="opacity:.6"></i>
-      </a>
-
-      <a href="premium.html">
-        <span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span>
-        <i class="fa-solid fa-chevron-right" style="opacity:.6"></i>
-      </a>
+      <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
+      <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
@@ -405,6 +461,7 @@
         <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
+
         <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -412,7 +469,7 @@
     </div>
   </header>
 
-  <main class="container page-wrap" id="main" tabindex="-1">
+  <main id="main" class="container page-wrap" tabindex="-1">
     <section class="hero" aria-label="Real Estate hero">
       <div class="hero-grid">
         <div>
@@ -423,9 +480,7 @@
           </div>
 
           <h1>Verified Real Estate Catalog.</h1>
-          <p class="lead">
-            Shortlets, rentals, and sales — curated for clarity. Enquire via WhatsApp with a traceable reference ID.
-          </p>
+          <p class="lead">Shortlets, rentals, and sales — curated for clarity. Enquire via WhatsApp with a traceable reference ID.</p>
 
           <div class="hero-actions">
             <a class="btn solid" href="#catalog"><i class="fa-solid fa-magnifying-glass"></i> Browse Listings</a>
@@ -434,16 +489,10 @@
             </button>
             <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
           </div>
-
-          <div class="meta" style="margin-top:12px">
-            <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span>
-            <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Scam-resistant</span>
-            <span class="pill"><i class="fa-solid fa-headset" style="color:var(--gold)"></i> Support</span>
-          </div>
         </div>
 
         <aside class="hero-media" id="heroMedia" aria-label="Real estate showcase">
-          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611" alt="Real estate showcase" decoding="async">
+          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?apartment,interior,luxury&sig=311" alt="Real estate showcase" decoding="async">
           <div class="cap">
             <div class="hero-tag" id="heroTag"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate</div>
             <div class="hero-sub" id="heroSub">Verified shortlets, rentals, and sales.</div>
@@ -465,13 +514,13 @@
       <div class="filters" aria-label="Filters">
         <div class="filters-grid">
           <div class="field">
-            <label for="q">Search</label>
-            <input id="q" placeholder="Title, features, area..." autocomplete="off" />
+            <label for="re_q">Search</label>
+            <input id="re_q" placeholder="Title, features, area..." autocomplete="off" />
           </div>
 
           <div class="field">
-            <label for="cat">Category</label>
-            <select id="cat">
+            <label for="re_cat">Category</label>
+            <select id="re_cat">
               <option value="all" selected>All</option>
               <option value="shortlet">Shortlet</option>
               <option value="rent">Rent</option>
@@ -480,8 +529,8 @@
           </div>
 
           <div class="field">
-            <label for="loc">Location</label>
-            <select id="loc">
+            <label for="re_loc">Location</label>
+            <select id="re_loc">
               <option value="all" selected>Any</option>
               <option value="Ikoyi">Ikoyi</option>
               <option value="Lekki">Lekki</option>
@@ -493,8 +542,8 @@
           </div>
 
           <div class="field">
-            <label for="sort">Sort</label>
-            <select id="sort">
+            <label for="re_sort">Sort</label>
+            <select id="re_sort">
               <option value="new" selected>Newest</option>
               <option value="az">Title A–Z</option>
               <option value="za">Title Z–A</option>
@@ -503,85 +552,123 @@
         </div>
 
         <div class="pillbar" aria-label="Quick filters">
-          <button class="btn small" type="button" onclick="quickSearch('Lekki')">Lekki</button>
-          <button class="btn small" type="button" onclick="quickSearch('Victoria Island')">VI</button>
-          <button class="btn small" type="button" onclick="quickSearch('Ikoyi')">Ikoyi</button>
-          <button class="btn small" type="button" onclick="setCategory('shortlet')">Shortlet</button>
-          <button class="btn small" type="button" onclick="setCategory('rent')">Rent</button>
-          <button class="btn small" type="button" onclick="setCategory('buy')">Buy</button>
-          <button class="btn small" type="button" onclick="resetFilters()" style="color:var(--bad);border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
+          <button class="btn small" type="button" onclick="reQuick('Lekki')">Lekki</button>
+          <button class="btn small" type="button" onclick="reQuick('Victoria Island')">VI</button>
+          <button class="btn small" type="button" onclick="reQuick('Ikoyi')">Ikoyi</button>
+          <button class="btn small" type="button" onclick="reSetCat('shortlet')">Shortlet</button>
+          <button class="btn small" type="button" onclick="reSetCat('rent')">Rent</button>
+          <button class="btn small" type="button" onclick="reSetCat('buy')">Buy</button>
+          <button class="btn small" type="button" onclick="reReset()" style="color:var(--bad);border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
             <i class="fa-solid fa-rotate-left"></i> Reset
           </button>
         </div>
       </div>
 
-      <div id="mount">
+      <div id="re_mount">
         <div class="notice">Loading verified listings…</div>
       </div>
     </section>
-
-    <section class="section" id="request" aria-label="Personalized sourcing">
-      <div class="section-head">
-        <div>
-          <h2>Personalized Sourcing</h2>
-          <p class="subhead">Tell us your budget and location — we’ll shortlist verified options.</p>
-        </div>
-      </div>
-
-      <div class="filters" style="padding:16px;">
-        <div class="filters-grid" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
-          <div class="field" style="grid-column: span 2;">
-            <label for="r_name">Name</label>
-            <input id="r_name" placeholder="Full name" autocomplete="name" />
-          </div>
-          <div class="field" style="grid-column: span 2;">
-            <label for="r_phone">WhatsApp Number</label>
-            <input id="r_phone" placeholder="+234..." inputmode="tel" autocomplete="tel" />
-          </div>
-
-          <div class="field" style="grid-column: span 2;">
-            <label for="r_location">Location</label>
-            <input id="r_location" placeholder="Ikoyi, Lekki, VI, Abuja..." autocomplete="address-level2" />
-          </div>
-          <div class="field">
-            <label for="r_cat">Category</label>
-            <select id="r_cat">
-              <option value="Shortlet">Shortlet</option>
-              <option value="Rent">Rent</option>
-              <option value="Buy">Buy</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="r_budget">Budget</label>
-            <input id="r_budget" placeholder="e.g., 250k/night or 5M/year" />
-          </div>
-
-          <div class="field" style="grid-column: span 4;">
-            <label for="r_notes">Notes</label>
-            <textarea id="r_notes" placeholder="24/7 power, security, pool, parking..."></textarea>
-          </div>
-        </div>
-
-        <div class="pillbar" style="border-top:0;margin-top:12px;padding-top:0;">
-          <button class="btn solid" type="button" onclick="sendRequest()">
-            <i class="fa-brands fa-whatsapp"></i> Submit via WhatsApp
-          </button>
-          <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
-        </div>
-      </div>
-    </section>
-
-    <footer>
-      <div class="footer-bottom">
-        © <span id="year"></span> Larmah Enterprise. All rights reserved.
-      </div>
-    </footer>
   </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-cta">
+        <div>
+          <h3>Verified stays. Clear confirmation. WhatsApp-first.</h3>
+          <p>Confirm availability and coordinate logistics — in one chat.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </button>
+          <a class="btn primary" href="logistics.html">
+            <i class="fa-solid fa-truck-fast"></i> Logistics
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-grid">
+        <div>
+          <div style="display:flex; gap:12px; align-items:center;">
+            <div class="logo-wrap" aria-hidden="true"><img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" /></div>
+            <div>
+              <div style="font-weight:950">Larmah Enterprise</div>
+              <div style="color:var(--muted2); font-weight:850; margin-top:4px;">RC: 9127113</div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
+            Verified real estate, shortlets, and logistics support.
+          </div>
+
+          <div class="social" aria-label="Social links">
+            <a href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://x.com/heylarmah_tech" aria-label="X" title="X"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            <a href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Quick Links</div>
+          <div class="footer-links">
+            <a href="index.html#about">About</a>
+            <a href="real-estate.html">Real Estate</a>
+            <a href="logistics.html">Logistics</a>
+            <a href="premium.html">Premium</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Contact</div>
+
+          <div class="contact-stack">
+            <div class="contact-chip">
+              <i class="fa-brands fa-whatsapp"></i>
+              <div>
+                <div class="txt">+234 706 308 0605</div>
+                <div class="sub">WhatsApp-first support</div>
+              </div>
+            </div>
+
+            <div class="contact-chip">
+              <i class="fa-regular fa-envelope"></i>
+              <div>
+                <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
+                <div class="sub">Business enquiries</div>
+              </div>
+            </div>
+
+            <div class="contact-chip">
+              <i class="fa-solid fa-location-dot"></i>
+              <div>
+                <div class="txt">Lagos, Nigeria</div>
+                <div class="sub">Serving Nigeria nationwide</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+              <i class="fa-brands fa-whatsapp"></i> Chat Now
+            </button>
+            <a class="btn small primary" href="logistics.html">
+              <i class="fa-solid fa-truck-fast"></i> Book Dispatch
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // ---------- shared helpers ----------
+    // ---- basics
     document.getElementById("year").textContent = new Date().getFullYear();
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
@@ -595,7 +682,7 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // ---------- theme: SAME as index ----------
+    // ---- theme (SAME AS index.html)
     const THEME_KEY = "larmah_theme_v5";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
@@ -614,7 +701,7 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // ---------- mobile menu ----------
+    // ---- mobile menu
     const overlay = document.getElementById("overlay");
     function toggleMenu(open){
       overlay.classList.toggle("open", !!open);
@@ -622,7 +709,7 @@
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // ---------- WhatsApp helpers (uses LARMAH if present) ----------
+    // ---- WA helpers
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -638,7 +725,7 @@
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
 
-    // ---------- hero slideshow (5s) ----------
+    // ---- hero slideshow (5s)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -649,11 +736,11 @@
       { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611", icon:"fa-house", label:"Shortlets", sub:"Verified shortlets and premium stays." },
       { img:"https://source.unsplash.com/1600x1000/?real-estate,building,lagos&sig=612", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clear confirmations." },
       { img:"https://source.unsplash.com/1600x1000/?apartment,living-room,modern&sig=613", icon:"fa-house", label:"Rentals", sub:"Quality rentals in high-demand areas." },
-      { img:"https://source.unsplash.com/1600x1000/?villa,luxury,interior&sig=614", icon:"fa-house", label:"Purchase", sub:"Verified options and guided checks." },
-      { img:"https://source.unsplash.com/1600x1000/?condo,interior,design&sig=615", icon:"fa-house", label:"Comfort-first", sub:"Spaces designed for work & rest." },
-      { img:"https://source.unsplash.com/1600x1000/?city,lagos,skyline&sig=616", icon:"fa-city", label:"Locations", sub:"Lekki • VI • Ikoyi • Mainland • Abuja." }
+      { img:"https://source.unsplash.com/1600x1000/?villa,luxury,interior&sig=614", icon:"fa-house", label:"Premium", sub:"High-standard options when you need the best." },
+      { img:"https://source.unsplash.com/1600x1000/?condo,interior,design&sig=615", icon:"fa-house", label:"Comfort-first", sub:"Spaces designed for work & rest." }
     ];
     let heroIdx = 0;
+
     function runHeroProgress(){ heroBar.classList.remove("run"); void heroBar.offsetWidth; heroBar.classList.add("run"); }
     function setHero(i){
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
@@ -670,8 +757,8 @@
     if(!reduceMotion){ setHero(0); setInterval(() => { heroIdx=(heroIdx+1)%HERO_SLIDES.length; setHero(heroIdx); }, 5000); }
     else setHero(0);
 
-    // ---------- Supabase listings ----------
-    const __STATE = { items: [], imgUrls: {}, imgIdx: {}, timers: {} };
+    // ---- Supabase listings + card image auto-rotate (5s)
+    const __RE = { items: [], imgUrls: {}, imgIdx: {}, timers: {} };
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
@@ -688,7 +775,7 @@
     function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
     function formatPrice(raw){ const s = safeText(raw).trim(); return s ? s : "Contact for quote"; }
     function inferCategory(it){
-      const hay = (safeText(it.listing_type) + " " + safeText(it.type) + " " + safeText(it.category2) + " " + safeText(it.title) + " " + safeText(it.description)).toLowerCase();
+      const hay = (safeText(it.listing_type) + " " + safeText(it.type) + " " + safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" "))).toLowerCase();
       if(hay.includes("shortlet") || hay.includes("airbnb")) return "shortlet";
       if(hay.includes("rent") || hay.includes("year") || hay.includes("annual")) return "rent";
       if(hay.includes("buy") || hay.includes("sale") || hay.includes("purchase")) return "buy";
@@ -705,22 +792,21 @@
     }
     function initImagesFor(it){
       const id = String(it.id);
-      __STATE.imgUrls[id] = getImages(it);
-      __STATE.imgIdx[id] = __STATE.imgIdx[id] ?? 0;
+      __RE.imgUrls[id] = getImages(it);
+      __RE.imgIdx[id] = __RE.imgIdx[id] ?? 0;
     }
-
     function clearAllTimers(){
-      for(const k in __STATE.timers){
-        try{ clearInterval(__STATE.timers[k]); }catch{}
+      for(const k in __RE.timers){
+        try{ clearInterval(__RE.timers[k]); }catch{}
       }
-      __STATE.timers = {};
+      __RE.timers = {};
     }
-
     function setCardImage(id){
       const img = document.getElementById(`re-img-${id}`);
       if(!img) return;
-      const urls = __STATE.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
-      const idx = __STATE.imgIdx[id] || 0;
+
+      const urls = __RE.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
+      const idx = __RE.imgIdx[id] || 0;
       img.src = urls[idx] || urls[0] || "assets/images/larmah-header.jpeg";
 
       const dots = document.getElementById(`re-dots-${id}`);
@@ -728,24 +814,23 @@
         dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
       }
     }
-
     function cycleReImage(id, dir){
-      const urls = __STATE.imgUrls[id] || [];
+      const urls = __RE.imgUrls[id] || [];
       if(urls.length <= 1) return;
       const max = urls.length;
-      const cur = __STATE.imgIdx[id] || 0;
-      __STATE.imgIdx[id] = (cur + dir + max) % max;
+      const cur = __RE.imgIdx[id] || 0;
+      __RE.imgIdx[id] = (cur + dir + max) % max;
       setCardImage(id);
     }
     window.cycleReImage = cycleReImage;
 
     function autoRotateImages(id){
       if(reduceMotion) return;
-      const urls = __STATE.imgUrls[id] || [];
+      const urls = __RE.imgUrls[id] || [];
       if(urls.length <= 1) return;
 
-      __STATE.timers[id] = setInterval(() => {
-        __STATE.imgIdx[id] = ((__STATE.imgIdx[id]||0) + 1) % urls.length;
+      __RE.timers[id] = setInterval(() => {
+        __RE.imgIdx[id] = ((__RE.imgIdx[id]||0) + 1) % urls.length;
         const media = document.getElementById(`re-media-${id}`);
         if(media){
           media.classList.add("is-fading");
@@ -754,23 +839,23 @@
       }, 5000);
     }
 
-    function render(){
-      const mount = document.getElementById("mount");
-      const q = safeText(document.getElementById("q").value).toLowerCase().trim();
-      const cat = document.getElementById("cat").value;
-      const loc = document.getElementById("loc").value;
-      const sort = document.getElementById("sort").value;
+    function renderRealEstate(){
+      const mount = document.getElementById("re_mount");
+      const q = safeText(document.getElementById("re_q").value).toLowerCase().trim();
+      const cat = document.getElementById("re_cat").value;
+      const loc = document.getElementById("re_loc").value;
+      const sort = document.getElementById("re_sort").value;
 
-      let items = (__STATE.items || []).slice();
+      let items = (__RE.items || []).slice();
 
       if(q){
         items = items.filter(it => {
-          const hay = (safeText(it.title) + " " + safeText(it.description) + " " + inferLocation(it) + " " + safeText((it.tags||[]).join(" "))).toLowerCase();
+          const hay = (safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" ")) + " " + inferLocation(it)).toLowerCase();
           return hay.includes(q);
         });
       }
       if(cat !== "all") items = items.filter(it => inferCategory(it) === cat);
-      if(loc !== "all") items = items.filter(it => (inferLocation(it) || "").toLowerCase().includes(loc.toLowerCase()));
+      if(loc !== "all") items = items.filter(it => inferLocation(it).toLowerCase().includes(loc.toLowerCase()));
 
       if(sort === "az") items.sort((a,b)=> safeText(a.title).localeCompare(safeText(b.title)));
       else if(sort === "za") items.sort((a,b)=> safeText(b.title).localeCompare(safeText(a.title)));
@@ -789,7 +874,7 @@
           ${items.map(it => {
             const id = String(it.id);
             initImagesFor(it);
-            const urls = __STATE.imgUrls[id] || [];
+            const urls = __RE.imgUrls[id] || [];
             const hasMany = urls.length > 1;
 
             const title = safeText(it.title) || "Listing";
@@ -824,6 +909,7 @@
                 <div class="card-body">
                   <div class="title">${esc(title)}</div>
                   <p class="desc">${esc(desc)}</p>
+
                   <div class="price">${esc(price)}</div>
 
                   <div class="meta">
@@ -833,10 +919,10 @@
                   </div>
 
                   <div class="actions-row">
-                    <button class="btn small solid" type="button" onclick="enquire('${id}')">
+                    <button class="btn small solid" type="button" onclick="reEnquire('${id}')">
                       <i class="fa-brands fa-whatsapp"></i> Enquire
                     </button>
-                    <button class="btn small primary" type="button" onclick="email('${id}')">
+                    <button class="btn small primary" type="button" onclick="reEmail('${id}')">
                       <i class="fa-regular fa-envelope"></i> Email
                     </button>
                   </div>
@@ -850,26 +936,27 @@
       items.forEach(it => autoRotateImages(String(it.id)));
     }
 
-    function quickSearch(tag){
-      const el = document.getElementById("q");
-      el.value = (el.value ? el.value + " " : "") + tag;
-      render();
+    function reQuick(word){
+      const el = document.getElementById("re_q");
+      el.value = (el.value ? el.value + " " : "") + word;
+      renderRealEstate();
     }
-    function setCategory(v){ document.getElementById("cat").value = v; render(); }
-    function resetFilters(){
-      document.getElementById("q").value = "";
-      document.getElementById("cat").value = "all";
-      document.getElementById("loc").value = "all";
-      document.getElementById("sort").value = "new";
-      render();
+    function reSetCat(v){ document.getElementById("re_cat").value = v; renderRealEstate(); }
+    function reReset(){
+      document.getElementById("re_q").value = "";
+      document.getElementById("re_cat").value = "all";
+      document.getElementById("re_loc").value = "all";
+      document.getElementById("re_sort").value = "new";
+      renderRealEstate();
     }
-    window.quickSearch = quickSearch;
-    window.setCategory = setCategory;
-    window.resetFilters = resetFilters;
+    window.reQuick = reQuick;
+    window.reSetCat = reSetCat;
+    window.reReset = reReset;
 
-    function enquire(id){
-      const it = (__STATE.items||[]).find(x => String(x.id)===String(id));
+    function reEnquire(id){
+      const it = (__RE.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
+
       openWA(buildMsg("Real Estate Enquiry", {
         Ref: listingRef(id),
         Title: safeText(it.title),
@@ -879,8 +966,10 @@
         Message: "Hello Larmah, please confirm availability and next steps."
       }));
     }
-    function email(id){
-      const it = (__STATE.items||[]).find(x => String(x.id)===String(id));
+    window.reEnquire = reEnquire;
+
+    function reEmail(id){
+      const it = (__RE.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
 
       const BUSINESS_EMAIL = "business@heylarmah.tech";
@@ -904,11 +993,10 @@ Notes:
 Thank you.`;
       window.location.href = `mailto:${encodeURIComponent(BUSINESS_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
-    window.enquire = enquire;
-    window.email = email;
+    window.reEmail = reEmail;
 
-    async function load(){
-      const mount = document.getElementById("mount");
+    async function loadRealEstate(){
+      const mount = document.getElementById("re_mount");
       mount.innerHTML = `<div class="notice">Loading verified listings…</div>`;
 
       try{
@@ -917,7 +1005,7 @@ Thank you.`;
 
         const { data, error } = await sb
           .from("listings")
-          .select("id,title,description,price,image_url,image_urls,location,area,city,state,listing_type,type,category2,tags,category,status,created_at")
+          .select("id,title,description,price,image_url,image_urls,location,area,city,state,listing_type,type,tags,category,status,created_at")
           .eq("category", "real-estate")
           .eq("status", "active")
           .order("created_at", { ascending: false })
@@ -925,17 +1013,18 @@ Thank you.`;
 
         if(error) throw error;
 
-        __STATE.items = data || [];
-        if(!__STATE.items.length){
+        __RE.items = data || [];
+        if(!__RE.items.length){
           clearAllTimers();
           mount.innerHTML = `<div class="notice"><strong>No active listings currently.</strong> Please check back soon.</div>`;
           return;
         }
 
-        render();
+        renderRealEstate();
 
+        // Optional realtime helper (if your app.js exposes it)
         if(window.LARMAH?.realtime?.subscribe){
-          LARMAH.realtime.subscribe("listings", () => load(), "re-page", { debounceMs: 800 });
+          LARMAH.realtime.subscribe("listings", () => loadRealEstate(), "re-page", { debounceMs: 800 });
         }
       } catch(err){
         console.error(err);
@@ -946,36 +1035,12 @@ Thank you.`;
       }
     }
 
-    function sendRequest(){
-      const name = document.getElementById("r_name").value.trim();
-      const phone = document.getElementById("r_phone").value.trim();
-      const location = document.getElementById("r_location").value.trim();
-      const cat = document.getElementById("r_cat").value;
-      const budget = document.getElementById("r_budget").value.trim();
-      const notes = document.getElementById("r_notes").value.trim();
-
-      if(!name || !phone){
-        toast("Name and WhatsApp number are required.");
-        return;
-      }
-
-      openWA(buildMsg("Real Estate Sourcing Request", {
-        Name: name,
-        Phone: phone,
-        Location: location,
-        Category: cat,
-        Budget: budget,
-        Notes: notes
-      }));
-    }
-    window.sendRequest = sendRequest;
-
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("q").addEventListener("input", render);
-      document.getElementById("cat").addEventListener("change", render);
-      document.getElementById("loc").addEventListener("change", render);
-      document.getElementById("sort").addEventListener("change", render);
-      load();
+      document.getElementById("re_q").addEventListener("input", renderRealEstate);
+      document.getElementById("re_cat").addEventListener("change", renderRealEstate);
+      document.getElementById("re_loc").addEventListener("change", renderRealEstate);
+      document.getElementById("re_sort").addEventListener("change", renderRealEstate);
+      loadRealEstate();
     });
 
     // expose
