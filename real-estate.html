@@ -1,3 +1,7 @@
+<!-- =========================
+     real-estate.html (UPGRADED)
+     Same styling + concept as upgraded index
+========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
 <head>
@@ -68,7 +72,8 @@
     }
 
     html[data-theme="dark"]{
-      --bg:#070A12; --bg2:#050810;
+      --bg:#070A12;
+      --bg2:#050810;
       --panel: rgba(255,255,255,.03);
       --panel2: rgba(255,255,255,.02);
       --line: rgba(255,255,255,.10);
@@ -82,14 +87,18 @@
       --ctaLine: rgba(255,255,255,.12);
       --good: rgba(0,217,129,.95);
       --bad: rgba(255,90,103,.95);
+      --warn: rgba(255,187,0,.95);
 
       --logoGlow: 0 0 22px rgba(212,175,55,.14);
       --logoRing: rgba(255,255,255,.12);
       --logoBg: rgba(255,255,255,.03);
+
+      --focus: rgba(245,213,122,.28);
     }
 
     html[data-theme="light"]{
-      --bg:#F7F7FB; --bg2:#FFFFFF;
+      --bg:#F7F7FB;
+      --bg2:#FFFFFF;
       --panel: rgba(10,14,26,.04);
       --panel2: rgba(10,14,26,.03);
       --line: rgba(10,14,26,.12);
@@ -103,6 +112,7 @@
       --ctaLine: rgba(10,14,26,.10);
       --good: rgba(0,140,90,.92);
       --bad: rgba(200,34,60,.90);
+      --warn: rgba(180,110,0,.92);
 
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
@@ -110,6 +120,8 @@
       --logoGlow: 0 0 0 rgba(0,0,0,0);
       --logoRing: rgba(10,14,26,.10);
       --logoBg: rgba(255,255,255,.65);
+
+      --focus: rgba(212,175,55,.26);
     }
 
     *{ box-sizing:border-box; }
@@ -135,7 +147,25 @@
 
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
+
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+
+    .skip{
+      position:absolute; left:-999px; top:10px;
+      padding:10px 12px;
+      border-radius: 12px;
+      background: var(--gold);
+      color:#111;
+      font-weight: 950;
+      z-index: 999;
+    }
+    .skip:focus{ left: 12px; outline: none; }
+
+    :focus-visible{
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
 
     /* Header */
     header{
@@ -218,7 +248,6 @@
       transition: transform .16s var(--ease), filter .16s var(--ease);
     }
     .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-
     .menu-btn{
       display:none;
       border: 1px solid var(--line);
@@ -293,6 +322,7 @@
       transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
       white-space: nowrap;
       user-select:none;
+      text-decoration:none;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
     .btn:active{ transform: translateY(0); }
@@ -301,10 +331,8 @@
       color: #111;
       border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
     }
-    .btn.primary{
-      background: var(--panel2);
-      border-color: var(--line);
-    }
+    .btn.primary{ background: var(--panel2); border-color: var(--line); }
+    .btn.ghost{ background: transparent; border-color: var(--line2); }
     .btn.small{
       min-height: 40px;
       padding: 10px 12px;
@@ -312,6 +340,7 @@
       font-weight: 900;
     }
 
+    /* Page */
     .page-wrap{ padding: 18px 0 0; }
 
     /* Hero */
@@ -322,6 +351,18 @@
       box-shadow: var(--shadow);
       overflow:hidden;
       padding: 16px;
+      position:relative;
+      isolation:isolate;
+    }
+    .hero::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.20), transparent 60%),
+        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
+        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.10), transparent 62%);
+      pointer-events:none;
+      z-index:-1;
     }
     .hero-grid{
       display:grid;
@@ -336,9 +377,15 @@
 
     h1{
       margin: 6px 0 10px;
-      font-size: clamp(2.0rem, 4vw, 2.7rem);
+      font-size: clamp(2.0rem, 4vw, 2.8rem);
       line-height: 1.06;
       letter-spacing: -0.6px;
+    }
+    .gold{
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     .lead{
       margin:0;
@@ -352,7 +399,7 @@
       .hero-actions .btn{ width:100%; }
     }
 
-    .meta{ margin-top: 10px; color: var(--muted); font-size: .88rem; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+    .meta{ margin-top: 12px; color: var(--muted); font-size: .88rem; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
     .pill{
       display:inline-flex;
       gap:8px;
@@ -372,12 +419,12 @@
       border: 1px solid var(--line);
       background: var(--panel);
       position:relative;
-      min-height: 300px;
+      min-height: 320px;
       isolation:isolate;
     }
     .hero-media img{
       width:100%;
-      height: 300px;
+      height: 320px;
       object-fit: cover;
       display:block;
       opacity:.94;
@@ -430,15 +477,23 @@
     input, select{
       border-radius: 14px;
       border: 1px solid var(--line);
-      background: var(--panel);
+      background: var(--panel2);
       color: var(--text);
       padding: 12px;
       min-height: 46px;
       outline:none;
       font-family: inherit;
     }
+    input::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
 
-    .pillbar{ display:flex; gap:8px; flex-wrap:wrap; padding-top: 12px; margin-top: 10px; border-top: 1px solid var(--line2); }
+    .pillbar{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      padding-top: 12px;
+      margin-top: 10px;
+      border-top: 1px solid var(--line2);
+    }
 
     /* Grid Cards */
     .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -451,12 +506,13 @@
       background: var(--panel);
       overflow:hidden;
       box-shadow: var(--shadow2);
-      transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+      transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease), filter .18s var(--ease);
     }
     .card:hover{
-      transform: translateY(-1px);
+      transform: translateY(-2px);
       border-color: color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
       background: color-mix(in oklab, var(--panel) 94%, white 6%);
+      filter: brightness(1.02);
     }
 
     .media{
@@ -488,6 +544,7 @@
       pointer-events:none;
       z-index:1;
     }
+
     .media-nav{
       position:absolute; inset:0;
       display:flex; align-items:center; justify-content:space-between;
@@ -615,9 +672,7 @@
     .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
     .social a{
       width: 42px; height: 42px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
+      display:inline-flex; align-items:center; justify-content:center;
       border-radius: 12px;
       border: 1px solid var(--line);
       background: var(--panel2);
@@ -673,10 +728,52 @@
       z-index: 120;
     }
     .toast.show{ display:block; }
+
+    /* Floating WhatsApp */
+    .wa-float{
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 90;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .wa-pill{
+      display:none;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 950;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(10px);
+      cursor:pointer;
+    }
+    .wa-btn{
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      border: 1px solid color-mix(in oklab, var(--gold) 40%, var(--line) 60%);
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      color: #111;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: var(--shadow2);
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
+    }
+    .wa-btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
+    .wa-btn i{ font-size: 20px; }
+    @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
   </style>
 </head>
 
 <body data-page="real-estate">
+  <a class="skip" href="#main">Skip to content</a>
+
   <!-- Mobile nav -->
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="sheet" role="dialog" aria-label="Menu">
@@ -704,6 +801,9 @@
       <div class="sheet-actions">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
+        </button>
+        <button class="btn solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
         </button>
       </div>
     </div>
@@ -747,24 +847,23 @@
       <div class="hero-grid">
         <div>
           <div class="kicker">
-            <span>Trust-first</span><span class="dot">•</span>
-            <span>Verified listings</span><span class="dot">•</span>
-            <span>WhatsApp-first</span>
+            <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span><span class="dot">•</span>
+            <span><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified listings</span><span class="dot">•</span>
+            <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
           </div>
 
-          <h1>Verified Real Estate Catalog.</h1>
+          <h1>Verified <span class="gold">Real Estate</span> Catalog.</h1>
           <p class="lead">Shortlets, rentals, and sales — curated for clarity. Enquire via WhatsApp with a traceable reference ID.</p>
 
           <div class="hero-actions">
             <a class="btn solid" href="#catalog"><i class="fa-solid fa-magnifying-glass"></i> Browse Listings</a>
-            <button class="btn primary" type="button"
-              onclick="openWA(buildMsg('Real Estate Request', { Message:'Hello Larmah, I need a verified listing.' }))">
+            <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Request', { Message:'Hello Larmah, I need a verified listing.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp Request
             </button>
-            <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
+            <a class="btn ghost" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Add Logistics</a>
           </div>
 
-          <div class="meta" style="margin-top:12px">
+          <div class="meta">
             <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span>
             <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Scam-resistant</span>
             <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> Traceable refs</span>
@@ -772,7 +871,7 @@
         </div>
 
         <aside class="hero-media" id="heroMedia" aria-label="Real estate showcase">
-          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611" alt="Real estate showcase" decoding="async">
+          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611" alt="Real estate showcase" decoding="async" fetchpriority="high">
           <div class="cap">
             <div class="hero-tag" id="heroTag"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate</div>
             <div class="hero-sub" id="heroSub">Verified shortlets, rentals, and sales.</div>
@@ -786,7 +885,7 @@
       <div class="section-head">
         <div>
           <h2>Listings</h2>
-          <p class="subhead">Filter by category and location — both are separate.</p>
+          <p class="subhead">Search + filter by category and location (separate).</p>
         </div>
         <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Sourcing</a>
       </div>
@@ -851,7 +950,7 @@
     </section>
   </main>
 
-  <!-- ✅ Latest Footer Styling -->
+  <!-- Latest Footer -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -956,6 +1055,16 @@
     </div>
   </footer>
 
+  <!-- Floating WhatsApp -->
+  <div class="wa-float" aria-label="Floating WhatsApp support">
+    <button class="wa-pill" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+      WhatsApp Support
+    </button>
+    <button class="wa-btn" type="button" aria-label="Chat on WhatsApp" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+      <i class="fa-brands fa-whatsapp"></i>
+    </button>
+  </div>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
@@ -973,8 +1082,8 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // ---- theme (SAME AS index.html)
-    const THEME_KEY = "larmah_theme_v5";
+    // ---- theme (match index)
+    const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem(THEME_KEY, theme);
@@ -1000,7 +1109,7 @@
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // ---- WA helpers
+    // ---- WA helpers (uses app.js if present)
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -1137,6 +1246,66 @@
       }, 5000);
     }
 
+    function cardHTML(it){
+      const id = String(it.id);
+      initImagesFor(it);
+      const urls = __RE.imgUrls[id] || [];
+      const hasMany = urls.length > 1;
+
+      const title = safeText(it.title) || "Listing";
+      const desc = safeText(it.description) || "Verified listing.";
+      const price = formatPrice(it.price);
+      const locationTxt = inferLocation(it) || "Nigeria";
+      const categoryTxt = inferCategory(it) || "listing";
+      const ref = listingRef(id);
+
+      return `
+        <article class="card" aria-label="${esc(title)}">
+          <div class="media" id="re-media-${id}">
+            <img id="re-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
+                 alt="${esc(title)}" loading="lazy" decoding="async"
+                 onerror="this.src='assets/images/larmah-header.jpeg'">
+
+            ${hasMany ? `
+              <div class="media-nav">
+                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleReImage('${id}', -1)">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleReImage('${id}', 1)">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="media-dots" id="re-dots-${id}" aria-hidden="true">
+                ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
+              </div>
+            ` : ``}
+          </div>
+
+          <div class="card-body">
+            <div class="title">${esc(title)}</div>
+            <p class="desc">${esc(desc)}</p>
+
+            <div class="price">${esc(price)}</div>
+
+            <div class="meta">
+              <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(locationTxt)}</span>
+              <span class="pill"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(categoryTxt)}</span>
+              <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> <span class="mono">${esc(ref)}</span></span>
+            </div>
+
+            <div class="actions-row">
+              <button class="btn small solid" type="button" onclick="reEnquire('${id}')">
+                <i class="fa-brands fa-whatsapp"></i> Enquire
+              </button>
+              <button class="btn small primary" type="button" onclick="reEmail('${id}')">
+                <i class="fa-regular fa-envelope"></i> Email
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
     function renderRealEstate(){
       const mount = document.getElementById("re_mount");
       const q = safeText(document.getElementById("re_q").value).toLowerCase().trim();
@@ -1166,70 +1335,7 @@
       }
 
       clearAllTimers();
-
-      mount.innerHTML = `
-        <div class="grid">
-          ${items.map(it => {
-            const id = String(it.id);
-            initImagesFor(it);
-            const urls = __RE.imgUrls[id] || [];
-            const hasMany = urls.length > 1;
-
-            const title = safeText(it.title) || "Listing";
-            const desc = safeText(it.description) || "Verified listing.";
-            const price = formatPrice(it.price);
-            const locationTxt = inferLocation(it) || "Nigeria";
-            const categoryTxt = inferCategory(it) || "listing";
-            const ref = listingRef(id);
-
-            return `
-              <article class="card" aria-label="${esc(title)}">
-                <div class="media" id="re-media-${id}">
-                  <img id="re-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
-                       alt="${esc(title)}" loading="lazy" decoding="async"
-                       onerror="this.src='assets/images/larmah-header.jpeg'">
-
-                  ${hasMany ? `
-                    <div class="media-nav">
-                      <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleReImage('${id}', -1)">
-                        <i class="fa-solid fa-chevron-left"></i>
-                      </button>
-                      <button class="media-btn" type="button" aria-label="Next image" onclick="cycleReImage('${id}', 1)">
-                        <i class="fa-solid fa-chevron-right"></i>
-                      </button>
-                    </div>
-                    <div class="media-dots" id="re-dots-${id}" aria-hidden="true">
-                      ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
-                    </div>
-                  ` : ``}
-                </div>
-
-                <div class="card-body">
-                  <div class="title">${esc(title)}</div>
-                  <p class="desc">${esc(desc)}</p>
-                  <div class="price">${esc(price)}</div>
-
-                  <div class="meta">
-                    <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(locationTxt)}</span>
-                    <span class="pill"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(categoryTxt)}</span>
-                    <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> <span class="mono">${esc(ref)}</span></span>
-                  </div>
-
-                  <div class="actions-row">
-                    <button class="btn small solid" type="button" onclick="reEnquire('${id}')">
-                      <i class="fa-brands fa-whatsapp"></i> Enquire
-                    </button>
-                    <button class="btn small primary" type="button" onclick="reEmail('${id}')">
-                      <i class="fa-regular fa-envelope"></i> Email
-                    </button>
-                  </div>
-                </div>
-              </article>
-            `;
-          }).join("")}
-        </div>
-      `;
-
+      mount.innerHTML = `<div class="grid">${items.map(cardHTML).join("")}</div>`;
       items.forEach(it => autoRotateImages(String(it.id)));
     }
 
