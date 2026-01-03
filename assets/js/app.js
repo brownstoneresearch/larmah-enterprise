@@ -1,122 +1,74 @@
-/* assets/js/app.js
-   Larmah Enterprise — shared client utilities
-
-   Includes:
-   - Supabase client bootstrap
-   - WhatsApp helpers + message builder
-   - Toast UI
-   - Request submission (real-estate/logistics/premium)
-   - Realtime subscriptions (listings)
-   - Premium gate helpers:
-       * isPremium()
-       * premium.claim()  (binds verified premium payment to logged-in user)
-       * premium.verifyPaystack(reference) (server-side verification via Edge Function)
-*/
+/* =========================
+   Larmah Enterprise - app.js (Premium gating + helpers)
+   - Supabase init
+   - WhatsApp helpers
+   - Functions base for Edge Functions
+   - Premium-only auth gating
+   - Admin allowlist gating (set your emails)
+========================= */
 
 (function () {
   "use strict";
 
-  // =========================
-  // CONFIG (EDIT THESE)
-  // =========================
+  // ====== CONFIG (Replace if needed) ======
+  // You can override via window.__SUPABASE_URL / window.__SUPABASE_ANON_KEY before app.js loads.
   const SUPABASE_URL =
-    window.LARMAH_SUPABASE_URL ||
-    "https://mskbumvopqnrhddfycfd.supabase.co";
-
-  // ✅ Paste your REAL anon key here (safe in frontend)
+    window.__SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
   const SUPABASE_ANON_KEY =
-    window.LARMAH_SUPABASE_ANON_KEY ||
-    "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY";
+    window.__SUPABASE_ANON_KEY ||
+    "REPLACE_WITH_YOUR_ANON_KEY"; // keep anon key here (ok). NEVER use service role in frontend.
 
-  // WhatsApp number (international, no +)
-  const WHATSAPP_NUMBER = "2347063080605";
+  // WhatsApp support number
+  const WHATSAPP_PHONE = "2347063080605";
 
-  // Tables
-  const REQUESTS_TABLE = "requests";
-  const PREMIUM_SUBSCRIBERS_TABLE = "premium_subscribers";
+  // Admin allowlist — set your real admin emails here (lowercase).
+  // Example: ["business@heylarmah.tech"]
+  const ADMIN_EMAILS = (window.__LARMAH_ADMIN_EMAILS || [
+    // "business@heylarmah.tech",
+  ]).map((e) => String(e).toLowerCase().trim());
 
-  // Edge Function names
-  const FN_PAYSTACK_VERIFY = "paystack-verify";
-  const FN_PREMIUM_CLAIM = "premium-claim";
+  // ====== Supabase client ======
+  let supabaseClient = null;
 
-  // =========================
-  // INTERNAL STATE
-  // =========================
-  let __sb = null;
-  const __channels = new Map();
-  const __debouncers = new Map();
-
-  // =========================
-  // HELPERS
-  // =========================
-  const nowISO = () => new Date().toISOString();
-  const uid = () => {
-    const t = Date.now().toString().slice(-8);
-    const r = Math.random().toString(16).slice(2, 8).toUpperCase();
-    return `${t}-${r}`;
-  };
-
-  function escapeHtml(s) {
-    return String(s ?? "").replace(/[&<>"']/g, (m) => {
-      return (
-        {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#039;",
-        }[m] || m
-      );
-    });
-  }
-
-  function prefersReduceMotion() {
-    return (
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    );
-  }
-
-  function debounce(key, fn, wait = 700) {
-    clearTimeout(__debouncers.get(key));
-    __debouncers.set(
-      key,
-      setTimeout(() => {
-        try {
-          fn();
-        } catch (e) {
-          console.error(e);
-        }
-      }, wait)
-    );
-  }
-
-  function ensureToastEl() {
-    let el = document.getElementById("toast");
-    if (!el) {
-      el = document.createElement("div");
-      el.id = "toast";
-      el.className = "toast";
-      el.setAttribute("role", "status");
-      el.setAttribute("aria-live", "polite");
-      document.body.appendChild(el);
+  function ensureSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (!window.supabase || !window.supabase.createClient) {
+      console.warn("Supabase SDK not loaded yet.");
+      return null;
     }
-    return el;
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_ANON_KEY.includes("REPLACE_WITH")) {
+      console.warn("Supabase URL/ANON KEY missing. Set them in app.js or window.__SUPABASE_* overrides.");
+      return null;
+    }
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
+    window.supabaseClient = supabaseClient;
+    return supabaseClient;
   }
 
-  function toast(msg, type = "info") {
-    const el = ensureToastEl();
-    el.textContent = msg;
-    el.classList.add("show");
-    el.dataset.type = type;
-    clearTimeout(window.__larmahToastT);
-    window.__larmahToastT = setTimeout(() => el.classList.remove("show"), 2400);
+  async function waitForSupabase({ tries = 20, delay = 250 } = {}) {
+    for (let i = 0; i < tries; i++) {
+      const sb = ensureSupabaseClient();
+      if (sb) return sb;
+      await new Promise((r) => setTimeout(r, delay));
+    }
+    return null;
   }
+
+  // ====== Helpers ======
+  const esc = (s) =>
+    (s ?? "")
+      .toString()
+      .replace(/[&<>"']/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m]));
 
   function buildMessage(title, data) {
     const lines = [title, ""];
-    const obj = data || {};
-    for (const [k, v] of Object.entries(obj)) {
+    for (const [k, v] of Object.entries(data || {})) {
       const val = (v ?? "").toString().trim();
       if (val) lines.push(`${k}: ${val}`);
     }
@@ -124,329 +76,146 @@
   }
 
   function openWhatsApp(text) {
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-      text || ""
-    )}`;
+    const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text || "")}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  // =========================
-  // SUPABASE
-  // =========================
-  function ensureSupabaseClient() {
-    if (__sb) return __sb;
-
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_ANON_KEY ||
-      SUPABASE_ANON_KEY.includes("REPLACE_WITH")
-    ) {
-      console.warn(
-        "[LARMAH] Supabase config missing. Set SUPABASE_URL and SUPABASE_ANON_KEY in assets/js/app.js"
-      );
-      return null;
-    }
-
-    if (!window.supabase || typeof window.supabase.createClient !== "function") {
-      console.warn(
-        "[LARMAH] Supabase JS not loaded. Ensure you have: https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-      );
-      return null;
-    }
-
-    __sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true,
-      },
-      realtime: {
-        params: { eventsPerSecond: 10 },
-      },
-    });
-
-    window.supabaseClient = __sb;
-    return __sb;
+  function functionsBase() {
+    // Supabase Edge Functions base
+    // https://<project-ref>.supabase.co/functions/v1
+    return `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1`;
   }
 
+  function lowerEmail(e) {
+    return String(e || "").toLowerCase().trim();
+  }
+
+  // ====== Premium membership checks ======
   async function getSession() {
-    const sb = ensureSupabaseClient();
-    if (!sb) return null;
+    const sb = await waitForSupabase();
+    if (!sb) return { session: null, user: null };
     const { data } = await sb.auth.getSession();
-    return data?.session || null;
+    return { session: data?.session || null, user: data?.session?.user || null };
   }
 
-  async function getUser() {
-    const sb = ensureSupabaseClient();
-    if (!sb) return null;
-    const { data } = await sb.auth.getUser();
-    return data?.user || null;
+  async function signOutSilently() {
+    const sb = await waitForSupabase();
+    if (!sb) return;
+    try { await sb.auth.signOut(); } catch {}
   }
 
-  // =========================
-  // PREMIUM GATE (Premium-only accounts)
-  // =========================
-  async function isPremium() {
-    const sb = ensureSupabaseClient();
-    if (!sb) return false;
+  async function getMyMembership() {
+    // Requires authenticated session.
+    const sb = await waitForSupabase();
+    if (!sb) return { ok: false, error: "Supabase not ready" };
 
-    const user = await getUser();
-    if (!user?.id) return false;
+    const { data: sess } = await sb.auth.getSession();
+    const user = sess?.session?.user;
+    const email = lowerEmail(user?.email);
 
+    if (!user || !email) return { ok: false, error: "Not authenticated" };
+
+    // RLS policy should allow authenticated users to read their own membership row.
     const { data, error } = await sb
-      .from(PREMIUM_SUBSCRIBERS_TABLE)
-      .select("active,tier,end_at")
-      .eq("user_id", user.id)
+      .from("premium_members")
+      .select("email,tier,active,started_at,paystack_ref")
+      .eq("email", email)
       .maybeSingle();
 
-    if (error) {
-      console.warn("[LARMAH] isPremium() error:", error.message);
+    if (error) return { ok: false, error: error.message };
+    if (!data) return { ok: true, member: null }; // not premium
+    return { ok: true, member: data };
+  }
+
+  async function requirePremium({ redirectTo = "premium.html", onFail } = {}) {
+    const m = await getMyMembership();
+    if (!m.ok) {
+      if (typeof onFail === "function") onFail(m);
       return false;
     }
-    if (!data?.active) return false;
-    if (data.end_at && new Date(data.end_at) <= new Date()) return false;
+    if (!m.member || m.member.active !== true) {
+      await signOutSilently();
+      if (typeof onFail === "function") onFail({ ok: true, member: null });
+      if (redirectTo) window.location.href = redirectTo;
+      return false;
+    }
     return true;
   }
 
-  // =========================
-  // EDGE FUNCTION CALLER
-  // =========================
-  async function callFunction(name, body, { useAuth = true } = {}) {
-    const sb = ensureSupabaseClient();
-    if (!sb) throw new Error("Supabase not initialized");
+  async function requireAdmin({ redirectTo = "auth.html", onFail } = {}) {
+    const { user } = await getSession();
+    const email = lowerEmail(user?.email);
+    if (!email) {
+      if (typeof onFail === "function") onFail({ reason: "no-session" });
+      if (redirectTo) window.location.href = redirectTo;
+      return false;
+    }
+    // Must also be premium (your rule), then admin allowlist
+    const premiumOk = await requirePremium({ redirectTo: "premium.html" });
+    if (!premiumOk) return false;
 
-    const url = `${SUPABASE_URL}/functions/v1/${name}`;
+    if (!ADMIN_EMAILS.includes(email)) {
+      if (typeof onFail === "function") onFail({ reason: "not-admin" });
+      window.location.href = "index.html";
+      return false;
+    }
+    return true;
+  }
 
-    const headers = {
-      "Content-Type": "application/json",
-      apikey: SUPABASE_ANON_KEY,
-    };
+  // ====== Realtime helper (optional) ======
+  const realtime = {
+    _subs: {},
+    subscribe(table, callback, key = "default", opts = {}) {
+      // Only works if your project has realtime enabled; keeps consistent API for your pages.
+      const sb = ensureSupabaseClient();
+      if (!sb) return null;
 
-    if (useAuth) {
-      const session = await getSession();
-      if (session?.access_token) {
-        headers.Authorization = `Bearer ${session.access_token}`;
+      const debounceMs = opts.debounceMs ?? 500;
+      let t = null;
+
+      const channelKey = `${table}:${key}`;
+      if (this._subs[channelKey]) {
+        try { sb.removeChannel(this._subs[channelKey]); } catch {}
+        delete this._subs[channelKey];
       }
-    }
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(body || {}),
-    });
-
-    const txt = await res.text();
-    let json = null;
-    try {
-      json = txt ? JSON.parse(txt) : null;
-    } catch {
-      // ignore
-    }
-
-    if (!res.ok) {
-      const msg = json?.error || json?.message || txt || `HTTP ${res.status}`;
-      throw new Error(msg);
-    }
-
-    return json;
-  }
-
-  // Verify Paystack reference server-side (does not create account)
-  async function verifyPaystack(reference) {
-    if (!reference) throw new Error("Missing reference");
-    return callFunction(
-      FN_PAYSTACK_VERIFY,
-      { reference },
-      { useAuth: false }
-    );
-  }
-
-  // Claim Premium for logged-in user
-  // This binds a paid premium_payment (by email/ref) -> auth user_id and activates premium_subscribers
-  async function claimPremium({ reference = null } = {}) {
-    return callFunction(FN_PREMIUM_CLAIM, { reference }, { useAuth: true });
-  }
-
-  // =========================
-  // REALTIME
-  // =========================
-  function realtimeSubscribe(table, onChange, key = "default", opts = {}) {
-    const sb = ensureSupabaseClient();
-    if (!sb) return null;
-
-    const {
-      schema = "public",
-      debounceMs = 800,
-      statusElId = null,
-      filter = null,
-    } = opts;
-
-    const channelKey = `${table}:${key}`;
-
-    if (__channels.has(channelKey)) {
-      try {
-        sb.removeChannel(__channels.get(channelKey));
-      } catch {}
-      __channels.delete(channelKey);
-    }
-
-    const statusEl = statusElId ? document.getElementById(statusElId) : null;
-
-    const ch = sb
-      .channel(channelKey)
-      .on("postgres_changes", { event: "*", schema, table }, (payload) => {
-        if (typeof filter === "function") {
-          try {
-            if (!filter(payload)) return;
-          } catch (e) {
-            console.error(e);
+      const ch = sb
+        .channel(channelKey)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table },
+          () => {
+            clearTimeout(t);
+            t = setTimeout(() => callback(), debounceMs);
           }
-        }
-        debounce(channelKey, onChange, debounceMs);
-      })
-      .subscribe((status) => {
-        if (!statusEl) return;
-        if (status === "SUBSCRIBED") {
-          statusEl.innerHTML =
-            `<i class="fa-solid fa-circle" style="font-size:9px"></i> Live updates enabled`;
-        } else {
-          statusEl.innerHTML =
-            `<i class="fa-solid fa-circle" style="font-size:9px"></i> Live: ${escapeHtml(status)}`;
-        }
-      });
+        )
+        .subscribe();
 
-    __channels.set(channelKey, ch);
-    return ch;
-  }
-
-  // =========================
-  // REQUEST SUBMISSION
-  // =========================
-  function makeRequestRef(prefix = "REQ") {
-    return `${prefix}-${uid()}`.toUpperCase();
-  }
-
-  async function submitRequest({
-    header = "New Request",
-    category = "general",
-    fields = {},
-    refPrefix = "REQ",
-    page = window.location.pathname,
-    source = "web",
-  } = {}) {
-    const sb = ensureSupabaseClient();
-    const ref = makeRequestRef(refPrefix);
-
-    const waMsg = buildMessage(header, {
-      Ref: ref,
-      Category: category,
-      ...fields,
-      Page: page,
-      Time: nowISO(),
-    });
-
-    // If Supabase not ready, just WhatsApp
-    if (!sb) {
-      openWhatsApp(waMsg);
-      return { ok: false, ref, fallback: "whatsapp" };
+      this._subs[channelKey] = ch;
+      return ch;
     }
+  };
 
-    try {
-      const user = await getUser();
-      const payload = {
-        ref,
-        category,
-        header,
-        fields,
-        source,
-        status: "new",
-        user_id: user?.id || null,
-        page,
-        user_agent: navigator.userAgent || null,
-      };
-
-      // NOTE: You should allow public inserts to requests (or authenticated-only) via RLS.
-      const { error } = await sb.from(REQUESTS_TABLE).insert(payload);
-      if (error) throw error;
-
-      toast("Request submitted. Opening WhatsApp…", "success");
-      openWhatsApp(waMsg);
-      return { ok: true, ref };
-    } catch (e) {
-      console.error(e);
-      toast("Could not log request. Opening WhatsApp…", "error");
-      openWhatsApp(waMsg);
-      return { ok: false, ref, fallback: "whatsapp" };
-    }
+  // ====== Optional request logger (if you want)
+  // You can implement submitRequest in Edge Function later. Kept here to match earlier references.
+  async function submitRequest(payload) {
+    // Example: call your own Edge Function if you have it
+    // const res = await fetch(`${functionsBase()}/submit-request`, { ... })
+    // For now, fallback: WhatsApp message.
+    openWhatsApp(buildMessage(payload?.header || "New Request", payload?.fields || payload || {}));
   }
 
-  // =========================
-  // HEADER AUTH UI (Premium-gated)
-  // =========================
-  async function updateHeaderAuthUI() {
-    const sb = ensureSupabaseClient();
-    if (!sb) return;
-
-    // Default hide premium-only controls until proven premium
-    document
-      .querySelectorAll("[data-premium='true']")
-      .forEach((el) => (el.style.display = "none"));
-
-    try {
-      const session = await getSession();
-      const authed = !!session;
-
-      // Only show "guest" elements if NOT authed
-      document
-        .querySelectorAll("[data-auth='guest']")
-        .forEach((el) => (el.style.display = authed ? "none" : ""));
-
-      // Only show "authed" elements if authed (still not premium)
-      document
-        .querySelectorAll("[data-auth='authed']")
-        .forEach((el) => (el.style.display = authed ? "" : "none"));
-
-      // Premium gate: only show premium-only UI if premium is active
-      if (authed) {
-        const ok = await isPremium();
-        document
-          .querySelectorAll("[data-premium='true']")
-          .forEach((el) => (el.style.display = ok ? "" : "none"));
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
-  // =========================
-  // EXPORT GLOBAL API
-  // =========================
+  // ====== Expose global LARMAH object ======
   window.ensureSupabaseClient = ensureSupabaseClient;
-  window.supabaseClient = window.supabaseClient || null;
+  window.supabaseClient = supabaseClient;
 
   window.LARMAH = window.LARMAH || {};
-  window.LARMAH.escapeHtml = escapeHtml;
-  window.LARMAH.toast = toast;
-  window.LARMAH.buildMessage = buildMessage;
+  window.LARMAH.supabase = { ensure: ensureSupabaseClient, wait: waitForSupabase };
   window.LARMAH.openWhatsApp = openWhatsApp;
+  window.LARMAH.buildMessage = buildMessage;
+  window.LARMAH.functionsBase = functionsBase();
+  window.LARMAH.realtime = realtime;
   window.LARMAH.submitRequest = submitRequest;
-
-  window.LARMAH.realtime = window.LARMAH.realtime || {};
-  window.LARMAH.realtime.subscribe = realtimeSubscribe;
-
-  window.LARMAH.premium = window.LARMAH.premium || {};
-  window.LARMAH.premium.isPremium = isPremium;
-  window.LARMAH.premium.verifyPaystack = verifyPaystack;
-  window.LARMAH.premium.claim = claimPremium;
-
-  window.LARMAH.updateHeaderAuthUI = updateHeaderAuthUI;
-  window.LARMAH.buildRef = makeRequestRef;
-
-  // =========================
-  // BOOT
-  // =========================
-  document.addEventListener("DOMContentLoaded", () => {
-    ensureSupabaseClient();
-    updateHeaderAuthUI();
-  });
+  window.LARMAH.requirePremium = requirePremium;
+  window.LARMAH.requireAdmin = requireAdmin;
 })();
