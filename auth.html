@@ -237,7 +237,7 @@
 
     .page-wrap{ padding: 18px 0 0; }
 
-    /* Auth layout (premium style) */
+    /* Auth layout */
     .auth-wrap{ max-width: 1120px; margin: 18px auto 70px; padding: 0 16px; }
     .auth-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap: 14px; align-items:stretch; }
     @media(max-width: 980px){ .auth-grid{ grid-template-columns: 1fr; } }
@@ -327,16 +327,93 @@
     }
     .notice strong{ color: var(--text); }
 
+    /* ===== FOOTER (UPDATED TO MATCH CURRENT FOOTER STYLING) ===== */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
       background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
     }
-    .footer-grid{ display:grid; gap: 16px; padding: 16px 0; grid-template-columns: 1.35fr 1fr 1fr; }
+    .footer-cta{
+      margin-top: 14px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
+        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
+        var(--panel2);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
+    .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
+
+    .footer-grid{
+      display:grid;
+      gap: 16px;
+      padding: 16px 0;
+      grid-template-columns: 1.35fr 1fr 1fr;
+    }
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
+
+    .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
+    .brandtext{ min-width:0; }
+    .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
+    .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
+
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
+    .footer-links a{
+      display:block;
+      padding: 6px 0;
+      color: color-mix(in oklab, var(--text) 84%, transparent);
+      font-weight: 600;
+    }
     .footer-links a:hover{ color: var(--gold); }
+
+    .contact-stack{ display:grid; gap: 10px; }
+    .contact-chip{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+    }
+    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
+    .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
+    .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
+
+    .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .social a{
+      width: 42px; height: 42px;
+      display:inline-flex; align-items:center; justify-content:center;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--text);
+    }
+    .social a:hover{
+      color: #111;
+      background: var(--gold);
+      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
+    }
+
+    .footer-bottom{
+      border-top: 1px solid var(--line2);
+      padding: 12px 0 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      color: var(--muted2);
+      font-size: .9rem;
+    }
 
     .toast{
       position: fixed;
@@ -464,9 +541,7 @@
             <input type="password" id="loginPassword" class="input" placeholder="••••••••" autocomplete="current-password" required>
           </div>
 
-          <button type="submit" class="btn solid" style="width:100%" id="loginBtn">
-            Sign In
-          </button>
+          <button type="submit" class="btn solid" style="width:100%" id="loginBtn">Sign In</button>
 
           <button type="button" class="btn primary" style="width:100%; margin-top:10px" id="resetBtn">
             <i class="fa-solid fa-key"></i> Reset Password
@@ -525,21 +600,45 @@
     </div>
   </main>
 
+  <!-- ✅ UPDATED FOOTER (matches current premium/index footer style) -->
   <footer>
     <div class="container">
+      <div class="footer-cta">
+        <div>
+          <h3>Need help activating Premium access?</h3>
+          <p>Send your payment email + Paystack reference — we’ll verify and enable your account.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn solid" type="button" onclick="supportAuth()">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </button>
+          <a class="btn primary" href="premium.html#pay">
+            <i class="fa-solid fa-crown"></i> Go Premium
+          </a>
+        </div>
+      </div>
+
       <div class="footer-grid">
         <div>
           <div class="brandline">
             <div class="logo-wrap" aria-hidden="true">
               <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
             </div>
-            <div>
-              <div style="font-weight:950">Larmah Enterprise</div>
-              <div style="color:var(--muted2); font-weight:850; margin-top:4px;">RC: 9127113</div>
+            <div class="brandtext">
+              <div class="brandname">Larmah Enterprise</div>
+              <div class="tagline">RC: 9127113</div>
             </div>
           </div>
+
           <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
             Verified real estate and trusted logistics across Nigeria — WhatsApp-first support.
+          </div>
+
+          <div class="social" aria-label="Social links">
+            <a href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://x.com/heylarmah_tech" aria-label="X" title="X"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            <a href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
           </div>
         </div>
 
@@ -556,7 +655,8 @@
 
         <div>
           <div class="footer-col-title">Contact</div>
-          <div style="display:grid; gap:10px;">
+
+          <div class="contact-stack">
             <div class="contact-chip">
               <i class="fa-brands fa-whatsapp"></i>
               <div>
@@ -564,6 +664,7 @@
                 <div class="sub">WhatsApp-first support</div>
               </div>
             </div>
+
             <div class="contact-chip">
               <i class="fa-regular fa-envelope"></i>
               <div>
@@ -571,6 +672,7 @@
                 <div class="sub">Business enquiries</div>
               </div>
             </div>
+
             <div class="contact-chip">
               <i class="fa-solid fa-location-dot"></i>
               <div>
@@ -579,10 +681,19 @@
               </div>
             </div>
           </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn small solid" href="premium.html#pay">
+              <i class="fa-solid fa-credit-card"></i> Pay Now
+            </a>
+            <button class="btn small primary" type="button" onclick="supportAuth()">
+              <i class="fa-brands fa-whatsapp"></i> Chat
+            </button>
+          </div>
         </div>
       </div>
 
-      <div style="border-top:1px solid var(--line2); padding:12px 0 16px; color:var(--muted2); font-size:.9rem; display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+      <div class="footer-bottom">
         <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
       </div>
     </div>
@@ -593,7 +704,6 @@
   <script>
     // ===== basics
     document.getElementById("year").textContent = new Date().getFullYear();
-    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     function toast(msg){
       const t = document.getElementById("toast");
@@ -687,8 +797,6 @@
     }
 
     async function isPremiumActive(sb, userId){
-      // expects your backend to store premium state in profiles (recommended)
-      // profiles: { id uuid pk, is_premium boolean, premium_tier text, premium_active_until timestamptz }
       try{
         const { data, error } = await sb
           .from("profiles")
@@ -699,21 +807,18 @@
 
         const isPremium = !!data?.is_premium;
         const until = data?.premium_active_until ? new Date(data.premium_active_until) : null;
-        const activeByDate = until ? (until.getTime() > Date.now()) : true; // if null, treat as active when is_premium=true
+        const activeByDate = until ? (until.getTime() > Date.now()) : true;
         return { ok: isPremium && activeByDate, tier: data?.premium_tier || "" };
       } catch(e){
-        // If profiles table doesn't exist yet, don't lock out silently; show guidance.
         console.warn("Premium check failed:", e);
         return { ok: false, error: "premium_check_failed" };
       }
     }
 
     async function redirectAfterLogin(){
-      // Only Premium subscribers are entitled to have an account
-      // → route to dashboard.html if premium, else sign out and send user to premium
       const sb = await waitForSB();
       if(!sb){
-        toast("Supabase not ready. Refresh the page.", "error");
+        toast("Supabase not ready. Refresh the page.");
         return;
       }
 
@@ -731,7 +836,6 @@
         return;
       }
 
-      // Not premium → sign out and guide to Premium
       try{ await sb.auth.signOut(); } catch {}
       toast("Premium subscription required for account access.");
       openWA(buildMsg("Premium Access Request", {
@@ -742,7 +846,6 @@
     }
 
     document.addEventListener("DOMContentLoaded", async () => {
-      // if user already has a session, enforce Premium gating
       redirectAfterLogin();
     });
 
@@ -751,7 +854,7 @@
       e.preventDefault();
       const sb = await waitForSB();
       if(!sb){
-        toast("Supabase not ready. Refresh the page.", "error");
+        toast("Supabase not ready. Refresh the page.");
         return;
       }
 
@@ -763,11 +866,9 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in…';
 
       try{
-        const { data, error } = await sb.auth.signInWithPassword({ email, password });
+        const { error } = await sb.auth.signInWithPassword({ email, password });
         if(error) throw error;
 
-        // If email not confirmed, Supabase may still allow session depending on settings.
-        // We keep UX guidance via resend button.
         toast("Signed in. Checking premium access…");
         await redirectAfterLogin();
       } catch(err){
@@ -783,7 +884,7 @@
     document.getElementById("resetBtn").addEventListener("click", async () => {
       const sb = await waitForSB();
       if(!sb){
-        toast("Supabase not ready. Refresh the page.", "error");
+        toast("Supabase not ready. Refresh the page.");
         return;
       }
       const email = document.getElementById("loginEmail").value.trim();
@@ -795,7 +896,6 @@
       btn.disabled = true;
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending…';
       try{
-        // adjust redirect to your password reset page if you have one
         const redirectTo = `${location.origin}/auth.html`;
         const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
         if(error) throw error;
@@ -812,7 +912,7 @@
     document.getElementById("resendBtn").addEventListener("click", async () => {
       const sb = await waitForSB();
       if(!sb){
-        toast("Supabase not ready. Refresh the page.", "error");
+        toast("Supabase not ready. Refresh the page.");
         return;
       }
       const email = document.getElementById("loginEmail").value.trim();
