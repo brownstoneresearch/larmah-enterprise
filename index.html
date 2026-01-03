@@ -1974,6 +1974,79 @@
       setHero(0);
       renderFeatured();
     }
+    let __featuredItems = [];
+
+async function loadFeaturedFromDB(){
+  const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+  if(!sb) return;
+
+  const { data, error } = await sb
+    .from("listings")
+    .select("id,title,price,image_url,image_urls,category,type,tags,location,area,city,state,status,featured,sort_rank,created_at")
+    .eq("status","active")
+    .eq("featured", true)
+    .order("sort_rank", { ascending:false })
+    .order("created_at", { ascending:false })
+    .limit(12);
+
+  if(error){
+    console.warn(error);
+    return;
+  }
+
+  __featuredItems = data || [];
+  featStart = 0;
+  renderFeaturedDB();
+}
+
+function normalizeArea(it){
+  return (it.location || it.area || it.city || it.state || "Nigeria").trim();
+}
+
+function pickImage(it){
+  const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
+  if(arr.length) return arr[0];
+  if(it.image_url) return it.image_url;
+  return "assets/images/larmah-header.jpeg";
+}
+
+function renderFeaturedDB(){
+  const list = (__featuredItems && __featuredItems.length) ? __featuredItems : [];
+  if(!list.length){
+    // fallback: keep your existing placeholders or show a message
+    featEls.forEach((el,i) => { if(el) el.innerHTML = `<div class="card-body">No featured items yet.</div>`; });
+    return;
+  }
+
+  featEls.forEach(el => el && el.classList.add("is-fading"));
+  setTimeout(() => {
+    for(let i=0;i<3;i++){
+      const it = list[(featStart + i) % list.length];
+      const area = normalizeArea(it);
+      const img = pickImage(it);
+      const type = (it.type || "Listing");
+
+      if(featEls[i]) featEls[i].innerHTML = `
+        <img src="${esc(img)}" alt="${esc(it.title||'Listing')}" loading="lazy" decoding="async">
+        <div class="card-body">
+          <div class="card-title">${esc(it.title||'Listing')}</div>
+          <div class="meta">
+            <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(area)}</span>
+            <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Featured</span>
+          </div>
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn small solid" type="button"
+              onclick="openWA(buildMsg('Shortlet Enquiry', { Ref:'WEB-FEAT-${esc(String(it.id).slice(0,8))}', Type:'${esc(type)}', Area:'${esc(area)}', Message:'Hello Larmah, please share available featured options.' }))">
+              <i class="fa-brands fa-whatsapp"></i> Enquire
+            </button>
+            <a class="btn small primary" href="real-estate.html">View</a>
+          </div>
+        </div>
+      `;
+    }
+    requestAnimationFrame(() => featEls.forEach(el => el && el.classList.remove("is-fading")));
+  }, 220);
+}
 
     // Expose
     window.toggleMenu = toggleMenu;
