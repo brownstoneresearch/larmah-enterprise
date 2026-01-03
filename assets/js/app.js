@@ -1,3 +1,12 @@
+/* =========================
+   Larmah Enterprise - app.js (Premium gating + helpers)
+   - Supabase init
+   - WhatsApp helpers
+   - Functions base for Edge Functions
+   - Premium-only auth gating
+   - Admin allowlist gating (set your emails)
+========================= */
+
 (function () {
   "use strict";
 
