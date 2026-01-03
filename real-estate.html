@@ -140,9 +140,9 @@
 
     nav{margin-left:auto}
     nav ul{display:flex;list-style:none;gap:18px;padding:0;margin:0;align-items:center}
-    .nav-link{opacity:.9;font-weight:850;font-size:.95rem}
-    .nav-link:hover{opacity:1}
-    .nav-link.active{color:var(--gold);opacity:1;position:relative}
+    .nav-link{opacity:.9;font-weight:850;font-size:.95rem;position:relative}
+    .nav-link:hover{opacity:1;color:var(--gold)}
+    .nav-link.active{color:var(--gold);opacity:1}
     .nav-link.active::after{
       content:"";position:absolute;left:0;right:0;bottom:-12px;height:2px;
       background:rgba(212,175,55,.65);border-radius:999px;
@@ -216,6 +216,8 @@
     .hero-grid{display:grid;gap:14px;grid-template-columns:1.05fr .95fr;align-items:start}
     @media (max-width:980px){.hero-grid{grid-template-columns:1fr}}
 
+    .kicker{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--muted);font-weight:850}
+    .kicker .dot{opacity:.65}
     h1{margin:6px 0 10px;font-size:clamp(2rem,4vw,2.7rem);line-height:1.06;letter-spacing:-.6px}
     .lead{margin:0;color:var(--muted);font-size:1.02rem;line-height:1.55}
 
@@ -489,9 +491,9 @@
           </div>
 
           <div class="meta" style="margin-top:12px">
-            <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span>
-            <span class="pill"><i class="fa-solid fa-clock" style="color:var(--gold)"></i> Fast response</span>
-            <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> Traceable refs</span>
+            <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span>
+            <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Scam-resistant</span>
+            <span class="pill"><i class="fa-solid fa-headset" style="color:var(--gold)"></i> Support</span>
           </div>
         </div>
 
@@ -638,7 +640,7 @@
             <div class="contact-chip">
               <i class="fa-regular fa-envelope"></i>
               <div>
-                <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
+                <div class="txt"><a href="/cdn-cgi/l/email-protection#31130402181f140202711914081d10031c10195f05141219"><span class="__cf_email__" data-cfemail="7f1d0a0c16111a0c0c3f171a06131e0d121e17510b1a1c17">[email&#160;protected]</span></a></div>
                 <div class="sub">Business enquiries</div>
               </div>
             </div>
@@ -671,6 +673,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
     // ---- basics
     document.getElementById("year").textContent = new Date().getFullYear();
@@ -685,7 +688,6 @@
       clearTimeout(window.__toastT);
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
-    window.toast = toast;
 
     // ---- theme (SAME AS index.html)
     const THEME_KEY = "larmah_theme_v5";
@@ -705,7 +707,6 @@
       const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
       setTheme(prefersLight ? "light" : "dark");
     })();
-    window.toggleTheme = toggleTheme;
 
     // ---- mobile menu
     const overlay = document.getElementById("overlay");
@@ -714,9 +715,8 @@
       overlay.setAttribute("aria-hidden", open ? "false" : "true");
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
-    window.toggleMenu = toggleMenu;
 
-    // ---- WA helpers
+    // ---- WA helpers (use app.js if present, fallback otherwise)
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -731,8 +731,6 @@
       const phone = "2347063080605";
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
-    window.buildMsg = buildMsg;
-    window.openWA = openWA;
 
     // ---- hero slideshow (5s)
     const heroMedia = document.getElementById("heroMedia");
@@ -750,8 +748,14 @@
     ];
     let heroIdx = 0;
 
-    function runHeroProgress(){ heroBar.classList.remove("run"); void heroBar.offsetWidth; heroBar.classList.add("run"); }
+    function runHeroProgress(){
+      if(!heroBar) return;
+      heroBar.classList.remove("run");
+      void heroBar.offsetWidth;
+      heroBar.classList.add("run");
+    }
     function setHero(i){
+      if(!heroMedia || !heroImg || !heroTag || !heroSub) return;
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
       heroMedia.classList.add("is-fading");
       runHeroProgress();
@@ -862,7 +866,7 @@
         });
       }
       if(cat !== "all") items = items.filter(it => inferCategory(it) === cat);
-      if(loc !== "all") items = items.filter(it => inferLocation(it).toLowerCase().includes(loc.toLowerCase()));
+      if(loc !== "all") items = items.filter(it => (inferLocation(it) || "").toLowerCase().includes(loc.toLowerCase()));
 
       if(sort === "az") items.sort((a,b)=> safeText(a.title).localeCompare(safeText(b.title)));
       else if(sort === "za") items.sort((a,b)=> safeText(b.title).localeCompare(safeText(a.title)));
@@ -916,7 +920,6 @@
                 <div class="card-body">
                   <div class="title">${esc(title)}</div>
                   <p class="desc">${esc(desc)}</p>
-
                   <div class="price">${esc(price)}</div>
 
                   <div class="meta">
@@ -1048,6 +1051,15 @@ Thank you.`;
       document.getElementById("re_sort").addEventListener("change", renderRealEstate);
       loadRealEstate();
     });
+
+    // expose
+    window.toggleTheme = toggleTheme;
+    window.toggleMenu = toggleMenu;
   </script>
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+    crossorigin="anonymous"></script>
 </body>
 </html>
