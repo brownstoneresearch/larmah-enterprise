@@ -576,101 +576,115 @@
     </section>
   </main>
 
-  <footer>
-    <div class="container">
-      <div class="footer-cta">
-        <div>
-          <h3>Verified stays. Clear confirmation. WhatsApp-first.</h3>
-          <p>Confirm availability and coordinate logistics — in one chat.</p>
+  <!-- ✅ REPLACE your entire <footer> ... </footer> block in real-estate.html with this (latest footer styling) -->
+
+<footer>
+  <div class="container">
+    <div class="footer-cta">
+      <div>
+        <h3>Verified stays. Clear confirmation. WhatsApp-first.</h3>
+        <p>Confirm availability and coordinate logistics — in one chat.</p>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn solid" type="button"
+          onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </button>
+        <a class="btn primary" href="logistics.html">
+          <i class="fa-solid fa-truck-fast"></i> Logistics
+        </a>
+        <a class="btn primary" href="premium.html">
+          <i class="fa-solid fa-crown"></i> Premium
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-grid">
+      <div>
+        <div class="brandline">
+          <div class="logo-wrap" aria-hidden="true">
+            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+          </div>
+          <div style="min-width:0;">
+            <div class="brandname">Larmah Enterprise</div>
+            <div class="tagline">Connecting People, Business & Possibilities • RC: 9127113</div>
+          </div>
         </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+
+        <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
+          Verified real estate, shortlets, and logistics support — with clear references and WhatsApp-first coordination.
+        </div>
+
+        <div class="social" aria-label="Social links">
+          <a href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://x.com/heylarmah_tech" aria-label="X" title="X"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+          <a href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Quick Links</div>
+        <div class="footer-links">
+          <a href="index.html#about">About</a>
+          <a href="real-estate.html">Real Estate</a>
+          <a href="logistics.html">Logistics</a>
+          <a href="premium.html">Premium</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Contact</div>
+
+        <div class="contact-stack">
+          <div class="contact-chip">
+            <i class="fa-brands fa-whatsapp"></i>
+            <div>
+              <div class="txt">+234 706 308 0605</div>
+              <div class="sub">WhatsApp-first support</div>
+            </div>
+          </div>
+
+          <div class="contact-chip">
+            <i class="fa-regular fa-envelope"></i>
+            <div>
+              <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
+              <div class="sub">Business enquiries</div>
+            </div>
+          </div>
+
+          <div class="contact-chip">
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+              <div class="txt">Lagos, Nigeria</div>
+              <div class="sub">Serving Nigeria nationwide</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn small solid" type="button"
+            onclick="openWA(buildMsg('Real Estate Enquiry', { Message:'Hello Larmah, I need a verified listing.' }))">
+            <i class="fa-brands fa-whatsapp"></i> Chat Now
           </button>
-          <a class="btn primary" href="logistics.html">
-            <i class="fa-solid fa-truck-fast"></i> Logistics
+
+          <a class="btn small primary" href="premium.html">
+            <i class="fa-solid fa-crown"></i> Go Premium
           </a>
         </div>
       </div>
+    </div>
 
-      <div class="footer-grid">
-        <div>
-          <div style="display:flex; gap:12px; align-items:center;">
-            <div class="logo-wrap" aria-hidden="true"><img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" /></div>
-            <div>
-              <div style="font-weight:950">Larmah Enterprise</div>
-              <div style="color:var(--muted2); font-weight:850; margin-top:4px;">RC: 9127113</div>
-            </div>
-          </div>
-
-          <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
-            Verified real estate, shortlets, and logistics support.
-          </div>
-
-          <div class="social" aria-label="Social links">
-            <a href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://x.com/heylarmah_tech" aria-label="X" title="X"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Quick Links</div>
-          <div class="footer-links">
-            <a href="index.html#about">About</a>
-            <a href="real-estate.html">Real Estate</a>
-            <a href="logistics.html">Logistics</a>
-            <a href="premium.html">Premium</a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Contact</div>
-
-          <div class="contact-stack">
-            <div class="contact-chip">
-              <i class="fa-brands fa-whatsapp"></i>
-              <div>
-                <div class="txt">+234 706 308 0605</div>
-                <div class="sub">WhatsApp-first support</div>
-              </div>
-            </div>
-
-            <div class="contact-chip">
-              <i class="fa-regular fa-envelope"></i>
-              <div>
-                <div class="txt"><a href="/cdn-cgi/l/email-protection#31130402181f140202711914081d10031c10195f05141219"><span class="__cf_email__" data-cfemail="7f1d0a0c16111a0c0c3f171a06131e0d121e17510b1a1c17">[email&#160;protected]</span></a></div>
-                <div class="sub">Business enquiries</div>
-              </div>
-            </div>
-
-            <div class="contact-chip">
-              <i class="fa-solid fa-location-dot"></i>
-              <div>
-                <div class="txt">Lagos, Nigeria</div>
-                <div class="sub">Serving Nigeria nationwide</div>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
-              <i class="fa-brands fa-whatsapp"></i> Chat Now
-            </button>
-            <a class="btn small primary" href="logistics.html">
-              <i class="fa-solid fa-truck-fast"></i> Book Dispatch
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+    <div class="footer-bottom">
+      <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+      <div class="footer-badges">
+        <span class="badge"><i class="fa-solid fa-shield-halved"></i> Trust-first</span>
+        <span class="badge"><i class="fa-solid fa-hashtag"></i> Traceable refs</span>
+        <span class="badge"><i class="fa-solid fa-headset"></i> Support</span>
       </div>
     </div>
-  </footer>
-
+  </div>
+</footer>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
