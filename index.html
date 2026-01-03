@@ -37,7 +37,7 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://source.unsplash.com" crossorigin />
   <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
-  <link rel="preload" href="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
+  <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -95,10 +95,13 @@
       --iconBg: rgba(212,175,55,.10);
       --iconLine: rgba(212,175,55,.25);
       --good: rgba(0,217,129,.95);
+      --warn: rgba(255,187,0,.95);
 
       --logoGlow: 0 0 22px rgba(212,175,55,.14);
       --logoRing: rgba(255,255,255,.12);
       --logoBg: rgba(255,255,255,.03);
+
+      --focus: rgba(245,213,122,.28);
     }
 
     html[data-theme="light"]{
@@ -118,12 +121,15 @@
       --iconBg: rgba(212,175,55,.16);
       --iconLine: rgba(212,175,55,.35);
       --good: rgba(0,140,90,.92);
+      --warn: rgba(180,110,0,.92);
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
 
       --logoGlow: 0 0 0 rgba(0,0,0,0);
       --logoRing: rgba(10,14,26,.10);
       --logoBg: rgba(255,255,255,.65);
+
+      --focus: rgba(212,175,55,.26);
     }
 
     *{ box-sizing:border-box; }
@@ -150,6 +156,24 @@
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+
+    /* Skip link */
+    .skip{
+      position:absolute; left:-999px; top:10px;
+      padding:10px 12px;
+      border-radius: 12px;
+      background: var(--gold);
+      color:#111;
+      font-weight: 950;
+      z-index: 999;
+    }
+    .skip:focus{ left: 12px; outline: none; }
+
+    :focus-visible{
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
 
     /* Pages router */
     .page{ display:none; }
@@ -376,12 +400,32 @@
       background: var(--panel2);
       border-color: var(--line);
     }
+    .btn.ghost{
+      background: transparent;
+      border-color: var(--line2);
+    }
     .btn.small{
       min-height: 40px;
       padding: 10px 12px;
       border-radius: 12px;
       font-weight: 900;
     }
+
+    /* Chips */
+    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 88%, transparent);
+      font-weight: 900;
+      font-size: .92rem;
+    }
+    .chip i{ color: var(--gold); }
 
     /* Hero/Home */
     .hero{ padding: 18px 0 0; }
@@ -391,6 +435,18 @@
       background: var(--panel2);
       box-shadow: var(--shadow);
       overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+    .hero-box::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.20), transparent 60%),
+        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
+        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.10), transparent 62%);
+      pointer-events:none;
+      z-index:-1;
     }
     .hero-row{
       display:grid;
@@ -414,9 +470,15 @@
     .kicker .dot{ opacity:.65; }
     h1{
       margin: 6px 0 10px;
-      font-size: clamp(2.0rem, 4vw, 3.0rem);
+      font-size: clamp(2.0rem, 4vw, 3.05rem);
       line-height: 1.02;
       letter-spacing: -0.6px;
+    }
+    .gold{
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     .lead{
       margin: 0;
@@ -432,21 +494,91 @@
       .hero-actions{ flex-direction:column; }
       .hero-actions .btn{ width:100%; }
     }
+    .live-row{
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+      margin-top: 12px;
+    }
     .live-dot{
       display:inline-flex; align-items:center; gap:8px;
       font-weight: 950;
       font-size: .86rem;
       color: var(--good);
-      margin-top: 12px;
     }
     .live-dot i{ font-size: 9px; }
+    .trust-mini{
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight: 900;
+      font-size: .86rem;
+      color: var(--muted2);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+    }
+    .trust-mini i{ color: var(--gold); }
 
-    /* Search */
-    .search{
+    /* Switch tabs */
+    .switcher{
       margin-top: 14px;
       border-top: 1px solid var(--line2);
       padding-top: 14px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
     }
+    .seg{
+      display:flex;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      width: fit-content;
+    }
+    .seg button{
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 950;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      transition: background .16s var(--ease), color .16s var(--ease), transform .16s var(--ease);
+      white-space:nowrap;
+    }
+    .seg button:hover{ transform: translateY(-1px); color: var(--text); }
+    .seg button.is-active{
+      background: color-mix(in oklab, var(--gold) 18%, transparent);
+      color: var(--text);
+      border: 1px solid color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
+    }
+    .seg button i{ color: var(--gold); }
+
+    .switch-right{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .92rem;
+    }
+    .switch-right b{ color: var(--text); }
+
+    /* Forms */
+    .form-wrap{ margin-top: 10px; }
+    .form{
+      margin-top: 12px;
+      display:none;
+      border-radius: 16px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      padding: 12px;
+    }
+    .form.is-active{ display:block; }
+
     .form-grid{
       display:grid;
       gap: 10px;
@@ -461,15 +593,18 @@
       text-transform: uppercase;
       color: var(--muted2);
     }
-    input, select{
+    input, select, textarea{
       border-radius: 14px;
       border: 1px solid var(--line);
-      background: var(--panel);
+      background: var(--panel2);
       color: var(--text);
       padding: 12px 12px;
       min-height: 46px;
       outline:none;
     }
+    textarea{ min-height: 92px; resize: vertical; }
+    input::placeholder, textarea::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
+
     .form-actions{
       margin-top: 12px;
       display:flex;
@@ -481,7 +616,7 @@
 
     /* Logistics strip */
     .logistics-strip{
-      margin-top: 14px;
+      margin-top: 12px;
       border-radius: 16px;
       border: 1px solid var(--line);
       background: var(--panel);
@@ -533,12 +668,12 @@
       border: 1px solid var(--line);
       background: var(--panel);
       position:relative;
-      min-height: 300px;
+      min-height: 320px;
       isolation:isolate;
     }
     .hero-media img{
       width:100%;
-      height: 300px;
+      height: 320px;
       object-fit: cover;
       display:block;
       opacity:.94;
@@ -586,9 +721,10 @@
       background: var(--panel);
       overflow:hidden;
       box-shadow: var(--shadow2);
-      transition: opacity .45s var(--ease), transform .45s var(--ease);
+      transition: opacity .45s var(--ease), transform .45s var(--ease), filter .45s var(--ease);
     }
-    .card.is-fading{ opacity:.22; transform: translateY(2px); }
+    .card:hover{ transform: translateY(-2px); filter: brightness(1.02); }
+    .card.is-fading{ opacity:.22; transform: translateY(2px); filter:none; }
     .card img{ width:100%; height: 180px; object-fit: cover; display:block; opacity:.92; }
     .card-body{ padding: 12px; }
     .card-title{ font-weight: 950; margin: 0 0 8px; }
@@ -603,6 +739,75 @@
       background: var(--panel2);
       color: color-mix(in oklab, var(--text) 85%, transparent);
       font-weight: 800;
+    }
+
+    /* Services */
+    .services{
+      display:grid;
+      gap: 14px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    @media (max-width: 980px){ .services{ grid-template-columns: 1fr; } }
+    .svc{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow2);
+      padding: 14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .svc::after{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(260px 120px at 30% 0%, rgba(212,175,55,.12), transparent 60%),
+        radial-gradient(260px 120px at 90% 25%, rgba(0,217,129,.07), transparent 60%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .svc-top{ display:flex; gap:10px; align-items:flex-start; position:relative; z-index:1; }
+    .svc-icn{
+      width:44px; height:44px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      background: var(--iconBg);
+      border: 1px solid var(--iconLine);
+      color: var(--gold2);
+      flex:0 0 auto;
+    }
+    .svc h3{ margin:0; font-size: 1.02rem; letter-spacing:-0.2px; position:relative; z-index:1; }
+    .svc p{ margin: 6px 0 0; color: var(--muted); line-height: 1.45; position:relative; z-index:1; }
+    .svc-actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; position:relative; z-index:1; }
+
+    /* How it works */
+    .steps{
+      display:grid;
+      gap: 12px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    @media (max-width: 980px){ .steps{ grid-template-columns: 1fr; } }
+    .step{
+      border-radius: var(--radius);
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      padding: 14px;
+      box-shadow: var(--shadow2);
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+    }
+    .step b{ display:block; }
+    .step span{ display:block; color: var(--muted); margin-top: 4px; line-height: 1.45; }
+    .step .n{
+      width: 40px; height: 40px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      background: color-mix(in oklab, var(--gold) 18%, transparent);
+      border: 1px solid color-mix(in oklab, var(--gold) 30%, var(--line2) 70%);
+      font-weight: 950;
+      color: var(--gold2);
+      flex:0 0 auto;
     }
 
     /* About page */
@@ -742,17 +947,61 @@
       color: var(--muted2);
       font-size: .9rem;
     }
+
+    /* Floating WhatsApp */
+    .wa-float{
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 90;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .wa-pill{
+      display:none;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 950;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(10px);
+      cursor:pointer;
+    }
+    .wa-btn{
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      border: 1px solid color-mix(in oklab, var(--gold) 40%, var(--line) 60%);
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      color: #111;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: var(--shadow2);
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
+    }
+    .wa-btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
+    .wa-btn i{ font-size: 20px; }
+    @media (min-width: 980px){
+      .wa-pill{ display:inline-flex; }
+    }
   </style>
 </head>
 
 <body>
+  <a class="skip" href="#main">Skip to content</a>
+
   <!-- Mobile nav -->
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="sheet" role="dialog" aria-label="Menu">
       <div class="sheet-head">
         <div class="sheet-brandline">
           <div class="logo-wrap" aria-hidden="true">
-            <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
           </div>
           <div style="min-width:0">
             <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
@@ -765,8 +1014,8 @@
         </button>
       </div>
 
-      <!-- About is a “page” inside this index.html -->
       <a href="#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="#services"><span><i class="fa-solid fa-grid-2" style="color:var(--gold)"></i> Services</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
@@ -774,6 +1023,9 @@
       <div class="sheet-actions">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
+        </button>
+        <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
         </button>
       </div>
     </div>
@@ -783,7 +1035,7 @@
     <div class="container header-inner">
       <a class="brand" href="#home" aria-label="Larmah Home">
         <div class="logo-wrap" aria-hidden="true">
-          <img src="https://heylarmah.tech/assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+          <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
         </div>
         <div class="btxt">
           <div class="bname">Larmah Enterprise</div>
@@ -793,7 +1045,9 @@
 
       <nav aria-label="Primary navigation">
         <ul>
+          <li><a class="nav-link" data-nav="home" href="#home">Home</a></li>
           <li><a class="nav-link" data-nav="about" href="#about">About</a></li>
+          <li><a class="nav-link" href="#services">Services</a></li>
           <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
@@ -822,110 +1076,241 @@
           <div class="hero-row">
             <div>
               <div class="kicker" aria-label="Trust badges">
-                <span>Trust-first stays</span><span class="dot">•</span>
-                <span>Verified listings</span><span class="dot">•</span>
-                <span>WhatsApp-first</span>
+                <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span><span class="dot">•</span>
+                <span><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span><span class="dot">•</span>
+                <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
               </div>
 
-              <h1>Trust-first real estate and logistics across Naija.</h1>
+              <h1>
+                Verified <span class="gold">stays</span> and trusted <span class="gold">movement</span> across Nigeria.
+              </h1>
 
               <p class="lead">
-                Premium shortlets and verified stays in Lagos — scam-resistant workflow, clear pricing, and WhatsApp-first support.
+                From premium shortlets and verified listings to dispatch, pickups, and freight coordination — Larmah runs a scam-resistant,
+                fast-confirmation workflow that keeps your bookings and deliveries clean, clear, and coordinated.
               </p>
 
               <div class="hero-actions">
-                <a class="btn solid" href="#browse"><i class="fa-solid fa-sparkles"></i> Browse Shortlets</a>
-                <button class="btn primary" type="button" onclick="openWA(buildMsg('General Enquiry', { Topic:'Real Estate / Logistics', Message:'Hello Larmah, I need assistance.' }))">
+                <button class="btn solid" type="button" onclick="scrollToEl('#browse')"><i class="fa-solid fa-sparkles"></i> Browse Shortlets</button>
+                <button class="btn primary" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
+                  <i class="fa-solid fa-truck-fast"></i> Book Logistics
+                </button>
+                <button class="btn ghost" type="button" onclick="openWA(buildMsg('General Enquiry', { Topic:'Real Estate / Logistics', Message:'Hello Larmah, I need assistance.' }))">
                   <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
                 </button>
               </div>
 
-              <div class="live-dot" aria-live="polite">
-                <i class="fa-solid fa-circle"></i> Fast responses available
+              <div class="live-row" aria-live="polite">
+                <div class="live-dot"><i class="fa-solid fa-circle"></i> Fast responses available</div>
+                <div class="trust-mini"><i class="fa-solid fa-receipt"></i> Clear pricing & references</div>
+                <div class="trust-mini"><i class="fa-solid fa-user-shield"></i> Scam-resistant flow</div>
               </div>
 
-              <div class="search" aria-label="Shortlet search">
-                <div class="form-grid">
-                  <div class="field" style="grid-column: span 2;">
-                    <label for="checkin">Check-in</label>
-                    <input id="checkin" type="date" />
-                  </div>
+              <div class="chips" aria-label="Highlights">
+                <div class="chip"><i class="fa-solid fa-house"></i> Shortlets • Rentals • Sales</div>
+                <div class="chip"><i class="fa-solid fa-motorcycle"></i> Dispatch • Same-day</div>
+                <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage support</div>
+              </div>
 
-                  <div class="field" style="grid-column: span 2;">
-                    <label for="checkout">Check-out</label>
-                    <input id="checkout" type="date" />
-                  </div>
-
-                  <div class="field" style="grid-column: span 1;">
-                    <label for="guests">Guests</label>
-                    <select id="guests">
-                      <option value="1">1</option>
-                      <option value="2" selected>2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5+</option>
-                    </select>
-                  </div>
-
-                  <div class="field" style="grid-column: span 1;">
-                    <label for="category">Category</label>
-                    <select id="category">
-                      <option value="Any" selected>Any</option>
-                      <option value="Studio">Studio</option>
-                      <option value="1 Bedroom">1 Bedroom</option>
-                      <option value="2 Bedroom">2 Bedroom</option>
-                      <option value="3 Bedroom">3 Bedroom</option>
-                      <option value="Family">Family</option>
-                      <option value="Business">Business</option>
-                      <option value="Premium">Premium</option>
-                    </select>
-                  </div>
-
-                  <div class="field" style="grid-column: span 2;">
-                    <label for="location">Location</label>
-                    <select id="location">
-                      <option value="Any" selected>Any</option>
-                      <option value="Ikoyi">Ikoyi</option>
-                      <option value="Lekki">Lekki</option>
-                      <option value="Victoria Island">Victoria Island</option>
-                      <option value="Yaba">Yaba</option>
-                      <option value="Mainland">Mainland</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="form-actions">
-                  <button class="btn solid" type="button" onclick="submitSearch()">
-                    <i class="fa-solid fa-calendar-check"></i> Check Availability
+              <!-- Mode switch -->
+              <div class="switcher" id="quick" aria-label="Quick request switcher">
+                <div class="seg" role="tablist" aria-label="Choose quick request">
+                  <button type="button" class="is-active" id="tabRealEstate" role="tab" aria-selected="true" onclick="setMode('realestate')">
+                    <i class="fa-solid fa-house"></i> Real Estate
                   </button>
-                  <a class="btn small primary" href="real-estate.html">
-                    <i class="fa-solid fa-house"></i> View All Real Estate
-                  </a>
+                  <button type="button" id="tabLogistics" role="tab" aria-selected="false" onclick="setMode('logistics')">
+                    <i class="fa-solid fa-truck-fast"></i> Logistics
+                  </button>
                 </div>
 
-                <div class="logistics-strip invert" aria-label="Logistics highlight">
-                  <div class="logistics-left">
-                    <div class="logi-icn"><i class="fa-solid fa-truck-fast"></i></div>
-                    <div style="min-width:0">
-                      <div class="logistics-title">Need pickup or delivery for your stay?</div>
-                      <p class="logistics-sub">
-                        Larmah Logistics handles dispatch, airport pickup coordination, and trusted movement across Nigeria — all on WhatsApp.
-                      </p>
+                <div class="switch-right">
+                  <span>Tip: <b>budget + location</b> = faster matching.</span>
+                </div>
+              </div>
+
+              <div class="form-wrap" aria-label="Quick forms">
+                <!-- REAL ESTATE FORM -->
+                <div class="form is-active" id="formRealEstate" role="tabpanel" aria-labelledby="tabRealEstate">
+                  <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+                    <div style="font-weight:950; letter-spacing:-0.2px;">
+                      Shortlet / Stay Request
+                      <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Check availability, confirm price, reserve via WhatsApp.</div>
+                    </div>
+                    <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> View All</a>
+                  </div>
+
+                  <div class="form-grid" style="margin-top:12px;">
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="checkin">Check-in</label>
+                      <input id="checkin" type="date" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="checkout">Check-out</label>
+                      <input id="checkout" type="date" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 1;">
+                      <label for="guests">Guests</label>
+                      <select id="guests">
+                        <option value="1">1</option>
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5+">5+</option>
+                      </select>
+                    </div>
+
+                    <div class="field" style="grid-column: span 1;">
+                      <label for="category">Category</label>
+                      <select id="category">
+                        <option value="Any" selected>Any</option>
+                        <option value="Studio">Studio</option>
+                        <option value="1 Bedroom">1 Bedroom</option>
+                        <option value="2 Bedroom">2 Bedroom</option>
+                        <option value="3 Bedroom">3 Bedroom</option>
+                        <option value="Family">Family</option>
+                        <option value="Business">Business</option>
+                        <option value="Premium">Premium</option>
+                      </select>
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="location">Location</label>
+                      <select id="location">
+                        <option value="Any" selected>Any</option>
+                        <option value="Ikoyi">Ikoyi</option>
+                        <option value="Lekki">Lekki</option>
+                        <option value="Victoria Island">Victoria Island</option>
+                        <option value="Yaba">Yaba</option>
+                        <option value="Mainland">Mainland</option>
+                      </select>
+                    </div>
+
+                    <div class="field" style="grid-column: span 8;">
+                      <label for="budget">Budget (optional)</label>
+                      <input id="budget" type="text" inputmode="numeric" placeholder="e.g., ₦120,000 per night / ₦500k total" />
                     </div>
                   </div>
-                  <a class="btn small solid" href="logistics.html">
-                    <i class="fa-solid fa-truck"></i> Explore Logistics
-                  </a>
+
+                  <div class="form-actions">
+                    <button class="btn solid" type="button" onclick="submitRealEstate()">
+                      <i class="fa-solid fa-calendar-check"></i> Request Availability
+                    </button>
+                    <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+                      <i class="fa-brands fa-whatsapp"></i> Chat Support
+                    </button>
+                  </div>
+
+                  <div class="logistics-strip invert" aria-label="Logistics add-on">
+                    <div class="logistics-left">
+                      <div class="logi-icn"><i class="fa-solid fa-car"></i></div>
+                      <div style="min-width:0">
+                        <div class="logistics-title">Need airport pickup or dispatch while you stay?</div>
+                        <p class="logistics-sub">
+                          Add movement support to your booking — reliable pickup + delivery, coordinated on WhatsApp.
+                        </p>
+                      </div>
+                    </div>
+                    <button class="btn small solid" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
+                      <i class="fa-solid fa-truck-fast"></i> Add Logistics
+                    </button>
+                  </div>
                 </div>
 
-                <div style="margin-top:10px; color:var(--muted); font-size:.92rem;">
-                  Tip: Share your budget + preferred area for faster matching.
+                <!-- LOGISTICS FORM -->
+                <div class="form" id="formLogistics" role="tabpanel" aria-labelledby="tabLogistics">
+                  <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+                    <div style="font-weight:950; letter-spacing:-0.2px;">
+                      Logistics / Dispatch Request
+                      <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Get a quote, assign rider/vehicle, track updates via WhatsApp.</div>
+                    </div>
+                    <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck"></i> Logistics Page</a>
+                  </div>
+
+                  <div class="form-grid" style="margin-top:12px;">
+                    <div class="field" style="grid-column: span 4;">
+                      <label for="pickup">Pickup location</label>
+                      <input id="pickup" type="text" placeholder="e.g., Lekki Phase 1" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 4;">
+                      <label for="dropoff">Drop-off location</label>
+                      <input id="dropoff" type="text" placeholder="e.g., Victoria Island" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="pickDate">Date</label>
+                      <input id="pickDate" type="date" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="pickTime">Time (optional)</label>
+                      <input id="pickTime" type="time" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="vehicle">Vehicle</label>
+                      <select id="vehicle">
+                        <option value="Dispatch Bike" selected>Dispatch Bike</option>
+                        <option value="Car">Car</option>
+                        <option value="Van">Van</option>
+                        <option value="Mini Truck">Mini Truck</option>
+                        <option value="Truck / Haulage">Truck / Haulage</option>
+                      </select>
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="loadType">Load type</label>
+                      <select id="loadType">
+                        <option value="Documents">Documents</option>
+                        <option value="Small Package" selected>Small Package</option>
+                        <option value="Food / Consumables">Food / Consumables</option>
+                        <option value="Fragile Items">Fragile Items</option>
+                        <option value="Bulk / Freight">Bulk / Freight</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+
+                    <div class="field" style="grid-column: span 8;">
+                      <label for="logNotes">Notes (optional)</label>
+                      <textarea id="logNotes" placeholder="Add landmark, size/weight, urgency, special instructions..."></textarea>
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button class="btn solid" type="button" onclick="submitLogistics()">
+                      <i class="fa-solid fa-paper-plane"></i> Request Quote
+                    </button>
+                    <button class="btn primary" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
+                      <i class="fa-brands fa-whatsapp"></i> Chat Support
+                    </button>
+                  </div>
+
+                  <div class="logistics-strip" aria-label="Real estate add-on">
+                    <div class="logistics-left">
+                      <div class="logi-icn"><i class="fa-solid fa-building"></i></div>
+                      <div style="min-width:0">
+                        <div class="logistics-title">Need a shortlet too?</div>
+                        <p class="logistics-sub">
+                          We can match verified stays fast — send dates + budget and we’ll respond.
+                        </p>
+                      </div>
+                    </div>
+                    <button class="btn small primary" type="button" onclick="setMode('realestate'); scrollToEl('#quick')">
+                      <i class="fa-solid fa-house"></i> Switch to Real Estate
+                    </button>
+                  </div>
                 </div>
+              </div>
+
+              <div style="margin-top:10px; color:var(--muted); font-size:.92rem;">
+                Pro tip: If you’re in a rush, send “URGENT” + your details on WhatsApp for priority routing.
               </div>
             </div>
 
             <aside class="hero-media" id="heroMedia" aria-label="Real estate and logistics carousel">
-              <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11" alt="Luxury apartment interior" decoding="async">
+              <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11" alt="Luxury apartment interior" decoding="async" fetchpriority="high">
               <div class="cap">
                 <div class="hero-tag" id="heroTag">
                   <i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate
@@ -934,6 +1319,76 @@
               </div>
               <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
             </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="services" aria-label="Services">
+        <div class="section-head">
+          <div>
+            <h2>Two pillars. One trust-first workflow.</h2>
+            <p class="subhead">Choose a service and we’ll coordinate the rest on WhatsApp.</p>
+          </div>
+          <button class="btn small solid" type="button" onclick="openWA(buildMsg('Service Enquiry', { Message:'Hello Larmah, please share your current offerings and pricing.' }))">
+            <i class="fa-brands fa-whatsapp"></i> Ask Pricing
+          </button>
+        </div>
+
+        <div class="services">
+          <div class="svc">
+            <div class="svc-top">
+              <div class="svc-icn"><i class="fa-solid fa-house"></i></div>
+              <div>
+                <h3>Shortlets & Stays</h3>
+                <p>Verified options, clear pricing, and quick confirmations for Lagos stays.</p>
+                <div class="svc-actions">
+                  <button class="btn small solid" type="button" onclick="setMode('realestate'); scrollToEl('#quick')"><i class="fa-solid fa-calendar-check"></i> Request</button>
+                  <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> View</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="svc">
+            <div class="svc-top">
+              <div class="svc-icn"><i class="fa-solid fa-building-user"></i></div>
+              <div>
+                <h3>Rentals & Sales</h3>
+                <p>Trust-first sourcing for rentals and sales with cleaner documentation steps.</p>
+                <div class="svc-actions">
+                  <button class="btn small solid" type="button" onclick="openWA(buildMsg('Property Enquiry', { Type:'Rentals / Sales', Location:'', Budget:'', Message:'Hello Larmah, I need verified property options.' }))"><i class="fa-brands fa-whatsapp"></i> Enquire</button>
+                  <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-arrow-right"></i> Explore</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="svc">
+            <div class="svc-top">
+              <div class="svc-icn"><i class="fa-solid fa-motorcycle"></i></div>
+              <div>
+                <h3>Dispatch & Pickup</h3>
+                <p>Same-day movement, pickups, deliveries — updates handled on WhatsApp.</p>
+                <div class="svc-actions">
+                  <button class="btn small solid" type="button" onclick="setMode('logistics'); scrollToEl('#quick')"><i class="fa-solid fa-paper-plane"></i> Quote</button>
+                  <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Details</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="svc">
+            <div class="svc-top">
+              <div class="svc-icn"><i class="fa-solid fa-boxes-stacked"></i></div>
+              <div>
+                <h3>Freight & Haulage</h3>
+                <p>Support for heavier loads and longer routes — coordinated, documented, tracked.</p>
+                <div class="svc-actions">
+                  <button class="btn small solid" type="button" onclick="openWA(buildMsg('Freight / Haulage Request', { Pickup:'', Dropoff:'', Load:'', Vehicle:'Truck / Haulage', Message:'Hello Larmah, I need freight movement support.' }))"><i class="fa-brands fa-whatsapp"></i> Request</button>
+                  <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-arrow-right"></i> Explore</a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -954,24 +1409,60 @@
         </div>
       </section>
 
+      <section class="section" aria-label="How it works">
+        <div class="section-head">
+          <div>
+            <h2>How it works</h2>
+            <p class="subhead">Simple. Clear. WhatsApp-first.</p>
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="n">1</div>
+            <div>
+              <b>Send your details</b>
+              <span>Dates + location + budget (real estate), or pickup + drop-off + load (logistics).</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="n">2</div>
+            <div>
+              <b>We confirm options</b>
+              <span>We share verified options, prices, and the best route to execute quickly.</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="n">3</div>
+            <div>
+              <b>We coordinate & update</b>
+              <span>Booking and movement updates happen in one thread — fewer mistakes, faster delivery.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="section" aria-label="WhatsApp request CTA">
         <div class="card" style="padding:14px;">
           <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
             <div>
-              <h2 style="margin:0">Need a specific shortlet?</h2>
-              <p class="subhead" style="margin:6px 0 0">Send your dates, location and budget — we’ll respond via WhatsApp.</p>
+              <h2 style="margin:0">Need something specific?</h2>
+              <p class="subhead" style="margin:6px 0 0">Tell us what you want — stays or movement — and we’ll respond via WhatsApp.</p>
             </div>
-            <button class="btn solid" type="button"
-              onclick="openWA(buildMsg('Custom Shortlet Request', { Dates:'', Location:'', Budget:'', Message:'Hello Larmah, I need a shortlet.' }))">
-              <i class="fa-brands fa-whatsapp"></i> Start Request
-            </button>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn solid" type="button"
+                onclick="openWA(buildMsg('Custom Request', { Type:'Real Estate / Logistics', Details:'', Message:'Hello Larmah, I need assistance. Here are my details...' }))">
+                <i class="fa-brands fa-whatsapp"></i> Start Request
+              </button>
+              <a class="btn primary" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Join Premium</a>
+            </div>
           </div>
         </div>
       </section>
     </div>
 
     <!-- ======================
-         ABOUT PAGE (INSIDE INDEX) — UPDATED
+         ABOUT PAGE (INSIDE INDEX)
          ====================== -->
     <div class="page" id="page-about" data-page="about">
       <section class="section" aria-label="About Larmah Enterprise">
@@ -1119,16 +1610,16 @@
     <div class="container">
       <div class="footer-cta">
         <div>
-          <h3>Fast bookings. Verified stays. WhatsApp-first support.</h3>
-          <p>Confirm availability and arrange logistics — in one chat.</p>
+          <h3>Verified stays + trusted movement — in one WhatsApp thread.</h3>
+          <p>Confirm availability, request a quote, and coordinate logistics — fast.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </button>
-          <a class="btn primary" href="logistics.html">
-            <i class="fa-solid fa-truck-fast"></i> Logistics
-          </a>
+          <button class="btn primary" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
+            <i class="fa-solid fa-truck-fast"></i> Quick Quote
+          </button>
         </div>
       </div>
 
@@ -1145,7 +1636,7 @@
           </div>
 
           <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
-            Verified real estate, shortlets, and logistics support.
+            Verified real estate, shortlets, and logistics support — built for speed, clarity, and trust.
           </div>
 
           <div class="social" aria-label="Social links">
@@ -1159,8 +1650,9 @@
         <div>
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
-            <a href="index.html">Home</a>
+            <a href="index.html#home">Home</a>
             <a href="index.html#about">About</a>
+            <a href="#services">Services</a>
             <a href="real-estate.html">Real Estate</a>
             <a href="logistics.html">Logistics</a>
             <a href="premium.html">Premium</a>
@@ -1182,7 +1674,7 @@
             <div class="contact-chip">
               <i class="fa-regular fa-envelope"></i>
               <div>
-                <div class="txt"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="056770766c6b607676456d607c69647768646d2b7160666d">[email&#160;protected]</a></div>
+                <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
                 <div class="sub">Business enquiries</div>
               </div>
             </div>
@@ -1197,7 +1689,7 @@
           </div>
 
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> Chat Now
             </button>
             <a class="btn small primary" href="logistics.html">
@@ -1209,11 +1701,23 @@
 
       <div class="footer-bottom">
         <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="premium.html" style="color:var(--muted2)"><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</a>
+        </div>
       </div>
     </div>
   </footer>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+  <!-- Floating WhatsApp -->
+  <div class="wa-float" aria-label="Floating WhatsApp support">
+    <button class="wa-pill" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+      WhatsApp Support
+    </button>
+    <button class="wa-btn" type="button" aria-label="Chat on WhatsApp" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+      <i class="fa-brands fa-whatsapp"></i>
+    </button>
+  </div>
+
   <script>
     // Year
     document.getElementById("year").textContent = new Date().getFullYear();
@@ -1242,9 +1746,14 @@
       const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
       window.open(url, "_blank", "noopener,noreferrer");
     }
+    function scrollToEl(sel){
+      const el = document.querySelector(sel);
+      if(!el) return;
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 
     // Theme (dark/light) with persistence
-    const THEME_KEY = "larmah_theme_v5";
+    const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem(THEME_KEY, theme);
@@ -1281,27 +1790,40 @@
     window.addEventListener("hashchange", () => setActivePage(getRoute()));
     document.addEventListener("DOMContentLoaded", () => setActivePage(getRoute()));
 
-    // Search submit -> WhatsApp (Category separate from Location)
-    function submitSearch(){
-      const checkin = document.getElementById("checkin").value || "Not set";
-      const checkout = document.getElementById("checkout").value || "Not set";
-      const guests = document.getElementById("guests").value || "2";
-      const category = document.getElementById("category").value || "Any";
-      const locationVal = document.getElementById("location").value || "Any";
+    // Mode switch (Real Estate / Logistics)
+    const tabRealEstate = document.getElementById("tabRealEstate");
+    const tabLogistics = document.getElementById("tabLogistics");
+    const formRealEstate = document.getElementById("formRealEstate");
+    const formLogistics = document.getElementById("formLogistics");
 
-      openWA(buildMsg("Shortlet Availability Request", {
-        Checkin: checkin,
-        Checkout: checkout,
-        Guests: guests,
-        Category: category,
-        Location: locationVal,
-        Message: "Hello Larmah, please confirm available verified options and total cost."
-      }));
+    function setMode(mode){
+      const isLog = mode === "logistics";
+      tabRealEstate.classList.toggle("is-active", !isLog);
+      tabLogistics.classList.toggle("is-active", isLog);
+      tabRealEstate.setAttribute("aria-selected", !isLog ? "true" : "false");
+      tabLogistics.setAttribute("aria-selected", isLog ? "true" : "false");
+      formRealEstate.classList.toggle("is-active", !isLog);
+      formLogistics.classList.toggle("is-active", isLog);
     }
+    window.setMode = setMode;
 
-    // Set minimum checkout based on checkin
+    // Date mins (today)
+    function toISODate(d){
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    const todayISO = toISODate(new Date());
     const checkinEl = document.getElementById("checkin");
     const checkoutEl = document.getElementById("checkout");
+    const pickDateEl = document.getElementById("pickDate");
+
+    if(checkinEl){ checkinEl.min = todayISO; }
+    if(checkoutEl){ checkoutEl.min = todayISO; }
+    if(pickDateEl){ pickDateEl.min = todayISO; }
+
+    // Set minimum checkout based on checkin
     if(checkinEl && checkoutEl){
       checkinEl.addEventListener("change", () => {
         if(!checkinEl.value) return;
@@ -1312,7 +1834,51 @@
       });
     }
 
-    // HERO carousel (home only) — FIXED ARRAY (no trailing comma)
+    // Real estate submit -> WhatsApp
+    function submitRealEstate(){
+      const checkin = (document.getElementById("checkin").value || "Not set");
+      const checkout = (document.getElementById("checkout").value || "Not set");
+      const guests = (document.getElementById("guests").value || "2");
+      const category = (document.getElementById("category").value || "Any");
+      const locationVal = (document.getElementById("location").value || "Any");
+      const budget = (document.getElementById("budget").value || "");
+
+      openWA(buildMsg("Real Estate — Availability Request", {
+        Checkin: checkin,
+        Checkout: checkout,
+        Guests: guests,
+        Category: category,
+        Location: locationVal,
+        Budget: budget,
+        Message: "Hello Larmah, please confirm available verified options and total cost."
+      }));
+    }
+    window.submitRealEstate = submitRealEstate;
+
+    // Logistics submit -> WhatsApp
+    function submitLogistics(){
+      const pickup = (document.getElementById("pickup").value || "Not set");
+      const dropoff = (document.getElementById("dropoff").value || "Not set");
+      const date = (document.getElementById("pickDate").value || "Not set");
+      const time = (document.getElementById("pickTime").value || "");
+      const vehicle = (document.getElementById("vehicle").value || "Dispatch Bike");
+      const loadType = (document.getElementById("loadType").value || "Small Package");
+      const notes = (document.getElementById("logNotes").value || "");
+
+      openWA(buildMsg("Logistics — Quote Request", {
+        Pickup: pickup,
+        Dropoff: dropoff,
+        Date: date,
+        Time: time,
+        Vehicle: vehicle,
+        Load: loadType,
+        Notes: notes,
+        Message: "Hello Larmah, please share pricing, ETA, and next steps for this movement."
+      }));
+    }
+    window.submitLogistics = submitLogistics;
+
+    // HERO carousel
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1321,9 +1887,9 @@
 
     const HERO_SLIDES = [
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766726716955-9ot7tl3d.jpeg", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
-      { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792878193-vc0a7pto.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Trust-first real estate support." },
-      { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792082908-wa7yd8n5.jpeg", icon:"fa-truck", label:"Dispatch", sub:"City-wide movement with updates." },
-      { img:"https://www.corriganlogistics.com/wp-content/uploads/2025/04/01-how-to-choose-the-right-freight-forwarder.jpg", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
+      { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792878193-vc0a7pto.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clean confirmations." },
+      { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792082908-wa7yd8n5.jpeg", icon:"fa-truck-fast", label:"Dispatch", sub:"City-wide movement with updates." },
+      { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=515", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
     ];
 
     let heroIdx = 0;
@@ -1347,7 +1913,7 @@
       }, 220);
     }
 
-    // Featured rotation (3 cards) — only on home
+    // Featured rotation (3 cards)
     const FEATURE_LIST = [
       { title:"Verified 1 Bedroom Shortlet", area:"Lekki / VI", tag:"Verified", img:"https://source.unsplash.com/1200x800/?apartment,bedroom,modern&sig=101", type:"1 Bedroom" },
       { title:"Verified 2 Bedroom Shortlet", area:"Ikoyi", tag:"Fast confirm", img:"https://source.unsplash.com/1200x800/?apartment,luxury,living-room&sig=102", type:"2 Bedroom" },
@@ -1412,7 +1978,9 @@
     // Expose
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
-    window.submitSearch = submitSearch;
+    window.openWA = openWA;
+    window.buildMsg = buildMsg;
+    window.scrollToEl = scrollToEl;
   </script>
 
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
