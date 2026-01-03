@@ -1,9 +1,9 @@
 <!-- =========================
-     premium.html (UPGRADED)
-     - Same styling/concept as your latest pages
-     - After Paystack success: server verifies payment + creates unique invite token
-     - Invite email is sent to the payer email with a UNIQUE registration link
-     - User creates account ONLY via that emailed link (premium-only accounts)
+     premium.html (UPGRADED v2)
+     - Premium Investment Tracks + Concierge
+     - Same styling language as index/real-estate/logistics
+     - Paystack: pay -> server verifies -> unique invite link emailed
+     - Only Premium users can create accounts (via invite link)
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -12,40 +12,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>Premium | Larmah Enterprise</title>
-  <meta name="description" content="Priority sourcing, faster response, and concierge handling across Real Estate and Logistics — WhatsApp-first support with clean references." />
-  <meta name="keywords" content="Larmah Premium, Concierge Nigeria, Priority Real Estate, Premium Logistics, VIP Sourcing" />
+  <meta name="description" content="Premium investment tracks + priority concierge across Real Estate and Logistics — WhatsApp-first support with clean references." />
+  <meta name="keywords" content="Larmah Premium, Investment Tracks Nigeria, Priority Real Estate, Premium Logistics, Concierge, Deal Sourcing" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
   <meta name="color-scheme" content="dark light" />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://heylarmah.tech/premium.html" />
 
+  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="en_NG" />
   <meta property="og:url" content="https://heylarmah.tech/premium.html" />
-  <meta property="og:title" content="Larmah Premium | Priority Concierge" />
-  <meta property="og:description" content="Priority sourcing and concierge handling across Real Estate and Logistics." />
+  <meta property="og:title" content="Larmah Premium | Investment Tracks + Concierge" />
+  <meta property="og:description" content="Premium investment tracks and priority concierge across Real Estate and Logistics." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:alt" content="Larmah Premium — Priority Concierge" />
+  <meta property="og:image:alt" content="Larmah Premium — Investment Tracks + Concierge" />
 
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Larmah Premium" />
-  <meta name="twitter:description" content="Priority sourcing and concierge handling across Real Estate and Logistics." />
+  <meta name="twitter:description" content="Premium investment tracks and concierge handling across Real Estate and Logistics." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
+  <!-- Icons -->
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
 
+  <!-- Perf -->
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="preconnect" href="https://js.paystack.co" crossorigin />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Supabase + app.js -->
+  <script>
+    window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
+    window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
+
+  <!-- Paystack -->
   <script src="https://js.paystack.co/v1/inline.js"></script>
 
+  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -53,7 +66,7 @@
     "name":"Larmah Premium",
     "url":"https://heylarmah.tech/premium.html",
     "isPartOf":{"@type":"WebSite","name":"Larmah Enterprise","url":"https://heylarmah.tech/"},
-    "about":{"@type":"Service","name":"Premium Concierge (Real Estate + Logistics)","areaServed":"NG"}
+    "about":{"@type":"Service","name":"Premium Investment Tracks + Concierge (Real Estate + Logistics)","areaServed":"NG"}
   }
   </script>
 
@@ -64,6 +77,11 @@
       --ease: cubic-bezier(.2,.8,.2,1);
       --shadow: 0 18px 50px rgba(0,0,0,.42);
       --shadow2: 0 12px 34px rgba(0,0,0,.30);
+
+      --safeB: env(safe-area-inset-bottom, 0px);
+      --safeT: env(safe-area-inset-top, 0px);
+      --safeL: env(safe-area-inset-left, 0px);
+      --safeR: env(safe-area-inset-right, 0px);
     }
 
     html[data-theme="dark"]{
@@ -115,7 +133,7 @@
       --logoBg: rgba(255,255,255,.65);
     }
 
-    *{ box-sizing:border-box; }
+    *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
     html{ scroll-behavior:smooth; }
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
@@ -138,7 +156,13 @@
 
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
-    .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+
+    .container{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding-left: max(16px, var(--safeL));
+      padding-right: max(16px, var(--safeR));
+    }
 
     .skip{
       position:absolute; left:-999px; top:10px;
@@ -152,6 +176,7 @@
     .skip:focus{ left: 12px; outline: none; }
     :focus-visible{ outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 12px; }
 
+    /* Header */
     header{
       position:sticky; top:0; z-index:50;
       background: var(--headerBg);
@@ -160,6 +185,7 @@
     }
     .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
     .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
+
     .logo-wrap{
       position:relative;
       width:44px; height:44px;
@@ -228,8 +254,10 @@
       nav{ display:none; }
       .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
       .header-actions{ margin-left:auto; }
+      body{ padding-bottom: calc(80px + var(--safeB)); }
     }
 
+    /* Mobile sheet */
     .overlay{ position:fixed; inset:0; background: var(--overlayBg); display:none; align-items:flex-end; z-index:80; }
     .overlay.open{ display:flex; }
     .sheet{
@@ -239,12 +267,15 @@
       background: color-mix(in oklab, var(--bg2) 82%, #000 18%);
       box-shadow: var(--shadow);
       padding: 14px;
+      padding-bottom: calc(14px + var(--safeB));
+      max-height: calc(92vh - var(--safeT));
+      overflow:auto;
     }
     .sheet-head{ display:flex; align-items:center; justify-content:space-between; padding-bottom: 10px; border-bottom: 1px solid var(--line2); margin-bottom: 10px; gap: 10px; }
     .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
     .sheet a{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding: 12px 12px;
+      padding: 14px 12px;
       border-radius: 14px;
       border: 1px solid var(--line2);
       background: var(--panel2);
@@ -253,7 +284,9 @@
       font-weight: 900;
     }
     .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 8px; }
+    .sheet-actions .btn{ flex:1; min-width:0; }
 
+    /* Buttons */
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:10px;
       border-radius: 14px; padding: 12px 16px; min-height: 46px;
@@ -275,15 +308,18 @@
     .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
     .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none !important; filter:none !important; }
 
+    /* Page blocks */
     .page-wrap{ padding: 18px 0 0; }
+    .section{ padding: 18px 0; }
+    .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom: 12px; flex-wrap:wrap; }
+    h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
+    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height:1.4; }
 
+    /* HERO */
     .hero{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
-      background:
-        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
-        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
-        var(--panel2);
+      background: var(--panel2);
       box-shadow: var(--shadow);
       overflow:hidden;
       padding: 16px;
@@ -294,9 +330,9 @@
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.20), transparent 60%),
-        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
-        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.10), transparent 62%);
+        radial-gradient(520px 260px at 18% 0%, rgba(212,175,55,.22), transparent 62%),
+        radial-gradient(520px 260px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
+        radial-gradient(620px 320px at 40% 105%, rgba(0,122,255,.12), transparent 62%);
       pointer-events:none;
       z-index:-1;
     }
@@ -309,6 +345,7 @@
     h1{ margin: 6px 0 10px; font-size: clamp(2.0rem, 4vw, 2.95rem); line-height: 1.05; letter-spacing:-0.6px; }
     .gold{ background: linear-gradient(180deg, var(--gold2), var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .lead{ margin:0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
+
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
     @media (max-width: 520px){ .hero-actions{ flex-direction:column; } .hero-actions .btn{ width:100%; } }
 
@@ -318,9 +355,23 @@
       background: var(--panel);
       box-shadow: var(--shadow2);
       padding: 12px;
+      position:relative;
+      overflow:hidden;
     }
+    .hero-panel::after{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(260px 120px at 30% 0%, rgba(212,175,55,.14), transparent 60%),
+        radial-gradient(260px 120px at 90% 25%, rgba(0,217,129,.08), transparent 60%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .hero-panel > *{ position:relative; z-index:1; }
+
     .hero-panel h3{ margin:0; font-size:1.05rem; letter-spacing:-0.2px; }
     .hero-panel p{ margin:8px 0 0; color: var(--muted); line-height:1.45; }
+
     .bullets{ margin: 10px 0 0; padding: 0; list-style:none; display:grid; gap:10px; }
     .b{
       display:flex; gap:10px; align-items:flex-start;
@@ -333,11 +384,74 @@
     .b b{ display:block; }
     .b span{ display:block; margin-top:3px; color: var(--muted2); font-size:.92rem; line-height:1.35; }
 
-    .section{ padding: 18px 0; }
-    .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom: 12px; flex-wrap:wrap; }
-    h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
-    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height:1.4; }
+    .notice{
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--muted);
+    }
+    .notice strong{ color: var(--text); }
 
+    /* Tracks grid */
+    .tracks{
+      display:grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @media (max-width: 980px){ .tracks{ grid-template-columns: 1fr; } }
+
+    .track{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+    }
+    .track-top{
+      padding: 14px;
+      border-bottom: 1px solid var(--line2);
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .track-title{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      min-width:0;
+    }
+    .track-icn{
+      width:42px; height:42px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      border: 1px solid color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
+      background: color-mix(in oklab, var(--gold) 14%, transparent);
+      color: var(--gold2);
+      flex:0 0 auto;
+    }
+    .track h3{ margin:0; letter-spacing:-0.2px; }
+    .track .tiny{ margin-top:4px; color: var(--muted); font-weight:850; font-size:.92rem; }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 82%, transparent);
+      font-weight: 900;
+      font-size: .82rem;
+    }
+    .track-body{ padding: 14px; }
+    .track ul{ margin: 0; padding: 0 0 0 18px; color: var(--muted); line-height: 1.55; }
+    .track li{ margin: 6px 0; }
+    .track-actions{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
+    .track-actions .btn{ flex:1; }
+    @media (max-width: 520px){ .track-actions .btn{ width:100%; flex:unset; } }
+
+    /* Tiers */
     .tiers{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     @media (max-width: 1024px){ .tiers{ grid-template-columns: 1fr; } }
 
@@ -381,6 +495,7 @@
     .tier-actions .btn{ flex:1; }
     @media (max-width: 520px){ .tier-actions .btn{ width:100%; flex:unset; } }
 
+    /* Pay form */
     .form{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -405,14 +520,12 @@
     }
     textarea{ min-height: 96px; resize: vertical; }
 
-    .notice{
-      border-radius: 16px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--muted);
+    .pillbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 12px;
     }
-    .notice strong{ color: var(--text); }
 
     .receipt{
       margin-top: 12px;
@@ -424,6 +537,7 @@
     }
     .receipt.show{ display:block; }
     .receipt .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; }
+
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:.92rem; }
 
     .status-line{
@@ -435,6 +549,7 @@
       color: var(--muted);
       font-weight: 850;
       font-size: .92rem;
+      display:none;
     }
     .dot{
       width:10px; height:10px; border-radius: 999px;
@@ -445,6 +560,7 @@
     .dot.warn{ background: var(--warn); border-color: color-mix(in oklab, var(--warn) 40%, var(--line2) 60%); }
     .dot.bad{ background: var(--bad); border-color: color-mix(in oklab, var(--bad) 40%, var(--line2) 60%); }
 
+    /* Footer (same as your current style) */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
@@ -504,10 +620,11 @@
       font-size: .9rem;
     }
 
+    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
-      bottom: 18px;
+      bottom: calc(18px + var(--safeB));
       transform: translateX(-50%);
       min-width: 220px;
       max-width: min(560px, calc(100vw - 28px));
@@ -521,6 +638,17 @@
       z-index: 120;
     }
     .toast.show{ display:block; }
+
+    /* Mobile polish */
+    @media (max-width: 620px){
+      .header-inner{ padding: 10px 0; gap:10px; }
+      .brand{ min-width: 0; }
+      .brand .bsub{ display:none; }
+      .logo-wrap{ width:40px; height:40px; border-radius: 13px; }
+      .logo-wrap img{ border-radius: 11px; }
+      .icon-btn{ width:40px; height:40px; }
+      input, select, textarea{ font-size:16px; } /* prevent iOS zoom */
+    }
   </style>
 </head>
 
@@ -590,56 +718,189 @@
   </header>
 
   <main id="main" class="container page-wrap" tabindex="-1">
+    <!-- HERO -->
     <section class="hero" aria-label="Premium hero">
       <div class="hero-grid">
         <div>
           <div class="kicker">
-            <span>Priority response</span><span class="dot">•</span>
-            <span>Better options</span><span class="dot">•</span>
-            <span>Cleaner handling</span>
+            <span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium-only access</span><span class="dot">•</span>
+            <span><i class="fa-solid fa-diagram-project" style="color:var(--gold)"></i> Investment tracks</span><span class="dot">•</span>
+            <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
           </div>
 
-          <h1>Go <span class="gold">Premium</span>.</h1>
+          <h1>Premium <span class="gold">Investment Tracks</span> + Concierge.</h1>
           <p class="lead">
-            Premium gives you priority sourcing + concierge handling across Real Estate and Logistics. After payment, we send a
-            <strong>unique registration link</strong> to your email so you can create your Premium-only account.
+            Premium gives you priority sourcing, deal support, and coordinated execution across Real Estate and Logistics.
+            After payment, we email a <strong>unique registration link</strong> for your Premium-only account.
           </p>
 
           <div class="hero-actions">
-            <a class="btn solid" href="#tiers"><i class="fa-solid fa-layer-group"></i> View Tiers</a>
+            <a class="btn solid" href="#tracks"><i class="fa-solid fa-diagram-project"></i> View Tracks</a>
             <a class="btn primary" href="#pay"><i class="fa-solid fa-credit-card"></i> Pay with Paystack</a>
-            <button class="btn ghost" type="button" onclick="openWA(buildMsg('Premium Enquiry', { Message:'Hello Larmah, I want Premium support.' }))">
+            <button class="btn ghost" type="button" onclick="openWA(buildMsg('Premium Enquiry', { Message:'Hello Larmah, I want Premium investment tracks + concierge support.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp
             </button>
           </div>
 
           <div class="notice" style="margin-top:12px;">
             <strong>Account Access:</strong> Only Premium subscribers can create an account.<br/>
-            <strong>How you register:</strong> Pay → We verify payment → We email you a <b>unique registration link</b> (expires).<br/><br/>
+            <strong>How you register:</strong> Pay → We verify → We email a <b>unique registration link</b> (expires).<br/><br/>
             <strong>Business Email:</strong> <a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a>
             &nbsp;•&nbsp; <strong>WhatsApp:</strong> +234 706 308 0605
           </div>
         </div>
 
-        <aside class="hero-panel" aria-label="Premium benefits">
-          <h3><i class="fa-solid fa-crown" style="color:var(--gold)"></i> What Premium unlocks</h3>
-          <p>Sharper sourcing, faster confirmations, and premium deal-flow access — with traceable references.</p>
+        <aside class="hero-panel" aria-label="Premium highlights">
+          <h3><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> What Premium unlocks</h3>
+          <p>Sharper sourcing, cleaner confirmations, premium deal-flow access — with traceable references.</p>
 
           <ul class="bullets">
             <li class="b"><i class="fa-solid fa-bolt"></i><div><b>Priority queue</b><span>Your requests move first — faster response and follow-up.</span></div></li>
-            <li class="b"><i class="fa-solid fa-circle-check"></i><div><b>Cleaner shortlist</b><span>Verified options (where available) — less back-and-forth.</span></div></li>
-            <li class="b"><i class="fa-solid fa-diagram-project"></i><div><b>Investing tracks</b><span>Deal support across real estate + logistics structures.</span></div></li>
-            <li class="b"><i class="fa-solid fa-user-tie"></i><div><b>Concierge handling</b><span>We coordinate and confirm — you stay focused.</span></div></li>
+            <li class="b"><i class="fa-solid fa-circle-check"></i><div><b>Cleaner shortlist</b><span>Verified options (where available) — less noise, more clarity.</span></div></li>
+            <li class="b"><i class="fa-solid fa-handshake-angle"></i><div><b>Deal support</b><span>Guidance, sourcing, and structure support on available tracks.</span></div></li>
+            <li class="b"><i class="fa-solid fa-user-tie"></i><div><b>Concierge execution</b><span>We coordinate and confirm — you stay focused.</span></div></li>
           </ul>
         </aside>
       </div>
     </section>
 
+    <!-- TRACKS -->
+    <section class="section" id="tracks" aria-label="Premium investment tracks">
+      <div class="section-head">
+        <div>
+          <h2>Premium Investment Tracks</h2>
+          <p class="subhead">Choose your path — active or passive real estate, fleet income, or freight participation (subject to availability).</p>
+        </div>
+        <button class="btn small solid" type="button" onclick="openWA(buildMsg('Premium Tracks', { Message:'Hello Larmah, please share currently available investment tracks and next steps.' }))">
+          <i class="fa-brands fa-whatsapp"></i> Ask Availability
+        </button>
+      </div>
+
+      <div class="tracks">
+        <!-- RE ACTIVE -->
+        <article class="track">
+          <div class="track-top">
+            <div class="track-title">
+              <div class="track-icn"><i class="fa-solid fa-building"></i></div>
+              <div style="min-width:0">
+                <h3>Real Estate — Active Investing</h3>
+                <div class="tiny">Buy-to-rent • Fix & flip • Joint ventures • Land banking</div>
+              </div>
+            </div>
+            <span class="chip"><i class="fa-solid fa-chart-line" style="color:var(--gold)"></i> Active</span>
+          </div>
+          <div class="track-body">
+            <ul>
+              <li>Deal sourcing support + curated shortlist</li>
+              <li>Basic verification guidance + documentation pathway</li>
+              <li>Execution coordination (inspection → reserve → move-in/hand-over)</li>
+              <li>Performance tracking prompts and checklists</li>
+            </ul>
+            <div class="track-actions">
+              <button class="btn solid" type="button" onclick="openWA(buildMsg('Track Interest', { Track:'Real Estate — Active', Budget:'', Location:'', Message:'Hello Larmah, I’m interested in active real estate investing. What’s available?' }))">
+                <i class="fa-brands fa-whatsapp"></i> I’m Interested
+              </button>
+              <a class="btn primary" href="#pay"><i class="fa-solid fa-credit-card"></i> Join Premium</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- RE PASSIVE -->
+        <article class="track">
+          <div class="track-top">
+            <div class="track-title">
+              <div class="track-icn"><i class="fa-solid fa-coins"></i></div>
+              <div style="min-width:0">
+                <h3>Real Estate — Passive Investing</h3>
+                <div class="tiny">Fractional participation • Rent-share • Property-backed notes</div>
+              </div>
+            </div>
+            <span class="chip"><i class="fa-solid fa-hand-holding-dollar" style="color:var(--gold)"></i> Passive</span>
+          </div>
+          <div class="track-body">
+            <ul>
+              <li>Curated income opportunities (when available)</li>
+              <li>Participation structures + timing clarity</li>
+              <li>Simple reporting cadence</li>
+              <li>Risk notes + exit/tenor alignment</li>
+            </ul>
+            <div class="track-actions">
+              <button class="btn solid" type="button" onclick="openWA(buildMsg('Track Interest', { Track:'Real Estate — Passive', Amount:'', Tenor:'', Message:'Hello Larmah, I want passive real estate opportunities. What’s available?' }))">
+                <i class="fa-brands fa-whatsapp"></i> I’m Interested
+              </button>
+              <a class="btn primary" href="#pay"><i class="fa-solid fa-credit-card"></i> Join Premium</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- LOGISTICS FLEET -->
+        <article class="track">
+          <div class="track-top">
+            <div class="track-title">
+              <div class="track-icn"><i class="fa-solid fa-truck-fast"></i></div>
+              <div style="min-width:0">
+                <h3>Logistics — Fleet & Dispatch Returns</h3>
+                <div class="tiny">Vehicle rental models • Partner-driver • Route-based earnings</div>
+              </div>
+            </div>
+            <span class="chip"><i class="fa-solid fa-gauge-high" style="color:var(--gold)"></i> Utilization</span>
+          </div>
+          <div class="track-body">
+            <ul>
+              <li>Dispatch bike/vehicle utilization playbooks</li>
+              <li>Driver onboarding + operational templates</li>
+              <li>Basic tracking prompts (days used, downtime, revenue)</li>
+              <li>Concierge coordination for scheduling and hand-offs</li>
+            </ul>
+            <div class="track-actions">
+              <button class="btn solid" type="button" onclick="openWA(buildMsg('Track Interest', { Track:'Logistics — Fleet & Dispatch', Vehicle:'', City:'', Message:'Hello Larmah, I want fleet/dispatch return models. What’s available?' }))">
+                <i class="fa-brands fa-whatsapp"></i> I’m Interested
+              </button>
+              <a class="btn primary" href="#pay"><i class="fa-solid fa-credit-card"></i> Join Premium</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- LOGISTICS FREIGHT -->
+        <article class="track">
+          <div class="track-top">
+            <div class="track-title">
+              <div class="track-icn"><i class="fa-solid fa-boxes-stacked"></i></div>
+              <div style="min-width:0">
+                <h3>Logistics — Freight & Movement Plays</h3>
+                <div class="tiny">Freight participation • Haulage partnerships • Contract-linked movement</div>
+              </div>
+            </div>
+            <span class="chip"><i class="fa-solid fa-route" style="color:var(--gold)"></i> Freight</span>
+          </div>
+          <div class="track-body">
+            <ul>
+              <li>Movement opportunity sourcing (subject to availability)</li>
+              <li>Contract-linked execution support</li>
+              <li>Basic risk notes + timeline planning</li>
+              <li>Concierge coordination for scheduling + documentation</li>
+            </ul>
+            <div class="track-actions">
+              <button class="btn solid" type="button" onclick="openWA(buildMsg('Track Interest', { Track:'Logistics — Freight', Corridor:'', Vehicle:'', Message:'Hello Larmah, I want freight/movement opportunities. What’s available?' }))">
+                <i class="fa-brands fa-whatsapp"></i> I’m Interested
+              </button>
+              <a class="btn primary" href="#pay"><i class="fa-solid fa-credit-card"></i> Join Premium</a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="notice" style="margin-top:14px;">
+        <strong>Important:</strong> Tracks are offered based on availability. Premium gives you first access to deal flow, sourcing, and coordination support.
+      </div>
+    </section>
+
+    <!-- TIERS -->
     <section class="section" id="tiers" aria-label="Premium tiers">
       <div class="section-head">
         <div>
           <h2>Premium Tiers</h2>
-          <p class="subhead">Pick a tier, then pay instantly. Registration link will be emailed after verification.</p>
+          <p class="subhead">Pick a tier, pay instantly, then check your email for your unique registration link.</p>
         </div>
         <div class="mono" style="opacity:.85">RC: 9127113</div>
       </div>
@@ -674,7 +935,7 @@
           <div class="tier-body">
             <ul>
               <li>Dedicated concierge coordination</li>
-              <li>Best options + faster confirmations</li>
+              <li>Premium track entry support + best options first</li>
               <li>Priority escalation on urgent requests</li>
               <li><strong>Premium-only account access</strong></li>
             </ul>
@@ -695,7 +956,7 @@
             <ul>
               <li>White-glove end-to-end handling</li>
               <li>Reserved scheduling priority for logistics</li>
-              <li>Deal structuring support</li>
+              <li>Deal structuring support (where applicable)</li>
               <li><strong>Premium-only account access</strong></li>
             </ul>
             <div class="tier-actions">
@@ -711,6 +972,7 @@
       </div>
     </section>
 
+    <!-- PAY -->
     <section class="section" id="pay" aria-label="Paystack payment">
       <div class="section-head">
         <div>
@@ -745,18 +1007,37 @@
             </select>
           </div>
 
+          <div class="field" style="grid-column: span 2;">
+            <label for="p_track">Preferred Track</label>
+            <select id="p_track">
+              <option value="general" selected>General (tell me what’s available)</option>
+              <option value="re_active">Real Estate — Active Investing</option>
+              <option value="re_passive">Real Estate — Passive Investing</option>
+              <option value="lg_fleet">Logistics — Fleet & Dispatch Returns</option>
+              <option value="lg_freight">Logistics — Freight & Movement Plays</option>
+            </select>
+          </div>
+
+          <div class="field" style="grid-column: span 2;">
+            <label for="p_urgency">Urgency</label>
+            <select id="p_urgency">
+              <option value="standard" selected>Standard</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+
           <div class="field" style="grid-column: span 4;">
             <label for="p_notes">Notes (optional)</label>
-            <textarea id="p_notes" placeholder="What do you need? Dates, locations, urgency, budgets, pickup/dropoff, investing interest, etc."></textarea>
+            <textarea id="p_notes" placeholder="Share budget, locations, timeline, vehicle type, corridor, etc."></textarea>
           </div>
         </div>
 
-        <div class="status-line" id="inviteStatus" style="display:none;">
+        <div class="status-line" id="inviteStatus">
           <span class="dot" id="inviteDot"></span>
           <span id="inviteText">—</span>
         </div>
 
-        <div class="pillbar" style="margin-top:12px;">
+        <div class="pillbar">
           <button class="btn solid" id="payBtn" type="button" onclick="payWithPaystack()">
             <i class="fa-solid fa-lock"></i> Pay Now
           </button>
@@ -766,7 +1047,7 @@
           </button>
 
           <button class="btn ghost" type="button"
-            onclick="openWA(buildMsg('Premium Enquiry', { Tier: document.getElementById('p_tier').value, Message:'Hello Larmah, I want to confirm Premium before payment.' }))">
+            onclick="openWA(buildMsg('Premium Enquiry', { Tier: document.getElementById('p_tier').value, Track: document.getElementById('p_track').value, Message:'Hello Larmah, I want to confirm Premium before payment.' }))">
             <i class="fa-brands fa-whatsapp"></i> Confirm on WhatsApp
           </button>
         </div>
@@ -800,11 +1081,12 @@
     </section>
   </main>
 
+  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-cta">
         <div>
-          <h3>Priority support, cleaner handling.</h3>
+          <h3>Premium tracks + concierge handling.</h3>
           <p>Pay with Paystack — we’ll email your unique registration link.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -829,7 +1111,7 @@
           </div>
 
           <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
-            Verified real estate and trusted logistics across Nigeria.
+            Verified real estate and trusted logistics across Nigeria — premium access unlocks investing tracks and priority handling.
           </div>
 
           <div class="social" aria-label="Social links">
@@ -907,21 +1189,25 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2400);
     }
 
-    // ===== theme (match your upgraded pages)
+    // ===== theme
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
-      localStorage.setItem(THEME_KEY, theme);
+      try{ localStorage.setItem(THEME_KEY, theme); }catch{}
       const metaTheme = document.querySelector('meta[name="theme-color"]');
       if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
     }
     function toggleTheme(){
+      if(window.LARMAH?.toggleTheme) return window.LARMAH.toggleTheme();
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
       setTheme(cur === "dark" ? "light" : "dark");
     }
     (function initTheme(){
-      const saved = localStorage.getItem(THEME_KEY);
-      if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
+      if(window.LARMAH?.setTheme) return;
+      try{
+        const saved = localStorage.getItem(THEME_KEY);
+        if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
+      }catch{}
       const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
       setTheme(prefersLight ? "light" : "dark");
     })();
@@ -967,10 +1253,7 @@
     // ===== Paystack
     const PAYSTACK_PUBLIC_KEY = "pk_live_69041d3bd5d37d2d88c5c3fe64de4c385e5f025b";
 
-    // ✅ REQUIRED: Supabase Edge Function endpoints (server-side verifies + emails unique link)
-    // Create these functions exactly as named below:
-    // - premium-invite   (verifies Paystack, creates invite token, emails link)
-    // - premium-resend   (re-sends invite link if not used/expired)
+    // Supabase Edge Functions (server verifies payment + emails unique invite)
     const PREMIUM_INVITE_FN = "/functions/v1/premium-invite";
     const PREMIUM_RESEND_FN = "/functions/v1/premium-resend";
 
@@ -992,10 +1275,9 @@
     const payBtn = document.getElementById("payBtn");
     const resendBtn = document.getElementById("resendBtn");
 
-    let __lastReceipt = null; // { ref, tier, amountNgn, email, name, phone }
+    let __lastReceipt = null; // { ref, tier, amountNgn, email, name, phone, track, urgency }
 
     function setInviteStatus(kind, text){
-      if(!inviteStatus) return;
       inviteStatus.style.display = "flex";
       inviteDot.classList.remove("good","warn","bad");
       inviteDot.classList.add(kind === "good" ? "good" : kind === "warn" ? "warn" : "bad");
@@ -1003,7 +1285,6 @@
     }
 
     function showReceipt({ ref, tier, amountNgn }){
-      __lastReceipt = { ...( __lastReceipt || {} ), ref, tier, amountNgn };
       receiptRefEl.textContent = ref;
       receiptTierEl.textContent = tier;
       receiptAmtEl.textContent = money(amountNgn);
@@ -1041,19 +1322,20 @@
         Email: __lastReceipt.email,
         Name: __lastReceipt.name,
         Phone: __lastReceipt.phone,
+        Track: __lastReceipt.track,
+        Urgency: __lastReceipt.urgency,
         Message: "Hello Larmah, I’ve completed payment. Please confirm and send my registration link."
       }));
     }
     window.shareOnWhatsApp = shareOnWhatsApp;
 
-    // Calls Edge Function to verify + email unique registration link
-    async function requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, notes }){
+    async function requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes }){
       setInviteStatus("warn", "Verifying payment and preparing your registration link…");
       try{
         const res = await fetch(PREMIUM_INVITE_FN, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ paystackRef, clientRef, name, email, phone, tier, amountNgn, notes })
+          body: JSON.stringify({ paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes })
         });
         const data = await res.json().catch(() => ({}));
         if(!res.ok){
@@ -1101,6 +1383,8 @@
       const email = document.getElementById("p_email").value.trim();
       const phone = document.getElementById("p_phone").value.trim();
       const tier = document.getElementById("p_tier").value;
+      const track = document.getElementById("p_track").value;
+      const urgency = document.getElementById("p_urgency").value;
       const notes = document.getElementById("p_notes").value.trim();
 
       if(!name) return toast("Full name is required.");
@@ -1129,25 +1413,27 @@
           custom_fields: [
             { display_name: "Customer Name", variable_name: "customer_name", value: name },
             { display_name: "Phone", variable_name: "phone", value: phone },
-            { display_name: "Tier", variable_name: "tier", value: tier }
+            { display_name: "Tier", variable_name: "tier", value: tier },
+            { display_name: "Track", variable_name: "track", value: track },
+            { display_name: "Urgency", variable_name: "urgency", value: urgency }
           ],
           notes
         },
         callback: async function(response){
           const paystackRef = response?.reference || clientRef;
 
-          __lastReceipt = { ref: paystackRef, tier, amountNgn, email, name, phone };
+          __lastReceipt = { ref: paystackRef, tier, amountNgn, email, name, phone, track, urgency };
           showReceipt({ ref: paystackRef, tier, amountNgn });
 
-          // ✅ Immediately trigger server-side verify + email invite link
-          const result = await requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, notes });
+          // server-side verify + email invite
+          const result = await requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes });
 
-          // allow resend if needed
           resendBtn.disabled = false;
 
-          // optional WhatsApp confirmation (kept)
           openWA(buildMsg("Premium Payment Confirmation", {
             Tier: tier,
+            Track: track,
+            Urgency: urgency,
             Amount: money(amountNgn),
             PaystackRef: paystackRef,
             Email: email,
@@ -1164,7 +1450,6 @@
         onClose: function(){
           setInviteStatus("bad", "Payment window closed.");
           payBtn.disabled = false;
-          // resend stays disabled until payment success
         }
       });
 
