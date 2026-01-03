@@ -1,6 +1,8 @@
 /* =========================
-   Larmah Enterprise - app.js (FULL + DB-admin check)
+   Larmah Enterprise - app.js (FULL)
+   Premium gating + helpers + DB admin check + UI helpers
 ========================= */
+
 (function () {
   "use strict";
 
@@ -18,14 +20,18 @@
   ]).map((e) => String(e).toLowerCase().trim());
 
   const THEME_KEY = "larmah_theme_v6";
-
   let supabaseClient = null;
 
   function ensureSupabaseClient() {
     if (supabaseClient) return supabaseClient;
-    if (!window.supabase || !window.supabase.createClient) return null;
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
-
+    if (!window.supabase || !window.supabase.createClient) {
+      console.warn("Supabase SDK not loaded yet.");
+      return null;
+    }
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      console.warn("Supabase URL/ANON KEY missing.");
+      return null;
+    }
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
     });
@@ -188,7 +194,7 @@
     return true;
   }
 
-  // ✅ DB admin check (matches RLS via is_admin())
+  // DB admin check (matches admin_allowlist / is_admin())
   async function isAdminDB() {
     const sb = await waitForSupabase();
     if (!sb) return false;
@@ -214,7 +220,6 @@
     const premiumOk = await requirePremium({ redirectTo: "premium.html" });
     if (!premiumOk) return false;
 
-    // pass if either JS allowlist OR DB allowlist
     const allowByJs = ADMIN_EMAILS.length ? ADMIN_EMAILS.includes(email) : false;
     const allowByDb = await isAdminDB();
 
