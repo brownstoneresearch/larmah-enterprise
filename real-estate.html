@@ -1,7 +1,7 @@
 <!-- =========================
-     real-estate.html (UPGRADED + SYNCED WITH INDEX FEATURED)
-     - Featured on homepage = listings.featured=true AND status=active
-     - This page shows ⭐ Featured badge + Featured-only filter
+     real-estate.html (UPGRADED)
+     - Synced with index Featured (featured=true + status=active)
+     - Adds Featured badge + Featured-only filter
      - Keeps current footer styling
 ========================= -->
 <!DOCTYPE html>
@@ -47,7 +47,7 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- ✅ Supabase + app.js -->
+  <!-- ✅ Configure BEFORE app.js loads -->
   <script>
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
     window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
@@ -348,10 +348,8 @@
       font-weight: 900;
     }
 
-    /* Page */
+    /* Hero / page */
     .page-wrap{ padding: 18px 0 0; }
-
-    /* Hero */
     .hero{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -395,17 +393,9 @@
       background-clip: text;
       color: transparent;
     }
-    .lead{
-      margin:0;
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.55;
-    }
+    .lead{ margin:0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
-    @media (max-width: 520px){
-      .hero-actions{ flex-direction:column; }
-      .hero-actions .btn{ width:100%; }
-    }
+    @media (max-width: 520px){ .hero-actions{ flex-direction:column; } .hero-actions .btn{ width:100%; } }
 
     .meta{ margin-top: 12px; color: var(--muted); font-size: .88rem; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
     .pill{
@@ -454,7 +444,6 @@
     .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
     .hero-bar.run{ width: 100%; }
 
-    /* Sections */
     .section{ padding: 18px 0; }
     .section-head{
       display:flex;
@@ -476,8 +465,7 @@
       padding: 14px;
       margin-bottom: 14px;
     }
-
-    /* ✅ 5 columns (added Featured) */
+    /* ✅ UPDATED to include Featured */
     .filters-grid{ display:grid; gap: 10px; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; }
     @media (max-width: 980px){ .filters-grid{ grid-template-columns: 1fr 1fr; } }
     @media (max-width: 520px){ .filters-grid{ grid-template-columns: 1fr; } }
@@ -505,7 +493,7 @@
       border-top: 1px solid var(--line2);
     }
 
-    /* Grid Cards */
+    /* Cards */
     .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     @media (max-width: 1024px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 640px){ .grid{ grid-template-columns: 1fr; } }
@@ -592,7 +580,6 @@
     .media-dot.active{ background: rgba(255,255,255,0.92); }
 
     .card-body{ padding: 12px; }
-
     .title{
       font-weight: 950;
       margin: 2px 0 6px;
@@ -613,7 +600,6 @@
       font-size: .78rem;
       letter-spacing: .02em;
     }
-
     .desc{
       margin:0;
       color: var(--muted);
@@ -625,8 +611,6 @@
       overflow:hidden;
     }
     .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
-
     .actions-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
     .actions-row .btn{ flex: 1; }
     @media (max-width: 520px){ .actions-row .btn{ width:100%; flex:unset; } }
@@ -916,7 +900,7 @@
       <div class="section-head">
         <div>
           <h2>Listings</h2>
-          <p class="subhead">Search + filter by category, location, and Featured (same as homepage).</p>
+          <p class="subhead">Search + filter by category, location and Featured (syncs with homepage).</p>
         </div>
         <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Sourcing</a>
       </div>
@@ -960,7 +944,6 @@
             </select>
           </div>
 
-          <!-- ✅ Featured filter -->
           <div class="field">
             <label for="re_feat">Featured</label>
             <select id="re_feat">
@@ -974,6 +957,7 @@
           <button class="btn small" type="button" onclick="reQuick('Lekki')">Lekki</button>
           <button class="btn small" type="button" onclick="reQuick('Victoria Island')">VI</button>
           <button class="btn small" type="button" onclick="reQuick('Ikoyi')">Ikoyi</button>
+
           <button class="btn small" type="button" onclick="reSetCat('shortlet')">Shortlet</button>
           <button class="btn small" type="button" onclick="reSetCat('rent')">Rent</button>
           <button class="btn small" type="button" onclick="reSetCat('buy')">Buy</button>
@@ -995,7 +979,6 @@
     </section>
   </main>
 
-  <!-- Latest Footer (current styling) -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -1128,12 +1111,31 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // ---- theme/menu (prefer app.js)
+    // ---- theme (prefer app.js)
+    const THEME_KEY = "larmah_theme_v6";
+    function setTheme(theme){
+      if(window.LARMAH?.setTheme) return window.LARMAH.setTheme(theme);
+      document.documentElement.setAttribute("data-theme", theme);
+      try{ localStorage.setItem(THEME_KEY, theme); }catch{}
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
+    }
     function toggleTheme(){
       if(window.LARMAH?.toggleTheme) return window.LARMAH.toggleTheme();
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
-      document.documentElement.setAttribute("data-theme", cur === "dark" ? "light" : "dark");
+      setTheme(cur === "dark" ? "light" : "dark");
     }
+    (function initTheme(){
+      if(window.LARMAH?.setTheme) return;
+      try{
+        const saved = localStorage.getItem(THEME_KEY);
+        if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
+      }catch{}
+      const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+      setTheme(prefersLight ? "light" : "dark");
+    })();
+
+    // ---- mobile menu
     const overlay = document.getElementById("overlay");
     function toggleMenu(open){
       overlay.classList.toggle("open", !!open);
@@ -1290,6 +1292,7 @@
       const locationTxt = inferLocation(it) || "Nigeria";
       const categoryTxt = inferCategory(it) || "listing";
       const ref = listingRef(id);
+
       const isFeatured = it.featured === true;
 
       return `
@@ -1319,9 +1322,7 @@
               ${esc(title)}
               ${isFeatured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
             </div>
-
             <p class="desc">${esc(desc)}</p>
-
             <div class="price">${esc(price)}</div>
 
             <div class="meta">
