@@ -1,12 +1,3 @@
-/* =========================
-   Larmah Enterprise - app.js (Premium gating + helpers)
-   - Supabase init
-   - WhatsApp helpers
-   - Functions base for Edge Functions
-   - Premium-only auth gating
-   - Admin allowlist gating (set your emails)
-========================= */
-
 (function () {
   "use strict";
 
@@ -16,7 +7,7 @@
     window.__SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
   const SUPABASE_ANON_KEY =
     window.__SUPABASE_ANON_KEY ||
-    "REPLACE_WITH_YOUR_ANON_KEY"; // keep anon key here (ok). NEVER use service role in frontend.
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4"; // keep anon key here (ok). NEVER use service role in frontend.
 
   // WhatsApp support number
   const WHATSAPP_PHONE = "2347063080605";
