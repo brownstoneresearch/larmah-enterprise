@@ -4,35 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="index,follow" />
+  <title>Login | Larmah Premium</title>
 
-  <title>Access | Larmah Enterprise</title>
-  <meta name="description" content="Premium members only: sign in to access your Larmah dashboard. New accounts are created after Premium payment verification." />
   <meta name="theme-color" content="#070A12" />
   <meta name="color-scheme" content="dark light" />
-  <link rel="canonical" href="https://heylarmah.tech/auth.html" />
-
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="en_NG" />
-  <meta property="og:url" content="https://heylarmah.tech/auth.html" />
-  <meta property="og:title" content="Larmah Access | Premium Members" />
-  <meta property="og:description" content="Premium members only: sign in to access your Larmah dashboard." />
-  <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
-
-  <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
   <style>
     :root{
       --gold:#D4AF37; --gold2:#F5D57A;
-      --radius: 18px; --radius2: 22px; --max: 1120px;
+      --radius: 18px; --radius2: 22px; --max: 980px;
       --ease: cubic-bezier(.2,.8,.2,1);
       --shadow: 0 18px 50px rgba(0,0,0,.42);
       --shadow2: 0 12px 34px rgba(0,0,0,.30);
@@ -47,14 +34,9 @@
       --muted: rgba(233,237,247,.72);
       --muted2: rgba(233,237,247,.60);
       --headerBg: rgba(7,10,18,.72);
-      --overlayBg: rgba(0,0,0,.55);
-      --ctaBg: rgba(0,0,0,.28);
-      --ctaLine: rgba(255,255,255,.12);
+      --focus: rgba(245,213,122,.28);
       --good: rgba(0,217,129,.95);
       --bad: rgba(255,90,103,.95);
-      --logoGlow: 0 0 22px rgba(212,175,55,.14);
-      --logoRing: rgba(255,255,255,.12);
-      --logoBg: rgba(255,255,255,.03);
     }
     html[data-theme="light"]{
       --bg:#F7F7FB; --bg2:#FFFFFF;
@@ -66,42 +48,29 @@
       --muted: rgba(14,21,38,.68);
       --muted2: rgba(14,21,38,.56);
       --headerBg: rgba(255,255,255,.78);
-      --overlayBg: rgba(0,0,0,.40);
-      --ctaBg: rgba(255,255,255,.78);
-      --ctaLine: rgba(10,14,26,.10);
+      --focus: rgba(212,175,55,.26);
       --good: rgba(0,140,90,.92);
       --bad: rgba(200,34,60,.90);
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
-      --logoGlow: 0 0 0 rgba(0,0,0,0);
-      --logoRing: rgba(10,14,26,.10);
-      --logoBg: rgba(255,255,255,.65);
     }
 
     *{ box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-    @media (prefers-reduced-motion: reduce){
-      html{ scroll-behavior:auto; }
-      *{ animation:none !important; transition:none !important; }
-    }
-
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       background:
         radial-gradient(900px 420px at 18% 6%, rgba(212,175,55,.10), transparent 60%),
         radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.06), transparent 62%),
-        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.06), transparent 58%),
         linear-gradient(180deg, var(--bg2), var(--bg));
       color: var(--text);
       overflow-x:hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
-    .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+    :focus-visible{ outline:2px solid var(--focus); outline-offset:3px; border-radius:12px; }
 
     header{
       position:sticky; top:0; z-index:50;
@@ -109,56 +78,20 @@
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line2);
     }
-    .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
-    .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
+    .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+    .header-inner{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 12px 0; }
+    .brand{ display:flex; align-items:center; gap:10px; }
+    .logo{
+      width:44px; height:44px; border-radius:14px;
+      border:1px solid var(--line2);
+      overflow:hidden;
+      background: var(--panel);
+    }
+    .logo img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .btxt{ display:flex; flex-direction:column; gap:4px; line-height:1.05; }
+    .bname{ font-weight:950; letter-spacing:-.2px; }
+    .bsub{ color: var(--muted); font-weight:850; font-size:.86rem; }
 
-    .logo-wrap{
-      position:relative;
-      width:44px; height:44px;
-      border-radius: 14px;
-      padding: 2px;
-      background:
-        radial-gradient(18px 18px at 25% 20%, rgba(245,213,122,.35), transparent 70%),
-        radial-gradient(20px 20px at 85% 80%, rgba(212,175,55,.22), transparent 70%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
-      box-shadow: var(--logoGlow);
-      border: 1px solid var(--logoRing);
-      flex: 0 0 auto;
-      isolation:isolate;
-    }
-    .logo-wrap::after{
-      content:"";
-      position:absolute;
-      inset:-10px;
-      background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
-      filter: blur(12px);
-      opacity:.8;
-      pointer-events:none;
-      z-index:-1;
-    }
-    .logo-wrap img{
-      width:100%; height:100%;
-      object-fit: cover;
-      display:block;
-      border-radius: 12px;
-      border: 1px solid var(--line2);
-      background: var(--logoBg);
-    }
-    .brand .btxt{ display:flex; flex-direction:column; line-height:1.05; gap:4px; min-width:0; }
-    .brand .bname{ font-weight: 950; letter-spacing:-0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .brand .bsub{ font-size:.86rem; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-    nav{ margin-left:auto; }
-    nav ul{ display:flex; list-style:none; gap:18px; padding:0; margin:0; align-items:center; }
-    .nav-link{ color: var(--text); opacity:.9; font-weight: 850; font-size: .95rem; position:relative; }
-    .nav-link:hover{ color: var(--gold); opacity:1; }
-    .nav-link.active{ color: var(--gold); opacity:1; }
-    .nav-link.active::after{
-      content:""; position:absolute; left:0; right:0; bottom:-12px; height:2px;
-      background: rgba(212,175,55,.65); border-radius:999px;
-    }
-
-    .header-actions{ display:flex; gap:10px; align-items:center; margin-left: 10px; }
     .icon-btn{
       width: 42px; height: 42px;
       border-radius: 12px;
@@ -171,249 +104,97 @@
     }
     .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
 
-    .menu-btn{
-      display:none;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      border-radius: 12px;
-      padding: 10px 12px;
-      cursor:pointer;
-    }
-    @media (max-width: 980px){
-      nav{ display:none; }
-      .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
-      .header-actions{ margin-left:auto; }
-    }
-
-    .overlay{ position:fixed; inset:0; background: var(--overlayBg); display:none; align-items:flex-end; z-index:80; }
-    .overlay.open{ display:flex; }
-    .sheet{
-      width:100%;
-      border-radius: 18px 18px 0 0;
-      border: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 82%, #000 18%);
-      box-shadow: var(--shadow);
-      padding: 14px;
-    }
-    .sheet-head{
-      display:flex; align-items:center; justify-content:space-between;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--line2);
-      margin-bottom: 10px;
-      gap: 10px;
-    }
-    .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
-    .sheet a{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: var(--text);
-      margin-bottom: 10px;
-      font-weight: 900;
-    }
-    .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 8px; }
-
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      border-radius: 14px; padding: 12px 16px; min-height: 46px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      cursor:pointer;
-      font-weight: 950;
-      transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
-      white-space:nowrap;
-      user-select:none;
-    }
-    .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
-    .btn:active{ transform: translateY(0); }
-    .btn.solid{ background: var(--gold); color:#111; border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
-    .btn.primary{ background: var(--panel2); border-color: var(--line); }
-    .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
-    .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none !important; filter:none !important; }
-
-    .page-wrap{ padding: 18px 0 0; }
-
-    /* Auth layout */
-    .auth-wrap{ max-width: 1120px; margin: 18px auto 70px; padding: 0 16px; }
-    .auth-grid{ display:grid; grid-template-columns: 1.1fr .9fr; gap: 14px; align-items:stretch; }
-    @media(max-width: 980px){ .auth-grid{ grid-template-columns: 1fr; } }
-
-    .auth-visual{
+    main{ padding: 18px 0; }
+    .hero{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.14)),
-        url('assets/images/larmah-header.jpeg') center/cover no-repeat;
-      min-height: 380px;
-      padding: 18px;
-      display:flex;
-      align-items:flex-end;
+      background: var(--panel2);
       box-shadow: var(--shadow);
+      padding: 16px;
       overflow:hidden;
       position:relative;
       isolation:isolate;
     }
-    .auth-visual::after{
+    .hero::before{
       content:"";
-      position:absolute; inset:0;
-      background: radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.18), transparent 55%);
-      pointer-events:none;
-      z-index:0;
-    }
-    .auth-visual > div{ position:relative; z-index:1; }
-    .auth-visual .kicker{
-      display:inline-flex; align-items:center; gap:10px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.28);
-      backdrop-filter: blur(8px);
-      font-weight: 950;
-      color: rgba(233,237,247,.92);
-    }
-    html[data-theme="light"] .auth-visual .kicker{
-      border-color: rgba(10,14,26,.12);
-      background: rgba(255,255,255,.72);
-      color: rgba(14,21,38,.90);
-    }
-
-    .auth-card{
-      border-radius: var(--radius2);
-      border: 1px solid var(--line);
+      position:absolute; inset:-2px;
       background:
-        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.12), transparent 55%),
-        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.08), transparent 60%),
-        var(--panel2);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      padding: 16px;
+        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.18), transparent 60%),
+        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.10), transparent 65%);
+      pointer-events:none;
+      z-index:-1;
     }
-    .auth-tabs{ display:flex; gap: 14px; border-bottom: 1px solid var(--line2); padding-bottom: 10px; margin-bottom: 14px; }
-    .auth-tab{ font-weight: 950; color: var(--muted); cursor:pointer; user-select:none; }
-    .auth-tab.active{ color: var(--text); border-bottom: 2px solid rgba(212,175,55,.65); padding-bottom: 10px; }
-    .divider{ display:flex; align-items:center; gap:10px; color: var(--muted2); font-size:.8rem; margin: 14px 0; }
-    .divider::before, .divider::after{ content:""; flex:1; height:1px; background: var(--line2); }
-    .hint{ font-size:.9rem; color: var(--muted); margin-top:10px; line-height:1.5; }
+    h1{ margin: 6px 0 10px; font-size: clamp(1.8rem, 3.5vw, 2.6rem); letter-spacing:-.6px; }
+    .lead{ margin:0; color: var(--muted); line-height:1.55; }
 
-    .field{ display:flex; flex-direction:column; gap:6px; margin-bottom: 12px; }
-    label.small{
-      font-size:.78rem;
-      letter-spacing:.12em;
-      text-transform: uppercase;
-      color: var(--muted2);
-      font-weight: 850;
-    }
-    .input{
-      border-radius: 14px;
+    .grid{ margin-top: 14px; display:grid; gap: 14px; grid-template-columns: 1fr .9fr; }
+    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      border-radius: var(--radius);
       border: 1px solid var(--line);
       background: var(--panel);
+      box-shadow: var(--shadow2);
+      padding: 14px;
+    }
+    label{ display:block; margin-top: 10px; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color: var(--muted2); }
+    input{
+      width:100%;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
       color: var(--text);
-      padding: 12px 12px;
+      padding: 12px;
       min-height: 46px;
       outline:none;
       font-family: inherit;
+      margin-top: 6px;
     }
+    .btn{
+      display:inline-flex; gap:10px; align-items:center; justify-content:center;
+      border-radius: 14px; padding: 12px 16px; min-height: 46px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--text);
+      cursor:pointer;
+      font-weight: 950;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
+      width: 100%;
+      margin-top: 12px;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .btn.solid{
+      background: var(--gold);
+      color: #111;
+      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
+    }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none !important; filter:none !important; }
 
     .notice{
+      margin-top: 12px;
       border-radius: 16px;
       padding: 12px;
       border: 1px solid var(--line);
       background: var(--panel2);
       color: var(--muted);
+      line-height: 1.5;
     }
     .notice strong{ color: var(--text); }
 
-    /* ===== FOOTER (UPDATED TO MATCH CURRENT FOOTER STYLING) ===== */
-    footer{
-      margin-top: 18px;
-      border-top: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
+    .state{
+      display:flex; gap:10px; align-items:center;
+      margin-top: 12px;
+      color: var(--muted);
+      font-weight: 850;
+      font-size:.92rem;
     }
-    .footer-cta{
-      margin-top: 14px;
-      border-radius: 20px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
-        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
-        var(--panel2);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: rgba(255,255,255,.25);
+      border: 1px solid var(--line2);
     }
-    .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
-    .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
-
-    .footer-grid{
-      display:grid;
-      gap: 16px;
-      padding: 16px 0;
-      grid-template-columns: 1.35fr 1fr 1fr;
-    }
-    @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
-
-    .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
-    .brandtext{ min-width:0; }
-    .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
-    .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
-
-    .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    .footer-links a{
-      display:block;
-      padding: 6px 0;
-      color: color-mix(in oklab, var(--text) 84%, transparent);
-      font-weight: 600;
-    }
-    .footer-links a:hover{ color: var(--gold); }
-
-    .contact-stack{ display:grid; gap: 10px; }
-    .contact-chip{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-    }
-    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
-    .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
-    .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
-
-    .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
-    .social a{
-      width: 42px; height: 42px;
-      display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--text);
-    }
-    .social a:hover{
-      color: #111;
-      background: var(--gold);
-      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-    }
-
-    .footer-bottom{
-      border-top: 1px solid var(--line2);
-      padding: 12px 0 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      color: var(--muted2);
-      font-size: .9rem;
-    }
+    .dot.good{ background: var(--good); }
+    .dot.bad{ background: var(--bad); }
 
     .toast{
       position: fixed;
@@ -435,287 +216,83 @@
   </style>
 </head>
 
-<body data-page="auth">
-  <!-- Mobile nav -->
-  <div class="overlay" id="overlay" aria-hidden="true">
-    <div class="sheet" role="dialog" aria-label="Menu">
-      <div class="sheet-head">
-        <div class="sheet-brandline">
-          <div class="logo-wrap" aria-hidden="true">
-            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
-          </div>
-          <div style="min-width:0">
-            <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
-            <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
-          </div>
-        </div>
-        <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-
-      <div class="sheet-actions">
-        <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle theme">
-          <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
-        </button>
-      </div>
-    </div>
-  </div>
-
+<body>
   <header>
     <div class="container header-inner">
-      <a class="brand" href="index.html#home" aria-label="Back to Index">
-        <div class="logo-wrap" aria-hidden="true">
-          <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
-        </div>
-        <div class="btxt">
-          <div class="bname">Larmah Enterprise</div>
-          <div class="bsub">Real Estate • Logistics</div>
-        </div>
+      <a class="brand" href="index.html#home" aria-label="Back to Home">
+        <span class="logo"><img src="assets/images/larmah-favicon.jpeg" alt="Larmah" /></span>
+        <span class="btxt">
+          <span class="bname">Larmah Enterprise</span>
+          <span class="bsub">Premium Login</span>
+        </span>
       </a>
 
-      <nav aria-label="Primary navigation">
-        <ul>
-          <li><a class="nav-link" href="index.html#about">About</a></li>
-          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
-          <li><a class="nav-link" href="logistics.html">Logistics</a></li>
-          <li><a class="nav-link" href="premium.html">Premium</a></li>
-          <li><a class="nav-link active" href="auth.html">Access</a></li>
-        </ul>
-      </nav>
-
-      <div class="header-actions">
-        <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
-          <i class="fa-solid fa-circle-half-stroke"></i>
-        </button>
-        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-      </div>
+      <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+      </button>
     </div>
   </header>
 
-  <main class="auth-wrap" id="main" tabindex="-1">
-    <div class="auth-grid">
-      <section class="auth-visual" aria-label="Access hero">
-        <div>
-          <div class="kicker"><i class="fa-solid fa-shield-halved"></i> Secure Access</div>
-          <h1 style="margin:12px 0 10px; letter-spacing:-0.6px;">Premium Members Only.</h1>
-          <p class="lead" style="max-width: 560px; color:rgba(233,237,247,.88); margin:0;">
-            Accounts are issued after Premium payment verification.
-            If you haven’t subscribed yet, go Premium to unlock access.
-          </p>
+  <main class="container">
+    <section class="hero">
+      <h1>Login to your Premium account</h1>
+      <p class="lead">Accounts are Premium-only. If you haven’t paid, go Premium first to receive your unique registration link.</p>
 
-          <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn solid" href="premium.html#pay"><i class="fa-solid fa-credit-card"></i> Go Premium</a>
-            <button class="btn primary" type="button" onclick="supportAuth()"><i class="fa-brands fa-whatsapp"></i> WhatsApp Support</button>
-          </div>
+      <div class="grid">
+        <div class="card">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@email.com" autocomplete="email" />
 
-          <div class="notice" style="margin-top:14px; max-width: 620px;">
-            <strong>Note:</strong> If you already paid, please sign in with the email used for payment.
-            If access isn’t active yet, share your Paystack reference on WhatsApp for fast verification.
-          </div>
-        </div>
-      </section>
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="Your password" autocomplete="current-password" />
 
-      <section class="auth-card" aria-label="Sign in">
-        <div class="auth-tabs">
-          <div class="auth-tab active" id="tabLogin">Sign In</div>
-          <div class="auth-tab" id="tabRegister">Create Account</div>
-        </div>
-
-        <!-- LOGIN -->
-        <form id="loginForm" autocomplete="on">
-          <div class="field">
-            <label class="small" for="loginEmail">Email Address</label>
-            <input type="email" id="loginEmail" class="input" placeholder="name@example.com" autocomplete="email" required>
-          </div>
-
-          <div class="field" style="margin-bottom:14px;">
-            <label class="small" for="loginPassword">Password</label>
-            <input type="password" id="loginPassword" class="input" placeholder="••••••••" autocomplete="current-password" required>
-          </div>
-
-          <button type="submit" class="btn solid" style="width:100%" id="loginBtn">Sign In</button>
-
-          <button type="button" class="btn primary" style="width:100%; margin-top:10px" id="resetBtn">
-            <i class="fa-solid fa-key"></i> Reset Password
+          <button class="btn solid" id="loginBtn" type="button" onclick="login()">
+            <i class="fa-solid fa-right-to-bracket"></i> Login
           </button>
 
-          <button type="button" class="btn" style="width:100%; margin-top:10px" id="resendBtn">
-            <i class="fa-regular fa-envelope"></i> Resend Verification Email
+          <button class="btn" id="resetBtn" type="button" onclick="resetPassword()">
+            <i class="fa-solid fa-key"></i> Forgot password
           </button>
 
-          <div class="hint">
-            If your email isn’t verified yet, open your inbox and click the verification link first.
-            Premium access is enforced at sign-in (non-premium accounts are blocked).
+          <div class="state" id="state" style="display:none;">
+            <span class="dot" id="dot"></span>
+            <span id="stateText">—</span>
           </div>
-        </form>
 
-        <!-- REGISTER (Premium-only; shown but gated) -->
-        <form id="registerForm" style="display:none" autocomplete="on">
           <div class="notice">
-            <strong>Premium-only:</strong> New accounts are created after Premium payment verification.
-            If you’ve already paid, use the same email here and we’ll verify it quickly on WhatsApp.
+            <strong>No signup here.</strong><br/>
+            To create an account: Pay on <a href="premium.html#pay">Premium</a> → check email → use your unique registration link.
           </div>
-
-          <div class="field" style="margin-top:12px;">
-            <label class="small" for="regName">Full Name</label>
-            <input type="text" id="regName" class="input" placeholder="e.g. John Doe" autocomplete="name">
-          </div>
-
-          <div class="field">
-            <label class="small" for="regEmail">Email Address</label>
-            <input type="email" id="regEmail" class="input" placeholder="name@example.com" autocomplete="email">
-          </div>
-
-          <div class="field" style="margin-bottom:14px;">
-            <label class="small" for="regPassword">Password</label>
-            <input type="password" id="regPassword" class="input" placeholder="Create a strong password" autocomplete="new-password">
-          </div>
-
-          <button type="button" class="btn solid" style="width:100%" onclick="goPremium()">
-            <i class="fa-solid fa-crown"></i> Go Premium to Create Account
-          </button>
-
-          <button type="button" class="btn primary" style="width:100%; margin-top:10px" onclick="supportAuth()">
-            <i class="fa-brands fa-whatsapp"></i> Verify Payment / Request Access
-          </button>
-
-          <div class="hint">
-            After Premium verification, we enable your account and you can sign in immediately.
-          </div>
-        </form>
-
-        <div class="divider">NEED HELP?</div>
-        <button class="btn" style="width:100%" type="button" onclick="supportAuth()">
-          <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-        </button>
-      </section>
-    </div>
-  </main>
-
-  <!-- ✅ UPDATED FOOTER (matches current premium/index footer style) -->
-  <footer>
-    <div class="container">
-      <div class="footer-cta">
-        <div>
-          <h3>Need help activating Premium access?</h3>
-          <p>Send your payment email + Paystack reference — we’ll verify and enable your account.</p>
         </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn solid" type="button" onclick="supportAuth()">
-            <i class="fa-brands fa-whatsapp"></i> WhatsApp
-          </button>
-          <a class="btn primary" href="premium.html#pay">
+
+        <div class="card">
+          <div style="font-weight:950; letter-spacing:-.2px;">New to Premium?</div>
+          <div style="margin-top:8px; color: var(--muted); line-height:1.5;">
+            After payment verification, we send a unique registration link to your email. This prevents fake signups and keeps access Premium-only.
+          </div>
+
+          <a class="btn solid" href="premium.html#pay" style="margin-top:12px;">
             <i class="fa-solid fa-crown"></i> Go Premium
           </a>
-        </div>
-      </div>
 
-      <div class="footer-grid">
-        <div>
-          <div class="brandline">
-            <div class="logo-wrap" aria-hidden="true">
-              <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
-            </div>
-            <div class="brandtext">
-              <div class="brandname">Larmah Enterprise</div>
-              <div class="tagline">RC: 9127113</div>
-            </div>
-          </div>
+          <button class="btn" type="button" onclick="waHelp()">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+          </button>
 
-          <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
-            Verified real estate and trusted logistics across Nigeria — WhatsApp-first support.
-          </div>
-
-          <div class="social" aria-label="Social links">
-            <a href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://x.com/heylarmah_tech" aria-label="X" title="X"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Quick Links</div>
-          <div class="footer-links">
-            <a href="index.html#about">About</a>
-            <a href="real-estate.html">Real Estate</a>
-            <a href="logistics.html">Logistics</a>
-            <a href="premium.html">Premium</a>
-            <a href="auth.html">Access</a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Contact</div>
-
-          <div class="contact-stack">
-            <div class="contact-chip">
-              <i class="fa-brands fa-whatsapp"></i>
-              <div>
-                <div class="txt">+234 706 308 0605</div>
-                <div class="sub">WhatsApp-first support</div>
-              </div>
-            </div>
-
-            <div class="contact-chip">
-              <i class="fa-regular fa-envelope"></i>
-              <div>
-                <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
-                <div class="sub">Business enquiries</div>
-              </div>
-            </div>
-
-            <div class="contact-chip">
-              <i class="fa-solid fa-location-dot"></i>
-              <div>
-                <div class="txt">Lagos, Nigeria</div>
-                <div class="sub">Serving Nigeria nationwide</div>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn small solid" href="premium.html#pay">
-              <i class="fa-solid fa-credit-card"></i> Pay Now
-            </a>
-            <button class="btn small primary" type="button" onclick="supportAuth()">
-              <i class="fa-brands fa-whatsapp"></i> Chat
-            </button>
+          <div class="notice">
+            <strong>Support:</strong> business@heylarmah.tech<br/>
+            <strong>WhatsApp:</strong> +234 706 308 0605
           </div>
         </div>
       </div>
-
-      <div class="footer-bottom">
-        <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
-      </div>
-    </div>
-  </footer>
+    </section>
+  </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // ===== basics
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    function toast(msg){
-      const t = document.getElementById("toast");
-      if(!t) return;
-      t.textContent = msg;
-      t.classList.add("show");
-      clearTimeout(window.__toastT);
-      window.__toastT = setTimeout(() => t.classList.remove("show"), 2400);
-    }
-
-    // ===== theme (SAME AS premium/index)
-    const THEME_KEY = "larmah_theme_v5";
+    // theme
+    const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem(THEME_KEY, theme);
@@ -733,217 +310,99 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // ===== mobile menu
-    const overlay = document.getElementById("overlay");
-    function toggleMenu(open){
-      overlay.classList.toggle("open", !!open);
-      overlay.setAttribute("aria-hidden", open ? "false" : "true");
-    }
-    overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
-
-    // ===== WA helpers (prefer app.js global)
-    function buildMsg(title, data){
-      if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
-      const lines = [title, ""];
-      for(const [k,v] of Object.entries(data || {})){
-        const val = (v ?? "").toString().trim();
-        if(val) lines.push(`${k}: ${val}`);
-      }
-      return lines.join("\n");
-    }
-    function openWA(text){
-      if(window.LARMAH?.openWhatsApp) return LARMAH.openWhatsApp(text);
-      const phone = "2347063080605";
-      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
+    function toast(msg){
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(window.__t);
+      window.__t = setTimeout(()=>t.classList.remove("show"), 2600);
     }
 
-    function supportAuth(){
-      openWA(buildMsg("Access Support", {
-        Page: "auth.html",
-        Message: "Hello Larmah, I need help with Premium access / account activation. My email is: "
-      }));
-    }
-    window.supportAuth = supportAuth;
-
-    function goPremium(){
-      window.location.href = "premium.html#pay";
-    }
-    window.goPremium = goPremium;
-
-    // ===== tabs
-    const tabLogin = document.getElementById("tabLogin");
-    const tabRegister = document.getElementById("tabRegister");
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
-
-    function setTab(which){
-      const login = which === "login";
-      tabLogin.classList.toggle("active", login);
-      tabRegister.classList.toggle("active", !login);
-      loginForm.style.display = login ? "" : "none";
-      registerForm.style.display = login ? "none" : "";
-    }
-    tabLogin.addEventListener("click", () => setTab("login"));
-    tabRegister.addEventListener("click", () => setTab("register"));
-
-    // ===== supabase helpers
-    async function waitForSB({ tries = 18, delay = 250 } = {}){
-      for(let i=0;i<tries;i++){
-        const sb = (window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null);
-        if(sb) return sb;
-        await new Promise(r => setTimeout(r, delay));
-      }
-      return null;
+    function setState(kind, text){
+      const wrap = document.getElementById("state");
+      const dot = document.getElementById("dot");
+      const txt = document.getElementById("stateText");
+      wrap.style.display = "flex";
+      dot.classList.remove("good","bad");
+      dot.classList.add(kind === "good" ? "good" : "bad");
+      txt.textContent = text;
     }
 
-    async function isPremiumActive(sb, userId){
-      try{
-        const { data, error } = await sb
-          .from("profiles")
-          .select("is_premium,premium_tier,premium_active_until")
-          .eq("id", userId)
-          .maybeSingle();
-        if(error) throw error;
-
-        const isPremium = !!data?.is_premium;
-        const until = data?.premium_active_until ? new Date(data.premium_active_until) : null;
-        const activeByDate = until ? (until.getTime() > Date.now()) : true;
-        return { ok: isPremium && activeByDate, tier: data?.premium_tier || "" };
-      } catch(e){
-        console.warn("Premium check failed:", e);
-        return { ok: false, error: "premium_check_failed" };
-      }
+    async function waHelp(){
+      const msg = LARMAH.buildMessage("Premium Login Help", { Message:"Hello Larmah, I need help accessing my Premium account." });
+      LARMAH.openWhatsApp(msg);
     }
 
-    async function redirectAfterLogin(){
-      const sb = await waitForSB();
-      if(!sb){
-        toast("Supabase not ready. Refresh the page.");
+    async function login(){
+      const sb = await LARMAH.supabase.wait();
+      if(!sb) return toast("Supabase not ready.");
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if(!email) return toast("Email is required.");
+      if(!password) return toast("Password is required.");
+
+      const loginBtn = document.getElementById("loginBtn");
+      const resetBtn = document.getElementById("resetBtn");
+      loginBtn.disabled = true;
+      resetBtn.disabled = true;
+      setState("bad","Signing in…");
+
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      if(error){
+        setState("bad", error.message);
+        toast(error.message);
+        loginBtn.disabled = false;
+        resetBtn.disabled = false;
         return;
       }
 
-      const { data } = await sb.auth.getSession();
-      const session = data?.session || null;
-      if(!session) return;
+      // Premium gate (hard enforcement)
+      const ok = await LARMAH.requirePremium({
+        redirectTo: "premium.html",
+        onFail: () => {
+          setState("bad","This email is not Premium-enabled.");
+          toast("Premium access required. Please go Premium.");
+        }
+      });
 
-      const userId = session.user?.id;
-      const email = session.user?.email || "";
+      if(!ok){
+        loginBtn.disabled = false;
+        resetBtn.disabled = false;
+        return;
+      }
 
-      const p = await isPremiumActive(sb, userId);
-      if(p.ok){
-        toast("Access granted. Redirecting…");
+      setState("good","Login successful. Redirecting…");
+      toast("Welcome.");
+
+      // Redirect (change to your real dashboard page)
+      setTimeout(() => {
         window.location.href = "dashboard.html";
-        return;
-      }
-
-      try{ await sb.auth.signOut(); } catch {}
-      toast("Premium subscription required for account access.");
-      openWA(buildMsg("Premium Access Request", {
-        Email: email,
-        Message: "Hello Larmah, I can’t access my account. I want to verify Premium / activate access. My Paystack reference is:"
-      }));
-      setTimeout(() => (window.location.href = "premium.html#pay"), 700);
+      }, 700);
     }
 
-    document.addEventListener("DOMContentLoaded", async () => {
-      redirectAfterLogin();
-    });
+    async function resetPassword(){
+      const sb = await LARMAH.supabase.wait();
+      if(!sb) return toast("Supabase not ready.");
 
-    // ===== LOGIN
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const sb = await waitForSB();
-      if(!sb){
-        toast("Supabase not ready. Refresh the page.");
+      const email = document.getElementById("email").value.trim();
+      if(!email) return toast("Enter your email first.");
+
+      // Password reset is still premium-only (if user exists)
+      // You can set redirect URL to a reset page if you have one.
+      const { error } = await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: `${location.origin}/auth.html`
+      });
+
+      if(error){
+        setState("bad", error.message);
+        toast(error.message);
         return;
       }
-
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("loginPassword").value;
-
-      const btn = document.getElementById("loginBtn");
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signing in…';
-
-      try{
-        const { error } = await sb.auth.signInWithPassword({ email, password });
-        if(error) throw error;
-
-        toast("Signed in. Checking premium access…");
-        await redirectAfterLogin();
-      } catch(err){
-        console.error(err);
-        toast(err?.message || "Sign in failed");
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Sign In";
-      }
-    });
-
-    // ===== RESET PASSWORD
-    document.getElementById("resetBtn").addEventListener("click", async () => {
-      const sb = await waitForSB();
-      if(!sb){
-        toast("Supabase not ready. Refresh the page.");
-        return;
-      }
-      const email = document.getElementById("loginEmail").value.trim();
-      if(!email){
-        toast("Enter your email first.");
-        return;
-      }
-      const btn = document.getElementById("resetBtn");
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending…';
-      try{
-        const redirectTo = `${location.origin}/auth.html`;
-        const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo });
-        if(error) throw error;
-        toast("Password reset email sent. Check your inbox.");
-      } catch(err){
-        toast(err?.message || "Could not send reset email");
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-solid fa-key"></i> Reset Password';
-      }
-    });
-
-    // ===== RESEND VERIFICATION EMAIL
-    document.getElementById("resendBtn").addEventListener("click", async () => {
-      const sb = await waitForSB();
-      if(!sb){
-        toast("Supabase not ready. Refresh the page.");
-        return;
-      }
-      const email = document.getElementById("loginEmail").value.trim();
-      if(!email){
-        toast("Enter your email first.");
-        return;
-      }
-      const btn = document.getElementById("resendBtn");
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending…';
-
-      try{
-        const redirectTo = `${location.origin}/auth.html`;
-        const { error } = await sb.auth.resend({
-          type: "signup",
-          email,
-          options: { emailRedirectTo: redirectTo }
-        });
-        if(error) throw error;
-        toast("Verification email sent. Check your inbox.");
-      } catch(err){
-        toast(err?.message || "Could not resend email");
-      } finally{
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fa-regular fa-envelope"></i> Resend Verification Email';
-      }
-    });
-
-    // expose
-    window.toggleMenu = toggleMenu;
-    window.toggleTheme = toggleTheme;
+      setState("good","Reset email sent. Check your inbox/spam.");
+      toast("Reset email sent.");
+    }
   </script>
 </body>
 </html>
