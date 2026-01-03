@@ -1,6 +1,8 @@
 <!-- =========================
-     logistics.html (UPGRADED)
-     Same styling + concept as upgraded index
+     logistics.html (FULL — SYNCED WITH INDEX + FEATURED)
+     ✅ Same DB table as index: public.listings
+     ✅ Featured badge + Featured-only filter
+     ✅ Loads featured + sort_rank from DB
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -40,6 +42,12 @@
   <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- ✅ Supabase + app.js (same config style as index/admin) -->
+  <script>
+    window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
+    window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
@@ -429,7 +437,8 @@
       padding: 14px;
       margin-bottom: 14px;
     }
-    .filters-grid{ display:grid; gap: 10px; grid-template-columns: 1.4fr 1fr 1fr 1fr; }
+    /* ✅ Featured filter added */
+    .filters-grid{ display:grid; gap: 10px; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; }
     @media (max-width: 980px){ .filters-grid{ grid-template-columns: 1fr 1fr; } }
     @media (max-width: 520px){ .filters-grid{ grid-template-columns: 1fr; } }
 
@@ -536,7 +545,20 @@
     .media-dot.active{ background: rgba(255,255,255,0.92); }
 
     .card-body{ padding: 12px; }
-    .title{ font-weight: 950; margin: 2px 0 6px; letter-spacing:-0.2px; }
+    .title{ font-weight: 950; margin: 2px 0 6px; letter-spacing:-0.2px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    /* ✅ Featured badge */
+    .star{
+      display:inline-flex; gap:6px; align-items:center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,.28);
+      background: rgba(212,175,55,.10);
+      color: var(--gold2);
+      font-weight: 900;
+      font-size: .78rem;
+      letter-spacing: .02em;
+    }
+
     .desc{
       margin:0; color: var(--muted); line-height:1.45; font-size: .96rem;
       display:-webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow:hidden;
@@ -554,71 +576,6 @@
       color: var(--muted);
     }
     .notice strong{ color: var(--text); }
-
-    /* Footer */
-    footer{
-      margin-top: 18px;
-      border-top: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
-    }
-    .footer-cta{
-      margin-top: 14px;
-      border-radius: 20px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
-        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
-        var(--panel2);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display:flex; gap:12px;
-      align-items:center; justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
-    .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
-
-    .footer-grid{ display:grid; gap: 16px; padding: 16px 0; grid-template-columns: 1.35fr 1fr 1fr; }
-    @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
-
-    .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
-    .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
-    .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
-
-    .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
-    .footer-links a:hover{ color: var(--gold); }
-
-    .contact-stack{ display:grid; gap: 10px; }
-    .contact-chip{
-      display:flex; gap:10px; align-items:flex-start;
-      padding: 10px 12px; border-radius: 14px;
-      border: 1px solid var(--line); background: var(--panel2);
-    }
-    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
-    .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
-    .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
-
-    .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
-    .social a{
-      width: 42px; height: 42px;
-      display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 12px; border: 1px solid var(--line);
-      background: var(--panel2); color: var(--text);
-    }
-    .social a:hover{
-      color:#111; background: var(--gold);
-      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-    }
-
-    .footer-bottom{
-      border-top: 1px solid var(--line2);
-      padding: 12px 0 16px;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px; flex-wrap:wrap;
-      color: var(--muted2);
-      font-size: .9rem;
-    }
 
     /* Toast */
     .toast{
@@ -776,7 +733,7 @@
           <div class="meta">
             <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span>
             <span class="pill"><i class="fa-solid fa-clock" style="color:var(--gold)"></i> Fast response</span>
-            <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> Traceable refs</span>
+            <span class="pill"><i class="fa-solid fa-star" style="color:var(--gold)"></i> Featured sync</span>
           </div>
         </div>
 
@@ -795,7 +752,7 @@
       <div class="section-head">
         <div>
           <h2>Services</h2>
-          <p class="subhead">Filter by service type and coverage (separate).</p>
+          <p class="subhead">Filter by service type, coverage, and Featured (same as homepage).</p>
         </div>
         <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Handling</a>
       </div>
@@ -840,6 +797,15 @@
               <option value="za">Title Z–A</option>
             </select>
           </div>
+
+          <!-- ✅ Featured filter -->
+          <div class="field">
+            <label for="lg_feat">Featured</label>
+            <select id="lg_feat">
+              <option value="all" selected>All</option>
+              <option value="featured">Featured only</option>
+            </select>
+          </div>
         </div>
 
         <div class="pillbar" aria-label="Quick filters">
@@ -848,6 +814,12 @@
           <button class="btn small" type="button" onclick="lgQuick('Airport')">Airport</button>
           <button class="btn small" type="button" onclick="lgSetType('interstate')">Interstate</button>
           <button class="btn small" type="button" onclick="lgSetCoverage('Lagos')">Lagos</button>
+
+          <!-- ✅ Featured quick -->
+          <button class="btn small" type="button" onclick="lgSetFeatured(true)">
+            <i class="fa-solid fa-star" style="color:var(--gold)"></i> Featured
+          </button>
+
           <button class="btn small" type="button" onclick="lgReset()" style="color:var(--bad);border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
             <i class="fa-solid fa-rotate-left"></i> Reset
           </button>
@@ -1055,21 +1027,25 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // ===== theme (match index)
+    // ===== theme (prefer app.js)
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
+      if(window.LARMAH?.setTheme) return window.LARMAH.setTheme(theme);
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem(THEME_KEY, theme);
       const metaTheme = document.querySelector('meta[name="theme-color"]');
       if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
     }
     function toggleTheme(){
+      if(window.LARMAH?.toggleTheme) return window.LARMAH.toggleTheme();
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
       setTheme(cur === "dark" ? "light" : "dark");
     }
     (function initTheme(){
-      const saved = localStorage.getItem(THEME_KEY);
-      if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
+      try{
+        const saved = localStorage.getItem(THEME_KEY);
+        if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
+      }catch{}
       const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
       setTheme(prefersLight ? "light" : "dark");
     })();
@@ -1139,8 +1115,8 @@
       setInterval(() => { heroIdx=(heroIdx+1)%HERO_SLIDES.length; setHero(heroIdx); }, 5000);
     } else setHero(0);
 
-    // ===== Supabase services + card image auto-rotate (5s)
-    const __LG = { items: [], imgUrls: {}, imgIdx: {}, timers: {} };
+    // ===== Supabase services (SYNCED WITH FEATURED)
+    const __LG = { items: [] };
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
@@ -1172,94 +1148,36 @@
     }
     function listingRef(id){ return `WEB-LG-${id}`; }
 
-    function getImages(it){
+    function pickImage(it){
       const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
-      if(arr.length) return arr.slice(0, 6);
-      if(it.image_url) return [it.image_url];
-      return ["assets/images/larmah-header.jpeg"];
-    }
-    function initImagesFor(it){
-      const id = String(it.id);
-      __LG.imgUrls[id] = getImages(it);
-      __LG.imgIdx[id] = __LG.imgIdx[id] ?? 0;
-    }
-    function clearAllTimers(){
-      for(const k in __LG.timers){
-        try{ clearInterval(__LG.timers[k]); }catch{}
-      }
-      __LG.timers = {};
-    }
-    function setCardImage(id){
-      const img = document.getElementById(`lg-img-${id}`);
-      if(!img) return;
-      const urls = __LG.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
-      const idx = __LG.imgIdx[id] || 0;
-      img.src = urls[idx] || urls[0] || "assets/images/larmah-header.jpeg";
-      const dots = document.getElementById(`lg-dots-${id}`);
-      if(dots) dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
-    }
-    function cycleLgImage(id, dir){
-      const urls = __LG.imgUrls[id] || [];
-      if(urls.length <= 1) return;
-      const max = urls.length;
-      const cur = __LG.imgIdx[id] || 0;
-      __LG.imgIdx[id] = (cur + dir + max) % max;
-      setCardImage(id);
-    }
-    window.cycleLgImage = cycleLgImage;
-
-    function autoRotateImages(id){
-      if(reduceMotion) return;
-      const urls = __LG.imgUrls[id] || [];
-      if(urls.length <= 1) return;
-
-      __LG.timers[id] = setInterval(() => {
-        __LG.imgIdx[id] = ((__LG.imgIdx[id]||0) + 1) % urls.length;
-        const media = document.getElementById(`lg-media-${id}`);
-        if(media){
-          media.classList.add("is-fading");
-          setTimeout(() => { setCardImage(id); media.classList.remove("is-fading"); }, 180);
-        } else setCardImage(id);
-      }, 5000);
+      if(arr.length) return arr[0];
+      if(it.image_url) return it.image_url;
+      return "assets/images/larmah-header.jpeg";
     }
 
     function cardHTML(it){
       const id = String(it.id);
-      initImagesFor(it);
-      const urls = __LG.imgUrls[id] || [];
-      const hasMany = urls.length > 1;
-
       const title = safeText(it.title) || "Logistics Service";
       const desc = safeText(it.description) || "Trusted logistics support.";
       const price = formatPrice(it.price);
       const coverage = inferCoverage(it) || "Nigeria";
       const stype = inferType(it) || "service";
       const ref = listingRef(id);
+      const img = pickImage(it);
+      const isFeatured = it.featured === true;
 
       return `
         <article class="card" aria-label="${esc(title)}">
-          <div class="media" id="lg-media-${id}">
-            <img id="lg-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
-                 alt="${esc(title)}" loading="lazy" decoding="async"
-                 onerror="this.src='assets/images/larmah-header.jpeg'">
-
-            ${hasMany ? `
-              <div class="media-nav">
-                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleLgImage('${id}', -1)">
-                  <i class="fa-solid fa-chevron-left"></i>
-                </button>
-                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleLgImage('${id}', 1)">
-                  <i class="fa-solid fa-chevron-right"></i>
-                </button>
-              </div>
-              <div class="media-dots" id="lg-dots-${id}" aria-hidden="true">
-                ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
-              </div>
-            ` : ``}
+          <div class="media">
+            <img src="${esc(img)}" alt="${esc(title)}" loading="lazy" decoding="async" onerror="this.src='assets/images/larmah-header.jpeg'">
           </div>
 
           <div class="card-body">
-            <div class="title">${esc(title)}</div>
+            <div class="title">
+              ${esc(title)}
+              ${isFeatured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
+            </div>
+
             <p class="desc">${esc(desc)}</p>
 
             <div class="price">${esc(price)}</div>
@@ -1289,6 +1207,7 @@
       const type = document.getElementById("lg_type").value;
       const cov = document.getElementById("lg_cov").value;
       const sort = document.getElementById("lg_sort").value;
+      const feat = document.getElementById("lg_feat").value;
 
       let items = (__LG.items || []).slice();
 
@@ -1300,20 +1219,18 @@
       }
       if(type !== "all") items = items.filter(it => inferType(it) === type);
       if(cov !== "all") items = items.filter(it => safeText(inferCoverage(it)).toLowerCase().includes(cov.toLowerCase()));
+      if(feat === "featured") items = items.filter(it => it.featured === true);
 
       if(sort === "az") items.sort((a,b)=> safeText(a.title).localeCompare(safeText(b.title)));
       else if(sort === "za") items.sort((a,b)=> safeText(b.title).localeCompare(safeText(a.title)));
       else items.sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
 
       if(!items.length){
-        clearAllTimers();
         mount.innerHTML = `<div class="notice"><strong>No matches found.</strong> Try adjusting filters or request a quote below.</div>`;
         return;
       }
 
-      clearAllTimers();
       mount.innerHTML = `<div class="grid">${items.map(cardHTML).join("")}</div>`;
-      items.forEach(it => autoRotateImages(String(it.id)));
     }
 
     function lgQuick(word){
@@ -1323,16 +1240,22 @@
     }
     function lgSetType(v){ document.getElementById("lg_type").value = v; renderLogistics(); }
     function lgSetCoverage(v){ document.getElementById("lg_cov").value = v; renderLogistics(); }
+    function lgSetFeatured(on){
+      document.getElementById("lg_feat").value = on ? "featured" : "all";
+      renderLogistics();
+    }
     function lgReset(){
       document.getElementById("lg_q").value = "";
       document.getElementById("lg_type").value = "all";
       document.getElementById("lg_cov").value = "all";
       document.getElementById("lg_sort").value = "new";
+      document.getElementById("lg_feat").value = "all";
       renderLogistics();
     }
     window.lgQuick = lgQuick;
     window.lgSetType = lgSetType;
     window.lgSetCoverage = lgSetCoverage;
+    window.lgSetFeatured = lgSetFeatured;
     window.lgReset = lgReset;
 
     function lgEnquire(id){
@@ -1345,6 +1268,7 @@
         Coverage: inferCoverage(it) || "",
         Type: inferType(it) || "",
         Quote: formatPrice(it.price),
+        Featured: it.featured === true ? "Yes" : "No",
         Message: "Hello Larmah, please confirm availability and cost."
       }));
     }
@@ -1364,6 +1288,7 @@ Service: ${safeText(it.title)}
 Coverage: ${inferCoverage(it) || ""}
 Type: ${inferType(it) || ""}
 Quote: ${formatPrice(it.price)}
+Featured: ${it.featured === true ? "Yes" : "No"}
 
 My Name:
 My Phone:
@@ -1386,19 +1311,19 @@ Thank you.`;
         const sb = await waitForSB();
         if(!sb) throw new Error("Supabase not ready. Ensure assets/js/app.js has your SUPABASE_URL + SUPABASE_ANON_KEY.");
 
+        // ✅ include featured + sort_rank to sync with index featured rules
         const { data, error } = await sb
           .from("listings")
-          .select("id,title,description,price,image_url,image_urls,coverage,location,area,city,state,service_type,type,tags,category,status,created_at")
+          .select("id,title,description,price,image_url,image_urls,coverage,location,area,city,state,service_type,type,tags,category,status,featured,sort_rank,created_at")
           .eq("category", "logistics")
           .eq("status", "active")
           .order("created_at", { ascending: false })
-          .limit(120);
+          .limit(200);
 
         if(error) throw error;
 
         __LG.items = data || [];
         if(!__LG.items.length){
-          clearAllTimers();
           mount.innerHTML = `<div class="notice"><strong>No active services currently.</strong> Please request a quote below.</div>`;
           return;
         }
@@ -1410,7 +1335,6 @@ Thank you.`;
         }
       } catch(err){
         console.error(err);
-        clearAllTimers();
         mount.innerHTML = `<div class="notice" style="border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
           <strong>Could not load services.</strong> Please refresh or try again later.
         </div>`;
@@ -1455,6 +1379,7 @@ Thank you.`;
       document.getElementById("lg_type")?.addEventListener("change", renderLogistics);
       document.getElementById("lg_cov")?.addEventListener("change", renderLogistics);
       document.getElementById("lg_sort")?.addEventListener("change", renderLogistics);
+      document.getElementById("lg_feat")?.addEventListener("change", renderLogistics);
       loadLogistics();
     });
 
@@ -1462,5 +1387,10 @@ Thank you.`;
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
   </script>
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+    crossorigin="anonymous"></script>
 </body>
 </html>
