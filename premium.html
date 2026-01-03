@@ -355,6 +355,79 @@
     .tier-actions .btn{ flex:1; }
     @media (max-width: 520px){ .tier-actions .btn{ width:100%; flex:unset; } }
 
+    /* NEW: Investor ideas section cards */
+    .invest-grid{
+      display:grid;
+      gap:14px;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 980px){ .invest-grid{ grid-template-columns: 1fr; } }
+    .invest-card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow2);
+      padding: 14px;
+      overflow:hidden;
+    }
+    .invest-card h3{
+      margin:0;
+      font-size:1.05rem;
+      letter-spacing:-0.2px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .invest-card p{ margin:8px 0 0; color: var(--muted); line-height:1.45; }
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 85%, transparent);
+      font-weight: 850;
+      font-size: .84rem;
+    }
+    .chip i{ color: var(--gold); }
+
+    .two-cols{
+      display:grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+      margin-top: 12px;
+    }
+    @media (max-width: 980px){ .two-cols{ grid-template-columns: 1fr; } }
+    .mini{
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      padding: 12px;
+    }
+    .mini h4{
+      margin:0;
+      font-size:.95rem;
+      letter-spacing:-0.2px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .mini ul{
+      margin:10px 0 0;
+      padding: 0 0 0 18px;
+      color: var(--muted);
+      line-height:1.55;
+    }
+    .mini li{ margin: 6px 0; }
+
     .form{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -569,6 +642,7 @@
 
           <div class="hero-actions">
             <a class="btn solid" href="#tiers"><i class="fa-solid fa-layer-group"></i> View Tiers</a>
+            <a class="btn primary" href="#invest"><i class="fa-solid fa-chart-line"></i> Investor Benefits</a>
             <a class="btn primary" href="#pay"><i class="fa-solid fa-credit-card"></i> Pay with Paystack</a>
             <button class="btn primary" type="button" onclick="openWA(buildMsg('Premium Enquiry', { Message:'Hello Larmah, I want Premium support.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp
@@ -578,6 +652,8 @@
           <div class="notice" style="margin-top:12px;">
             <strong>Business Email:</strong> <a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a> &nbsp;•&nbsp;
             <strong>WhatsApp:</strong> +234 706 308 0605
+            <br/>
+            <strong>Note:</strong> Only Premium subscribers are eligible to create a Larmah account/dashboard profile.
           </div>
         </div>
 
@@ -612,6 +688,100 @@
       </div>
     </section>
 
+    <!-- NEW: Investor benefits + all active/passive ideas -->
+    <section class="section" id="invest" aria-label="Premium investor benefits">
+      <div class="section-head">
+        <div>
+          <h2>What Premium Members Can Participate In</h2>
+          <p class="subhead">Active and passive real estate plays — plus the Larmah support layer that makes it easier to execute.</p>
+        </div>
+        <div class="mono" style="opacity:.85">Investor access • Deal support</div>
+      </div>
+
+      <div class="invest-grid">
+        <div class="invest-card">
+          <h3><i class="fa-solid fa-screwdriver-wrench" style="color:var(--gold)"></i> Active Investing Plays</h3>
+          <p>Hands-on strategies where you or your team are directly involved in sourcing, operations, improvements, or resale.</p>
+
+          <div class="two-cols">
+            <div class="mini">
+              <h4><i class="fa-solid fa-house" style="color:var(--gold)"></i> Cashflow & Rentals</h4>
+              <ul>
+                <li>Buy-to-let (long-term rentals)</li>
+                <li>Shortlets / Airbnb-style operations</li>
+                <li>House hacking (live + rent out)</li>
+                <li>Commercial leasing (shops, offices, warehouses)</li>
+              </ul>
+            </div>
+
+            <div class="mini">
+              <h4><i class="fa-solid fa-hammer" style="color:var(--gold)"></i> Value Creation</h4>
+              <ul>
+                <li>Fix-and-flip (buy, renovate, sell)</li>
+                <li>BRRRR (buy, rehab, rent, refinance, repeat)</li>
+                <li>Land banking (hold in growth areas)</li>
+                <li>Development / construction projects</li>
+              </ul>
+            </div>
+
+            <div class="mini" style="grid-column: 1 / -1;">
+              <h4><i class="fa-solid fa-handshake" style="color:var(--gold)"></i> Deal Access & Creative Structures</h4>
+              <ul>
+                <li>Wholesaling / deal sourcing (assign deals)</li>
+                <li>Joint ventures (capital + operator partnership)</li>
+                <li>Rent-to-rent / master lease (where legal/allowed)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="invest-card">
+          <h3><i class="fa-solid fa-chart-pie" style="color:var(--gold)"></i> Passive Investing Plays</h3>
+          <p>Lower-touch strategies where capital is the main input and operations are handled by professionals or platforms.</p>
+
+          <div class="two-cols">
+            <div class="mini">
+              <h4><i class="fa-solid fa-building-columns" style="color:var(--gold)"></i> Market Instruments</h4>
+              <ul>
+                <li>REITs (Real Estate Investment Trusts)</li>
+                <li>Real estate ETFs / mutual funds</li>
+                <li>Public real-estate company exposure</li>
+              </ul>
+            </div>
+
+            <div class="mini">
+              <h4><i class="fa-solid fa-users" style="color:var(--gold)"></i> Group Deals</h4>
+              <ul>
+                <li>Crowdfunding (debt or equity deals)</li>
+                <li>Syndications (property partnerships)</li>
+                <li>Private real estate funds</li>
+              </ul>
+            </div>
+
+            <div class="mini" style="grid-column: 1 / -1;">
+              <h4><i class="fa-solid fa-money-bill-wave" style="color:var(--gold)"></i> Debt & Income Structures</h4>
+              <ul>
+                <li>Property-backed lending / debt investing</li>
+                <li>Income contracts / lease structures (niche)</li>
+                <li>Sale-leaseback (advanced / commercial)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="chips" aria-label="Premium support chips">
+            <span class="chip"><i class="fa-solid fa-circle-check"></i> Deal screening</span>
+            <span class="chip"><i class="fa-solid fa-file-signature"></i> Docs & verification support</span>
+            <span class="chip"><i class="fa-solid fa-truck-fast"></i> Logistics coordination</span>
+            <span class="chip"><i class="fa-solid fa-headset"></i> WhatsApp-first handling</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="notice" style="margin-top:14px;">
+        <strong>Premium Advantage:</strong> We help reduce friction — faster sourcing, cleaner confirmations, optional partner introductions, and end-to-end coordination (real estate + logistics).
+      </div>
+    </section>
+
     <section class="section" id="tiers" aria-label="Premium tiers">
       <div class="section-head">
         <div>
@@ -633,6 +803,7 @@
               <li>Priority response on Real Estate + Logistics</li>
               <li>Cleaner shortlist + faster confirmations</li>
               <li>WhatsApp follow-up + reference tracking</li>
+              <li>Investor ideas access (active + passive)</li>
             </ul>
 
             <div class="tier-actions">
@@ -657,7 +828,7 @@
               <li>Dedicated concierge coordination</li>
               <li>Best options + faster confirmations</li>
               <li>Priority escalation on urgent requests</li>
-              <li>More structured follow-up</li>
+              <li>Structured follow-up + investor support</li>
             </ul>
 
             <div class="tier-actions">
@@ -682,7 +853,7 @@
               <li>White-glove end-to-end handling</li>
               <li>Reserved scheduling priority for logistics</li>
               <li>Priority sourcing for tight timelines</li>
-              <li>Dedicated escalation lane</li>
+              <li>Dedicated escalation lane + investor execution support</li>
             </ul>
 
             <div class="tier-actions">
