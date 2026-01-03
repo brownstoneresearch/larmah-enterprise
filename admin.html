@@ -1,8 +1,19 @@
+<!-- =========================
+     admin.html (UPDATED)
+     - Uses new Premium gating model:
+       * must be logged in
+       * must be Premium (premium_members)
+       * must be in admin allowlist (set below)
+     - Removes rpc is_admin dependency
+     - Removes custom ensureSupabaseClient conflicts
+     - Replaces missing helpers (LARMAH.toast / escapeHtml / toggleMenu)
+========================= -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-NG" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="index,follow" />
   <title>Admin Command | Larmah Enterprise</title>
 
   <link rel="stylesheet" href="assets/css/style.css" />
@@ -11,17 +22,14 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- ✅ Fallback client -->
+  <!-- ✅ Configure BEFORE app.js loads -->
   <script>
-    window.SUPABASE_URL = window.SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
-    window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
-    window.ensureSupabaseClient = function () {
-      if (window.supabaseClient) return window.supabaseClient;
-      if (!window.supabase || typeof window.supabase.createClient !== "function") return null;
-      window.supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-      return window.supabaseClient;
-    };
-    window.ensureSupabaseClient();
+    // Optional overrides for app.js (recommended)
+    window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
+    window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4"; // put your anon key (not service role)
+
+    // Admin allowlist for this page (so you don't have to edit app.js)
+    window.__LARMAH_ADMIN_EMAILS = ["luckymomodu60@gmail.com"];
   </script>
 
   <script defer src="assets/js/app.js"></script>
@@ -74,7 +82,6 @@
     .saving{opacity:.7;pointer-events:none}
     @media(max-width:900px){.admin-layout{grid-template-columns:1fr}.admin-sidebar{display:none}}
 
-    /* ✅ Little upgrade: header quick actions */
     .quick-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
     .chip{
       display:inline-flex;align-items:center;gap:8px;
@@ -84,6 +91,16 @@
       color:var(--muted);
       font-weight:900;font-size:.82rem;
     }
+
+    /* Minimal toast */
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      min-width:220px; max-width:min(560px, calc(100vw - 28px));
+      padding:10px 12px; border-radius:14px; border:1px solid rgba(255,255,255,.12);
+      background: rgba(5,8,16,.92);
+      color:#fff; display:none; z-index:20000;
+    }
+    .toast.show{display:block}
   </style>
 </head>
 
@@ -93,12 +110,12 @@
     <div class="login-box">
       <img src="assets/images/larmah-header.jpeg" style="width:60px;border-radius:12px;margin:0 auto 18px;display:block" alt="Larmah">
       <h2 style="margin-bottom:10px">Admin Access</h2>
-      <p class="small" style="margin-bottom:18px">Super admin only.</p>
+      <p class="small" style="margin-bottom:18px">Premium + Admin allowlist only.</p>
 
       <form id="adminLoginForm">
         <div style="margin-bottom:14px;text-align:left">
           <label class="form-label">Email</label>
-          <input type="email" id="admin_email" class="input" placeholder="luckymomodu60@gmail.com" required>
+          <input type="email" id="admin_email" class="input" placeholder="admin@email.com" required>
         </div>
         <div style="margin-bottom:20px;text-align:left">
           <label class="form-label">Password</label>
@@ -109,7 +126,7 @@
 
       <div id="loginMsg" class="small" style="margin-top:14px;color:var(--bad);display:none"></div>
       <div class="small" style="margin-top:12px;opacity:.75">
-        Not admin? <a href="auth.html" style="color:var(--accent)">Go to Auth</a>
+        Not admin? <a href="auth.html" style="color:var(--accent)">Go to Login</a>
       </div>
     </div>
   </div>
@@ -151,10 +168,10 @@
           <div class="admin-header">
             <div>
               <h1 style="margin:0">System Overview</h1>
-              <div class="small" style="margin-top:6px;color:var(--muted)">Live DB • Admin-only access</div>
+              <div class="small" style="margin-top:6px;color:var(--muted)">Live DB • Premium Admin-only access</div>
             </div>
             <div class="quick-actions">
-              <span class="chip"><i class="fa-solid fa-shield-halved"></i> Super Admin</span>
+              <span class="chip"><i class="fa-solid fa-shield-halved"></i> Admin</span>
               <button class="btn small" onclick="loadStats()"><i class="fa-solid fa-rotate"></i> Refresh</button>
               <button class="btn small" onclick="syncRssNow()"><i class="fa-solid fa-rss"></i> Sync RSS</button>
             </div>
@@ -575,7 +592,17 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const ONLY_ADMIN_EMAIL = "luckymomodu60@gmail.com";
+    // ===== minimal helpers (don’t rely on removed app.js helpers)
+    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    function toast(msg){
+      const t = document.getElementById("toast");
+      if(!t) return;
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(()=>t.classList.remove("show"), 2600);
+    }
+
     let sb = null;
 
     const CACHE = {
@@ -585,15 +612,6 @@
       requests:new Map(),
       rss:new Map()
     };
-
-    function toast(msg, type="info"){
-      try { if (window.LARMAH && typeof LARMAH.toast === "function") LARMAH.toast(msg, type); } catch {}
-      const t = document.getElementById("toast");
-      if(!t) return;
-      t.textContent = msg;
-      t.className = `toast show ${type}`;
-      setTimeout(()=> t.className="toast", 4000);
-    }
 
     function showLogin(msg=null){
       document.getElementById("login-gate").style.display = "flex";
@@ -622,8 +640,6 @@
       if(k === "rss") return "rss";
       return "admin";
     }
-
-    function safeDate(d){ try { return new Date(d).toLocaleString(); } catch { return ""; } }
 
     function setInsightsCount(n){
       const el = document.getElementById("ins_count");
@@ -682,7 +698,6 @@
 
     async function collectImages(kind, folder){
       const urls = [];
-      const paths = [];
       for(let i=1;i<=3;i++){
         const file = document.getElementById(`${kind}_file_${i}`)?.files?.[0] || null;
         const manual = getSlotUrl(kind, i);
@@ -690,16 +705,14 @@
         if(file){
           const up = await uploadToStorage(file, folder);
           urls.push(up.url);
-          paths.push(up.path);
           setSlotUrl(kind, i, up.url);
           setSlotPreview(kind, i, up.url);
         } else if(manual){
           urls.push(manual);
-          paths.push(null);
           setSlotPreview(kind, i, manual);
         }
       }
-      return { urls, paths };
+      return { urls: urls.slice(0,3) };
     }
 
     function pickThumb(it){
@@ -718,7 +731,7 @@
         if(!file) return;
 
         try{
-          toast("Uploading image…", "info");
+          toast("Uploading image…");
           const folder = (entity === "insight") ? "insights" : "listings";
           const up = await uploadToStorage(file, folder);
 
@@ -734,7 +747,7 @@
           const res = await sb.from(table).update(payload).eq("id", id).select().single();
           if(res.error) throw res.error;
 
-          toast("Image updated ✅", "success");
+          toast("Image updated ✅");
           if(entity === "listing"){
             await fetchListings("all");
             if(category) await fetchListings(category);
@@ -743,7 +756,7 @@
           }
         }catch(e){
           console.warn(e);
-          toast(e?.message || "Upload failed", "error");
+          toast(e?.message || "Upload failed");
         }
       };
 
@@ -751,42 +764,27 @@
     }
 
     /* ===========================
-       ✅ ADMIN GATE (ROLE + EMAIL)
+       ✅ ADMIN GATE (Premium + allowlist)
        =========================== */
-    async function assertOnlyAdmin(){
-      const { data } = await sb.auth.getSession();
-      if(!data?.session) throw new Error("No session");
-
-      const { data: isAdmin, error } = await sb.rpc("is_admin");
-      if(error) throw error;
-      if(!isAdmin) throw new Error("Access denied: Admins only.");
-
-      const email = (data.session.user.email || "").toLowerCase();
-      if(email !== ONLY_ADMIN_EMAIL.toLowerCase()){
-        throw new Error("Access denied: Admin email mismatch.");
+    async function initAdminGate(){
+      sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
+      if(!sb){
+        showLogin("Supabase not ready.");
+        return false;
       }
+
+      // must be logged in and be admin (premium + allowlist)
+      const ok = await LARMAH.requireAdmin({
+        redirectTo: "auth.html",
+        onFail: ({ reason }) => {
+          showLogin(reason === "not-admin" ? "Access denied: Admin allowlist only." : "Please sign in.");
+        }
+      });
+
+      if(!ok) return false;
+
+      showAdmin();
       return true;
-    }
-
-    async function initAdmin(){
-      sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
-      if(!sb){ showLogin("Supabase not ready."); return; }
-
-      const { data } = await sb.auth.getSession();
-      if(!data?.session){
-        showLogin();
-        return;
-      }
-
-      try{
-        await assertOnlyAdmin();
-        showAdmin();
-        await loadStats();
-        await fetchListings("all");
-      }catch(e){
-        try { await sb.auth.signOut(); } catch {}
-        window.location.href = "dashboard.html";
-      }
     }
 
     async function adminLogin(email, password){
@@ -801,8 +799,10 @@
         const { error } = await sb.auth.signInWithPassword({ email, password });
         if(error) throw error;
 
-        await assertOnlyAdmin();
-        showAdmin();
+        const ok = await initAdminGate();
+        if(!ok) throw new Error("Access denied.");
+
+        toast("Admin authenticated ✅");
         await loadStats();
         switchView("overview", document.querySelector(".nav-item"));
       }catch(e){
@@ -811,7 +811,7 @@
           msg.textContent = e?.message || "Access denied";
           msg.style.display = "block";
         }
-        window.location.href = "dashboard.html";
+        showLogin(e?.message || "Access denied");
       }finally{
         btn.disabled = false;
         btn.textContent = "Authenticate";
@@ -850,21 +850,16 @@
        =========================== */
     async function syncRssNow(){
       try{
-        toast("Running RSS sync…", "info");
+        toast("Running RSS sync…");
         const { data, error } = await sb.functions.invoke("rss-sync", { body: {} });
         if(error) throw error;
-
-        const inserted = data?.items_inserted_est ?? 0;
-        const fetched = data?.sources_fetched ?? 0;
-        toast(`RSS synced ✅ (${inserted} items, ${fetched} feeds)`, "success");
-
+        toast(`RSS synced ✅`);
         try { await fetchInsights(); } catch {}
         try { await fetchRssSources(); } catch {}
-
         console.log("rss-sync:", data);
       }catch(e){
         console.warn(e);
-        toast(e?.message || "RSS sync failed", "error");
+        toast(e?.message || "RSS sync failed");
       }
     }
 
@@ -915,22 +910,22 @@
           const cat = it.category || "";
           const actions = `
             <div style="display:flex;gap:8px">
-              <button class="action-btn" title="Edit" onclick="openEditor('listing','${String(it.id)}','${LARMAH.escapeHtml(cat)}')"><i class="fa-solid fa-pen"></i></button>
-              <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('listing','${String(it.id)}','${LARMAH.escapeHtml(cat)}')"><i class="fa-solid fa-image"></i></button>
-              <button class="action-btn danger" title="Delete" onclick="deleteEntity('listing','${String(it.id)}','${LARMAH.escapeHtml(cat)}')"><i class="fa-solid fa-trash"></i></button>
+              <button class="action-btn" title="Edit" onclick="openEditor('listing','${String(it.id)}','${esc(cat)}')"><i class="fa-solid fa-pen"></i></button>
+              <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('listing','${String(it.id)}','${esc(cat)}')"><i class="fa-solid fa-image"></i></button>
+              <button class="action-btn danger" title="Delete" onclick="deleteEntity('listing','${String(it.id)}','${esc(cat)}')"><i class="fa-solid fa-trash"></i></button>
             </div>
           `;
 
           const statusText = String(it.status || "inactive");
-          const statusBadge = `<span class="badge ${badgeClass(statusText)}">${LARMAH.escapeHtml(statusText)}</span>`;
+          const statusBadge = `<span class="badge ${badgeClass(statusText)}">${esc(statusText)}</span>`;
 
           if(isAll){
             return `
               <tr>
-                <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
-                <td><div style="font-weight:950">${LARMAH.escapeHtml(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div></td>
-                <td>${LARMAH.escapeHtml(cat)}</td>
-                <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price||"")}</td>
+                <td><img class="tbl-thumb" src="${esc(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
+                <td><div style="font-weight:950">${esc(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${esc(String(it.id))}</div></td>
+                <td>${esc(cat)}</td>
+                <td style="color:var(--accent);font-weight:900">${esc(it.price||"")}</td>
                 <td>${statusBadge}</td>
                 <td>${actions}</td>
               </tr>
@@ -939,9 +934,9 @@
 
           return `
             <tr>
-              <td><img class="tbl-thumb" src="${LARMAH.escapeHtml(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
-              <td><div style="font-weight:950">${LARMAH.escapeHtml(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(it.id))}</div></td>
-              <td style="color:var(--accent);font-weight:900">${LARMAH.escapeHtml(it.price||"")}</td>
+              <td><img class="tbl-thumb" src="${esc(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
+              <td><div style="font-weight:950">${esc(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${esc(String(it.id))}</div></td>
+              <td style="color:var(--accent);font-weight:900">${esc(it.price||"")}</td>
               <td>${statusBadge}</td>
               <td>${actions}</td>
             </tr>
@@ -959,7 +954,6 @@
     async function fetchRates(){
       const tbody = document.getElementById("tbody-rates");
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
-
       try{
         const { data, error } = await sb.from("rates").select("*").order("pair",{ascending:true});
         if(error) throw error;
@@ -974,10 +968,10 @@
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td style="font-weight:950">${LARMAH.escapeHtml(String(it.pair || ((it.base||it.asset||"") + "/" + (it.quote||"NGN"))))}</td>
-            <td style="color:var(--ok);font-weight:950">${LARMAH.escapeHtml(String(it.buy ?? ""))}</td>
-            <td style="color:var(--warn);font-weight:950">${LARMAH.escapeHtml(String(it.sell ?? ""))}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "inactive")}</span></td>
+            <td style="font-weight:950">${esc(String(it.pair || ((it.base||it.asset||"") + "/" + (it.quote||"NGN"))))}</td>
+            <td style="color:var(--ok);font-weight:950">${esc(String(it.buy ?? ""))}</td>
+            <td style="color:var(--warn);font-weight:950">${esc(String(it.sell ?? ""))}</td>
+            <td><span class="badge ${badgeClass(it.status)}">${esc(it.status || "inactive")}</span></td>
             <td>
               <div style="display:flex;gap:8px">
                 <button class="action-btn" onclick="openEditor('rate','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
@@ -993,7 +987,7 @@
     }
 
     /* ===========================
-       INSIGHTS (Admin + RSS)
+       INSIGHTS
        =========================== */
     async function fetchInsights(){
       const tbody = document.getElementById("tbody-insights");
@@ -1018,12 +1012,12 @@
 
           return `
             <tr>
-              <td style="font-weight:950">${LARMAH.escapeHtml(it.title || "")}</td>
-              <td>${LARMAH.escapeHtml(it.category || "general")}</td>
-              <td>${LARMAH.escapeHtml(it.source_name || (kind === "rss" ? "RSS" : "Admin"))}</td>
+              <td style="font-weight:950">${esc(it.title || "")}</td>
+              <td>${esc(it.category || "general")}</td>
+              <td>${esc(it.source_name || (kind === "rss" ? "RSS" : "Admin"))}</td>
               <td><span class="badge ${kindCls}">${kindLabel}</span></td>
               <td class="small">${it.created_at ? new Date(it.created_at).toLocaleDateString() : ""}</td>
-              <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "inactive")}</span></td>
+              <td><span class="badge ${badgeClass(it.status)}">${esc(it.status || "inactive")}</span></td>
               <td>
                 <div style="display:flex;gap:8px">
                   <button class="action-btn" title="Edit" onclick="openEditor('insight','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
@@ -1060,10 +1054,10 @@
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td style="font-weight:950">${LARMAH.escapeHtml(it.name || "")}</td>
-            <td>${LARMAH.escapeHtml(it.category || "general")}</td>
-            <td style="font-family:ui-monospace;font-size:.85rem;opacity:.85">${LARMAH.escapeHtml(it.url || "")}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "inactive")}</span></td>
+            <td style="font-weight:950">${esc(it.name || "")}</td>
+            <td>${esc(it.category || "general")}</td>
+            <td style="font-family:ui-monospace;font-size:.85rem;opacity:.85">${esc(it.url || "")}</td>
+            <td><span class="badge ${badgeClass(it.status)}">${esc(it.status || "inactive")}</span></td>
             <td>
               <div style="display:flex;gap:8px">
                 <button class="action-btn" onclick="openEditor('rss','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
@@ -1079,7 +1073,7 @@
     }
 
     /* ===========================
-       REQUESTS (new/open/closed)
+       REQUESTS
        =========================== */
     async function fetchRequests(){
       const tbody = document.getElementById("tbody-requests");
@@ -1098,9 +1092,9 @@
 
         tbody.innerHTML = data.map(it => `
           <tr>
-            <td style="font-weight:950">${LARMAH.escapeHtml(it.category || "general")}</td>
+            <td style="font-weight:950">${esc(it.category || "general")}</td>
             <td class="small">${it.created_at ? new Date(it.created_at).toLocaleString() : ""}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${LARMAH.escapeHtml(it.status || "new")}</span></td>
+            <td><span class="badge ${badgeClass(it.status)}">${esc(it.status || "new")}</span></td>
             <td>
               <select class="status-select" onchange="updateRequestStatus('${String(it.id)}', this.value)">
                 <option value="new" ${String(it.status||"new")==="new"?"selected":""}>new</option>
@@ -1121,11 +1115,11 @@
       try{
         const { error } = await sb.from("requests").update({ status }).eq("id", id);
         if(error) throw error;
-        toast("Request status updated ✅","success");
+        toast("Request status updated ✅");
         await loadStats();
         await fetchRequests();
       }catch(e){
-        toast(e.message || "Update failed","error");
+        toast(e.message || "Update failed");
       }
     }
 
@@ -1147,10 +1141,10 @@
         tbody.innerHTML = data.map(u => `
           <tr>
             <td>
-              <div>${LARMAH.escapeHtml(u.email || "N/A")}</div>
-              <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${LARMAH.escapeHtml(String(u.id||""))}</div>
+              <div>${esc(u.email || "N/A")}</div>
+              <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${esc(String(u.id||""))}</div>
             </td>
-            <td>${LARMAH.escapeHtml(u.full_name || "User")}</td>
+            <td>${esc(u.full_name || "User")}</td>
             <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : ""}</td>
             <td><span class="badge active">Active</span></td>
           </tr>
@@ -1275,7 +1269,7 @@
         const it = CACHE.requests.get(String(id));
         if(it){
           document.getElementById("req_category").value = it.category || "";
-          document.getElementById("req_created").value = it.created_at ? safeDate(it.created_at) : "";
+          document.getElementById("req_created").value = it.created_at ? new Date(it.created_at).toLocaleString() : "";
           document.getElementById("req_status").value = it.status || "";
           document.getElementById("req_payload").value = JSON.stringify(it.payload || {}, null, 2);
         }
@@ -1315,9 +1309,8 @@
           if(!payload.title) throw new Error("Title is required.");
 
           const imgs = await collectImages("listing", "listings");
-          const urls = imgs.urls.slice(0,3);
-          payload.image_url = urls[0] || "";
-          payload.image_urls = urls;
+          payload.image_url = imgs.urls[0] || "";
+          payload.image_urls = imgs.urls;
 
           const res = id
             ? await sb.from("listings").update(payload).eq("id", id).select().single()
@@ -1325,7 +1318,7 @@
 
           if(res.error) throw res.error;
 
-          toast("Saved listing ✅","success");
+          toast("Saved listing ✅");
           closeEditor();
           await fetchListings("all");
           await loadStats();
@@ -1347,14 +1340,13 @@
             status: document.getElementById("rate_status").value
           };
 
-          // Prefer update by id; otherwise insert
           const res = id
             ? await sb.from("rates").update(payload).eq("id", id).select().single()
             : await sb.from("rates").insert([payload]).select().single();
 
           if(res.error) throw res.error;
 
-          toast("Saved pair ✅","success");
+          toast("Saved pair ✅");
           closeEditor();
           await fetchRates();
           return;
@@ -1372,9 +1364,8 @@
           if(!payload.title) throw new Error("Title is required.");
 
           const imgs = await collectImages("insight", "insights");
-          const urls = imgs.urls.slice(0,3);
-          payload.image_url = urls[0] || "";
-          payload.image_urls = urls;
+          payload.image_url = imgs.urls[0] || "";
+          payload.image_urls = imgs.urls;
 
           const res = id
             ? await sb.from("insights").update(payload).eq("id", id).select().single()
@@ -1382,7 +1373,7 @@
 
           if(res.error) throw res.error;
 
-          toast("Saved insight ✅","success");
+          toast("Saved insight ✅");
           closeEditor();
           await fetchInsights();
           return;
@@ -1401,9 +1392,10 @@
           const res = id
             ? await sb.from("rss_sources").update(payload).eq("id", id).select().single()
             : await sb.from("rss_sources").insert([payload]).select().single();
+
           if(res.error) throw res.error;
 
-          toast("Saved RSS source ✅","success");
+          toast("Saved RSS source ✅");
           closeEditor();
           await fetchRssSources();
           return;
@@ -1411,7 +1403,7 @@
 
       }catch(err){
         console.warn("SAVE ERROR:", err);
-        toast(err?.message || "Save failed","error");
+        toast(err?.message || "Save failed");
       }finally{
         document.body.classList.remove("saving");
         btn.disabled = false;
@@ -1425,7 +1417,7 @@
         if(entity === "listing"){
           const { error } = await sb.from("listings").delete().eq("id", id);
           if(error) throw error;
-          toast("Deleted listing ✅","success");
+          toast("Deleted listing ✅");
           await fetchListings("all");
           if(category) await fetchListings(category);
           await loadStats();
@@ -1434,26 +1426,26 @@
         if(entity === "rate"){
           const { error } = await sb.from("rates").delete().eq("id", id);
           if(error) throw error;
-          toast("Deleted pair ✅","success");
+          toast("Deleted pair ✅");
           await fetchRates();
           return;
         }
         if(entity === "insight"){
           const { error } = await sb.from("insights").delete().eq("id", id);
           if(error) throw error;
-          toast("Deleted insight ✅","success");
+          toast("Deleted insight ✅");
           await fetchInsights();
           return;
         }
         if(entity === "rss"){
           const { error } = await sb.from("rss_sources").delete().eq("id", id);
           if(error) throw error;
-          toast("Deleted RSS source ✅","success");
+          toast("Deleted RSS source ✅");
           await fetchRssSources();
           return;
         }
       }catch(e){
-        toast(e.message || "Delete failed","error");
+        toast(e.message || "Delete failed");
       }
     }
 
@@ -1461,7 +1453,7 @@
        WIRE UP
        =========================== */
     document.addEventListener("DOMContentLoaded", async () => {
-      sb = (window.ensureSupabaseClient ? window.ensureSupabaseClient() : window.supabaseClient);
+      sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
       if(!sb){ showLogin("Supabase not ready."); return; }
 
       ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) bindFilePreview(kind,i); });
@@ -1495,8 +1487,33 @@
         if(e.key === "Escape") closeEditor();
       });
 
-      await initAdmin();
+      // Try session-based entry (already logged in)
+      const ok = await initAdminGate();
+      if(ok){
+        await loadStats();
+        await fetchListings("all");
+      }else{
+        showLogin();
+      }
     });
+
+    // expose for inline handlers
+    window.switchView = switchView;
+    window.syncRssNow = syncRssNow;
+    window.loadStats = loadStats;
+    window.fetchListings = fetchListings;
+    window.fetchRates = fetchRates;
+    window.fetchInsights = fetchInsights;
+    window.fetchRssSources = fetchRssSources;
+    window.fetchRequests = fetchRequests;
+    window.fetchUsers = fetchUsers;
+    window.openEditor = openEditor;
+    window.closeEditor = closeEditor;
+    window.clearSlot = clearSlot;
+    window.quickUploadMainImage = quickUploadMainImage;
+    window.deleteEntity = deleteEntity;
+    window.adminLogout = adminLogout;
+    window.updateRequestStatus = updateRequestStatus;
   </script>
 </body>
 </html>
