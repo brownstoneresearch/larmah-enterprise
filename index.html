@@ -742,20 +742,6 @@
       color: var(--muted2);
       font-size: .9rem;
     }
-    .footer-badges{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
-    .badge{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 80%, transparent);
-      font-weight: 850;
-      font-size: .84rem;
-    }
-    .badge i{ color: var(--gold); }
   </style>
 </head>
 
@@ -985,7 +971,7 @@
     </div>
 
     <!-- ======================
-         ABOUT PAGE (INSIDE INDEX)
+         ABOUT PAGE (INSIDE INDEX) — UPDATED
          ====================== -->
     <div class="page" id="page-about" data-page="about">
       <section class="section" aria-label="About Larmah Enterprise">
@@ -1000,8 +986,9 @@
 
               <h1>About Larmah Enterprise</h1>
               <p class="lead">
-                Larmah Enterprise is a trust-first commerce hub built around two pillars: verified real estate (including shortlets) and dependable logistics.
-                We reduce friction with clear confirmations, clean references, and WhatsApp-first support.
+                Larmah Enterprise is a trust-first hub built on two pillars: verified real estate (shortlets, rentals, sales)
+                and dependable logistics (dispatch, pickups, haulage, and freight coordination). We reduce friction with clear
+                confirmations, clean references, and WhatsApp-first support.
               </p>
 
               <div class="hero-actions">
@@ -1017,14 +1004,14 @@
                   <i class="fa-solid fa-circle-check"></i>
                   <div>
                     <b>Verified Listings</b>
-                    <span>We prioritize clear listing details, basic verification, and scam-resistant confirmations.</span>
+                    <span>Clear listing details, basic verification, and scam-resistant confirmations.</span>
                   </div>
                 </div>
                 <div class="ap">
                   <i class="fa-solid fa-truck-fast"></i>
                   <div>
                     <b>Logistics Support</b>
-                    <span>Dispatch, pickups, and trusted movement across Nigeria with real-time WhatsApp coordination.</span>
+                    <span>Dispatch, pickups, haulage and coordination across Nigeria with real-time WhatsApp updates.</span>
                   </div>
                 </div>
                 <div class="ap">
@@ -1036,9 +1023,72 @@
                 </div>
               </div>
 
-              <div class="notice" style="margin-top:12px;">
-                <b style="color:var(--text)">Business Email:</b> business@heylarmah.tech<br/>
-                <b style="color:var(--text)">WhatsApp:</b> +234 706 308 0605
+              <div style="margin-top:14px;">
+                <h2 style="margin:0;">Premium Investment Tracks</h2>
+                <p class="subhead" style="margin:6px 0 0;">
+                  Premium subscribers can participate in curated opportunities across real estate and logistics — with guidance,
+                  sourcing, and coordinated execution.
+                </p>
+
+                <div class="about-points" style="margin-top:12px;">
+                  <div class="ap">
+                    <i class="fa-solid fa-building"></i>
+                    <div>
+                      <b>Real Estate — Active Investing</b>
+                      <span>
+                        Buy-to-rent (shortlets/longlets), fix-and-flip, joint ventures, land banking, development participation,
+                        and deal sourcing support.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="ap">
+                    <i class="fa-solid fa-coins"></i>
+                    <div>
+                      <b>Real Estate — Passive Investing</b>
+                      <span>
+                        Fractional participation, pooled deals, rent-share structures, property-backed notes, and curated
+                        income opportunities (subject to availability).
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="ap">
+                    <i class="fa-solid fa-truck"></i>
+                    <div>
+                      <b>Logistics — Fleet & Dispatch Returns</b>
+                      <span>
+                        Dispatch bike/vehicle rentals, partner-driver models, route-based earnings, managed operations,
+                        and utilization tracking.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="ap">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <div>
+                      <b>Logistics — Freight & Movement Plays</b>
+                      <span>
+                        Freight participation, haulage partnerships, warehousing support, last-mile delivery capacity,
+                        and contract-linked movement opportunities.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="notice" style="margin-top:12px;">
+                  <b style="color:var(--text)">Premium-only access:</b> only Premium subscribers are entitled to have an account.
+                  Join Premium to unlock your dashboard and investment tracks.<br/>
+                  <b style="color:var(--text)">Business Email:</b> <a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a><br/>
+                  <b style="color:var(--text)">WhatsApp:</b> +234 706 308 0605
+                  <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <a class="btn small solid" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Join Premium</a>
+                    <button class="btn small primary" type="button"
+                      onclick="openWA(buildMsg('Premium Interest', { Topic:'Premium Investment Tracks', Message:'Hello Larmah, I want to join Premium and learn the available investment tracks.' }))">
+                      <i class="fa-brands fa-whatsapp"></i> Ask on WhatsApp
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1054,9 +1104,11 @@
                 <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
                   <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
                   <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
+                  <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
                 </div>
               </div>
             </div>
+
           </div>
         </div>
       </section>
@@ -1161,6 +1213,7 @@
     </div>
   </footer>
 
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
     // Year
     document.getElementById("year").textContent = new Date().getFullYear();
@@ -1216,7 +1269,6 @@
       pages.forEach(p => p.classList.toggle("is-active", p.dataset.page === name));
       navLinks.forEach(a => a.classList.toggle("is-active", a.dataset.nav === name));
       toggleMenu(false);
-      // accessibility: move focus into main
       const main = document.getElementById("main");
       if(main) main.focus({preventScroll:true});
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1260,7 +1312,7 @@
       });
     }
 
-    // HERO carousel: 10 live images, 5s (only runs on home page)
+    // HERO carousel (home only) — FIXED ARRAY (no trailing comma)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1271,8 +1323,8 @@
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766726716955-9ot7tl3d.jpeg", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792878193-vc0a7pto.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Trust-first real estate support." },
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792082908-wa7yd8n5.jpeg", icon:"fa-truck", label:"Dispatch", sub:"City-wide movement with updates." },
-      { img:"https://www.corriganlogistics.com/wp-content/uploads/2025/04/01-how-to-choose-the-right-freight-forwarder.jpg", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." },
-     ];
+      { img:"https://www.corriganlogistics.com/wp-content/uploads/2025/04/01-how-to-choose-the-right-freight-forwarder.jpg", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
+    ];
 
     let heroIdx = 0;
     function runHeroProgress(){
@@ -1362,5 +1414,10 @@
     window.toggleTheme = toggleTheme;
     window.submitSearch = submitSearch;
   </script>
+
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
+    crossorigin="anonymous"></script>
 </body>
 </html>
