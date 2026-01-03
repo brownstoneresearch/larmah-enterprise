@@ -1,8 +1,9 @@
 <!-- =========================
-     real-estate.html (UPGRADED)
-     - Synced with index Featured (featured=true + status=active)
-     - Adds Featured badge + Featured-only filter
-     - Keeps current footer styling
+     real-estate.html (FULL)
+     ✅ Syncs with index.html Featured: listings.featured=true
+     ✅ Catalog from Supabase: public.listings (category='real-estate', status='active')
+     ✅ Includes Booking Request (dates/guests/budget) -> WhatsApp + optional DB request insert
+     ✅ Keeps current footer styling + WA float + image carousel per card
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -52,6 +53,7 @@
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
     window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
   </script>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
@@ -348,8 +350,10 @@
       font-weight: 900;
     }
 
-    /* Hero / page */
+    /* Page */
     .page-wrap{ padding: 18px 0 0; }
+
+    /* Hero */
     .hero{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -393,9 +397,17 @@
       background-clip: text;
       color: transparent;
     }
-    .lead{ margin:0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
+    .lead{
+      margin:0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
-    @media (max-width: 520px){ .hero-actions{ flex-direction:column; } .hero-actions .btn{ width:100%; } }
+    @media (max-width: 520px){
+      .hero-actions{ flex-direction:column; }
+      .hero-actions .btn{ width:100%; }
+    }
 
     .meta{ margin-top: 12px; color: var(--muted); font-size: .88rem; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
     .pill{
@@ -410,6 +422,7 @@
       font-weight: 800;
       font-size:.84rem;
     }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
 
     .hero-media{
       border-radius: 14px;
@@ -444,6 +457,7 @@
     .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
     .hero-bar.run{ width: 100%; }
 
+    /* Sections */
     .section{ padding: 18px 0; }
     .section-head{
       display:flex;
@@ -465,14 +479,13 @@
       padding: 14px;
       margin-bottom: 14px;
     }
-    /* ✅ UPDATED to include Featured */
     .filters-grid{ display:grid; gap: 10px; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; }
     @media (max-width: 980px){ .filters-grid{ grid-template-columns: 1fr 1fr; } }
     @media (max-width: 520px){ .filters-grid{ grid-template-columns: 1fr; } }
 
     .field{ display:flex; flex-direction:column; gap:6px; }
     label{ font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
-    input, select{
+    input, select, textarea{
       border-radius: 14px;
       border: 1px solid var(--line);
       background: var(--panel2);
@@ -482,7 +495,8 @@
       outline:none;
       font-family: inherit;
     }
-    input::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
+    textarea{ min-height: 96px; resize: vertical; }
+    input::placeholder, textarea::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
 
     .pillbar{
       display:flex;
@@ -493,7 +507,7 @@
       border-top: 1px solid var(--line2);
     }
 
-    /* Cards */
+    /* Grid Cards */
     .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     @media (max-width: 1024px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 640px){ .grid{ grid-template-columns: 1fr; } }
@@ -579,27 +593,9 @@
     }
     .media-dot.active{ background: rgba(255,255,255,0.92); }
 
+    /* Title supports featured badge */
     .card-body{ padding: 12px; }
-    .title{
-      font-weight: 950;
-      margin: 2px 0 6px;
-      letter-spacing:-0.2px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .star{
-      display:inline-flex; gap:6px; align-items:center;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(212,175,55,.28);
-      background: rgba(212,175,55,.10);
-      color: var(--gold2);
-      font-weight: 900;
-      font-size: .78rem;
-      letter-spacing: .02em;
-    }
+    .title{ font-weight: 950; margin: 2px 0 6px; letter-spacing:-0.2px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
     .desc{
       margin:0;
       color: var(--muted);
@@ -615,6 +611,18 @@
     .actions-row .btn{ flex: 1; }
     @media (max-width: 520px){ .actions-row .btn{ width:100%; flex:unset; } }
 
+    .star{
+      display:inline-flex; gap:6px; align-items:center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,.28);
+      background: rgba(212,175,55,.10);
+      color: var(--gold2);
+      font-weight: 900;
+      font-size: .78rem;
+      letter-spacing: .02em;
+    }
+
     .notice{
       border-radius: 16px;
       padding: 12px;
@@ -623,6 +631,17 @@
       color: var(--muted);
     }
     .notice strong{ color: var(--text); }
+
+    /* Booking / request card */
+    .request-card{
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      padding: 14px;
+      margin-top: 14px;
+    }
 
     /* Footer (current styling) */
     footer{
@@ -694,7 +713,7 @@
       color: var(--text);
     }
     .social a:hover{
-      color: #111;
+      color:#111;
       background: var(--gold);
       border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
     }
@@ -868,20 +887,18 @@
           </div>
 
           <h1>Verified <span class="gold">Real Estate</span> Catalog.</h1>
-          <p class="lead">Shortlets, rentals, and sales — curated for clarity. Enquire via WhatsApp with a traceable reference ID.</p>
+          <p class="lead">Browse verified stays, rentals, and sales. Mark any catalogue item as <b>featured</b> in Admin to show on homepage.</p>
 
           <div class="hero-actions">
             <a class="btn solid" href="#catalog"><i class="fa-solid fa-magnifying-glass"></i> Browse Listings</a>
-            <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Request', { Message:'Hello Larmah, I need a verified listing.' }))">
-              <i class="fa-brands fa-whatsapp"></i> WhatsApp Request
-            </button>
+            <a class="btn primary" href="#book"><i class="fa-solid fa-calendar-check"></i> Booking Request</a>
             <a class="btn ghost" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Add Logistics</a>
           </div>
 
           <div class="meta">
             <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span>
             <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Scam-resistant</span>
-            <span class="pill"><i class="fa-solid fa-star" style="color:var(--gold)"></i> Featured sync</span>
+            <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> Traceable refs</span>
           </div>
         </div>
 
@@ -896,18 +913,107 @@
       </div>
     </section>
 
+    <!-- ✅ Booking request (WhatsApp + optional DB request insert) -->
+    <section class="section" id="book" aria-label="Booking request">
+      <div class="section-head">
+        <div>
+          <h2>Booking Request</h2>
+          <p class="subhead">Send dates + location + budget. We confirm options fast on WhatsApp.</p>
+        </div>
+        <button class="btn small solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with a booking.' }))">
+          <i class="fa-brands fa-whatsapp"></i> Chat Support
+        </button>
+      </div>
+
+      <div class="request-card">
+        <div class="filters-grid" style="grid-template-columns: repeat(8, minmax(0, 1fr));">
+          <div class="field" style="grid-column: span 2;">
+            <label for="bk_checkin">Check-in</label>
+            <input id="bk_checkin" type="date" />
+          </div>
+
+          <div class="field" style="grid-column: span 2;">
+            <label for="bk_checkout">Check-out</label>
+            <input id="bk_checkout" type="date" />
+          </div>
+
+          <div class="field" style="grid-column: span 1;">
+            <label for="bk_guests">Guests</label>
+            <select id="bk_guests">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5+">5+</option>
+            </select>
+          </div>
+
+          <div class="field" style="grid-column: span 1;">
+            <label for="bk_cat">Category</label>
+            <select id="bk_cat">
+              <option value="Any" selected>Any</option>
+              <option value="Studio">Studio</option>
+              <option value="1 Bedroom">1 Bedroom</option>
+              <option value="2 Bedroom">2 Bedroom</option>
+              <option value="3 Bedroom">3 Bedroom</option>
+              <option value="Family">Family</option>
+              <option value="Business">Business</option>
+              <option value="Premium">Premium</option>
+            </select>
+          </div>
+
+          <div class="field" style="grid-column: span 2;">
+            <label for="bk_location">Location</label>
+            <select id="bk_location">
+              <option value="Any" selected>Any</option>
+              <option value="Ikoyi">Ikoyi</option>
+              <option value="Lekki">Lekki</option>
+              <option value="Victoria Island">Victoria Island</option>
+              <option value="Yaba">Yaba</option>
+              <option value="Mainland">Mainland</option>
+              <option value="Abuja">Abuja</option>
+            </select>
+          </div>
+
+          <div class="field" style="grid-column: span 8;">
+            <label for="bk_budget">Budget</label>
+            <input id="bk_budget" type="text" placeholder="e.g., ₦120,000 per night / ₦500k total" />
+          </div>
+
+          <div class="field" style="grid-column: span 8;">
+            <label for="bk_notes">Notes</label>
+            <textarea id="bk_notes" placeholder="Any preference? (pool, balcony, generator, proximity, etc.)"></textarea>
+          </div>
+        </div>
+
+        <div class="pillbar" style="border-top:0; margin-top:12px; padding-top:0;">
+          <button class="btn solid" type="button" onclick="submitBookingRequest()">
+            <i class="fa-brands fa-whatsapp"></i> Send Booking Request
+          </button>
+          <button class="btn primary" type="button" onclick="submitBookingToDB()">
+            <i class="fa-solid fa-inbox"></i> Save Request (DB)
+          </button>
+          <a class="btn ghost" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Go Premium</a>
+        </div>
+
+        <div class="notice" style="margin-top:12px;">
+          <strong>Tip:</strong> If you want the item to appear on the homepage Featured section, set <strong>featured=true</strong> in Admin.
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="catalog" aria-label="Real Estate Catalog">
       <div class="section-head">
         <div>
           <h2>Listings</h2>
-          <p class="subhead">Search + filter by category, location and Featured (syncs with homepage).</p>
+          <p class="subhead">Search + filter by category, location, and Featured (syncs with homepage).</p>
         </div>
         <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Sourcing</a>
       </div>
 
       <div class="filters" aria-label="Filters">
         <div class="filters-grid">
-          <div class="field">
+          <div class="field" style="grid-column: span 1;">
             <label for="re_q">Search</label>
             <input id="re_q" placeholder="Title, features, area..." autocomplete="off" />
           </div>
@@ -957,7 +1063,6 @@
           <button class="btn small" type="button" onclick="reQuick('Lekki')">Lekki</button>
           <button class="btn small" type="button" onclick="reQuick('Victoria Island')">VI</button>
           <button class="btn small" type="button" onclick="reQuick('Ikoyi')">Ikoyi</button>
-
           <button class="btn small" type="button" onclick="reSetCat('shortlet')">Shortlet</button>
           <button class="btn small" type="button" onclick="reSetCat('rent')">Rent</button>
           <button class="btn small" type="button" onclick="reSetCat('buy')">Buy</button>
@@ -979,6 +1084,7 @@
     </section>
   </main>
 
+  <!-- Current footer styling -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -1095,7 +1201,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
   <script>
     // ---- basics
     document.getElementById("year").textContent = new Date().getFullYear();
@@ -1111,26 +1216,21 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // ---- theme (prefer app.js)
+    // ---- theme (match index)
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
-      if(window.LARMAH?.setTheme) return window.LARMAH.setTheme(theme);
       document.documentElement.setAttribute("data-theme", theme);
-      try{ localStorage.setItem(THEME_KEY, theme); }catch{}
+      localStorage.setItem(THEME_KEY, theme);
       const metaTheme = document.querySelector('meta[name="theme-color"]');
       if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
     }
     function toggleTheme(){
-      if(window.LARMAH?.toggleTheme) return window.LARMAH.toggleTheme();
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
       setTheme(cur === "dark" ? "light" : "dark");
     }
     (function initTheme(){
-      if(window.LARMAH?.setTheme) return;
-      try{
-        const saved = localStorage.getItem(THEME_KEY);
-        if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
-      }catch{}
+      const saved = localStorage.getItem(THEME_KEY);
+      if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
       const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
       setTheme(prefersLight ? "light" : "dark");
     })();
@@ -1143,7 +1243,7 @@
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // ---- WA helpers
+    // ---- WA helpers (uses app.js if present)
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -1216,6 +1316,7 @@
 
     function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
     function formatPrice(raw){ const s = safeText(raw).trim(); return s ? s : "Contact for quote"; }
+
     function inferCategory(it){
       const hay = (safeText(it.listing_type) + " " + safeText(it.type) + " " + safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" "))).toLowerCase();
       if(hay.includes("shortlet") || hay.includes("airbnb")) return "shortlet";
@@ -1292,7 +1393,6 @@
       const locationTxt = inferLocation(it) || "Nigeria";
       const categoryTxt = inferCategory(it) || "listing";
       const ref = listingRef(id);
-
       const isFeatured = it.featured === true;
 
       return `
@@ -1322,6 +1422,7 @@
               ${esc(title)}
               ${isFeatured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
             </div>
+
             <p class="desc">${esc(desc)}</p>
             <div class="price">${esc(price)}</div>
 
@@ -1335,8 +1436,8 @@
               <button class="btn small solid" type="button" onclick="reEnquire('${id}')">
                 <i class="fa-brands fa-whatsapp"></i> Enquire
               </button>
-              <button class="btn small primary" type="button" onclick="reEmail('${id}')">
-                <i class="fa-regular fa-envelope"></i> Email
+              <button class="btn small primary" type="button" onclick="reBookFromCard('${id}')">
+                <i class="fa-solid fa-calendar-check"></i> Book
               </button>
             </div>
           </div>
@@ -1385,10 +1486,7 @@
       renderRealEstate();
     }
     function reSetCat(v){ document.getElementById("re_cat").value = v; renderRealEstate(); }
-    function reSetFeatured(on){
-      document.getElementById("re_feat").value = on ? "featured" : "all";
-      renderRealEstate();
-    }
+    function reSetFeatured(on){ document.getElementById("re_feat").value = on ? "featured" : "all"; renderRealEstate(); }
     function reReset(){
       document.getElementById("re_q").value = "";
       document.getElementById("re_cat").value = "all";
@@ -1418,33 +1516,113 @@
     }
     window.reEnquire = reEnquire;
 
-    function reEmail(id){
+    function reBookFromCard(id){
       const it = (__RE.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
-
-      const BUSINESS_EMAIL = "business@heylarmah.tech";
-      const subject = `Real Estate Enquiry — ${listingRef(id)} — ${safeText(it.title) || "Listing"}`;
-      const body =
-`Hello Larmah Team,
-
-I’m interested in this listing:
-
-Ref: ${listingRef(id)}
-Title: ${safeText(it.title)}
-Location: ${inferLocation(it) || ""}
-Category: ${inferCategory(it) || ""}
-Price: ${formatPrice(it.price)}
-Featured: ${it.featured === true ? "Yes" : "No"}
-
-My Name:
-My Phone:
-Preferred Viewing / Move-in Date:
-Notes:
-
-Thank you.`;
-      window.location.href = `mailto:${encodeURIComponent(BUSINESS_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      // jump to booking section, prefill location/category in notes
+      document.getElementById("bk_notes").value =
+        `Interested in: ${safeText(it.title)}\nRef: ${listingRef(id)}\nLocation: ${inferLocation(it) || ""}\nPrice: ${formatPrice(it.price)}\n\n`;
+      document.getElementById("bk_location").value = inferLocation(it) || "Any";
+      document.getElementById("bk_cat").value = safeText(it.type) || "Any";
+      document.getElementById("book").scrollIntoView({ behavior:"smooth", block:"start" });
+      toast("Booking form pre-filled ✅");
     }
-    window.reEmail = reEmail;
+    window.reBookFromCard = reBookFromCard;
+
+    // Booking Request -> WhatsApp
+    function submitBookingRequest(){
+      const checkin = (document.getElementById("bk_checkin").value || "Not set");
+      const checkout = (document.getElementById("bk_checkout").value || "Not set");
+      const guests = (document.getElementById("bk_guests").value || "2");
+      const category = (document.getElementById("bk_cat").value || "Any");
+      const locationVal = (document.getElementById("bk_location").value || "Any");
+      const budget = (document.getElementById("bk_budget").value || "");
+      const notes = (document.getElementById("bk_notes").value || "");
+
+      openWA(buildMsg("Real Estate — Booking Request", {
+        Checkin: checkin,
+        Checkout: checkout,
+        Guests: guests,
+        Category: category,
+        Location: locationVal,
+        Budget: budget,
+        Notes: notes,
+        Message: "Hello Larmah, please confirm available verified options and total cost."
+      }));
+    }
+    window.submitBookingRequest = submitBookingRequest;
+
+    // Booking Request -> DB (public.requests) + WhatsApp fallback
+    async function submitBookingToDB(){
+      const fields = {
+        Checkin: (document.getElementById("bk_checkin").value || ""),
+        Checkout: (document.getElementById("bk_checkout").value || ""),
+        Guests: (document.getElementById("bk_guests").value || ""),
+        Category: (document.getElementById("bk_cat").value || ""),
+        Location: (document.getElementById("bk_location").value || ""),
+        Budget: (document.getElementById("bk_budget").value || ""),
+        Notes: (document.getElementById("bk_notes").value || "")
+      };
+
+      if(!fields.Location || fields.Location === "Any"){
+        toast("Please select a location.", "warn");
+        return;
+      }
+
+      try{
+        const sb = await waitForSB();
+        if(!sb) throw new Error("Supabase not ready.");
+
+        // If app.js exposes LARMAH.submitRequest, it will WhatsApp fallback anyway.
+        if(window.LARMAH?.submitRequest){
+          await LARMAH.submitRequest({
+            header: "New Real Estate Booking Request",
+            category: "real-estate",
+            fields,
+            refPrefix: "RE"
+          });
+          toast("Submitted. We’ll respond on WhatsApp ✅");
+          return;
+        }
+
+        // direct insert (works if your RLS allows public insert on requests)
+        const { error } = await sb.from("requests").insert([{
+          category: "real-estate",
+          payload: fields,
+          status: "new"
+        }]);
+        if(error) throw error;
+
+        toast("Saved ✅ (We’ll respond on WhatsApp)");
+        // also open WA for immediate response
+        submitBookingRequest();
+      }catch(e){
+        console.warn(e);
+        toast(e?.message || "Could not save. Sending via WhatsApp…");
+        submitBookingRequest();
+      }
+    }
+    window.submitBookingToDB = submitBookingToDB;
+
+    // Date mins (today)
+    function toISODate(d){
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    const todayISO = toISODate(new Date());
+    const bkIn = document.getElementById("bk_checkin");
+    const bkOut = document.getElementById("bk_checkout");
+    if(bkIn) bkIn.min = todayISO;
+    if(bkOut) bkOut.min = todayISO;
+    if(bkIn && bkOut){
+      bkIn.addEventListener("change", () => {
+        if(!bkIn.value) return;
+        bkOut.min = bkIn.value;
+        if(bkOut.value && bkOut.value < bkIn.value) bkOut.value = bkIn.value;
+      });
+    }
 
     async function loadRealEstate(){
       const mount = document.getElementById("re_mount");
@@ -1494,6 +1672,7 @@ Thank you.`;
       loadRealEstate();
     });
 
+    // expose
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
   </script>
