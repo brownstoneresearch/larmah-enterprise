@@ -1,3 +1,10 @@
+<!-- =========================
+     premium.html (UPGRADED)
+     - Same styling/concept as your latest pages
+     - After Paystack success: server verifies payment + creates unique invite token
+     - Invite email is sent to the payer email with a UNIQUE registration link
+     - User creates account ONLY via that emailed link (premium-only accounts)
+========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
 <head>
@@ -74,11 +81,14 @@
       --ctaLine: rgba(255,255,255,.12);
       --good: rgba(0,217,129,.95);
       --bad: rgba(255,90,103,.95);
+      --warn: rgba(255,187,0,.95);
+      --focus: rgba(245,213,122,.28);
 
       --logoGlow: 0 0 22px rgba(212,175,55,.14);
       --logoRing: rgba(255,255,255,.12);
       --logoBg: rgba(255,255,255,.03);
     }
+
     html[data-theme="light"]{
       --bg:#F7F7FB; --bg2:#FFFFFF;
       --panel: rgba(10,14,26,.04);
@@ -94,6 +104,8 @@
       --ctaLine: rgba(10,14,26,.10);
       --good: rgba(0,140,90,.92);
       --bad: rgba(200,34,60,.90);
+      --warn: rgba(180,110,0,.92);
+      --focus: rgba(212,175,55,.26);
 
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
@@ -128,6 +140,18 @@
     a:hover{ color: var(--gold); }
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
 
+    .skip{
+      position:absolute; left:-999px; top:10px;
+      padding:10px 12px;
+      border-radius: 12px;
+      background: var(--gold);
+      color:#111;
+      font-weight: 950;
+      z-index: 999;
+    }
+    .skip:focus{ left: 12px; outline: none; }
+    :focus-visible{ outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 12px; }
+
     header{
       position:sticky; top:0; z-index:50;
       background: var(--headerBg);
@@ -136,7 +160,6 @@
     }
     .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
     .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
-
     .logo-wrap{
       position:relative;
       width:44px; height:44px;
@@ -153,8 +176,7 @@
     }
     .logo-wrap::after{
       content:"";
-      position:absolute;
-      inset:-10px;
+      position:absolute; inset:-10px;
       background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
       filter: blur(12px);
       opacity:.8;
@@ -178,10 +200,7 @@
     .nav-link{ color: var(--text); opacity:.9; font-weight: 850; font-size: .95rem; position:relative; }
     .nav-link:hover{ color: var(--gold); opacity:1; }
     .nav-link.active{ color: var(--gold); opacity:1; }
-    .nav-link.active::after{
-      content:""; position:absolute; left:0; right:0; bottom:-12px; height:2px;
-      background: rgba(212,175,55,.65); border-radius:999px;
-    }
+    .nav-link.active::after{ content:""; position:absolute; left:0; right:0; bottom:-12px; height:2px; background: rgba(212,175,55,.65); border-radius:999px; }
 
     .header-actions{ display:flex; gap:10px; align-items:center; margin-left: 10px; }
     .icon-btn{
@@ -221,13 +240,7 @@
       box-shadow: var(--shadow);
       padding: 14px;
     }
-    .sheet-head{
-      display:flex; align-items:center; justify-content:space-between;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--line2);
-      margin-bottom: 10px;
-      gap: 10px;
-    }
+    .sheet-head{ display:flex; align-items:center; justify-content:space-between; padding-bottom: 10px; border-bottom: 1px solid var(--line2); margin-bottom: 10px; gap: 10px; }
     .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
     .sheet a{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
@@ -252,16 +265,15 @@
       transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
       white-space:nowrap;
       user-select:none;
+      text-decoration:none;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
     .btn:active{ transform: translateY(0); }
     .btn.solid{ background: var(--gold); color:#111; border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
     .btn.primary{ background: var(--panel2); border-color: var(--line); }
+    .btn.ghost{ background: transparent; border-color: var(--line2); }
     .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
     .btn:disabled{ opacity:.6; cursor:not-allowed; transform:none !important; filter:none !important; }
-
-    .pillbar{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    @media (max-width: 520px){ .pillbar .btn{ width:100%; } }
 
     .page-wrap{ padding: 18px 0 0; }
 
@@ -275,13 +287,27 @@
       box-shadow: var(--shadow);
       overflow:hidden;
       padding: 16px;
+      position:relative;
+      isolation:isolate;
     }
+    .hero::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.20), transparent 60%),
+        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
+        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.10), transparent 62%);
+      pointer-events:none;
+      z-index:-1;
+    }
+
     .hero-grid{ display:grid; gap: 14px; grid-template-columns: 1.1fr .9fr; align-items:start; }
     @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
 
     .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
     .kicker .dot{ opacity:.65; }
-    h1{ margin: 6px 0 10px; font-size: clamp(2.0rem, 4vw, 2.9rem); line-height: 1.05; letter-spacing:-0.6px; }
+    h1{ margin: 6px 0 10px; font-size: clamp(2.0rem, 4vw, 2.95rem); line-height: 1.05; letter-spacing:-0.6px; }
+    .gold{ background: linear-gradient(180deg, var(--gold2), var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .lead{ margin:0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
     @media (max-width: 520px){ .hero-actions{ flex-direction:column; } .hero-actions .btn{ width:100%; } }
@@ -397,86 +423,27 @@
       display:none;
     }
     .receipt.show{ display:block; }
-    .receipt .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
-    .receipt .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
+    .receipt .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-start; justify-content:space-between; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:.92rem; }
 
-    /* ===== INVESTING HUB (NEW) ===== */
-    .invest-grid{
-      display:grid;
-      gap: 14px;
-      grid-template-columns: 1fr 1fr;
-    }
-    @media (max-width: 1024px){ .invest-grid{ grid-template-columns: 1fr; } }
-
-    .invest-card{
-      border-radius: var(--radius2);
-      border: 1px solid var(--line);
-      background: var(--panel);
-      box-shadow: var(--shadow2);
-      overflow:hidden;
-      padding: 14px;
-    }
-    .invest-card h3{
-      margin:0;
-      letter-spacing:-0.2px;
-      font-size: 1.08rem;
-    }
-    .invest-card p{
-      margin: 8px 0 0;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .two-cols{
-      margin-top: 12px;
-      display:grid;
-      gap: 12px;
-      grid-template-columns: 1fr 1fr;
-    }
-    @media (max-width: 980px){ .two-cols{ grid-template-columns: 1fr; } }
-
-    .mini{
-      border-radius: 16px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      padding: 12px;
-    }
-    .mini h4{
-      margin:0;
-      font-size: .95rem;
-      letter-spacing:-0.2px;
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    .mini ul{
-      margin: 10px 0 0;
-      padding: 0 0 0 18px;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-    .mini li{ margin: 6px 0; }
-
-    .chips{
-      margin-top: 12px;
+    .status-line{
+      margin-top: 10px;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       align-items:center;
-    }
-    .chip{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 82%, transparent);
+      color: var(--muted);
       font-weight: 850;
-      font-size: .84rem;
+      font-size: .92rem;
     }
-    .chip i{ color: var(--gold); }
+    .dot{
+      width:10px; height:10px; border-radius: 999px;
+      background: rgba(255,255,255,.25);
+      border: 1px solid var(--line2);
+    }
+    .dot.good{ background: var(--good); border-color: color-mix(in oklab, var(--good) 40%, var(--line2) 60%); }
+    .dot.warn{ background: var(--warn); border-color: color-mix(in oklab, var(--warn) 40%, var(--line2) 60%); }
+    .dot.bad{ background: var(--bad); border-color: color-mix(in oklab, var(--bad) 40%, var(--line2) 60%); }
 
     footer{
       margin-top: 18px;
@@ -502,15 +469,12 @@
 
     .footer-grid{ display:grid; gap: 16px; padding: 16px 0; grid-template-columns: 1.35fr 1fr 1fr; }
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
-
     .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
     .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
     .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
-
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
     .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
     .footer-links a:hover{ color: var(--gold); }
-
     .contact-stack{ display:grid; gap: 10px; }
     .contact-chip{
       display:flex; gap:10px; align-items:flex-start;
@@ -520,7 +484,6 @@
     .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
     .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
     .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
-
     .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
     .social a{
       width: 42px; height: 42px;
@@ -532,7 +495,6 @@
       color:#111; background: var(--gold);
       border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
     }
-
     .footer-bottom{
       border-top: 1px solid var(--line2);
       padding: 12px 0 16px;
@@ -559,12 +521,12 @@
       z-index: 120;
     }
     .toast.show{ display:block; }
-
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; font-size:.92rem; }
   </style>
 </head>
 
 <body data-page="premium">
+  <a class="skip" href="#main">Skip to content</a>
+
   <!-- Mobile nav -->
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="sheet" role="dialog" aria-label="Menu">
@@ -578,10 +540,7 @@
             <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
           </div>
         </div>
-
-        <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+        <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
@@ -592,6 +551,9 @@
       <div class="sheet-actions">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
+        </button>
+        <button class="btn solid" type="button" onclick="openWA(buildMsg('Premium Enquiry', { Message:'Hello Larmah, I want Premium.' }))">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
         </button>
       </div>
     </div>
@@ -622,10 +584,7 @@
         <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
-
-        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
-          <i class="fa-solid fa-bars"></i>
-        </button>
+        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
       </div>
     </div>
   </header>
@@ -640,62 +599,37 @@
             <span>Cleaner handling</span>
           </div>
 
-          <h1>Go Premium.</h1>
+          <h1>Go <span class="gold">Premium</span>.</h1>
           <p class="lead">
-            Skip delays and get concierge handling across Real Estate and Logistics — with WhatsApp-first support, clean references,
-            and premium deal-flow access.
+            Premium gives you priority sourcing + concierge handling across Real Estate and Logistics. After payment, we send a
+            <strong>unique registration link</strong> to your email so you can create your Premium-only account.
           </p>
 
           <div class="hero-actions">
             <a class="btn solid" href="#tiers"><i class="fa-solid fa-layer-group"></i> View Tiers</a>
             <a class="btn primary" href="#pay"><i class="fa-solid fa-credit-card"></i> Pay with Paystack</a>
-            <a class="btn primary" href="#invest"><i class="fa-solid fa-chart-line"></i> Investing Hub</a>
-            <button class="btn primary" type="button" onclick="openWA(buildMsg('Premium Enquiry', { Message:'Hello Larmah, I want Premium support.' }))">
+            <button class="btn ghost" type="button" onclick="openWA(buildMsg('Premium Enquiry', { Message:'Hello Larmah, I want Premium support.' }))">
               <i class="fa-brands fa-whatsapp"></i> WhatsApp
             </button>
           </div>
 
           <div class="notice" style="margin-top:12px;">
+            <strong>Account Access:</strong> Only Premium subscribers can create an account.<br/>
+            <strong>How you register:</strong> Pay → We verify payment → We email you a <b>unique registration link</b> (expires).<br/><br/>
             <strong>Business Email:</strong> <a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a>
             &nbsp;•&nbsp; <strong>WhatsApp:</strong> +234 706 308 0605
-            <br/><br/>
-            <strong>Account Access:</strong> Only Premium subscribers are entitled to have an account.
           </div>
         </div>
 
         <aside class="hero-panel" aria-label="Premium benefits">
           <h3><i class="fa-solid fa-crown" style="color:var(--gold)"></i> What Premium unlocks</h3>
-          <p>Sharper sourcing, faster confirmations, premium investing opportunities, and a cleaner experience end-to-end.</p>
+          <p>Sharper sourcing, faster confirmations, and premium deal-flow access — with traceable references.</p>
 
           <ul class="bullets">
-            <li class="b">
-              <i class="fa-solid fa-bolt"></i>
-              <div>
-                <b>Priority queue</b>
-                <span>Your requests move first — faster response and follow-up.</span>
-              </div>
-            </li>
-            <li class="b">
-              <i class="fa-solid fa-circle-check"></i>
-              <div>
-                <b>Cleaner shortlist</b>
-                <span>Verified options only (where available) — less back-and-forth.</span>
-              </div>
-            </li>
-            <li class="b">
-              <i class="fa-solid fa-diagram-project"></i>
-              <div>
-                <b>Investing opportunities</b>
-                <span>Real estate and logistics investing structures — active + passive deal support.</span>
-              </div>
-            </li>
-            <li class="b">
-              <i class="fa-solid fa-user-tie"></i>
-              <div>
-                <b>Concierge handling</b>
-                <span>We coordinate and confirm — you stay focused.</span>
-              </div>
-            </li>
+            <li class="b"><i class="fa-solid fa-bolt"></i><div><b>Priority queue</b><span>Your requests move first — faster response and follow-up.</span></div></li>
+            <li class="b"><i class="fa-solid fa-circle-check"></i><div><b>Cleaner shortlist</b><span>Verified options (where available) — less back-and-forth.</span></div></li>
+            <li class="b"><i class="fa-solid fa-diagram-project"></i><div><b>Investing tracks</b><span>Deal support across real estate + logistics structures.</span></div></li>
+            <li class="b"><i class="fa-solid fa-user-tie"></i><div><b>Concierge handling</b><span>We coordinate and confirm — you stay focused.</span></div></li>
           </ul>
         </aside>
       </div>
@@ -705,7 +639,7 @@
       <div class="section-head">
         <div>
           <h2>Premium Tiers</h2>
-          <p class="subhead">Pick a tier — then pay instantly with Paystack or confirm via WhatsApp.</p>
+          <p class="subhead">Pick a tier, then pay instantly. Registration link will be emailed after verification.</p>
         </div>
         <div class="mono" style="opacity:.85">RC: 9127113</div>
       </div>
@@ -722,17 +656,11 @@
               <li>Priority response on Real Estate + Logistics</li>
               <li>Cleaner shortlist + faster confirmations</li>
               <li>WhatsApp follow-up + reference tracking</li>
-              <li>Access to Premium investing hub (real estate + logistics)</li>
-              <li><strong>Eligible for account access</strong></li>
+              <li><strong>Premium-only account access</strong></li>
             </ul>
-
             <div class="tier-actions">
-              <button class="btn solid" type="button" onclick="selectTierAndScroll('Priority')">
-                <i class="fa-solid fa-credit-card"></i> Pay Now
-              </button>
-              <button class="btn primary" type="button" onclick="openWA(buildMsg('Premium Request', { Tier:'Priority', Message:'Hello Larmah, I want Priority Premium.' }))">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp
-              </button>
+              <button class="btn solid" type="button" onclick="selectTierAndScroll('Priority')"><i class="fa-solid fa-credit-card"></i> Pay Now</button>
+              <button class="btn primary" type="button" onclick="openWA(buildMsg('Premium Request', { Tier:'Priority', Message:'Hello Larmah, I want Priority Premium.' }))"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
             </div>
           </div>
         </article>
@@ -748,18 +676,11 @@
               <li>Dedicated concierge coordination</li>
               <li>Best options + faster confirmations</li>
               <li>Priority escalation on urgent requests</li>
-              <li>More structured follow-up</li>
-              <li>Enhanced investing support + partner matching</li>
-              <li><strong>Eligible for account access</strong></li>
+              <li><strong>Premium-only account access</strong></li>
             </ul>
-
             <div class="tier-actions">
-              <button class="btn solid" type="button" onclick="selectTierAndScroll('Concierge')">
-                <i class="fa-solid fa-credit-card"></i> Pay Now
-              </button>
-              <button class="btn primary" type="button" onclick="openWA(buildMsg('Premium Request', { Tier:'Concierge', Message:'Hello Larmah, I want Concierge Premium.' }))">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp
-              </button>
+              <button class="btn solid" type="button" onclick="selectTierAndScroll('Concierge')"><i class="fa-solid fa-credit-card"></i> Pay Now</button>
+              <button class="btn primary" type="button" onclick="openWA(buildMsg('Premium Request', { Tier:'Concierge', Message:'Hello Larmah, I want Concierge Premium.' }))"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
             </div>
           </div>
         </article>
@@ -774,169 +695,27 @@
             <ul>
               <li>White-glove end-to-end handling</li>
               <li>Reserved scheduling priority for logistics</li>
-              <li>Priority sourcing for tight timelines</li>
-              <li>Dedicated escalation lane</li>
-              <li>Deal structuring support (real estate + fleet deals)</li>
-              <li><strong>Eligible for account access</strong></li>
+              <li>Deal structuring support</li>
+              <li><strong>Premium-only account access</strong></li>
             </ul>
-
             <div class="tier-actions">
-              <button class="btn solid" type="button" onclick="selectTierAndScroll('Elite')">
-                <i class="fa-solid fa-credit-card"></i> Pay Now
-              </button>
-              <button class="btn primary" type="button" onclick="openWA(buildMsg('Premium Request', { Tier:'Elite', Message:'Hello Larmah, I want Elite Premium.' }))">
-                <i class="fa-brands fa-whatsapp"></i> WhatsApp
-              </button>
+              <button class="btn solid" type="button" onclick="selectTierAndScroll('Elite')"><i class="fa-solid fa-credit-card"></i> Pay Now</button>
+              <button class="btn primary" type="button" onclick="openWA(buildMsg('Premium Request', { Tier:'Elite', Message:'Hello Larmah, I want Elite Premium.' }))"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
             </div>
           </div>
         </article>
       </div>
 
       <div class="notice" style="margin-top:14px;">
-        <strong>Note:</strong> Amounts are adjustable. If you need a custom scope (bulk logistics / long stay / urgent sourcing / investing deal support),
-        choose any tier and write your notes.
+        <strong>Note:</strong> Amounts can be adjusted for custom scopes. After payment verification, you’ll receive a unique registration link via email.
       </div>
     </section>
 
-    <!-- =======================
-         INVESTING HUB (UPDATED)
-         ======================= -->
-    <section class="section" id="invest" aria-label="Premium investing hub">
-      <div class="section-head">
-        <div>
-          <h2>Premium Investing Hub</h2>
-          <p class="subhead">
-            Active + passive ways to invest in Real Estate and Logistics — and how Premium members benefit from support, structure, and verified workflows.
-          </p>
-        </div>
-        <div class="mono" style="opacity:.85">Deal-flow • Due diligence • Structure</div>
-      </div>
-
-      <div class="invest-grid">
-        <!-- Real Estate -->
-        <div class="invest-card">
-          <h3><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate Investing</h3>
-          <p>
-            Build wealth through property cashflow, appreciation, and structured deals — supported by our verified sourcing process.
-          </p>
-
-          <div class="two-cols">
-            <div class="mini">
-              <h4><i class="fa-solid fa-screwdriver-wrench" style="color:var(--gold)"></i> Active Plays</h4>
-              <ul>
-                <li>Buy-to-rent (long-term rentals)</li>
-                <li>Shortlets / Airbnb-style operations</li>
-                <li>Fix & flip (renovate + resell)</li>
-                <li>BRRRR-style model (buy, rehab, rent, refinance)</li>
-                <li>House-hacking (rent part of your space)</li>
-                <li>Land banking (strategic land holds)</li>
-                <li>Small development (build-to-sell / build-to-rent)</li>
-                <li>Wholesaling / sourcing deals (advanced)</li>
-              </ul>
-            </div>
-
-            <div class="mini">
-              <h4><i class="fa-solid fa-chart-pie" style="color:var(--gold)"></i> Passive Plays</h4>
-              <ul>
-                <li>REITs (real estate investment trusts)</li>
-                <li>Real estate funds / pooled vehicles</li>
-                <li>Syndications / joint ventures</li>
-                <li>Crowdfunding / fractional property ownership</li>
-                <li>Private lending / mortgage notes (advanced)</li>
-                <li>Rent-to-own partnerships (structured)</li>
-              </ul>
-            </div>
-
-            <div class="mini" style="grid-column: 1 / -1;">
-              <h4><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Premium Support Adds</h4>
-              <ul>
-                <li>Verified listing workflow + scam-resistant confirmations</li>
-                <li>Deal-screening checklist + documentation review</li>
-                <li>Shortlet logistics coordination (pickup, dispatch, supplies)</li>
-                <li>Negotiation support + structured follow-up</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="chips">
-            <span class="chip"><i class="fa-solid fa-circle-check"></i> Verified sourcing</span>
-            <span class="chip"><i class="fa-solid fa-file-signature"></i> Deal checklist</span>
-            <span class="chip"><i class="fa-solid fa-headset"></i> Concierge support</span>
-            <span class="chip"><i class="fa-solid fa-hashtag"></i> Clean references</span>
-          </div>
-
-          <div class="notice" style="margin-top:12px;">
-            <strong>Note:</strong> This is informational, not financial advice. Premium members get structured support and better execution.
-          </div>
-        </div>
-
-        <!-- Logistics -->
-        <div class="invest-card">
-          <h3><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics Investing</h3>
-          <p>
-            Invest in movement: auto rentals, dispatch systems, freight contracts, and fleet-backed cashflow — with operational structure.
-          </p>
-
-          <div class="two-cols">
-            <div class="mini">
-              <h4><i class="fa-solid fa-car-side" style="color:var(--gold)"></i> Active Plays</h4>
-              <ul>
-                <li>Auto rentals (daily/weekly rentals)</li>
-                <li>Corporate fleet leasing (monthly contracts)</li>
-                <li>Airport pickup / chauffeur operations</li>
-                <li>Dispatch rider pooling (multi-rider ops)</li>
-                <li>Merchant delivery contracts (daily routes)</li>
-                <li>Haulage operations (sand, granite, goods)</li>
-                <li>Interstate cargo runs (scheduled lanes)</li>
-                <li>Warehousing / fulfillment services</li>
-              </ul>
-            </div>
-
-            <div class="mini">
-              <h4><i class="fa-solid fa-handshake" style="color:var(--gold)"></i> Passive Plays</h4>
-              <ul>
-                <li>Fleet partnerships (asset owner + operator)</li>
-                <li>Revenue share logistics structures</li>
-                <li>Fixed remittance contracts (risk-managed)</li>
-                <li>Freight lane partnerships (B2B supply lines)</li>
-                <li>Fleet pooling (multiple investors, managed ops)</li>
-                <li>Asset-backed logistics financing (advanced)</li>
-              </ul>
-            </div>
-
-            <div class="mini" style="grid-column: 1 / -1;">
-              <h4><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Premium Support Adds</h4>
-              <ul>
-                <li>Driver/operator verification + onboarding rules</li>
-                <li>Contract templates + payout schedules</li>
-                <li>Route planning + operational reporting templates</li>
-                <li>Dispute workflow + escalation support</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="chips">
-            <span class="chip"><i class="fa-solid fa-circle-check"></i> Partner matching</span>
-            <span class="chip"><i class="fa-solid fa-route"></i> Route planning</span>
-            <span class="chip"><i class="fa-solid fa-warehouse"></i> Fulfillment support</span>
-            <span class="chip"><i class="fa-solid fa-file-signature"></i> Contract structure</span>
-          </div>
-
-          <div class="notice" style="margin-top:12px;">
-            <strong>Premium Advantage:</strong> Members can access logistics deal support — structured ops, verified workflows, and better partner quality.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- =======================
-         PAYSTACK PAYMENT
-         ======================= -->
     <section class="section" id="pay" aria-label="Paystack payment">
       <div class="section-head">
         <div>
           <h2>Pay with Paystack</h2>
-          <p class="subhead">Fill the form, choose a tier, and pay instantly. You’ll get a reference to share on WhatsApp.</p>
+          <p class="subhead">Use an email you can access — your <strong>unique registration link</strong> will be sent there.</p>
         </div>
       </div>
 
@@ -972,11 +751,21 @@
           </div>
         </div>
 
+        <div class="status-line" id="inviteStatus" style="display:none;">
+          <span class="dot" id="inviteDot"></span>
+          <span id="inviteText">—</span>
+        </div>
+
         <div class="pillbar" style="margin-top:12px;">
           <button class="btn solid" id="payBtn" type="button" onclick="payWithPaystack()">
             <i class="fa-solid fa-lock"></i> Pay Now
           </button>
-          <button class="btn primary" type="button"
+
+          <button class="btn primary" id="resendBtn" type="button" onclick="resendInvite()" disabled>
+            <i class="fa-regular fa-paper-plane"></i> Resend Registration Link
+          </button>
+
+          <button class="btn ghost" type="button"
             onclick="openWA(buildMsg('Premium Enquiry', { Tier: document.getElementById('p_tier').value, Message:'Hello Larmah, I want to confirm Premium before payment.' }))">
             <i class="fa-brands fa-whatsapp"></i> Confirm on WhatsApp
           </button>
@@ -985,11 +774,16 @@
         <div class="receipt" id="receipt">
           <div class="row">
             <div>
-              <div style="font-weight:950; letter-spacing:-.2px;"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Payment created</div>
+              <div style="font-weight:950; letter-spacing:-.2px;">
+                <i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Payment successful
+              </div>
               <div style="margin-top:6px; color:var(--muted); line-height:1.35;">
-                Ref: <span class="mono" id="receiptRef">—</span>
+                Paystack Ref: <span class="mono" id="receiptRef">—</span>
                 &nbsp;•&nbsp; Tier: <span class="mono" id="receiptTier">—</span>
                 &nbsp;•&nbsp; Amount: <span class="mono" id="receiptAmt">—</span>
+              </div>
+              <div style="margin-top:8px; color:var(--muted); line-height:1.4;">
+                Next step: check your email for the <strong>unique registration link</strong>. (Also check spam/promotions.)
               </div>
             </div>
             <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -1000,8 +794,7 @@
         </div>
 
         <div class="notice" style="margin-top:12px;">
-          <strong>Important:</strong> For production-grade security, verify the Paystack reference on your server (e.g., Supabase Edge Function)
-          before marking a user as paid / enabling account access.
+          <strong>Security:</strong> Payment verification + email delivery happens on the server (Supabase Edge Function). Your Paystack secret key is never exposed to the browser.
         </div>
       </div>
     </section>
@@ -1012,15 +805,14 @@
       <div class="footer-cta">
         <div>
           <h3>Priority support, cleaner handling.</h3>
-          <p>Pay with Paystack or message us on WhatsApp — we’ll start immediately.</p>
+          <p>Pay with Paystack — we’ll email your unique registration link.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <button class="btn solid" type="button" onclick="openWA(buildMsg('Premium Support', { Message:'Hello Larmah, I want Premium.' }))">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </button>
-          <a class="btn primary" href="real-estate.html">
-            <i class="fa-solid fa-building"></i> Real Estate
-          </a>
+          <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
+          <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
         </div>
       </div>
 
@@ -1060,7 +852,6 @@
 
         <div>
           <div class="footer-col-title">Contact</div>
-
           <div class="contact-stack">
             <div class="contact-chip">
               <i class="fa-brands fa-whatsapp"></i>
@@ -1069,7 +860,6 @@
                 <div class="sub">WhatsApp-first support</div>
               </div>
             </div>
-
             <div class="contact-chip">
               <i class="fa-regular fa-envelope"></i>
               <div>
@@ -1077,7 +867,6 @@
                 <div class="sub">Business enquiries</div>
               </div>
             </div>
-
             <div class="contact-chip">
               <i class="fa-solid fa-location-dot"></i>
               <div>
@@ -1088,9 +877,7 @@
           </div>
 
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn small solid" href="#pay">
-              <i class="fa-solid fa-credit-card"></i> Pay Now
-            </a>
+            <a class="btn small solid" href="#pay"><i class="fa-solid fa-credit-card"></i> Pay Now</a>
             <button class="btn small primary" type="button" onclick="openWA(buildMsg('Premium Support', { Message:'Hello Larmah, I want Premium.' }))">
               <i class="fa-brands fa-whatsapp"></i> Chat
             </button>
@@ -1120,8 +907,8 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2400);
     }
 
-    // ===== theme (SAME AS index.html)
-    const THEME_KEY = "larmah_theme_v5";
+    // ===== theme (match your upgraded pages)
+    const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       localStorage.setItem(THEME_KEY, theme);
@@ -1147,7 +934,7 @@
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // ===== WA helpers
+    // ===== helpers
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -1162,18 +949,13 @@
       const phone = "2347063080605";
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
-
-    // ===== tier selection helper
-    const TIER_AMOUNTS_NGN = {
-      "Priority": 10000,
-      "Concierge": 25000,
-      "Elite": 50000
-    };
-
-    function money(n){
-      return `₦${Number(n||0).toLocaleString()}`;
+    function isValidEmail(email){
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email||"").trim());
     }
 
+    // ===== tiers
+    const TIER_AMOUNTS_NGN = { "Priority": 10000, "Concierge": 25000, "Elite": 50000 };
+    function money(n){ return `₦${Number(n||0).toLocaleString()}`; }
     function selectTierAndScroll(tier){
       const sel = document.getElementById("p_tier");
       if(sel) sel.value = tier;
@@ -1182,22 +964,20 @@
     }
     window.selectTierAndScroll = selectTierAndScroll;
 
-    // ===== Paystack integration
-    // ✅ Public key is OK to be in frontend. NEVER put secret key in frontend.
+    // ===== Paystack
     const PAYSTACK_PUBLIC_KEY = "pk_live_69041d3bd5d37d2d88c5c3fe64de4c385e5f025b";
 
-    // Optional: If you create a Supabase Edge Function to verify, put URL here.
-    // Example: https://<project-ref>.supabase.co/functions/v1/paystack-verify
-    const PAYSTACK_VERIFY_FUNCTION_URL = ""; // optional
+    // ✅ REQUIRED: Supabase Edge Function endpoints (server-side verifies + emails unique link)
+    // Create these functions exactly as named below:
+    // - premium-invite   (verifies Paystack, creates invite token, emails link)
+    // - premium-resend   (re-sends invite link if not used/expired)
+    const PREMIUM_INVITE_FN = "/functions/v1/premium-invite";
+    const PREMIUM_RESEND_FN = "/functions/v1/premium-resend";
 
-    function makeRef(){
+    function makeClientRef(){
       const t = Date.now().toString().slice(-8);
       const r = Math.random().toString(16).slice(2, 8).toUpperCase();
       return `LARMAH-PR-${t}-${r}`;
-    }
-
-    function isValidEmail(email){
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email||"").trim());
     }
 
     const receiptEl = document.getElementById("receipt");
@@ -1205,14 +985,29 @@
     const receiptTierEl = document.getElementById("receiptTier");
     const receiptAmtEl = document.getElementById("receiptAmt");
 
-    let __lastReceipt = null;
+    const inviteStatus = document.getElementById("inviteStatus");
+    const inviteDot = document.getElementById("inviteDot");
+    const inviteText = document.getElementById("inviteText");
+
+    const payBtn = document.getElementById("payBtn");
+    const resendBtn = document.getElementById("resendBtn");
+
+    let __lastReceipt = null; // { ref, tier, amountNgn, email, name, phone }
+
+    function setInviteStatus(kind, text){
+      if(!inviteStatus) return;
+      inviteStatus.style.display = "flex";
+      inviteDot.classList.remove("good","warn","bad");
+      inviteDot.classList.add(kind === "good" ? "good" : kind === "warn" ? "warn" : "bad");
+      inviteText.textContent = text;
+    }
 
     function showReceipt({ ref, tier, amountNgn }){
-      __lastReceipt = { ref, tier, amountNgn };
-      if(receiptRefEl) receiptRefEl.textContent = ref;
-      if(receiptTierEl) receiptTierEl.textContent = tier;
-      if(receiptAmtEl) receiptAmtEl.textContent = money(amountNgn);
-      if(receiptEl) receiptEl.classList.add("show");
+      __lastReceipt = { ...( __lastReceipt || {} ), ref, tier, amountNgn };
+      receiptRefEl.textContent = ref;
+      receiptTierEl.textContent = tier;
+      receiptAmtEl.textContent = money(amountNgn);
+      receiptEl.classList.add("show");
     }
 
     async function copyToClipboard(txt){
@@ -1231,7 +1026,6 @@
         toast("Copied.");
       }
     }
-
     function copyRef(){
       if(!__lastReceipt?.ref) return toast("No reference yet.");
       copyToClipboard(__lastReceipt.ref);
@@ -1244,28 +1038,65 @@
         Tier: __lastReceipt.tier,
         Amount: money(__lastReceipt.amountNgn),
         Ref: __lastReceipt.ref,
-        Message: "Hello Larmah, I’ve completed payment. Please confirm and start my Premium handling."
+        Email: __lastReceipt.email,
+        Name: __lastReceipt.name,
+        Phone: __lastReceipt.phone,
+        Message: "Hello Larmah, I’ve completed payment. Please confirm and send my registration link."
       }));
     }
     window.shareOnWhatsApp = shareOnWhatsApp;
 
-    async function verifyOnServer(reference){
-      if(!PAYSTACK_VERIFY_FUNCTION_URL) return { ok:false, skipped:true };
+    // Calls Edge Function to verify + email unique registration link
+    async function requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, notes }){
+      setInviteStatus("warn", "Verifying payment and preparing your registration link…");
       try{
-        const res = await fetch(PAYSTACK_VERIFY_FUNCTION_URL, {
+        const res = await fetch(PREMIUM_INVITE_FN, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reference })
+          body: JSON.stringify({ paystackRef, clientRef, name, email, phone, tier, amountNgn, notes })
         });
         const data = await res.json().catch(() => ({}));
-        return { ok: res.ok, data };
+        if(!res.ok){
+          setInviteStatus("bad", data?.error || "Payment recorded. Could not send email link yet. Try Resend.");
+          return { ok:false, data };
+        }
+        setInviteStatus("good", "Registration link sent to your email. Check inbox/spam.");
+        return { ok:true, data };
       } catch (e){
-        return { ok:false, error: String(e||"verify failed") };
+        setInviteStatus("bad", "Network error. Payment was successful. Use Resend to send link.");
+        return { ok:false, error: String(e||"") };
       }
     }
 
+    async function resendInvite(){
+      const email = document.getElementById("p_email").value.trim();
+      const tier = document.getElementById("p_tier").value;
+      if(!email || !isValidEmail(email)) return toast("Enter a valid email first.");
+
+      resendBtn.disabled = true;
+      setInviteStatus("warn", "Resending your registration link…");
+      try{
+        const res = await fetch(PREMIUM_RESEND_FN, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, tier })
+        });
+        const data = await res.json().catch(() => ({}));
+        if(!res.ok){
+          setInviteStatus("bad", data?.error || "Could not resend link. Try again.");
+          resendBtn.disabled = false;
+          return;
+        }
+        setInviteStatus("good", "Registration link resent. Check your email.");
+        toast("Sent.");
+      } catch (e){
+        setInviteStatus("bad", "Network error while resending.");
+      }
+      resendBtn.disabled = false;
+    }
+    window.resendInvite = resendInvite;
+
     async function payWithPaystack(){
-      const payBtn = document.getElementById("payBtn");
       const name = document.getElementById("p_name").value.trim();
       const email = document.getElementById("p_email").value.trim();
       const phone = document.getElementById("p_phone").value.trim();
@@ -1277,22 +1108,23 @@
       if(!PAYSTACK_PUBLIC_KEY) return toast("Paystack public key missing.");
 
       const amountNgn = TIER_AMOUNTS_NGN[tier] || 10000;
-      const ref = makeRef();
+      const clientRef = makeClientRef();
 
       if(!window.PaystackPop || typeof PaystackPop.setup !== "function"){
         toast("Paystack script not loaded. Reload the page.");
         return;
       }
 
-      if(payBtn) payBtn.disabled = true;
-      toast("Opening Paystack…");
+      payBtn.disabled = true;
+      resendBtn.disabled = true;
+      setInviteStatus("warn", "Opening Paystack…");
 
       const handler = PaystackPop.setup({
         key: PAYSTACK_PUBLIC_KEY,
         email,
         amount: Math.round(amountNgn * 100), // kobo
         currency: "NGN",
-        ref,
+        ref: clientRef,
         metadata: {
           custom_fields: [
             { display_name: "Customer Name", variable_name: "customer_name", value: name },
@@ -1302,34 +1134,37 @@
           notes
         },
         callback: async function(response){
-          const paystackRef = response?.reference || ref;
+          const paystackRef = response?.reference || clientRef;
 
+          __lastReceipt = { ref: paystackRef, tier, amountNgn, email, name, phone };
           showReceipt({ ref: paystackRef, tier, amountNgn });
 
-          const v = await verifyOnServer(paystackRef);
-          if(v.ok){
-            toast("Payment verified. Opening WhatsApp…");
-          } else {
-            toast("Payment received. Please share your ref on WhatsApp.");
-          }
+          // ✅ Immediately trigger server-side verify + email invite link
+          const result = await requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, notes });
 
+          // allow resend if needed
+          resendBtn.disabled = false;
+
+          // optional WhatsApp confirmation (kept)
           openWA(buildMsg("Premium Payment Confirmation", {
             Tier: tier,
             Amount: money(amountNgn),
-            Ref: ref,
             PaystackRef: paystackRef,
+            Email: email,
             Name: name,
             Phone: phone,
-            Email: email,
             Notes: notes || "—",
-            Message: "Hello Larmah, I’ve completed payment. Please confirm and start my Premium handling. (Account access should be enabled after verification.)"
+            Message: result.ok
+              ? "Hello Larmah, I’ve paid. Registration link should have been emailed to me."
+              : "Hello Larmah, I’ve paid. Please confirm my payment and send my registration link."
           }));
 
-          if(payBtn) payBtn.disabled = false;
+          payBtn.disabled = false;
         },
         onClose: function(){
-          toast("Payment closed.");
-          if(payBtn) payBtn.disabled = false;
+          setInviteStatus("bad", "Payment window closed.");
+          payBtn.disabled = false;
+          // resend stays disabled until payment success
         }
       });
 
