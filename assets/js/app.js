@@ -1,6 +1,7 @@
 /* =========================
    Larmah Enterprise - app.js (FULL)
    Premium gating + helpers + DB admin check + UI helpers
+   + Featured loader (DB -> homepage cards feat0/1/2)
 ========================= */
 
 (function () {
@@ -265,6 +266,179 @@
     openWhatsApp(buildMessage(payload?.header || "New Request", payload?.fields || payload || {}));
   }
 
+  /* =========================
+     FEATURED (Homepage)
+     - reads from public.listings
+     - needs cards in index.html: #feat0, #feat1, #feat2 inside #featuredGrid
+  ========================= */
+  const featured = {
+    _items: [],
+    _start: 0,
+    _timer: null,
+    _bound: false,
+
+    _reduceMotion() {
+      return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    },
+
+    _area(it) {
+      return String(it?.location || it?.area || it?.city || it?.state || "Nigeria").trim();
+    },
+
+    _img(it) {
+      const arr = Array.isArray(it?.image_urls) ? it.image_urls.filter(Boolean) : [];
+      if (arr.length) return arr[0];
+      if (it?.image_url) return it.image_url;
+      return "assets/images/larmah-header.jpeg";
+    },
+
+    _els() {
+      return [
+        document.getElementById("feat0"),
+        document.getElementById("feat1"),
+        document.getElementById("feat2"),
+      ];
+    },
+
+    _mount() {
+      return document.getElementById("featuredGrid");
+    },
+
+    async load({ limit = 12 } = {}) {
+      const sb = await waitForSupabase();
+      if (!sb) return;
+
+      const { data, error } = await sb
+        .from("listings")
+        .select("id,title,price,image_url,image_urls,category,type,location,area,city,state,status,featured,sort_rank,created_at")
+        .eq("status", "active")
+        .eq("featured", true)
+        .order("sort_rank", { ascending: false })
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (error) {
+        console.warn("featured load error:", error);
+        return;
+      }
+
+      this._items = data || [];
+      this._start = 0;
+      this.render();
+    },
+
+    render() {
+      const els = this._els();
+      const list = this._items || [];
+
+      if (!els.some(Boolean)) return; // not on homepage
+      if (!list.length) {
+        els.forEach((el) => {
+          if (!el) return;
+          el.innerHTML = `<div class="card-body">No featured items yet.</div>`;
+        });
+        return;
+      }
+
+      // fade
+      els.forEach((el) => el && el.classList.add("is-fading"));
+
+      setTimeout(() => {
+        for (let i = 0; i < 3; i++) {
+          const it = list[(this._start + i) % list.length];
+          const area = this._area(it);
+          const img = this._img(it);
+          const title = it?.title || "Listing";
+          const type = it?.type || "Listing";
+          const ref = `WEB-FEAT-${String(it?.id || "").slice(0, 8)}`;
+
+          if (!els[i]) continue;
+
+          els[i].innerHTML = `
+            <img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy" decoding="async">
+            <div class="card-body">
+              <div class="card-title">${escapeHtml(title)}</div>
+              <div class="meta">
+                <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${escapeHtml(area)}</span>
+                <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Featured</span>
+              </div>
+              <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn small solid js-feat-enq"
+                  type="button"
+                  data-id="${escapeHtml(String(it.id))}"
+                  data-ref="${escapeHtml(ref)}"
+                  data-type="${escapeHtml(type)}"
+                  data-area="${escapeHtml(area)}">
+                  <i class="fa-brands fa-whatsapp"></i> Enquire
+                </button>
+                <a class="btn small primary" href="real-estate.html">View</a>
+              </div>
+            </div>
+          `;
+        }
+
+        requestAnimationFrame(() => els.forEach((el) => el && el.classList.remove("is-fading")));
+      }, 220);
+    },
+
+    rotateOnce() {
+      if (!this._items?.length) return;
+      this._start = (this._start + 1) % this._items.length;
+      this.render();
+    },
+
+    startRotation(ms = 5000) {
+      this.stopRotation();
+      if (this._reduceMotion()) return;
+      this._timer = setInterval(() => this.rotateOnce(), ms);
+    },
+
+    stopRotation() {
+      if (this._timer) {
+        try { clearInterval(this._timer); } catch {}
+        this._timer = null;
+      }
+    },
+
+    bindEventsOnce() {
+      if (this._bound) return;
+      const mount = this._mount();
+      if (!mount) return;
+
+      mount.addEventListener("click", (e) => {
+        const btn = e.target.closest(".js-feat-enq");
+        if (!btn) return;
+
+        const ref = btn.getAttribute("data-ref") || "";
+        const type = btn.getAttribute("data-type") || "";
+        const area = btn.getAttribute("data-area") || "";
+
+        openWhatsApp(buildMessage("Shortlet Enquiry", {
+          Ref: ref,
+          Type: type,
+          Area: area,
+          Message: "Hello Larmah, please share available featured options."
+        }));
+      });
+
+      this._bound = true;
+    },
+
+    async init() {
+      // only runs on pages where featuredGrid exists
+      if (!this._mount()) return;
+
+      this.bindEventsOnce();
+      await this.load({ limit: 12 });
+      this.startRotation(5000);
+
+      // Optional: auto-refresh when listings change
+      if (window.LARMAH?.realtime?.subscribe) {
+        window.LARMAH.realtime.subscribe("listings", () => this.load({ limit: 12 }), "featured", { debounceMs: 800 });
+      }
+    }
+  };
+
   // Expose
   window.ensureSupabaseClient = ensureSupabaseClient;
   window.supabaseClient = supabaseClient;
@@ -289,9 +463,19 @@
   window.LARMAH.setTheme = setTheme;
   window.LARMAH.toggleMenu = toggleMenu;
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initTheme);
-  } else {
+  // ✅ Featured exports
+  window.LARMAH.featured = featured;
+
+  // Init theme + featured (featured only if homepage has featuredGrid)
+  function boot() {
     initTheme();
+    // Featured will no-op on pages without #featuredGrid
+    featured.init().catch((e) => console.warn("featured init error:", e));
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
   }
 })();
