@@ -1,12 +1,12 @@
 <!-- =========================
-     admin.html (UPDATED)
-     - Uses new Premium gating model:
+     admin.html (CATALOGUE + FEATURED ONLY)
+     - Premium gating:
        * must be logged in
        * must be Premium (premium_members)
-       * must be in admin allowlist (set below)
-     - Removes rpc is_admin dependency
-     - Removes custom ensureSupabaseClient conflicts
-     - Replaces missing helpers (LARMAH.toast / escapeHtml / toggleMenu)
+       * must be Admin allowlist (window.__LARMAH_ADMIN_EMAILS OR DB is_admin() in app.js)
+     - ✅ Only manages: public.listings
+     - ✅ Includes: featured toggle + sort_rank
+     - ❌ Removes: RSS, Insights, Rates, Users, Requests
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -24,11 +24,8 @@
 
   <!-- ✅ Configure BEFORE app.js loads -->
   <script>
-    // Optional overrides for app.js (recommended)
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
-    window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4"; // put your anon key (not service role)
-
-    // Admin allowlist for this page (so you don't have to edit app.js)
+    window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
     window.__LARMAH_ADMIN_EMAILS = ["luckymomodu60@gmail.com"];
   </script>
 
@@ -53,24 +50,27 @@
     td{padding:14px 16px;border-top:1px solid rgba(255,255,255,.05);font-size:.93rem;vertical-align:middle}
     tr:hover td{background:rgba(255,255,255,.02)}
     .tbl-thumb{width:46px;height:46px;border-radius:10px;object-fit:cover;background:#000}
+
     .badge{padding:4px 10px;border-radius:999px;font-size:.75rem;font-weight:900;display:inline-block}
     .badge.active{background:rgba(67,209,125,.2);color:var(--ok)}
     .badge.draft{background:rgba(255,176,32,.18);color:var(--warn)}
-    .badge.sold{background:rgba(255,90,103,.18);color:var(--bad)}
-    .badge.closed{background:rgba(255,90,103,.18);color:var(--bad)}
-    .badge.rss{background:rgba(212,175,55,.14);color:var(--accent)}
-    .badge.admin{background:rgba(0,217,129,.14);color:var(--brand)}
+    .badge.featured{background:rgba(212,175,55,.16);color:var(--accent);border:1px solid rgba(212,175,55,.22)}
+    .badge.notfeatured{background:rgba(255,255,255,.06);color:rgba(233,237,247,.75);border:1px solid rgba(255,255,255,.10)}
+
     .action-btn{width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--text);transition:.2s}
     .action-btn:hover{background:#fff;color:#000}
     .action-btn.danger:hover{background:var(--bad);color:#fff;border-color:var(--bad)}
+
     .modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(5px);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}
     .modal.active{display:flex}
-    .editor-box{width:820px;max-width:96vw;background:#0f1218;border:1px solid var(--border);border-radius:20px;padding:26px;box-shadow:0 50px 100px rgba(0,0,0,.6);max-height:90vh;overflow-y:auto}
+    .editor-box{width:860px;max-width:96vw;background:#0f1218;border:1px solid var(--border);border-radius:20px;padding:26px;box-shadow:0 50px 100px rgba(0,0,0,.6);max-height:90vh;overflow-y:auto}
+
     .form-group{margin-bottom:14px}
     .form-label{display:block;color:var(--muted);font-size:.85rem;margin-bottom:6px;font-weight:900}
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+    @media(max-width:840px){.row3{grid-template-columns:1fr}}
     @media(max-width:720px){.row2{grid-template-columns:1fr}}
-    .status-select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;border-radius:12px;padding:8px 10px;font-weight:900;cursor:pointer}
     .img-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
     @media(max-width:720px){.img-grid{grid-template-columns:1fr}}
     .img-slot{border:1px solid rgba(255,255,255,.10);border-radius:14px;padding:12px;background:rgba(255,255,255,.03)}
@@ -78,8 +78,10 @@
     .img-slot .slot-preview{width:100%;height:140px;border-radius:12px;overflow:hidden;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.08)}
     .img-slot .slot-preview img{width:100%;height:100%;object-fit:cover;display:block}
     .img-slot .slot-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+
     .tiny{font-size:.78rem;opacity:.75}
     .saving{opacity:.7;pointer-events:none}
+
     @media(max-width:900px){.admin-layout{grid-template-columns:1fr}.admin-sidebar{display:none}}
 
     .quick-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -92,7 +94,6 @@
       font-weight:900;font-size:.82rem;
     }
 
-    /* Minimal toast */
     .toast{
       position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
       min-width:220px; max-width:min(560px, calc(100vw - 28px));
@@ -101,6 +102,15 @@
       color:#fff; display:none; z-index:20000;
     }
     .toast.show{display:block}
+
+    .toggle{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.04);
+    }
+    .toggle input{ width:18px; height:18px; }
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;}
   </style>
 </head>
 
@@ -139,20 +149,16 @@
           <img src="assets/images/larmah-header.jpeg" style="width:42px;border-radius:12px" alt="Larmah">
           <div>
             <div style="font-weight:950;font-size:1rem;">Larmah Admin</div>
-            <div style="font-size:0.75rem;color:var(--muted)">Master Control</div>
+            <div style="font-size:0.75rem;color:var(--muted)">Catalogue Control</div>
           </div>
         </div>
 
         <ul class="admin-nav">
           <li class="nav-item active" onclick="switchView('overview', this)"><i class="fa-solid fa-gauge-high"></i> Overview</li>
-          <li class="nav-item" onclick="switchView('all-listings', this)"><i class="fa-solid fa-layer-group"></i> All Listings</li>
-          <li class="nav-item" onclick="switchView('real-estate', this)"><i class="fa-solid fa-building"></i> Real Estate</li>
-          <li class="nav-item" onclick="switchView('logistics', this)"><i class="fa-solid fa-truck-fast"></i> Logistics</li>
-          <li class="nav-item" onclick="switchView('rates', this)"><i class="fa-solid fa-money-bill-transfer"></i> Rates (Pairs)</li>
-          <li class="nav-item" onclick="switchView('insights', this)"><i class="fa-regular fa-newspaper"></i> Insights</li>
-          <li class="nav-item" onclick="switchView('rss', this)"><i class="fa-solid fa-rss"></i> RSS Sources</li>
-          <li class="nav-item" onclick="switchView('requests', this)"><i class="fa-solid fa-inbox"></i> Requests</li>
-          <li class="nav-item" onclick="switchView('users', this)"><i class="fa-solid fa-users"></i> Users</li>
+          <li class="nav-item" onclick="switchView('catalogue-all', this)"><i class="fa-solid fa-layer-group"></i> Catalogue (All)</li>
+          <li class="nav-item" onclick="switchView('catalogue-real-estate', this)"><i class="fa-solid fa-building"></i> Real Estate</li>
+          <li class="nav-item" onclick="switchView('catalogue-logistics', this)"><i class="fa-solid fa-truck-fast"></i> Logistics</li>
+          <li class="nav-item" onclick="switchView('catalogue-featured', this)"><i class="fa-solid fa-star"></i> Featured</li>
         </ul>
 
         <div style="margin-top:auto">
@@ -167,176 +173,149 @@
         <div id="view-overview" class="view-section">
           <div class="admin-header">
             <div>
-              <h1 style="margin:0">System Overview</h1>
-              <div class="small" style="margin-top:6px;color:var(--muted)">Live DB • Premium Admin-only access</div>
+              <h1 style="margin:0">Catalogue Overview</h1>
+              <div class="small" style="margin-top:6px;color:var(--muted)">Listings + Featured • Premium Admin-only access</div>
             </div>
             <div class="quick-actions">
               <span class="chip"><i class="fa-solid fa-shield-halved"></i> Admin</span>
               <button class="btn small" onclick="loadStats()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-              <button class="btn small" onclick="syncRssNow()"><i class="fa-solid fa-rss"></i> Sync RSS</button>
+              <button class="btn solid small" onclick="openEditor('listing', null, 'real-estate')"><i class="fa-solid fa-plus"></i> Add Listing</button>
             </div>
           </div>
 
-          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-bottom:22px">
-            <div class="card">
-              <div class="small" style="color:var(--muted)">Total Users</div>
-              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_users">—</div>
-            </div>
+          <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom:22px">
             <div class="card">
               <div class="small" style="color:var(--muted)">Total Listings</div>
               <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_listings">—</div>
             </div>
             <div class="card">
-              <div class="small" style="color:var(--muted)">Requests (Last 7 Days)</div>
-              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_requests">—</div>
+              <div class="small" style="color:var(--muted)">Active Listings</div>
+              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_active">—</div>
+            </div>
+            <div class="card">
+              <div class="small" style="color:var(--muted)">Featured (Active)</div>
+              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_featured">—</div>
             </div>
           </div>
 
           <div class="card">
-            <div style="font-weight:950;margin-bottom:6px">Rates (Pairs)</div>
+            <div style="font-weight:950;margin-bottom:6px">Featured rules</div>
             <div class="small" style="opacity:.85;line-height:1.7">
-              Add pairs like <b>BTC/USDT</b>, <b>BTC/NGN</b>, <b>ETH/USDT</b>, <b>ETH/NGN</b>, <b>USDT/NGN</b>.<br/>
-              Use Base + Quote. Pair is auto-generated.
+              Homepage "Featured Shortlets" pulls items where <b>featured = true</b> and <b>status = active</b>.<br/>
+              Ordering uses <b>sort_rank</b> (highest first), then newest.
             </div>
           </div>
         </div>
 
-        <!-- ALL LISTINGS -->
-        <div id="view-all-listings" class="view-section" style="display:none">
+        <!-- CATALOGUE: ALL -->
+        <div id="view-catalogue-all" class="view-section" style="display:none">
           <div class="admin-header">
-            <h1>All Listings</h1>
-            <button class="btn solid small" onclick="openEditor('listing', null, 'real-estate')"><i class="fa-solid fa-plus"></i> Add Listing</button>
-          </div>
-          <div class="data-table-wrapper">
-            <table>
-              <thead><tr><th width="70">Img</th><th>Title</th><th>Category</th><th>Price</th><th>Status</th><th width="170">Actions</th></tr></thead>
-              <tbody id="tbody-all-listings"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- REAL ESTATE -->
-        <div id="view-real-estate" class="view-section" style="display:none">
-          <div class="admin-header">
-            <h1>Real Estate</h1>
-            <button class="btn solid small" onclick="openEditor('listing', null, 'real-estate')"><i class="fa-solid fa-plus"></i> Add</button>
-          </div>
-          <div class="data-table-wrapper">
-            <table>
-              <thead><tr><th width="70">Img</th><th>Title</th><th>Price</th><th>Status</th><th width="170">Actions</th></tr></thead>
-              <tbody id="tbody-real-estate"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- LOGISTICS -->
-        <div id="view-logistics" class="view-section" style="display:none">
-          <div class="admin-header">
-            <h1>Logistics</h1>
-            <button class="btn solid small" onclick="openEditor('listing', null, 'logistics')"><i class="fa-solid fa-plus"></i> Add</button>
-          </div>
-          <div class="data-table-wrapper">
-            <table>
-              <thead><tr><th width="70">Img</th><th>Title</th><th>Rate</th><th>Status</th><th width="170">Actions</th></tr></thead>
-              <tbody id="tbody-logistics"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- RATES -->
-        <div id="view-rates" class="view-section" style="display:none">
-          <div class="admin-header">
-            <h1>Rates (Pairs)</h1>
-            <button class="btn solid small" onclick="openEditor('rate', null, null)"><i class="fa-solid fa-plus"></i> Add Pair</button>
-          </div>
-          <div class="data-table-wrapper">
-            <table>
-              <thead><tr><th>Pair</th><th>We Buy</th><th>We Sell</th><th>Status</th><th width="120">Actions</th></tr></thead>
-              <tbody id="tbody-rates"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- INSIGHTS -->
-        <div id="view-insights" class="view-section" style="display:none">
-          <div class="admin-header">
-            <div>
-              <h1 style="margin:0">Insights</h1>
-              <div class="small" style="margin-top:6px;color:var(--muted)">
-                Admin posts + RSS feed entries (auto-synced) • <span id="ins_count">—</span> total
-              </div>
-            </div>
+            <h1>Catalogue (All)</h1>
             <div class="quick-actions">
-              <button class="btn small" onclick="syncRssNow()"><i class="fa-solid fa-rss"></i> Sync RSS</button>
-              <button class="btn solid small" onclick="openEditor('insight', null, null)"><i class="fa-solid fa-plus"></i> Add Insight</button>
+              <button class="btn small" onclick="fetchListings('all')"><i class="fa-solid fa-rotate"></i> Refresh</button>
+              <button class="btn solid small" onclick="openEditor('listing', null, 'real-estate')"><i class="fa-solid fa-plus"></i> Add</button>
             </div>
           </div>
           <div class="data-table-wrapper">
             <table>
               <thead>
                 <tr>
+                  <th width="70">Img</th>
                   <th>Title</th>
                   <th>Category</th>
-                  <th>Source</th>
-                  <th>Kind</th>
-                  <th>Date</th>
+                  <th>Price</th>
+                  <th>Featured</th>
+                  <th>Rank</th>
                   <th>Status</th>
                   <th width="170">Actions</th>
                 </tr>
               </thead>
-              <tbody id="tbody-insights"></tbody>
+              <tbody id="tbody-catalogue-all"></tbody>
             </table>
           </div>
         </div>
 
-        <!-- RSS SOURCES -->
-        <div id="view-rss" class="view-section" style="display:none">
+        <!-- CATALOGUE: REAL ESTATE -->
+        <div id="view-catalogue-real-estate" class="view-section" style="display:none">
           <div class="admin-header">
-            <div>
-              <h1 style="margin:0">RSS Sources</h1>
-              <div class="small" style="margin-top:6px;color:var(--muted)">Feeds for real-estate, logistics, and exchange updates</div>
-            </div>
+            <h1>Real Estate</h1>
             <div class="quick-actions">
-              <button class="btn small" onclick="syncRssNow()"><i class="fa-solid fa-bolt"></i> Run Sync</button>
-              <button class="btn solid small" onclick="openEditor('rss', null, null)"><i class="fa-solid fa-plus"></i> Add Source</button>
+              <button class="btn small" onclick="fetchListings('real-estate')"><i class="fa-solid fa-rotate"></i> Refresh</button>
+              <button class="btn solid small" onclick="openEditor('listing', null, 'real-estate')"><i class="fa-solid fa-plus"></i> Add</button>
             </div>
           </div>
           <div class="data-table-wrapper">
             <table>
-              <thead><tr><th>Name</th><th>Category</th><th>URL</th><th>Status</th><th width="120">Actions</th></tr></thead>
-              <tbody id="tbody-rss"></tbody>
+              <thead>
+                <tr>
+                  <th width="70">Img</th>
+                  <th>Title</th>
+                  <th>Price</th>
+                  <th>Featured</th>
+                  <th>Rank</th>
+                  <th>Status</th>
+                  <th width="170">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-catalogue-real-estate"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CATALOGUE: LOGISTICS -->
+        <div id="view-catalogue-logistics" class="view-section" style="display:none">
+          <div class="admin-header">
+            <h1>Logistics</h1>
+            <div class="quick-actions">
+              <button class="btn small" onclick="fetchListings('logistics')"><i class="fa-solid fa-rotate"></i> Refresh</button>
+              <button class="btn solid small" onclick="openEditor('listing', null, 'logistics')"><i class="fa-solid fa-plus"></i> Add</button>
+            </div>
+          </div>
+          <div class="data-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th width="70">Img</th>
+                  <th>Title</th>
+                  <th>Rate</th>
+                  <th>Featured</th>
+                  <th>Rank</th>
+                  <th>Status</th>
+                  <th width="170">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-catalogue-logistics"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CATALOGUE: FEATURED -->
+        <div id="view-catalogue-featured" class="view-section" style="display:none">
+          <div class="admin-header">
+            <h1>Featured (Homepage)</h1>
+            <div class="quick-actions">
+              <button class="btn small" onclick="fetchFeatured()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+              <button class="btn small" onclick="fetchListings('all')"><i class="fa-solid fa-layer-group"></i> All Listings</button>
+            </div>
+          </div>
+          <div class="data-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th width="70">Img</th>
+                  <th>Title</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Rank</th>
+                  <th>Status</th>
+                  <th width="170">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-catalogue-featured"></tbody>
             </table>
           </div>
           <div class="small" style="margin-top:12px;opacity:.8">
-            Tip: Keep only reputable feeds. RSS sync runs on schedule, but you can also "Run Sync" anytime.
-          </div>
-        </div>
-
-        <!-- REQUESTS -->
-        <div id="view-requests" class="view-section" style="display:none">
-          <div class="admin-header">
-            <h1>Requests</h1>
-            <button class="btn small" onclick="fetchRequests()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-          </div>
-          <div class="data-table-wrapper">
-            <table>
-              <thead><tr><th>Category</th><th>Created</th><th>Status</th><th width="170">Update Status</th><th width="70">View</th></tr></thead>
-              <tbody id="tbody-requests"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- USERS -->
-        <div id="view-users" class="view-section" style="display:none">
-          <div class="admin-header">
-            <h1>Users</h1>
-            <button class="btn small" onclick="fetchUsers()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-          </div>
-          <div class="data-table-wrapper">
-            <table>
-              <thead><tr><th>Email / ID</th><th>Full Name</th><th>Joined</th><th>Status</th></tr></thead>
-              <tbody id="tbody-users"></tbody>
-            </table>
+            Tip: Set higher <b>sort_rank</b> for items you want shown more often on the homepage.
           </div>
         </div>
 
@@ -361,13 +340,29 @@
 
         <!-- LISTING -->
         <div id="fields-listing" style="display:none">
-          <div class="form-group">
-            <label class="form-label">Category</label>
-            <select id="listing_category" class="input" required>
-              <option value="real-estate">real-estate</option>
-              <option value="logistics">logistics</option>
-            </select>
-            <div class="tiny">Website pages read only <b>real-estate</b> and <b>logistics</b>.</div>
+          <div class="row3">
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select id="listing_category" class="input" required>
+                <option value="real-estate">real-estate</option>
+                <option value="logistics">logistics</option>
+              </select>
+              <div class="tiny">Website reads only <b>real-estate</b> and <b>logistics</b>.</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select id="listing_status" class="input">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Sort Rank (Featured order)</label>
+              <input type="number" id="listing_sort_rank" class="input" placeholder="e.g. 100" inputmode="numeric" />
+              <div class="tiny">Higher shows first.</div>
+            </div>
           </div>
 
           <div class="form-group">
@@ -378,20 +373,30 @@
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Price / Rate</label>
-              <input type="text" id="listing_price" class="input">
+              <input type="text" id="listing_price" class="input" placeholder="₦120,000/night or Contact for quote">
             </div>
+
             <div class="form-group">
-              <label class="form-label">Status</label>
-              <select id="listing_status" class="input">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive (Draft/Sold)</option>
-              </select>
+              <label class="form-label">Location / Coverage</label>
+              <input type="text" id="listing_location" class="input" placeholder="Lekki / Ikoyi / Lagos / Nationwide">
+              <div class="tiny">Used by cards as Location/Area.</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Featured on homepage</label>
+            <div class="toggle">
+              <input type="checkbox" id="listing_featured" />
+              <div>
+                <div style="font-weight:900">Mark as Featured</div>
+                <div class="tiny">Shows in homepage Featured section (if active).</div>
+              </div>
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label">Description</label>
-            <textarea id="listing_desc" class="input" rows="4"></textarea>
+            <textarea id="listing_desc" class="input" rows="4" placeholder="Short description shown on cards..."></textarea>
           </div>
 
           <div class="form-group">
@@ -424,159 +429,10 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- RATE -->
-        <div id="fields-rate" style="display:none">
-          <div class="row2">
-            <div class="form-group">
-              <label class="form-label">Base (e.g. BTC)</label>
-              <input type="text" id="rate_base" class="input" placeholder="BTC" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Quote (e.g. USDT / NGN)</label>
-              <input type="text" id="rate_quote" class="input" placeholder="USDT" required>
-            </div>
+          <div class="tiny" style="margin-top:10px">
+            ID: <span class="mono" id="listing_id_hint">—</span>
           </div>
-
-          <div class="form-group">
-            <label class="form-label">Pair (auto)</label>
-            <input type="text" id="rate_pair" class="input" placeholder="BTC/USDT" disabled>
-            <div class="tiny">Pair is generated as BASE/QUOTE.</div>
-          </div>
-
-          <div class="row2">
-            <div class="form-group">
-              <label class="form-label">We Buy</label>
-              <input type="number" id="rate_buy" class="input" step="0.01">
-            </div>
-            <div class="form-group">
-              <label class="form-label">We Sell</label>
-              <input type="number" id="rate_sell" class="input" step="0.01">
-            </div>
-          </div>
-
-          <div class="row2">
-            <div class="form-group">
-              <label class="form-label">Status</label>
-              <select id="rate_status" class="input">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Quick presets</label>
-              <select id="rate_preset" class="input">
-                <option value="">Select preset…</option>
-                <option value="USDT/NGN">USDT/NGN</option>
-                <option value="BTC/USDT">BTC/USDT</option>
-                <option value="BTC/NGN">BTC/NGN</option>
-                <option value="ETH/USDT">ETH/USDT</option>
-                <option value="ETH/NGN">ETH/NGN</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- INSIGHT -->
-        <div id="fields-insight" style="display:none">
-          <div class="form-group">
-            <label class="form-label">Title</label>
-            <input type="text" id="insight_title" class="input" required>
-          </div>
-
-          <div class="row2">
-            <div class="form-group">
-              <label class="form-label">Category</label>
-              <select id="insight_category" class="input">
-                <option value="real-estate">Real Estate</option>
-                <option value="logistics">Logistics</option>
-                <option value="exchange">Exchange</option>
-                <option value="general">General</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Status</label>
-              <select id="insight_status" class="input">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Summary</label>
-            <textarea id="insight_summary" class="input" rows="4"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Images (1–3)</label>
-            <div class="tiny">Upload or paste URLs. First image becomes main.</div>
-
-            <div class="img-grid" style="margin-top:10px">
-              <div class="img-slot">
-                <div class="slot-head"><b>Image 1 (Main)</b><button type="button" class="btn small" onclick="clearSlot('insight',1)">Clear</button></div>
-                <input type="file" id="insight_file_1" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_1" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_1" class="input" placeholder="or paste URL"></div>
-              </div>
-              <div class="img-slot">
-                <div class="slot-head"><b>Image 2</b><button type="button" class="btn small" onclick="clearSlot('insight',2)">Clear</button></div>
-                <input type="file" id="insight_file_2" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_2" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_2" class="input" placeholder="or paste URL"></div>
-              </div>
-              <div class="img-slot">
-                <div class="slot-head"><b>Image 3</b><button type="button" class="btn small" onclick="clearSlot('insight',3)">Clear</button></div>
-                <input type="file" id="insight_file_3" class="input" accept="image/*">
-                <div class="slot-preview" style="margin-top:10px"><img id="insight_prev_3" src="" alt=""></div>
-                <div class="slot-actions"><input type="text" id="insight_url_3" class="input" placeholder="or paste URL"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- RSS SOURCE -->
-        <div id="fields-rss" style="display:none">
-          <div class="form-group">
-            <label class="form-label">Name</label>
-            <input type="text" id="rss_name" class="input" placeholder="e.g. CoinDesk" required>
-          </div>
-
-          <div class="row2">
-            <div class="form-group">
-              <label class="form-label">Category</label>
-              <select id="rss_category" class="input">
-                <option value="real-estate">real-estate</option>
-                <option value="logistics">logistics</option>
-                <option value="exchange">exchange</option>
-                <option value="general">general</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Status</label>
-              <select id="rss_status" class="input">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Feed URL</label>
-            <input type="url" id="rss_url" class="input" placeholder="https://example.com/feed" required>
-            <div class="tiny">Use RSS/Atom feed URL. RSS sync pulls new items into Insights.</div>
-          </div>
-        </div>
-
-        <!-- REQUEST -->
-        <div id="fields-request" style="display:none">
-          <div class="form-group"><label class="form-label">Category</label><input type="text" id="req_category" class="input" disabled></div>
-          <div class="row2">
-            <div class="form-group"><label class="form-label">Created</label><input type="text" id="req_created" class="input" disabled></div>
-            <div class="form-group"><label class="form-label">Status</label><input type="text" id="req_status" class="input" disabled></div>
-          </div>
-          <div class="form-group"><label class="form-label">Payload</label><textarea id="req_payload" class="input" rows="10" disabled></textarea></div>
         </div>
 
         <div style="margin-top:18px;display:flex;gap:10px">
@@ -592,7 +448,7 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // ===== minimal helpers (don’t rely on removed app.js helpers)
+    // ===== minimal helpers
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
     function toast(msg){
       const t = document.getElementById("toast");
@@ -605,13 +461,7 @@
 
     let sb = null;
 
-    const CACHE = {
-      listings:new Map(),
-      rates:new Map(),
-      insights:new Map(),
-      requests:new Map(),
-      rss:new Map()
-    };
+    const CACHE = { listings:new Map() };
 
     function showLogin(msg=null){
       document.getElementById("login-gate").style.display = "flex";
@@ -629,29 +479,12 @@
     function badgeClass(status){
       const s = String(status||"").toLowerCase();
       if(s === "active") return "active";
-      if(s === "inactive") return "draft";
-      if(s === "closed") return "closed";
-      if(s === "open") return "draft";
-      if(s === "new") return "draft";
       return "draft";
     }
-    function kindBadge(kind){
-      const k = String(kind||"admin").toLowerCase();
-      if(k === "rss") return "rss";
-      return "admin";
-    }
 
-    function setInsightsCount(n){
-      const el = document.getElementById("ins_count");
-      if(el) el.textContent = String(n ?? "—");
-    }
-
-    function setFieldsVisible(entity){
-      ["listing","rate","insight","rss","request"].forEach(k => {
-        const el = document.getElementById("fields-" + k);
-        if(el) el.style.display = (k === entity) ? "block" : "none";
-      });
-      document.getElementById("saveBtn").style.display = (entity === "request") ? "none" : "";
+    function featuredBadge(v){
+      return v ? `<span class="badge featured"><i class="fa-solid fa-star" style="margin-right:6px"></i> Featured</span>`
+               : `<span class="badge notfeatured">Not Featured</span>`;
     }
 
     /* ===== Storage helpers ===== */
@@ -721,7 +554,7 @@
       return "assets/images/larmah-header.jpeg";
     }
 
-    async function quickUploadMainImage(entity, id, category=null){
+    async function quickUploadMainImage(id, category=null){
       const input = document.getElementById("quickUploadInput");
       if(!input) return;
 
@@ -732,28 +565,20 @@
 
         try{
           toast("Uploading image…");
-          const folder = (entity === "insight") ? "insights" : "listings";
-          const up = await uploadToStorage(file, folder);
+          const up = await uploadToStorage(file, "listings");
 
-          const table = (entity === "insight") ? "insights" : "listings";
-          const cacheMap = (entity === "insight") ? CACHE.insights : CACHE.listings;
-          const current = cacheMap.get(String(id)) || {};
-
+          const current = CACHE.listings.get(String(id)) || {};
           const nextUrls = Array.isArray(current.image_urls) ? current.image_urls.slice(0,3) : [];
           nextUrls[0] = up.url;
 
           const payload = { image_url: up.url, image_urls: nextUrls };
-
-          const res = await sb.from(table).update(payload).eq("id", id).select().single();
+          const res = await sb.from("listings").update(payload).eq("id", id).select().single();
           if(res.error) throw res.error;
 
           toast("Image updated ✅");
-          if(entity === "listing"){
-            await fetchListings("all");
-            if(category) await fetchListings(category);
-          } else {
-            await fetchInsights();
-          }
+          await fetchListings("all");
+          if(category) await fetchListings(category);
+          await fetchFeatured();
         }catch(e){
           console.warn(e);
           toast(e?.message || "Upload failed");
@@ -773,7 +598,6 @@
         return false;
       }
 
-      // must be logged in and be admin (premium + allowlist)
       const ok = await LARMAH.requireAdmin({
         redirectTo: "auth.html",
         onFail: ({ reason }) => {
@@ -782,7 +606,6 @@
       });
 
       if(!ok) return false;
-
       showAdmin();
       return true;
     }
@@ -835,61 +658,48 @@
       if(el) el.classList.add("active");
 
       if(viewId === "overview") loadStats();
-      if(viewId === "all-listings") fetchListings("all");
-      if(viewId === "real-estate") fetchListings("real-estate");
-      if(viewId === "logistics") fetchListings("logistics");
-      if(viewId === "rates") fetchRates();
-      if(viewId === "insights") fetchInsights();
-      if(viewId === "rss") fetchRssSources();
-      if(viewId === "requests") fetchRequests();
-      if(viewId === "users") fetchUsers();
-    }
-
-    /* ===========================
-       RSS SYNC
-       =========================== */
-    async function syncRssNow(){
-      try{
-        toast("Running RSS sync…");
-        const { data, error } = await sb.functions.invoke("rss-sync", { body: {} });
-        if(error) throw error;
-        toast(`RSS synced ✅`);
-        try { await fetchInsights(); } catch {}
-        try { await fetchRssSources(); } catch {}
-        console.log("rss-sync:", data);
-      }catch(e){
-        console.warn(e);
-        toast(e?.message || "RSS sync failed");
-      }
+      if(viewId === "catalogue-all") fetchListings("all");
+      if(viewId === "catalogue-real-estate") fetchListings("real-estate");
+      if(viewId === "catalogue-logistics") fetchListings("logistics");
+      if(viewId === "catalogue-featured") fetchFeatured();
     }
 
     /* ===========================
        STATS
        =========================== */
     async function loadStats(){
-      try { const { count } = await sb.from("listings").select("*",{count:"exact", head:true}); document.getElementById("stat_listings").textContent = count ?? 0; }
-      catch { document.getElementById("stat_listings").textContent = "—"; }
+      try {
+        const { count } = await sb.from("listings").select("*",{count:"exact", head:true});
+        document.getElementById("stat_listings").textContent = count ?? 0;
+      } catch { document.getElementById("stat_listings").textContent = "—"; }
 
-      try { const { count } = await sb.from("profiles").select("*",{count:"exact", head:true}); document.getElementById("stat_users").textContent = count ?? 0; }
-      catch { document.getElementById("stat_users").textContent = "—"; }
+      try {
+        const { count } = await sb.from("listings").select("*",{count:"exact", head:true}).eq("status","active");
+        document.getElementById("stat_active").textContent = count ?? 0;
+      } catch { document.getElementById("stat_active").textContent = "—"; }
 
-      try{
-        const since = new Date(Date.now()-7*24*60*60*1000).toISOString();
-        const { count } = await sb.from("requests").select("*",{count:"exact", head:true}).gte("created_at", since);
-        document.getElementById("stat_requests").textContent = count ?? 0;
-      }catch{ document.getElementById("stat_requests").textContent = "—"; }
+      try {
+        const { count } = await sb.from("listings").select("*",{count:"exact", head:true}).eq("status","active").eq("featured", true);
+        document.getElementById("stat_featured").textContent = count ?? 0;
+      } catch { document.getElementById("stat_featured").textContent = "—"; }
     }
 
     /* ===========================
        LISTINGS
        =========================== */
+    function getTbodyFor(category){
+      if(!category || category === "all") return document.getElementById("tbody-catalogue-all");
+      if(category === "real-estate") return document.getElementById("tbody-catalogue-real-estate");
+      if(category === "logistics") return document.getElementById("tbody-catalogue-logistics");
+      return document.getElementById("tbody-catalogue-all");
+    }
+
     async function fetchListings(category){
       const isAll = !category || category === "all";
-      const tbody = document.getElementById(
-        isAll ? "tbody-all-listings" :
-        (category === "real-estate" ? "tbody-real-estate" : "tbody-logistics")
-      );
-      const colspan = isAll ? 6 : 5;
+      const tbody = getTbodyFor(category);
+      if(!tbody) return;
+
+      const colspan = isAll ? 8 : 7;
       tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center">Loading...</td></tr>`;
 
       try{
@@ -906,37 +716,110 @@
           return;
         }
 
-        tbody.innerHTML = data.map(it => {
-          const cat = it.category || "";
-          const actions = `
-            <div style="display:flex;gap:8px">
-              <button class="action-btn" title="Edit" onclick="openEditor('listing','${String(it.id)}','${esc(cat)}')"><i class="fa-solid fa-pen"></i></button>
-              <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('listing','${String(it.id)}','${esc(cat)}')"><i class="fa-solid fa-image"></i></button>
-              <button class="action-btn danger" title="Delete" onclick="deleteEntity('listing','${String(it.id)}','${esc(cat)}')"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          `;
+        const rows = (data||[]).map(it => renderListingRow(it, category, isAll)).join("");
+        tbody.innerHTML = rows;
+      }catch(e){
+        console.warn(e);
+        tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center">Error loading listings.</td></tr>`;
+      }
+    }
 
+    function renderListingRow(it, category, isAll){
+      const cat = it.category || "";
+      const statusText = String(it.status || "inactive");
+      const statusBadge = `<span class="badge ${badgeClass(statusText)}">${esc(statusText)}</span>`;
+      const featBadge = featuredBadge(!!it.featured);
+      const rank = Number(it.sort_rank || 0);
+
+      const actions = `
+        <div style="display:flex;gap:8px">
+          <button class="action-btn" title="Edit" onclick="openEditor('listing','${String(it.id)}','${esc(cat)}')"><i class="fa-solid fa-pen"></i></button>
+          <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('${String(it.id)}','${esc(cat)}')"><i class="fa-solid fa-image"></i></button>
+          <button class="action-btn danger" title="Delete" onclick="deleteListing('${String(it.id)}','${esc(cat)}')"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `;
+
+      const baseCols = `
+        <td><img class="tbl-thumb" src="${esc(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
+        <td>
+          <div style="font-weight:950">${esc(it.title||"")}</div>
+          <div style="font-size:.8rem;opacity:.55" class="mono">${esc(String(it.id))}</div>
+        </td>
+      `;
+
+      if(isAll){
+        return `
+          <tr>
+            ${baseCols}
+            <td>${esc(cat)}</td>
+            <td style="color:var(--accent);font-weight:900">${esc(it.price||"")}</td>
+            <td>${featBadge}</td>
+            <td class="mono">${esc(String(rank))}</td>
+            <td>${statusBadge}</td>
+            <td>${actions}</td>
+          </tr>
+        `;
+      }
+
+      // category-specific (RE/LOG) tables
+      return `
+        <tr>
+          ${baseCols}
+          <td style="color:var(--accent);font-weight:900">${esc(it.price||"")}</td>
+          <td>${featBadge}</td>
+          <td class="mono">${esc(String(rank))}</td>
+          <td>${statusBadge}</td>
+          <td>${actions}</td>
+        </tr>
+      `;
+    }
+
+    async function fetchFeatured(){
+      const tbody = document.getElementById("tbody-catalogue-featured");
+      if(!tbody) return;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">Loading...</td></tr>`;
+
+      try{
+        const { data, error } = await sb
+          .from("listings")
+          .select("*")
+          .eq("featured", true)
+          .order("sort_rank", { ascending:false })
+          .order("created_at", { ascending:false })
+          .limit(300);
+
+        if(error) throw error;
+
+        if(!data?.length){
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">No featured items yet.</td></tr>`;
+          return;
+        }
+
+        (data||[]).forEach(it => CACHE.listings.set(String(it.id), it));
+
+        tbody.innerHTML = (data||[]).map(it => {
           const statusText = String(it.status || "inactive");
           const statusBadge = `<span class="badge ${badgeClass(statusText)}">${esc(statusText)}</span>`;
+          const rank = Number(it.sort_rank || 0);
 
-          if(isAll){
-            return `
-              <tr>
-                <td><img class="tbl-thumb" src="${esc(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
-                <td><div style="font-weight:950">${esc(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${esc(String(it.id))}</div></td>
-                <td>${esc(cat)}</td>
-                <td style="color:var(--accent);font-weight:900">${esc(it.price||"")}</td>
-                <td>${statusBadge}</td>
-                <td>${actions}</td>
-              </tr>
-            `;
-          }
+          const actions = `
+            <div style="display:flex;gap:8px">
+              <button class="action-btn" title="Edit" onclick="openEditor('listing','${String(it.id)}','${esc(it.category||"")}')"><i class="fa-solid fa-pen"></i></button>
+              <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('${String(it.id)}','${esc(it.category||"")}')"><i class="fa-solid fa-image"></i></button>
+              <button class="action-btn danger" title="Delete" onclick="deleteListing('${String(it.id)}','${esc(it.category||"")}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          `;
 
           return `
             <tr>
               <td><img class="tbl-thumb" src="${esc(pickThumb(it))}" onerror="this.src='assets/images/larmah-header.jpeg'"></td>
-              <td><div style="font-weight:950">${esc(it.title||"")}</div><div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${esc(String(it.id))}</div></td>
+              <td>
+                <div style="font-weight:950">${esc(it.title||"")}</div>
+                <div style="font-size:.8rem;opacity:.55" class="mono">${esc(String(it.id))}</div>
+              </td>
+              <td>${esc(it.category||"")}</td>
               <td style="color:var(--accent);font-weight:900">${esc(it.price||"")}</td>
+              <td class="mono">${esc(String(rank))}</td>
               <td>${statusBadge}</td>
               <td>${actions}</td>
             </tr>
@@ -944,232 +827,26 @@
         }).join("");
       }catch(e){
         console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center">Error loading listings.</td></tr>`;
-      }
-    }
-
-    /* ===========================
-       RATES
-       =========================== */
-    async function fetchRates(){
-      const tbody = document.getElementById("tbody-rates");
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
-      try{
-        const { data, error } = await sb.from("rates").select("*").order("pair",{ascending:true});
-        if(error) throw error;
-
-        CACHE.rates.clear();
-        (data||[]).forEach(it => CACHE.rates.set(String(it.id), it));
-
-        if(!data?.length){
-          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No rates found.</td></tr>`;
-          return;
-        }
-
-        tbody.innerHTML = data.map(it => `
-          <tr>
-            <td style="font-weight:950">${esc(String(it.pair || ((it.base||it.asset||"") + "/" + (it.quote||"NGN"))))}</td>
-            <td style="color:var(--ok);font-weight:950">${esc(String(it.buy ?? ""))}</td>
-            <td style="color:var(--warn);font-weight:950">${esc(String(it.sell ?? ""))}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${esc(it.status || "inactive")}</span></td>
-            <td>
-              <div style="display:flex;gap:8px">
-                <button class="action-btn" onclick="openEditor('rate','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
-                <button class="action-btn danger" onclick="deleteEntity('rate','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        `).join("");
-      }catch(e){
-        console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading rates.</td></tr>`;
-      }
-    }
-
-    /* ===========================
-       INSIGHTS
-       =========================== */
-    async function fetchInsights(){
-      const tbody = document.getElementById("tbody-insights");
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">Loading...</td></tr>`;
-      try{
-        const { data, error } = await sb.from("insights").select("*").order("created_at",{ascending:false}).limit(500);
-        if(error) throw error;
-
-        CACHE.insights.clear();
-        (data||[]).forEach(it => CACHE.insights.set(String(it.id), it));
-        setInsightsCount((data||[]).length);
-
-        if(!data?.length){
-          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">No insights found.</td></tr>`;
-          return;
-        }
-
-        tbody.innerHTML = data.map(it => {
-          const kind = String(it.source_kind || "admin").toLowerCase();
-          const kindLabel = kind === "rss" ? "RSS" : "ADMIN";
-          const kindCls = kindBadge(kind);
-
-          return `
-            <tr>
-              <td style="font-weight:950">${esc(it.title || "")}</td>
-              <td>${esc(it.category || "general")}</td>
-              <td>${esc(it.source_name || (kind === "rss" ? "RSS" : "Admin"))}</td>
-              <td><span class="badge ${kindCls}">${kindLabel}</span></td>
-              <td class="small">${it.created_at ? new Date(it.created_at).toLocaleDateString() : ""}</td>
-              <td><span class="badge ${badgeClass(it.status)}">${esc(it.status || "inactive")}</span></td>
-              <td>
-                <div style="display:flex;gap:8px">
-                  <button class="action-btn" title="Edit" onclick="openEditor('insight','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
-                  <button class="action-btn" title="Upload Image" onclick="quickUploadMainImage('insight','${String(it.id)}',null)"><i class="fa-solid fa-image"></i></button>
-                  <button class="action-btn danger" title="Delete" onclick="deleteEntity('insight','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
-                </div>
-              </td>
-            </tr>
-          `;
-        }).join("");
-      }catch(e){
-        console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">Error loading insights.</td></tr>`;
-      }
-    }
-
-    /* ===========================
-       RSS SOURCES
-       =========================== */
-    async function fetchRssSources(){
-      const tbody = document.getElementById("tbody-rss");
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
-      try{
-        const { data, error } = await sb.from("rss_sources").select("*").order("created_at",{ascending:false}).limit(500);
-        if(error) throw error;
-
-        CACHE.rss.clear();
-        (data||[]).forEach(it => CACHE.rss.set(String(it.id), it));
-
-        if(!data?.length){
-          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No RSS sources yet.</td></tr>`;
-          return;
-        }
-
-        tbody.innerHTML = data.map(it => `
-          <tr>
-            <td style="font-weight:950">${esc(it.name || "")}</td>
-            <td>${esc(it.category || "general")}</td>
-            <td style="font-family:ui-monospace;font-size:.85rem;opacity:.85">${esc(it.url || "")}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${esc(it.status || "inactive")}</span></td>
-            <td>
-              <div style="display:flex;gap:8px">
-                <button class="action-btn" onclick="openEditor('rss','${String(it.id)}',null)"><i class="fa-solid fa-pen"></i></button>
-                <button class="action-btn danger" onclick="deleteEntity('rss','${String(it.id)}',null)"><i class="fa-solid fa-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        `).join("");
-      }catch(e){
-        console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading RSS sources.</td></tr>`;
-      }
-    }
-
-    /* ===========================
-       REQUESTS
-       =========================== */
-    async function fetchRequests(){
-      const tbody = document.getElementById("tbody-requests");
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Loading...</td></tr>`;
-      try{
-        const { data, error } = await sb.from("requests").select("*").order("created_at",{ascending:false}).limit(500);
-        if(error) throw error;
-
-        CACHE.requests.clear();
-        (data||[]).forEach(it => CACHE.requests.set(String(it.id), it));
-
-        if(!data?.length){
-          tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">No requests yet.</td></tr>`;
-          return;
-        }
-
-        tbody.innerHTML = data.map(it => `
-          <tr>
-            <td style="font-weight:950">${esc(it.category || "general")}</td>
-            <td class="small">${it.created_at ? new Date(it.created_at).toLocaleString() : ""}</td>
-            <td><span class="badge ${badgeClass(it.status)}">${esc(it.status || "new")}</span></td>
-            <td>
-              <select class="status-select" onchange="updateRequestStatus('${String(it.id)}', this.value)">
-                <option value="new" ${String(it.status||"new")==="new"?"selected":""}>new</option>
-                <option value="open" ${String(it.status||"")==="open"?"selected":""}>open</option>
-                <option value="closed" ${String(it.status||"")==="closed"?"selected":""}>closed</option>
-              </select>
-            </td>
-            <td><button class="btn small" onclick="openEditor('request','${String(it.id)}',null)">View</button></td>
-          </tr>
-        `).join("");
-      }catch(e){
-        console.warn(e);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center">Error loading requests.</td></tr>`;
-      }
-    }
-
-    async function updateRequestStatus(id, status){
-      try{
-        const { error } = await sb.from("requests").update({ status }).eq("id", id);
-        if(error) throw error;
-        toast("Request status updated ✅");
-        await loadStats();
-        await fetchRequests();
-      }catch(e){
-        toast(e.message || "Update failed");
-      }
-    }
-
-    /* ===========================
-       USERS
-       =========================== */
-    async function fetchUsers(){
-      const tbody = document.getElementById("tbody-users");
-      tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Loading...</td></tr>`;
-      try{
-        const { data, error } = await sb.from("profiles").select("*").order("created_at",{ascending:false}).limit(500);
-        if(error) throw error;
-
-        if(!data?.length){
-          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">No profiles found.</td></tr>`;
-          return;
-        }
-
-        tbody.innerHTML = data.map(u => `
-          <tr>
-            <td>
-              <div>${esc(u.email || "N/A")}</div>
-              <div style="font-size:.8rem;opacity:.55;font-family:ui-monospace">${esc(String(u.id||""))}</div>
-            </td>
-            <td>${esc(u.full_name || "User")}</td>
-            <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : ""}</td>
-            <td><span class="badge active">Active</span></td>
-          </tr>
-        `).join("");
-      }catch(e){
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading users.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">Error loading featured list.</td></tr>`;
       }
     }
 
     /* ===========================
        EDITOR
        =========================== */
+    function setFieldsVisible(entity){
+      const fields = document.getElementById("fields-listing");
+      if(fields) fields.style.display = (entity === "listing") ? "block" : "none";
+    }
+
     function resetEditor(){
       document.getElementById("editorForm").reset();
       document.getElementById("edit_entity").value = "";
       document.getElementById("edit_id").value = "";
       document.getElementById("edit_category").value = "";
       document.getElementById("editorHint").textContent = "";
-      ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) clearSlot(kind,i); });
-    }
-
-    function setRatePairPreview(){
-      const base = (document.getElementById("rate_base").value || "").trim().toUpperCase();
-      const quote = (document.getElementById("rate_quote").value || "").trim().toUpperCase();
-      document.getElementById("rate_pair").value = (base && quote) ? `${base}/${quote}` : "";
+      document.getElementById("listing_id_hint").textContent = "—";
+      for(let i=1;i<=3;i++) clearSlot("listing",i);
     }
 
     function openEditor(entity, id=null, category=null){
@@ -1180,99 +857,37 @@
       document.getElementById("edit_category").value = category || "";
       setFieldsVisible(entity);
 
-      if(entity === "listing"){
-        document.getElementById("editorTitle").textContent = id ? "Edit Listing" : "New Listing";
-        document.getElementById("listing_status").value = "active";
+      if(entity !== "listing") return;
 
-        if(id){
-          const it = CACHE.listings.get(String(id));
-          if(it){
-            document.getElementById("listing_category").value = it.category || category || "real-estate";
-            document.getElementById("listing_title").value = it.title || "";
-            document.getElementById("listing_price").value = it.price || "";
-            document.getElementById("listing_status").value = (it.status || "inactive");
-            document.getElementById("listing_desc").value = it.description || "";
-            document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : "";
+      document.getElementById("editorTitle").textContent = id ? "Edit Listing" : "New Listing";
+      document.getElementById("listing_status").value = "active";
+      document.getElementById("listing_sort_rank").value = "0";
+      document.getElementById("listing_featured").checked = false;
 
-            const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
-            for(let i=1;i<=3;i++){
-              const u = arr[i-1] || "";
-              setSlotUrl("listing", i, u);
-              setSlotPreview("listing", i, u);
-            }
-          }
-        } else {
-          document.getElementById("listing_category").value = category || "real-estate";
-        }
-      }
-
-      if(entity === "rate"){
-        document.getElementById("editorTitle").textContent = id ? "Edit Pair" : "New Pair";
-        document.getElementById("rate_status").value = "active";
-
-        if(id){
-          const it = CACHE.rates.get(String(id));
-          if(it){
-            document.getElementById("rate_base").value = String(it.base || it.asset || "").toUpperCase();
-            document.getElementById("rate_quote").value = String(it.quote || "NGN").toUpperCase();
-            document.getElementById("rate_buy").value = it.buy ?? "";
-            document.getElementById("rate_sell").value = it.sell ?? "";
-            document.getElementById("rate_status").value = (it.status || "inactive");
-            setRatePairPreview();
-          }
-        } else {
-          document.getElementById("rate_base").value = "";
-          document.getElementById("rate_quote").value = "NGN";
-          setRatePairPreview();
-        }
-      }
-
-      if(entity === "insight"){
-        document.getElementById("editorTitle").textContent = id ? "Edit Insight" : "New Insight";
-        document.getElementById("insight_status").value = "active";
-
-        if(id){
-          const it = CACHE.insights.get(String(id));
-          if(it){
-            document.getElementById("insight_title").value = it.title || "";
-            document.getElementById("insight_category").value = it.category || "general";
-            document.getElementById("insight_status").value = (it.status || "inactive");
-            document.getElementById("insight_summary").value = it.summary || "";
-
-            const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
-            for(let i=1;i<=3;i++){
-              const u = arr[i-1] || "";
-              setSlotUrl("insight", i, u);
-              setSlotPreview("insight", i, u);
-            }
-          }
-        }
-      }
-
-      if(entity === "rss"){
-        document.getElementById("editorTitle").textContent = id ? "Edit RSS Source" : "New RSS Source";
-        document.getElementById("rss_status").value = "active";
-
-        if(id){
-          const it = CACHE.rss.get(String(id));
-          if(it){
-            document.getElementById("rss_name").value = it.name || "";
-            document.getElementById("rss_category").value = it.category || "general";
-            document.getElementById("rss_status").value = it.status || "inactive";
-            document.getElementById("rss_url").value = it.url || "";
-          }
-        }
-      }
-
-      if(entity === "request"){
-        document.getElementById("editorTitle").textContent = "Request Details";
-        const it = CACHE.requests.get(String(id));
+      if(id){
+        const it = CACHE.listings.get(String(id));
         if(it){
-          document.getElementById("req_category").value = it.category || "";
-          document.getElementById("req_created").value = it.created_at ? new Date(it.created_at).toLocaleString() : "";
-          document.getElementById("req_status").value = it.status || "";
-          document.getElementById("req_payload").value = JSON.stringify(it.payload || {}, null, 2);
+          document.getElementById("listing_id_hint").textContent = String(it.id || id);
+
+          document.getElementById("listing_category").value = it.category || category || "real-estate";
+          document.getElementById("listing_title").value = it.title || "";
+          document.getElementById("listing_price").value = it.price || "";
+          document.getElementById("listing_status").value = (it.status || "inactive");
+          document.getElementById("listing_desc").value = it.description || "";
+          document.getElementById("listing_tags").value = Array.isArray(it.tags) ? it.tags.join(", ") : "";
+          document.getElementById("listing_featured").checked = !!it.featured;
+          document.getElementById("listing_sort_rank").value = String(it.sort_rank ?? 0);
+          document.getElementById("listing_location").value = it.location || it.coverage || it.area || it.city || it.state || "";
+
+          const arr = Array.isArray(it.image_urls) ? it.image_urls : (it.image_url ? [it.image_url] : []);
+          for(let i=1;i<=3;i++){
+            const u = arr[i-1] || "";
+            setSlotUrl("listing", i, u);
+            setSlotPreview("listing", i, u);
+          }
         }
+      } else {
+        document.getElementById("listing_category").value = category || "real-estate";
       }
     }
 
@@ -1287,6 +902,7 @@
 
       const entity = document.getElementById("edit_entity").value;
       const id = document.getElementById("edit_id").value || null;
+      if(entity !== "listing") return;
 
       const btn = document.getElementById("saveBtn");
       const original = btn.textContent;
@@ -1296,110 +912,45 @@
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
 
       try{
-        if(entity === "listing"){
-          const payload = {
-            category: document.getElementById("listing_category").value,
-            title: document.getElementById("listing_title").value.trim(),
-            price: document.getElementById("listing_price").value.trim(),
-            status: document.getElementById("listing_status").value,
-            description: document.getElementById("listing_desc").value.trim(),
-            tags: document.getElementById("listing_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
-          };
-          if(!payload.category) throw new Error("Category is required.");
-          if(!payload.title) throw new Error("Title is required.");
+        const payload = {
+          category: document.getElementById("listing_category").value,
+          title: document.getElementById("listing_title").value.trim(),
+          price: document.getElementById("listing_price").value.trim(),
+          status: document.getElementById("listing_status").value,
+          description: document.getElementById("listing_desc").value.trim(),
+          tags: document.getElementById("listing_tags").value.split(",").map(s=>s.trim()).filter(Boolean),
+          featured: !!document.getElementById("listing_featured").checked,
+          sort_rank: Number(document.getElementById("listing_sort_rank").value || 0),
+        };
 
-          const imgs = await collectImages("listing", "listings");
-          payload.image_url = imgs.urls[0] || "";
-          payload.image_urls = imgs.urls;
+        const loc = (document.getElementById("listing_location").value || "").trim();
+        // store in BOTH fields so your pages can read either
+        payload.location = loc || null;
+        payload.coverage = loc || null;
 
-          const res = id
-            ? await sb.from("listings").update(payload).eq("id", id).select().single()
-            : await sb.from("listings").insert([payload]).select().single();
+        if(!payload.category) throw new Error("Category is required.");
+        if(!payload.title) throw new Error("Title is required.");
 
-          if(res.error) throw res.error;
+        const imgs = await collectImages("listing", "listings");
+        payload.image_url = imgs.urls[0] || "";
+        payload.image_urls = imgs.urls;
 
-          toast("Saved listing ✅");
-          closeEditor();
-          await fetchListings("all");
-          await loadStats();
-          return;
-        }
+        const res = id
+          ? await sb.from("listings").update(payload).eq("id", id).select().single()
+          : await sb.from("listings").insert([payload]).select().single();
 
-        if(entity === "rate"){
-          const base = (document.getElementById("rate_base").value || "").trim().toUpperCase();
-          const quote = (document.getElementById("rate_quote").value || "").trim().toUpperCase();
-          const pair = (base && quote) ? `${base}/${quote}` : "";
+        if(res.error) throw res.error;
 
-          if(!base || !quote) throw new Error("Base and Quote are required.");
-          if(!pair) throw new Error("Pair is required.");
+        toast("Saved ✅");
+        closeEditor();
 
-          const payload = {
-            base, quote, pair,
-            buy: Number(document.getElementById("rate_buy").value || 0),
-            sell: Number(document.getElementById("rate_sell").value || 0),
-            status: document.getElementById("rate_status").value
-          };
+        await loadStats();
+        await fetchListings("all");
+        await fetchFeatured();
 
-          const res = id
-            ? await sb.from("rates").update(payload).eq("id", id).select().single()
-            : await sb.from("rates").insert([payload]).select().single();
-
-          if(res.error) throw res.error;
-
-          toast("Saved pair ✅");
-          closeEditor();
-          await fetchRates();
-          return;
-        }
-
-        if(entity === "insight"){
-          const payload = {
-            title: document.getElementById("insight_title").value.trim(),
-            category: document.getElementById("insight_category").value,
-            status: document.getElementById("insight_status").value,
-            summary: document.getElementById("insight_summary").value.trim(),
-            source_kind: "admin",
-            source_name: "Admin"
-          };
-          if(!payload.title) throw new Error("Title is required.");
-
-          const imgs = await collectImages("insight", "insights");
-          payload.image_url = imgs.urls[0] || "";
-          payload.image_urls = imgs.urls;
-
-          const res = id
-            ? await sb.from("insights").update(payload).eq("id", id).select().single()
-            : await sb.from("insights").insert([payload]).select().single();
-
-          if(res.error) throw res.error;
-
-          toast("Saved insight ✅");
-          closeEditor();
-          await fetchInsights();
-          return;
-        }
-
-        if(entity === "rss"){
-          const payload = {
-            name: document.getElementById("rss_name").value.trim(),
-            category: document.getElementById("rss_category").value,
-            status: document.getElementById("rss_status").value,
-            url: document.getElementById("rss_url").value.trim()
-          };
-          if(!payload.name) throw new Error("Name is required.");
-          if(!payload.url) throw new Error("URL is required.");
-
-          const res = id
-            ? await sb.from("rss_sources").update(payload).eq("id", id).select().single()
-            : await sb.from("rss_sources").insert([payload]).select().single();
-
-          if(res.error) throw res.error;
-
-          toast("Saved RSS source ✅");
-          closeEditor();
-          await fetchRssSources();
-          return;
-        }
+        // If homepage is open somewhere and using realtime, it will refresh automatically;
+        // but if you want instant refresh in this session too:
+        try { window.LARMAH?.featured?.load?.({ limit: 12 }); } catch {}
 
       }catch(err){
         console.warn("SAVE ERROR:", err);
@@ -1411,39 +962,16 @@
       }
     }
 
-    async function deleteEntity(entity, id, category=null){
+    async function deleteListing(id, category=null){
       if(!confirm("Delete this item?")) return;
       try{
-        if(entity === "listing"){
-          const { error } = await sb.from("listings").delete().eq("id", id);
-          if(error) throw error;
-          toast("Deleted listing ✅");
-          await fetchListings("all");
-          if(category) await fetchListings(category);
-          await loadStats();
-          return;
-        }
-        if(entity === "rate"){
-          const { error } = await sb.from("rates").delete().eq("id", id);
-          if(error) throw error;
-          toast("Deleted pair ✅");
-          await fetchRates();
-          return;
-        }
-        if(entity === "insight"){
-          const { error } = await sb.from("insights").delete().eq("id", id);
-          if(error) throw error;
-          toast("Deleted insight ✅");
-          await fetchInsights();
-          return;
-        }
-        if(entity === "rss"){
-          const { error } = await sb.from("rss_sources").delete().eq("id", id);
-          if(error) throw error;
-          toast("Deleted RSS source ✅");
-          await fetchRssSources();
-          return;
-        }
+        const { error } = await sb.from("listings").delete().eq("id", id);
+        if(error) throw error;
+        toast("Deleted ✅");
+        await loadStats();
+        await fetchListings("all");
+        if(category) await fetchListings(category);
+        await fetchFeatured();
       }catch(e){
         toast(e.message || "Delete failed");
       }
@@ -1456,18 +984,7 @@
       sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
       if(!sb){ showLogin("Supabase not ready."); return; }
 
-      ["listing","insight"].forEach(kind => { for(let i=1;i<=3;i++) bindFilePreview(kind,i); });
-
-      document.getElementById("rate_base").addEventListener("input", setRatePairPreview);
-      document.getElementById("rate_quote").addEventListener("input", setRatePairPreview);
-      document.getElementById("rate_preset").addEventListener("change", () => {
-        const v = document.getElementById("rate_preset").value;
-        if(!v) return;
-        const [b,q] = v.split("/");
-        document.getElementById("rate_base").value = (b||"").toUpperCase();
-        document.getElementById("rate_quote").value = (q||"").toUpperCase();
-        setRatePairPreview();
-      });
+      for(let i=1;i<=3;i++) bindFilePreview("listing", i);
 
       document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -1487,7 +1004,6 @@
         if(e.key === "Escape") closeEditor();
       });
 
-      // Try session-based entry (already logged in)
       const ok = await initAdminGate();
       if(ok){
         await loadStats();
@@ -1499,21 +1015,18 @@
 
     // expose for inline handlers
     window.switchView = switchView;
-    window.syncRssNow = syncRssNow;
     window.loadStats = loadStats;
     window.fetchListings = fetchListings;
-    window.fetchRates = fetchRates;
-    window.fetchInsights = fetchInsights;
-    window.fetchRssSources = fetchRssSources;
-    window.fetchRequests = fetchRequests;
-    window.fetchUsers = fetchUsers;
+    window.fetchFeatured = fetchFeatured;
+
     window.openEditor = openEditor;
     window.closeEditor = closeEditor;
+
     window.clearSlot = clearSlot;
     window.quickUploadMainImage = quickUploadMainImage;
-    window.deleteEntity = deleteEntity;
+
+    window.deleteListing = deleteListing;
     window.adminLogout = adminLogout;
-    window.updateRequestStatus = updateRequestStatus;
   </script>
 </body>
 </html>
