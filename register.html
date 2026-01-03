@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-NG" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Create Account | Larmah Premium</title>
+  <meta name="theme-color" content="#070A12" />
+  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/js/app.js"></script>
+
+  <style>
+    :root{--gold:#D4AF37;--gold2:#F5D57A;--bg:#070A12;--bg2:#050810;--panel:rgba(255,255,255,.03);--panel2:rgba(255,255,255,.02);--line:rgba(255,255,255,.10);--text:#E9EDF7;--muted:rgba(233,237,247,.72);--shadow:0 18px 50px rgba(0,0,0,.42);--radius2:22px;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui;background:linear-gradient(180deg,var(--bg2),var(--bg));color:var(--text)}
+    .container{max-width:720px;margin:0 auto;padding:18px 16px}
+    .card{border:1px solid var(--line);background:var(--panel2);border-radius:var(--radius2);box-shadow:var(--shadow);padding:16px}
+    h1{margin:10px 0 10px;letter-spacing:-.6px}
+    .muted{color:var(--muted);line-height:1.5}
+    label{display:block;margin-top:12px;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(233,237,247,.60)}
+    input{width:100%;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:12px;min-height:46px;outline:none}
+    .btn{margin-top:14px;display:inline-flex;gap:10px;align-items:center;justify-content:center;border-radius:14px;padding:12px 16px;min-height:46px;border:1px solid var(--line);background:var(--gold);color:#111;font-weight:950;cursor:pointer;width:100%}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .note{margin-top:12px;border:1px solid var(--line);border-radius:16px;background:var(--panel2);padding:12px;color:var(--muted)}
+    .toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:rgba(5,8,16,.92);color:var(--text);display:none}
+    .toast.show{display:block}
+    .row{display:flex;gap:10px;align-items:center}
+    .badge{display:inline-flex;gap:8px;align-items:center;padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-weight:900;font-size:.85rem;margin-top:10px}
+    .badge i{color:var(--gold)}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="row">
+        <img src="assets/images/larmah-favicon.jpeg" alt="Larmah" style="width:44px;height:44px;border-radius:14px;border:1px solid var(--line)">
+        <div>
+          <div style="font-weight:950">Larmah Premium</div>
+          <div class="muted" style="font-size:.92rem">Create your Premium-only account</div>
+        </div>
+      </div>
+
+      <span class="badge"><i class="fa-solid fa-lock"></i> Unique registration link</span>
+
+      <h1>Finish registration</h1>
+      <p class="muted">This link is unique and expires. Set a password to activate your Premium account.</p>
+
+      <label>Email</label>
+      <input id="email" readonly />
+
+      <label>Password</label>
+      <input id="pass" type="password" placeholder="Create a strong password (min 8 chars)" />
+
+      <label>Confirm Password</label>
+      <input id="pass2" type="password" placeholder="Repeat password" />
+
+      <button class="btn" id="btn" type="button" onclick="createAccount()">
+        <i class="fa-solid fa-user-plus"></i> Create Account
+      </button>
+
+      <div class="note">
+        If you didn’t request Premium, ignore this page. Support: <b>business@heylarmah.tech</b>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const LOOKUP_FN = () => `${LARMAH.functionsBase}/premium-lookup`;
+    const CONSUME_FN = () => `${LARMAH.functionsBase}/premium-consume`;
+
+    function toast(msg){
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(window.__t);
+      window.__t = setTimeout(()=>t.classList.remove("show"), 2600);
+    }
+
+    function getToken(){
+      const u = new URL(location.href);
+      return u.searchParams.get("token") || "";
+    }
+
+    async function preloadEmail(){
+      const token = getToken();
+      if(!token) { toast("Missing token."); return; }
+
+      try{
+        const res = await fetch(LOOKUP_FN(), {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify({ token })
+        });
+        const data = await res.json().catch(()=> ({}));
+        if(!res.ok){
+          toast(data?.error || "Invalid/expired link.");
+          document.getElementById("email").value = "Invalid link";
+          document.getElementById("btn").disabled = true;
+          return;
+        }
+        document.getElementById("email").value = data.email || "—";
+      } catch {
+        toast("Network error.");
+      }
+    }
+    preloadEmail();
+
+    async function createAccount(){
+      const btn = document.getElementById("btn");
+      const token = getToken();
+      const pass = document.getElementById("pass").value.trim();
+      const pass2 = document.getElementById("pass2").value.trim();
+
+      if(!token) return toast("Invalid token.");
+      if(!pass || pass.length < 8) return toast("Password must be at least 8 characters.");
+      if(pass !== pass2) return toast("Passwords do not match.");
+
+      btn.disabled = true;
+      toast("Creating account…");
+
+      try{
+        const res = await fetch(CONSUME_FN(), {
+          method: "POST",
+          headers: { "Content-Type":"application/json" },
+          body: JSON.stringify({ token, password: pass })
+        });
+        const data = await res.json().catch(()=> ({}));
+        if(!res.ok){
+          toast(data?.error || "Could not create account.");
+          btn.disabled = false;
+          return;
+        }
+
+        toast("Account created. Redirecting to login…");
+        setTimeout(()=> location.href = "auth.html", 900);
+      } catch {
+        toast("Network error.");
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
