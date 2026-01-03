@@ -84,6 +84,11 @@
       --ease: cubic-bezier(.2,.8,.2,1);
       --shadow: 0 18px 50px rgba(0,0,0,.42);
       --shadow2: 0 12px 34px rgba(0,0,0,.30);
+
+      --safeB: env(safe-area-inset-bottom, 0px);
+      --safeT: env(safe-area-inset-top, 0px);
+      --safeL: env(safe-area-inset-left, 0px);
+      --safeR: env(safe-area-inset-right, 0px);
     }
 
     html[data-theme="dark"]{
@@ -140,7 +145,7 @@
       --focus: rgba(212,175,55,.26);
     }
 
-    *{ box-sizing:border-box; }
+    *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
     html{ scroll-behavior:smooth; }
     @media (prefers-reduced-motion: reduce){
       html{ scroll-behavior:auto; }
@@ -159,11 +164,17 @@
       overflow-x:hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      padding-bottom: 0;
     }
 
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
-    .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+    .container{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding-left: max(16px, var(--safeL));
+      padding-right: max(16px, var(--safeR));
+    }
 
     /* Skip link */
     .skip{
@@ -331,6 +342,8 @@
       nav{ display:none; }
       .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
       .header-actions{ margin-left: auto; }
+      /* leave space for WA button so it never covers content */
+      body{ padding-bottom: calc(88px + var(--safeB)); }
     }
 
     /* Mobile sheet */
@@ -349,6 +362,9 @@
       background: color-mix(in oklab, var(--bg2) 82%, #000 18%);
       box-shadow: var(--shadow);
       padding: 14px;
+      padding-bottom: calc(14px + var(--safeB));
+      max-height: calc(92vh - var(--safeT));
+      overflow:auto;
     }
     .sheet-head{
       display:flex; align-items:center; justify-content:space-between;
@@ -363,7 +379,7 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
-      padding: 12px 12px;
+      padding: 14px 12px;
       border-radius: 14px;
       border: 1px solid var(--line2);
       background: var(--panel2);
@@ -377,6 +393,7 @@
       flex-wrap:wrap;
       margin-top: 8px;
     }
+    .sheet-actions .btn{ flex:1; min-width: 0; }
 
     /* Buttons */
     .btn{
@@ -465,6 +482,7 @@
     @media (min-width: 980px){
       .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; }
     }
+
     .kicker{
       display:flex;
       gap:10px;
@@ -498,10 +516,7 @@
       display:flex; gap:12px; flex-wrap:wrap;
       margin-top: 12px;
     }
-    @media (max-width: 520px){
-      .hero-actions{ flex-direction:column; }
-      .hero-actions .btn{ width:100%; }
-    }
+
     .live-row{
       display:flex; gap:12px; flex-wrap:wrap; align-items:center;
       margin-top: 12px;
@@ -594,6 +609,7 @@
     }
     @media (max-width: 980px){ .form-grid{ grid-template-columns: 1fr 1fr; } }
     @media (max-width: 520px){ .form-grid{ grid-template-columns: 1fr; } }
+
     .field{ display:flex; flex-direction:column; gap:6px; }
     label{
       font-size: .78rem;
@@ -620,7 +636,6 @@
       align-items:center;
       flex-wrap:wrap;
     }
-    @media (max-width: 520px){ .form-actions .btn{ width:100%; } }
 
     /* Logistics strip */
     .logistics-strip{
@@ -663,10 +678,6 @@
       background: #0b0f1a;
       color: var(--gold2);
       border-color: rgba(0,0,0,.35);
-    }
-    @media (max-width: 520px){
-      .logistics-strip{ flex-direction:column; align-items:stretch; }
-      .logistics-strip .btn{ width:100%; }
     }
 
     /* Hero carousel */
@@ -712,16 +723,19 @@
       justify-content:space-between;
       gap:12px;
       margin-bottom: 12px;
+      flex-wrap:wrap;
     }
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
+    /* ✅ Responsive grids (better tablet -> mobile) */
     .grid{
       display:grid;
       gap: 14px;
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+    @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
 
     .card{
       border-radius: var(--radius);
@@ -735,7 +749,7 @@
     .card.is-fading{ opacity:.22; transform: translateY(2px); filter:none; }
     .card img{ width:100%; height: 180px; object-fit: cover; display:block; opacity:.92; }
     .card-body{ padding: 12px; }
-    .card-title{ font-weight: 950; margin: 0 0 8px; }
+    .card-title{ font-weight: 950; margin: 0 0 8px; letter-spacing:-0.15px; }
     .meta{ display:flex; gap:10px; flex-wrap:wrap; color: var(--muted); font-size: .9rem; }
     .pill{
       display:inline-flex;
@@ -755,7 +769,9 @@
       gap: 14px;
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
-    @media (max-width: 980px){ .services{ grid-template-columns: 1fr; } }
+    @media (max-width: 980px){ .services{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px){ .services{ grid-template-columns: 1fr; } }
+
     .svc{
       border-radius: var(--radius);
       border: 1px solid var(--line);
@@ -787,6 +803,10 @@
     .svc h3{ margin:0; font-size: 1.02rem; letter-spacing:-0.2px; position:relative; z-index:1; }
     .svc p{ margin: 6px 0 0; color: var(--muted); line-height: 1.45; position:relative; z-index:1; }
     .svc-actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; position:relative; z-index:1; }
+    @media (max-width: 620px){
+      .svc-actions{ gap:8px; }
+      .svc-actions .btn{ flex:1; min-width: 0; }
+    }
 
     /* How it works */
     .steps{
@@ -794,7 +814,9 @@
       gap: 12px;
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-    @media (max-width: 980px){ .steps{ grid-template-columns: 1fr; } }
+    @media (max-width: 980px){ .steps{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px){ .steps{ grid-template-columns: 1fr; } }
+
     .step{
       border-radius: var(--radius);
       border: 1px solid var(--line2);
@@ -959,8 +981,8 @@
     /* Floating WhatsApp */
     .wa-float{
       position: fixed;
-      right: 16px;
-      bottom: 16px;
+      right: calc(16px + var(--safeR));
+      bottom: calc(16px + var(--safeB));
       z-index: 90;
       display:flex;
       gap:10px;
@@ -996,6 +1018,52 @@
     .wa-btn i{ font-size: 20px; }
     @media (min-width: 980px){
       .wa-pill{ display:inline-flex; }
+    }
+
+    /* ===== Mobile polish extras ===== */
+    @media (max-width: 620px){
+      .header-inner{ padding: 10px 0; gap:10px; }
+      .brand{ min-width: 0; }
+      .brand .bsub{ display:none; }
+      .logo-wrap{ width:40px; height:40px; border-radius: 13px; }
+      .logo-wrap img{ border-radius: 11px; }
+      .icon-btn{ width:40px; height:40px; }
+      .menu-btn{ border-radius: 12px; }
+
+      .hero{ padding: 14px 0 0; }
+      .hero-row{ padding: 12px; gap: 12px; }
+      h1{ font-size: clamp(1.72rem, 7vw, 2.25rem); line-height: 1.05; }
+      .lead{ font-size: .98rem; }
+
+      /* swipe chips on phone */
+      .chips{
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+        margin-right: -10px;
+      }
+      .chip{ flex: 0 0 auto; }
+
+      /* prevent iOS zoom */
+      input, select, textarea{ font-size: 16px; }
+
+      .hero-media{ min-height: 240px; }
+      .hero-media img{ height: 240px; }
+      .hero-media .cap{ left: 10px; right: 10px; bottom: 10px; }
+
+      .footer-cta > div:last-child{ width:100%; }
+      .footer-cta > div:last-child .btn{ width:100%; }
+    }
+
+    @media (max-width: 520px){
+      .hero-actions{ flex-direction:column; }
+      .hero-actions .btn{ width:100%; }
+      .form-actions{ flex-direction:column; }
+      .form-actions .btn{ width:100%; }
+      .logistics-strip{ flex-direction:column; align-items:stretch; }
+      .logistics-strip .btn{ width:100%; }
+      .form-grid .field{ grid-column: 1 / -1 !important; }
     }
   </style>
 </head>
@@ -1099,7 +1167,7 @@
               </p>
 
               <div class="hero-actions">
-                <button class="btn solid" type="button" onclick="scrollToEl('#browse')"><i class="fa-solid fa-sparkles"></i> Browse Shortlets</button>
+                <button class="btn solid" type="button" onclick="scrollToEl('#browse')"><i class="fa-solid fa-sparkles"></i> Browse Featured</button>
                 <button class="btn primary" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
                   <i class="fa-solid fa-truck-fast"></i> Book Logistics
                 </button>
@@ -1401,11 +1469,11 @@
         </div>
       </section>
 
-      <section class="section" id="browse" aria-label="Browse shortlets">
+      <section class="section" id="browse" aria-label="Browse featured">
         <div class="section-head">
           <div>
             <h2>Featured Listings</h2>
-            <p class="subhead">Auto-rotating highlights (every 5 seconds).</p>
+            <p class="subhead">Pulled from DB (featured=true) and rotates automatically.</p>
           </div>
           <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
         </div>
@@ -1726,8 +1794,6 @@
     </button>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
-
   <script>
     // Year
     document.getElementById("year").textContent = new Date().getFullYear();
@@ -1742,9 +1808,10 @@
       if(e.target === overlay) toggleMenu(false);
     });
 
-    // Helpers (kept for page script)
+    // Helpers (globals used by app.js featured renderer)
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
     function buildMsg(title, data){
+      if(window.LARMAH?.buildMessage) return window.LARMAH.buildMessage(title, data);
       const lines = [title, ""];
       for(const [k,v] of Object.entries(data || {})){
         if((v ?? "").toString().trim().length) lines.push(`${k}: ${v}`);
@@ -1752,7 +1819,6 @@
       return lines.join("\n");
     }
     function openWA(text){
-      // Prefer central helper if app.js loaded
       if(window.LARMAH?.openWhatsApp) return window.LARMAH.openWhatsApp(text);
       const phone = "2347063080605";
       const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
@@ -1764,7 +1830,7 @@
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    // Theme (dark/light) with persistence (kept; app.js also handles theme safely)
+    // Theme
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
@@ -1773,14 +1839,11 @@
       if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
     }
     function toggleTheme(){
-      // Prefer central helper if app.js loaded
       if(window.LARMAH?.toggleTheme) return window.LARMAH.toggleTheme();
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
       setTheme(cur === "dark" ? "light" : "dark");
     }
     (function initTheme(){
-      // Prefer app.js boot (already runs), but keep as fallback
-      if(window.LARMAH?.setTheme) return;
       try{
         const saved = localStorage.getItem(THEME_KEY);
         if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
@@ -1841,7 +1904,6 @@
     if(checkoutEl){ checkoutEl.min = todayISO; }
     if(pickDateEl){ pickDateEl.min = todayISO; }
 
-    // Set minimum checkout based on checkin
     if(checkinEl && checkoutEl){
       checkinEl.addEventListener("change", () => {
         if(!checkinEl.value) return;
@@ -1906,7 +1968,7 @@
     const HERO_SLIDES = [
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766726716955-9ot7tl3d.jpeg", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792878193-vc0a7pto.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clean confirmations." },
-      { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792082908-wa7yd8n5.jpeg", icon:"fa-truck-fast", label:"Dispatch", sub:"City-wide movement with updates." },
+      { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792082908-wa7yd8n5.jpeg", icon:"fa-truck-fast", label:"Logistics", sub:"Trusted movement with clear coordination." },
       { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=515", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
     ];
 
@@ -1943,18 +2005,56 @@
       setHero(0);
     }
 
-    // ✅ Featured is now handled by assets/js/app.js (DB-driven).
-    // No FEATURE_LIST / no renderFeatured here.
+    // ===== Featured placeholders + globals expected by your app.js featured loader
+    const featEls = [document.getElementById("feat0"), document.getElementById("feat1"), document.getElementById("feat2")];
+    let featStart = 0;
 
-    // Expose
+    function renderFeaturedPlaceholder(){
+      const ph = (i) => `
+        <img src="assets/images/larmah-header.jpeg" alt="Featured listing" loading="lazy" decoding="async">
+        <div class="card-body">
+          <div class="card-title">Loading featured…</div>
+          <div class="meta">
+            <span class="pill"><i class="fa-solid fa-circle-notch fa-spin" style="color:var(--gold)"></i> Fetching</span>
+            <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span>
+          </div>
+          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn small solid" type="button" disabled><i class="fa-brands fa-whatsapp"></i> Enquire</button>
+            <a class="btn small primary" href="real-estate.html">View</a>
+          </div>
+        </div>
+      `;
+      featEls.forEach((el, i) => { if(el) el.innerHTML = ph(i); });
+    }
+    renderFeaturedPlaceholder();
+
+    // Boot DB featured safely after app.js loads
+    async function bootFeaturedDB(){
+      // wait for app.js to create supabase + featured loader
+      for(let i=0;i<30;i++){
+        if(typeof window.loadFeaturedFromDB === "function" || (window.LARMAH?.supabase?.ensure && window.supabaseClient)) break;
+        await new Promise(r => setTimeout(r, 150));
+      }
+      if(typeof window.loadFeaturedFromDB === "function"){
+        try{ await window.loadFeaturedFromDB(); } catch(e){}
+      }
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      if(getRoute() === "home") bootFeaturedDB();
+    });
+
+    // Expose globals used by app.js-rendered featured cards
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
     window.openWA = openWA;
     window.buildMsg = buildMsg;
     window.scrollToEl = scrollToEl;
+    window.esc = esc;
+    window.featEls = featEls;
+    window.featStart = featStart;
   </script>
 
-  <!-- ✅ Keep only ONE Cloudflare beacon script (you had duplicates) -->
+  <!-- ✅ Keep only ONE Cloudflare beacon script -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
     integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
     data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
