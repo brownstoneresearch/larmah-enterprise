@@ -5,6 +5,11 @@
      ✅ Cards match RE/LG style: image carousel + desc preview + View More modal
      ✅ Mobile responsive hero + layout + footer (same as other pages)
      ✅ About section upgraded with rich, contentful description + beautiful styling
+     ✅ FIXED: Modal CSS + Notice CSS
+     ✅ FIXED: #home / #about anchors
+     ✅ FIXED: Router (hash routing + scroll)
+     ✅ FIXED: Supabase fallback client
+     ✅ FIXED: Featured loader fallback (listings OR catalog_items)
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -1208,6 +1213,104 @@
       .footer-cta > div:last-child{ width:100%; }
       .footer-cta > div:last-child .btn{ width:100%; }
     }
+
+    /* ✅ Notice (loading / empty states) */
+    .notice{
+      border-radius: var(--radius2);
+      border: 1px dashed var(--line);
+      background: var(--panel2);
+      padding: 14px;
+      color: var(--muted);
+      font-weight: 850;
+      box-shadow: var(--shadow2);
+    }
+
+    /* ✅ Modal (View More) */
+    .modalOverlay{
+      position: fixed;
+      inset: 0;
+      background: var(--overlayBg);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 110;
+    }
+    .modalOverlay.open{ display:flex; }
+
+    .modal{
+      width: min(860px, 100%);
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 86%, #000 14%);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .modalHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      padding: 14px;
+      border-bottom: 1px solid var(--line2);
+    }
+    .modalTitle{
+      margin:0;
+      font-size: 1.2rem;
+      letter-spacing:-0.3px;
+    }
+    .modalMeta{
+      margin-top: 8px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .modalBody{ padding: 14px; }
+    .modalDesc{
+      margin:0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 1rem;
+      white-space: pre-wrap;
+    }
+    .modalFoot{
+      padding: 14px;
+      border-top: 1px solid var(--line2);
+      display:flex;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .modalFoot .right{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
+    }
+    .copy-btn{
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 950;
+      cursor:pointer;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
+    }
+    .copy-btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+
+    @media (max-width: 620px){
+      .modalOverlay{ align-items:flex-end; padding: 0; }
+      .modal{ width:100%; border-radius: 18px 18px 0 0; }
+      .modalFoot .left, .modalFoot .right{ width:100%; }
+      .modalFoot .right .btn, .modalFoot .right a, .copy-btn{ width:100%; justify-content:center; }
+    }
   </style>
 </head>
 
@@ -1286,7 +1389,7 @@
   <main id="main" class="container" tabindex="-1">
     <!-- HOME PAGE -->
     <div class="page is-active" id="page-home" data-page="home">
-      <section class="hero" aria-label="Hero">
+      <section class="hero" id="home" aria-label="Hero">
         <div class="hero-box">
           <div class="hero-row">
             <div>
@@ -1528,13 +1631,12 @@
           <div class="notice">Loading featured items…</div>
         </div>
       </section>
-
     </div>
 
-    <!-- ABOUT PAGE (optional internal route) -->
+    <!-- ABOUT PAGE (internal route) -->
     <div class="page" id="page-about" data-page="about">
-      <section class="section" aria-label="About page">
-           <div class="section-head">
+      <section class="section" id="about" aria-label="About page">
+        <div class="section-head">
           <div>
             <h2>About Larmah Enterprise</h2>
             <p class="subhead">Trust-first real estate + dependable logistics — coordinated in one WhatsApp thread.</p>
@@ -1614,7 +1716,7 @@
             <aside class="about-card" aria-label="Operations snapshot">
               <img src="https://source.unsplash.com/1400x900/?lagos,city,real-estate&sig=909" alt="Lagos operations" loading="lazy" decoding="async">
               <div class="card-body">
-                <div class="card-title" style="margin:0 0 6px;">How we operate</div>
+                <div class="card-title" style="margin:0 0 6px; font-weight:950; letter-spacing:-0.2px;">How we operate</div>
                 <div class="meta" style="margin:0; color:var(--muted); line-height:1.5;">
                   We prioritize clarity and speed: request → confirm → coordinate → deliver updates.
                 </div>
@@ -1881,21 +1983,36 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // Router
+    // ✅ Router (supports #home, #browse, #quick, #about and scrolls correctly)
     const pages = Array.from(document.querySelectorAll(".page"));
-    const navLinks = Array.from(document.querySelectorAll('[data-nav]'));
+    const navLinks = Array.from(document.querySelectorAll("[data-nav]"));
+    let __activePage = "home";
+
     function setActivePage(name){
+      __activePage = name;
       pages.forEach(p => p.classList.toggle("is-active", p.dataset.page === name));
       navLinks.forEach(a => a.classList.toggle("is-active", a.dataset.nav === name));
       toggleMenu(false);
     }
-    function getRoute(){
-      const h = (location.hash || "#home").replace("#", "").trim().toLowerCase();
-      if(h === "about") return "about";
-      return "home";
+
+    function handleHashRoute(){
+      const raw = (location.hash || "#home").replace("#", "").trim();
+      const key = raw.toLowerCase();
+
+      const page = (key === "about") ? "about" : "home";
+      setActivePage(page);
+
+      setTimeout(() => {
+        const targetId = key || (page === "about" ? "about" : "home");
+        const el = document.getElementById(targetId);
+        if(el){
+          el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+        }
+      }, 30);
     }
-    window.addEventListener("hashchange", () => setActivePage(getRoute()));
-    document.addEventListener("DOMContentLoaded", () => setActivePage(getRoute()));
+
+    window.addEventListener("hashchange", handleHashRoute);
+    document.addEventListener("DOMContentLoaded", handleHashRoute);
 
     // Mode switch
     const tabRealEstate = document.getElementById("tabRealEstate");
@@ -1981,7 +2098,7 @@
     if(!reduceMotion){
       setHero(0);
       setInterval(() => {
-        if(getRoute() !== "home") return;
+        if(__activePage !== "home") return;
         heroIdx = (heroIdx + 1) % HERO_SLIDES.length;
         setHero(heroIdx);
       }, 5000);
@@ -2432,10 +2549,28 @@
     }
     window.featReset = featReset;
 
+    // ✅ Supabase client fallback (works even if app.js didn't init it)
+    function ensureSupabaseClient(){
+      if(window.supabaseClient) return window.supabaseClient;
+      const url = window.__SUPABASE_URL;
+      const key = window.__SUPABASE_ANON_KEY;
+      if(!url || !key) return null;
+      if(!window.supabase || !window.supabase.createClient) return null;
+
+      window.supabaseClient = window.supabase.createClient(url, key, {
+        auth: { persistSession: true, autoRefreshToken: true }
+      });
+      return window.supabaseClient;
+    }
+    window.ensureSupabaseClient = window.ensureSupabaseClient || ensureSupabaseClient;
+
     function sbClient(){
-      return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
+      return window.supabaseClient
+        || (window.ensureSupabaseClient && window.ensureSupabaseClient())
+        || null;
     }
 
+    // ✅ Featured loader fallback (listings OR catalog_items)
     async function loadFeaturedAll(){
       const mount = document.getElementById("feat_mount");
       mount.innerHTML = `<div class="notice">Loading featured items…</div>`;
@@ -2454,8 +2589,16 @@
         return;
       }
 
+      const normalize = (rows, source) => (rows || []).map(r => {
+        if(source === "catalog_items"){
+          return { ...r, price: r.price_text ?? r.price ?? null };
+        }
+        return r;
+      });
+
       try{
-        const { data, error } = await sb
+        // 1) Try listings
+        let resp = await sb
           .from("listings")
           .select("id,title,description,price,image_url,image_urls,location,coverage,area,city,state,listing_type,type,service_type,tags,category,status,featured,created_at")
           .in("category", ["real-estate","logistics"])
@@ -2464,9 +2607,30 @@
           .order("created_at", { ascending:false })
           .limit(1000);
 
-        if(error) throw error;
+        if(resp.error){
+          const msg = (resp.error.message || "").toLowerCase();
+          const code = resp.error.code || "";
+          const looksMissing = code === "42P01" || msg.includes("does not exist") || msg.includes("relation");
 
-        __FEAT.items = data || [];
+          if(looksMissing){
+            resp = await sb
+              .from("catalog_items")
+              .select("id,title,description,price_text,price,image_url,image_urls,location,coverage,area,city,state,listing_type,type,service_type,tags,category,status,featured,created_at")
+              .in("category", ["real-estate","logistics"])
+              .eq("status","active")
+              .eq("featured", true)
+              .order("created_at", { ascending:false })
+              .limit(1000);
+
+            if(resp.error) throw resp.error;
+            __FEAT.items = normalize(resp.data, "catalog_items");
+          } else {
+            throw resp.error;
+          }
+        } else {
+          __FEAT.items = normalize(resp.data, "listings");
+        }
+
         __FEAT.page = 1;
         renderFeaturedAll();
       }catch(e){
