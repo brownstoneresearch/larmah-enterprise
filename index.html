@@ -1,12 +1,10 @@
 <!-- =========================
      index.html (FULL — UPDATED)
      ✅ Shows ALL featured listings from BOTH Real Estate + Logistics
-        - DB: public.listings
-        - Filters: status='active' AND featured=true AND category IN ('real-estate','logistics')
-     ✅ Clean (not rowdy): featured section uses pagination + simple filter
+     ✅ Clean featured section (filters + pagination)
      ✅ Cards match RE/LG style: image carousel + desc preview + View More modal
-     ✅ Modal includes: price, ref, location/coverage, type, actions (WA + Open Page + Book/Quote)
      ✅ Mobile responsive hero + layout + footer (same as other pages)
+     ✅ About section upgraded with rich, contentful description + beautiful styling
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -59,31 +57,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
-
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"Larmah Enterprise",
-    "url":"https://heylarmah.tech/",
-    "logo":"https://heylarmah.tech/assets/images/larmah-header.jpeg",
-    "sameAs":[
-      "https://instagram.com/hey_larmah",
-      "https://x.com/heylarmah_tech",
-      "https://t.me/heylarmah_tech",
-      "https://youtube.com/@heylarmah"
-    ],
-    "contactPoint":[{
-      "@type":"ContactPoint",
-      "email":"business@heylarmah.tech",
-      "telephone":"+2347063080605",
-      "contactType":"customer support",
-      "availableLanguage":["en"]
-    }],
-    "areaServed":"NG"
-  }
-  </script>
 
   <style>
     :root{
@@ -219,8 +192,18 @@
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line2);
     }
-    .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
-    .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
+    .header-inner{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding: 12px 0;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 220px;
+    }
 
     .logo-wrap{
       position:relative;
@@ -345,6 +328,10 @@
       .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
       .header-actions{ margin-left: auto; }
       body{ padding-bottom: calc(88px + var(--safeB)); }
+      .brand{ min-width: 0; }
+      .brand .bsub{ display:none; }
+      .logo-wrap{ width:40px; height:40px; }
+      .icon-btn{ width:40px; height:40px; }
     }
 
     /* Mobile sheet */
@@ -437,7 +424,23 @@
       font-weight: 900;
     }
 
-    /* Hero */
+    /* Chips */
+    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 88%, transparent);
+      font-weight: 900;
+      font-size: .92rem;
+    }
+    .chip i{ color: var(--gold); }
+
+    /* Hero/Home */
     .hero{ padding: 18px 0 0; }
     .hero-box{
       border-radius: var(--radius2);
@@ -479,7 +482,6 @@
       margin-bottom: 10px;
     }
     .kicker .dot{ opacity:.65; }
-
     h1{
       margin: 6px 0 10px;
       font-size: clamp(2.0rem, 4vw, 3.05rem);
@@ -501,10 +503,6 @@
     .hero-actions{
       display:flex; gap:12px; flex-wrap:wrap;
       margin-top: 12px;
-    }
-    @media (max-width: 520px){
-      .hero-actions{ flex-direction:column; }
-      .hero-actions .btn{ width:100%; }
     }
 
     .live-row{
@@ -627,10 +625,6 @@
       align-items:center;
       flex-wrap:wrap;
     }
-    @media (max-width:520px){
-      .form-actions{ flex-direction:column; }
-      .form-actions .btn{ width:100%; }
-    }
 
     /* Hero carousel */
     .hero-media{
@@ -689,7 +683,7 @@
     @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
 
-    /* Cards (synced) */
+    /* Cards */
     .card{
       border-radius: var(--radius);
       border: 1px solid var(--line);
@@ -790,14 +784,9 @@
       -webkit-box-orient: vertical;
       overflow:hidden;
     }
-    .price{
-      margin-top:10px;
-      font-weight: 950;
-      color: var(--gold2);
-      letter-spacing: .1px;
-    }
+    .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
     .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px; }
-    .chip{
+    .chip2{
       display:inline-flex; gap:8px; align-items:center;
       padding: 7px 10px;
       border-radius: 999px;
@@ -867,6 +856,7 @@
       flex-wrap:wrap;
       align-items:flex-end;
       min-width: 0;
+      flex: 1 1 auto;
     }
     .feat-right{
       display:flex;
@@ -874,6 +864,7 @@
       flex-wrap:wrap;
       align-items:center;
       justify-content:flex-end;
+      flex: 0 0 auto;
     }
     .feat-field{ display:flex; flex-direction:column; gap:6px; min-width: 190px; }
     .feat-field label{ font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color: var(--muted2); }
@@ -889,12 +880,11 @@
     }
     @media (max-width:520px){
       .feat-field{ min-width: 100%; }
-      .feat-controls{ padding: 12px; }
       .feat-right{ width:100%; }
       .feat-right .btn{ width:100%; }
     }
 
-    /* Pagination (same feel as other pages) */
+    /* Pagination */
     .pager{
       margin-top: 14px;
       border-radius: var(--radius2);
@@ -944,85 +934,112 @@
     }
     .pager-ellipsis{ padding: 8px 6px; color: var(--muted2); font-weight: 950; user-select:none; }
 
-    /* Modal */
-    .modalOverlay{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.56);
-      display:none;
-      align-items:flex-end;
-      justify-content:center;
-      z-index: 140;
-      padding: 14px;
-    }
-    .modalOverlay.open{ display:flex; }
-    .modal{
-      width: min(860px, 100%);
-      border-radius: 18px;
+    /* About (NEW — contentful + beautiful) */
+    .about-wrap{
+      margin-top: 16px;
+      border-radius: var(--radius2);
       border: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 86%, #000 14%);
+      background: var(--panel2);
       box-shadow: var(--shadow);
       overflow:hidden;
+      position:relative;
+      isolation:isolate;
     }
-    .modalHead{
+    .about-wrap::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(520px 240px at 12% 0%, rgba(212,175,55,.16), transparent 60%),
+        radial-gradient(520px 240px at 88% 20%, rgba(0,217,129,.10), transparent 62%),
+        radial-gradient(620px 260px at 50% 120%, rgba(0,122,255,.08), transparent 60%);
+      pointer-events:none;
+      z-index:-1;
+    }
+    .about-grid{
+      display:grid;
+      gap: 14px;
+      padding: 16px;
+      grid-template-columns: 1.15fr .85fr;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .about-grid{ grid-template-columns: 1fr; }
+    }
+    .about-title{
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 3.6vw, 2.2rem);
+      letter-spacing:-0.4px;
+      line-height:1.1;
+    }
+    .about-lead{
+      margin:0;
+      color: var(--muted);
+      line-height:1.6;
+      font-size: 1.02rem;
+    }
+    .about-points{
+      margin-top: 12px;
+      display:grid;
+      gap: 10px;
+    }
+    .ap{
       display:flex;
       gap:10px;
       align-items:flex-start;
-      justify-content:space-between;
-      padding: 12px 12px;
-      border-bottom: 1px solid var(--line2);
-      background: color-mix(in oklab, var(--panel2) 65%, transparent);
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
     }
-    .modalTitle{
-      font-weight: 950;
-      letter-spacing:-0.2px;
-      line-height:1.15;
-      margin:0;
-      font-size: 1.08rem;
+    .ap i{ color: var(--gold); margin-top: 2px; width: 18px; }
+    .ap b{ display:block; }
+    .ap span{ color: var(--muted2); font-size: .92rem; display:block; margin-top: 3px; line-height: 1.35; }
+
+    .about-card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      overflow:hidden;
+      box-shadow: var(--shadow2);
     }
-    .modalMeta{
-      margin-top: 8px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
+    .about-card img{
+      width:100%;
+      height: 220px;
+      object-fit: cover;
+      display:block;
+      opacity:.92;
     }
-    .modalBody{
-      padding: 12px;
-      max-height: min(65vh, 520px);
-      overflow:auto;
+    @media (max-width:520px){
+      .about-card img{ height: 190px; }
     }
-    .modalDesc{
-      white-space: pre-wrap;
-      line-height: 1.65;
-      color: color-mix(in oklab, var(--text) 92%, transparent);
-      font-size: 1.0rem;
+    .about-card .card-body{ padding: 12px; }
+    .about-kpis{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width:520px){ .about-kpis{ grid-template-columns: 1fr; } }
+    .kpi{
       border-radius: 14px;
       border: 1px solid var(--line2);
       background: var(--panel2);
-      padding: 12px;
-      margin:0;
+      padding: 10px 12px;
     }
-    .modalFoot{
-      padding: 12px;
-      border-top: 1px solid var(--line2);
+    .kpi .k{ font-weight: 950; letter-spacing:-0.2px; }
+    .kpi .s{ color: var(--muted); font-size: .92rem; margin-top: 4px; line-height:1.35; }
+
+    .about-actions{
+      margin-top: 12px;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-      justify-content:space-between;
-      background: color-mix(in oklab, var(--panel2) 65%, transparent);
+      align-items:center;
     }
-    .modalFoot .left, .modalFoot .right{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    @media (max-width:520px){
+      .about-actions{ flex-direction:column; }
+      .about-actions .btn{ width:100%; }
     }
-    .copy-btn{
-      border: 1px dashed var(--line);
-      background: transparent;
-      color: var(--muted);
-      font-weight: 950;
-      border-radius: 12px;
-      padding: 10px 12px;
-      cursor:pointer;
-    }
-    .copy-btn:hover{ color: var(--gold2); border-color: rgba(212,175,55,.35); }
 
     /* Footer (same as other pages) */
     footer{
@@ -1186,18 +1203,10 @@
 
     /* Mobile polish */
     @media (max-width: 620px){
-      .brand{ min-width:0; }
-      .brand .bsub{ display:none; }
-      .hero-media{ min-height: 240px; }
-      .hero-media img{ height: 240px; }
+      .chips{ flex-wrap: nowrap; overflow-x:auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; margin-right: -10px; }
+      .chip{ flex: 0 0 auto; }
       .footer-cta > div:last-child{ width:100%; }
       .footer-cta > div:last-child .btn{ width:100%; }
-    }
-
-    @media (max-width: 520px){
-      .logistics-strip{ flex-direction:column; align-items:stretch; }
-      .logistics-strip .btn{ width:100%; }
-      .form-grid .field{ grid-column: 1 / -1 !important; }
     }
   </style>
 </head>
@@ -1224,7 +1233,7 @@
         </button>
       </div>
 
-      <a href="#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="#about" onclick="toggleMenu(false)"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
@@ -1254,6 +1263,7 @@
 
       <nav aria-label="Primary navigation">
         <ul>
+          <li><a class="nav-link" data-nav="home" href="#home">Home</a></li>
           <li><a class="nav-link" data-nav="about" href="#about">About</a></li>
           <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
@@ -1355,31 +1365,6 @@
                       <input id="checkout" type="date" />
                     </div>
 
-                    <div class="field" style="grid-column: span 1;">
-                      <label for="guests">Guests</label>
-                      <select id="guests">
-                        <option value="1">1</option>
-                        <option value="2" selected>2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5+">5+</option>
-                      </select>
-                    </div>
-
-                    <div class="field" style="grid-column: span 1;">
-                      <label for="category">Category</label>
-                      <select id="category">
-                        <option value="Any" selected>Any</option>
-                        <option value="Studio">Studio</option>
-                        <option value="1 Bedroom">1 Bedroom</option>
-                        <option value="2 Bedroom">2 Bedroom</option>
-                        <option value="3 Bedroom">3 Bedroom</option>
-                        <option value="Family">Family</option>
-                        <option value="Business">Business</option>
-                        <option value="Premium">Premium</option>
-                      </select>
-                    </div>
-
                     <div class="field" style="grid-column: span 2;">
                       <label for="location">Location</label>
                       <select id="location">
@@ -1393,15 +1378,15 @@
                       </select>
                     </div>
 
-                    <div class="field" style="grid-column: span 8;">
-                      <label for="budget">Budget (optional)</label>
-                      <input id="budget" type="text" inputmode="numeric" placeholder="e.g., ₦120,000 per night / ₦500k total" />
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="budget">Budget</label>
+                      <input id="budget" type="text" placeholder="e.g., ₦120k/night" />
                     </div>
                   </div>
 
                   <div class="form-actions">
                     <button class="btn solid" type="button" onclick="submitRealEstate()">
-                      <i class="fa-solid fa-calendar-check"></i> Request Availability
+                      <i class="fa-brands fa-whatsapp"></i> Request Availability
                     </button>
                     <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
                       <i class="fa-brands fa-whatsapp"></i> Chat Support
@@ -1447,14 +1432,14 @@
                     </div>
 
                     <div class="field" style="grid-column: span 4;">
-                      <label for="logNotes">Notes (optional)</label>
+                      <label for="logNotes">Notes</label>
                       <input id="logNotes" type="text" placeholder="Size/weight, urgency, landmarks..." />
                     </div>
                   </div>
 
                   <div class="form-actions">
                     <button class="btn solid" type="button" onclick="submitLogistics()">
-                      <i class="fa-solid fa-paper-plane"></i> Request Quote
+                      <i class="fa-brands fa-whatsapp"></i> Request Quote
                     </button>
                     <button class="btn primary" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
                       <i class="fa-brands fa-whatsapp"></i> Chat Support
@@ -1543,14 +1528,135 @@
           <div class="notice">Loading featured items…</div>
         </div>
       </section>
+
+      <!-- ✅ ABOUT (contentful + styled) -->
+      <section class="section" id="about" aria-label="About Larmah Enterprise">
+        <div class="section-head">
+          <div>
+            <h2>About Larmah Enterprise</h2>
+            <p class="subhead">Trust-first real estate + dependable logistics — coordinated in one WhatsApp thread.</p>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
+            <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
+          </div>
+        </div>
+
+        <div class="about-wrap">
+          <div class="about-grid">
+            <div>
+              <h3 class="about-title">What we do — clean sourcing, clear confirmation, fast coordination.</h3>
+              <p class="about-lead">
+                Larmah Enterprise helps people and businesses move smarter across Nigeria by combining two essential pillars:
+                <b style="color:var(--text)">Verified Real Estate</b> and <b style="color:var(--text)">Trusted Logistics</b>.
+                We reduce stress and fraud by using a trust-first workflow — clear references, simple communication, and quick
+                confirmations on WhatsApp.
+              </p>
+
+              <div class="about-points" aria-label="Core strengths">
+                <div class="ap">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div>
+                    <b>Verified Real Estate (Shortlets • Rentals • Sales)</b>
+                    <span>
+                      We source and coordinate verified options based on your dates, budget, and preferred area.
+                      You get clear pricing, availability confirmation, and next steps without confusion.
+                    </span>
+                  </div>
+                </div>
+
+                <div class="ap">
+                  <i class="fa-solid fa-truck-fast"></i>
+                  <div>
+                    <b>Logistics (Dispatch • Pickup • Haulage • Freight)</b>
+                    <span>
+                      From same-day dispatch to heavier freight support, we coordinate movement with pickup/drop-off clarity,
+                      ETA updates, and handling notes — all in one thread.
+                    </span>
+                  </div>
+                </div>
+
+                <div class="ap">
+                  <i class="fa-solid fa-shield-halved"></i>
+                  <div>
+                    <b>Scam-resistant process</b>
+                    <span>
+                      We prioritize clean confirmations, traceable refs, and structured communication to reduce mistakes and fraud.
+                      You always know what you’re paying for and what happens next.
+                    </span>
+                  </div>
+                </div>
+
+                <div class="ap">
+                  <i class="fa-solid fa-headset"></i>
+                  <div>
+                    <b>WhatsApp-first support</b>
+                    <span>
+                      Bookings and movement updates stay in one place — faster decisions, fewer mix-ups, and smoother execution.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="about-actions">
+                <button class="btn solid" type="button"
+                  onclick="openWA(buildMsg('General Enquiry', { Message:'Hello Larmah, I want to get started. Please guide me.' }))">
+                  <i class="fa-brands fa-whatsapp"></i> Start on WhatsApp
+                </button>
+                <a class="btn primary" href="#browse"><i class="fa-solid fa-sparkles"></i> View Featured</a>
+                <a class="btn ghost" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
+              </div>
+            </div>
+
+            <aside class="about-card" aria-label="Operations snapshot">
+              <img src="https://source.unsplash.com/1400x900/?lagos,city,real-estate&sig=909" alt="Lagos operations" loading="lazy" decoding="async">
+              <div class="card-body">
+                <div class="card-title" style="margin:0 0 6px;">How we operate</div>
+                <div class="meta" style="margin:0; color:var(--muted); line-height:1.5;">
+                  We prioritize clarity and speed: request → confirm → coordinate → deliver updates.
+                </div>
+
+                <div class="about-kpis" aria-label="Key promises">
+                  <div class="kpi">
+                    <div class="k"><i class="fa-solid fa-bolt" style="color:var(--gold)"></i> Fast response</div>
+                    <div class="s">Quick replies, clear next steps.</div>
+                  </div>
+                  <div class="kpi">
+                    <div class="k"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> Traceable refs</div>
+                    <div class="s">Easier tracking and follow-up.</div>
+                  </div>
+                  <div class="kpi">
+                    <div class="k"><i class="fa-solid fa-receipt" style="color:var(--gold)"></i> Clear pricing</div>
+                    <div class="s">Less ambiguity, better decisions.</div>
+                  </div>
+                  <div class="kpi">
+                    <div class="k"><i class="fa-solid fa-comments" style="color:var(--gold)"></i> One thread</div>
+                    <div class="s">Booking + movement updates together.</div>
+                  </div>
+                </div>
+
+                <div class="about-actions" style="margin-top:12px;">
+                  <button class="btn small solid" type="button"
+                    onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help with a request.' }))">
+                    <i class="fa-brands fa-whatsapp"></i> Chat Support
+                  </button>
+                  <a class="btn small primary" href="premium.html">
+                    <i class="fa-solid fa-crown"></i> Premium
+                  </a>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <!-- ABOUT PAGE -->
+    <!-- ABOUT PAGE (optional internal route) -->
     <div class="page" id="page-about" data-page="about">
-      <section class="section" aria-label="About Larmah Enterprise">
+      <section class="section" aria-label="About page">
         <div class="notice">
-          <b style="color:var(--text)">Larmah Enterprise</b> is a trust-first hub for verified real estate and dependable logistics across Nigeria.
-          We coordinate everything on WhatsApp with clear confirmations and clean references.
+          <b style="color:var(--text)">Larmah Enterprise</b> delivers trust-first real estate and dependable logistics across Nigeria —
+          coordinated on WhatsApp with clean references and clear confirmations.
         </div>
       </section>
     </div>
@@ -1692,7 +1798,7 @@
       </div>
 
       <div class="footer-bottom">
-        <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+        <div>© <span id="year2"></span> Larmah Enterprise. All rights reserved.</div>
         <div class="footer-badges">
           <span class="badge"><i class="fa-solid fa-shield-halved"></i> Trust-first</span>
           <span class="badge"><i class="fa-solid fa-hashtag"></i> Traceable refs</span>
@@ -1713,8 +1819,9 @@
   </div>
 
   <script>
-    // Year
-    document.getElementById("year").textContent = new Date().getFullYear();
+    // years
+    document.getElementById("year2").textContent = new Date().getFullYear();
+
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // Toast
@@ -1727,20 +1834,18 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // Mobile menu
+    // Menu
     const overlay = document.getElementById("overlay");
     function toggleMenu(open){
       overlay.classList.toggle("open", !!open);
       overlay.setAttribute("aria-hidden", open ? "false" : "true");
     }
-    overlay.addEventListener("click", (e) => {
-      if(e.target === overlay) toggleMenu(false);
-    });
+    overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // Escape helper
+    // esc
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
-    // WhatsApp helpers
+    // WhatsApp
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return window.LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -1799,7 +1904,7 @@
     window.addEventListener("hashchange", () => setActivePage(getRoute()));
     document.addEventListener("DOMContentLoaded", () => setActivePage(getRoute()));
 
-    // Mode switch (Real Estate / Logistics)
+    // Mode switch
     const tabRealEstate = document.getElementById("tabRealEstate");
     const tabLogistics = document.getElementById("tabLogistics");
     const formRealEstate = document.getElementById("formRealEstate");
@@ -1816,7 +1921,7 @@
     }
     window.setMode = setMode;
 
-    // Date mins (today)
+    // Date mins
     function toISODate(d){
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth()+1).padStart(2,"0");
@@ -1824,87 +1929,51 @@
       return `${yyyy}-${mm}-${dd}`;
     }
     const todayISO = toISODate(new Date());
-    const checkinEl = document.getElementById("checkin");
-    const checkoutEl = document.getElementById("checkout");
-    const pickDateEl = document.getElementById("pickDate");
+    document.getElementById("checkin")?.setAttribute("min", todayISO);
+    document.getElementById("checkout")?.setAttribute("min", todayISO);
+    document.getElementById("pickDate")?.setAttribute("min", todayISO);
 
-    if(checkinEl){ checkinEl.min = todayISO; }
-    if(checkoutEl){ checkoutEl.min = todayISO; }
-    if(pickDateEl){ pickDateEl.min = todayISO; }
-
-    if(checkinEl && checkoutEl){
-      checkinEl.addEventListener("change", () => {
-        if(!checkinEl.value) return;
-        checkoutEl.min = checkinEl.value;
-        if(checkoutEl.value && checkoutEl.value < checkinEl.value){
-          checkoutEl.value = checkinEl.value;
-        }
-      });
-    }
-
-    // Real estate submit -> WhatsApp
+    // Quick submits
     function submitRealEstate(){
-      const checkin = (document.getElementById("checkin").value || "Not set");
-      const checkout = (document.getElementById("checkout").value || "Not set");
-      const guests = (document.getElementById("guests").value || "2");
-      const category = (document.getElementById("category").value || "Any");
-      const locationVal = (document.getElementById("location").value || "Any");
-      const budget = (document.getElementById("budget").value || "");
-
       openWA(buildMsg("Real Estate — Availability Request", {
-        Checkin: checkin,
-        Checkout: checkout,
-        Guests: guests,
-        Category: category,
-        Location: locationVal,
-        Budget: budget,
+        Checkin: document.getElementById("checkin").value || "Not set",
+        Checkout: document.getElementById("checkout").value || "Not set",
+        Location: document.getElementById("location").value || "Any",
+        Budget: document.getElementById("budget").value || "",
         Message: "Hello Larmah, please confirm available verified options and total cost."
       }));
     }
-    window.submitRealEstate = submitRealEstate;
-
-    // Logistics submit -> WhatsApp
     function submitLogistics(){
-      const pickup = (document.getElementById("pickup").value || "Not set");
-      const dropoff = (document.getElementById("dropoff").value || "Not set");
-      const date = (document.getElementById("pickDate").value || "Not set");
-      const vehicle = (document.getElementById("vehicle").value || "Dispatch Bike");
-      const notes = (document.getElementById("logNotes").value || "");
-
       openWA(buildMsg("Logistics — Quote Request", {
-        Pickup: pickup,
-        Dropoff: dropoff,
-        Date: date,
-        Vehicle: vehicle,
-        Notes: notes,
-        Message: "Hello Larmah, please share pricing, ETA, and next steps for this movement."
+        Pickup: document.getElementById("pickup").value || "Not set",
+        Dropoff: document.getElementById("dropoff").value || "Not set",
+        Date: document.getElementById("pickDate").value || "Not set",
+        Vehicle: document.getElementById("vehicle").value || "Dispatch Bike",
+        Notes: document.getElementById("logNotes").value || "",
+        Message: "Hello Larmah, please share pricing, ETA, and next steps."
       }));
     }
+    window.submitRealEstate = submitRealEstate;
     window.submitLogistics = submitLogistics;
 
-    // HERO carousel
+    // HERO slideshow
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
     const heroSub = document.getElementById("heroSub");
     const heroBar = document.getElementById("heroBar");
-
     const HERO_SLIDES = [
       { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
       { img:"https://source.unsplash.com/1600x1000/?real-estate,lagos,building&sig=12", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clean confirmations." },
-      { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=13", icon:"fa-truck-fast", label:"Logistics", sub:"Trusted movement with clear coordination." },
-      { img:"https://source.unsplash.com/1600x1000/?cargo,truck,highway&sig=14", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
+      { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=13", icon:"fa-truck-fast", label:"Logistics", sub:"Trusted movement with clear coordination." }
     ];
     let heroIdx = 0;
-
     function runHeroProgress(){
-      if(!heroBar) return;
       heroBar.classList.remove("run");
       void heroBar.offsetWidth;
       heroBar.classList.add("run");
     }
     function setHero(i){
-      if(!heroMedia || !heroImg || !heroTag || !heroSub) return;
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
       heroMedia.classList.add("is-fading");
       runHeroProgress();
@@ -1925,7 +1994,7 @@
       }, 5000);
     } else setHero(0);
 
-    // ===== Featured (ALL) loader =====
+    // Featured store
     const __FEAT = {
       items: [],
       imgUrls: {},
@@ -1959,7 +2028,6 @@
         if(hay.includes("dispatch") || hay.includes("delivery") || hay.includes("courier")) return "Dispatch";
         return "Service";
       }
-      // real estate
       if(hay.includes("shortlet") || hay.includes("airbnb")) return "Shortlet";
       if(hay.includes("rent") || hay.includes("annual") || hay.includes("year")) return "Rent";
       if(hay.includes("buy") || hay.includes("sale") || hay.includes("purchase")) return "Buy";
@@ -2052,11 +2120,11 @@
       document.getElementById("descBody").textContent = __FEAT.modal.desc;
 
       document.getElementById("descMeta").innerHTML = `
-        <span class="chip"><i class="fa-solid fa-naira-sign" style="color:var(--gold)"></i> ${esc(__FEAT.modal.price)}</span>
-        <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(__FEAT.modal.location)}</span>
-        <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(__FEAT.modal.type)}</span>
-        <span class="chip"><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> ${__FEAT.modal.pillar === "logistics" ? "Logistics" : "Real Estate"}</span>
-        <span class="chip"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> ${esc(__FEAT.modal.ref)}</span>
+        <span class="chip2"><i class="fa-solid fa-naira-sign" style="color:var(--gold)"></i> ${esc(__FEAT.modal.price)}</span>
+        <span class="chip2"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(__FEAT.modal.location)}</span>
+        <span class="chip2"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(__FEAT.modal.type)}</span>
+        <span class="chip2"><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> ${__FEAT.modal.pillar === "logistics" ? "Logistics" : "Real Estate"}</span>
+        <span class="chip2"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> ${esc(__FEAT.modal.ref)}</span>
       `;
 
       const openPage = document.getElementById("descOpenPage");
@@ -2107,7 +2175,6 @@
     function descModalPrimaryAction(){
       if(!__FEAT.modal?.id) return;
       if(__FEAT.modal.pillar === "logistics"){
-        // Prefill logistics quick form
         setMode("logistics");
         const notes = document.getElementById("logNotes");
         if(notes){
@@ -2117,7 +2184,6 @@
         scrollToEl("#quick");
         toast("Quote form prepared ✅");
       } else {
-        // Prefill real estate quick form
         setMode("realestate");
         const budget = document.getElementById("budget");
         const locSel = document.getElementById("location");
@@ -2126,7 +2192,6 @@
           if(opt) locSel.value = opt.value;
         }
         if(budget && __FEAT.modal.price && __FEAT.modal.price !== "Contact for quote"){
-          // keep it gentle; don't override if already filled
           if(!budget.value) budget.value = __FEAT.modal.price;
         }
         closeDescModal();
@@ -2157,7 +2222,6 @@
       const loc = inferLocation(it);
       const pillar = inferPillar(it);
       const type = inferTypeLabel(it);
-      const isFeatured = it.featured === true;
 
       return `
         <article class="card" aria-label="${esc(title)}">
@@ -2184,7 +2248,7 @@
           <div class="card-body">
             <div class="title">
               ${esc(title)}
-              ${isFeatured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
+              <span class="star"><i class="fa-solid fa-star"></i> Featured</span>
             </div>
 
             <p class="desc">${esc(desc)}</p>
@@ -2198,9 +2262,9 @@
             <div class="price">${esc(price)}</div>
 
             <div class="meta-row">
-              <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(loc)}</span>
-              <span class="chip"><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> ${pillar === "logistics" ? "Logistics" : "Real Estate"}</span>
-              <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(type)}</span>
+              <span class="chip2"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(loc)}</span>
+              <span class="chip2"><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> ${pillar === "logistics" ? "Logistics" : "Real Estate"}</span>
+              <span class="chip2"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(type)}</span>
             </div>
 
             <div class="actions-row">
@@ -2376,10 +2440,7 @@
     window.featReset = featReset;
 
     function sbClient(){
-      return window.supabaseClient
-        || (window.ensureSupabaseClient && window.ensureSupabaseClient())
-        || (window.supabase && window.supabase.createClient && window.supabase.createClient(window.__SUPABASE_URL, window.__SUPABASE_ANON_KEY))
-        || null;
+      return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
     }
 
     async function loadFeaturedAll(){
@@ -2389,7 +2450,6 @@
       // ensure supabase client
       let sb = sbClient();
       if(!sb){
-        // wait for app.js
         for(let i=0;i<18;i++){
           await new Promise(r=>setTimeout(r, 200));
           sb = sbClient();
@@ -2448,7 +2508,7 @@
       loadFeaturedAll();
     });
 
-    // Expose
+    // expose
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
     window.openWA = openWA;
@@ -2460,11 +2520,5 @@
     window.descModalEnquire = descModalEnquire;
     window.descModalPrimaryAction = descModalPrimaryAction;
   </script>
-
-  <!-- Keep only one Cloudflare beacon -->
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
-    crossorigin="anonymous"></script>
 </body>
 </html>
