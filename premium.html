@@ -1,12 +1,12 @@
 <!-- =========================
-     premium.html (UPGRADED v2) — FIXED
+     premium.html (FULL UPDATED)
      - Premium Investment Tracks + Concierge
-     - Paystack: pay -> server verifies -> unique invite link emailed
-     - FIXES:
-       ✅ Added missing scripts: supabase-js, app.js, paystack inline
-       ✅ Removed broken pasted snippet with "{ ... }"
-       ✅ Removed wrong re-definition of PREMIUM_INVITE_FN / PREMIUM_RESEND_FN
-       ✅ All function calls now use full Supabase Functions URL + required headers (fnHeaders())
+     - Paystack: resilient loader (won’t hang on “Opening Paystack…”)
+     - After Paystack success: calls Supabase Edge Functions:
+         /functions/v1/premium-invite
+         /functions/v1/premium-resend
+     - Uses anon key headers (apikey + Authorization Bearer anon)
+     - Works best on http/https (NOT file://)
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -47,32 +47,35 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="preconnect" href="https://js.paystack.co" crossorigin />
+  <link rel="preconnect" href="https://mskbumvopqnrhddfycfd.supabase.co" crossorigin />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- ✅ Supabase config + Function endpoints -->
+  <!-- ✅ Supabase config (same as your other pages) -->
   <script>
-    // Use the same config you use everywhere else
-    const SUPABASE_URL = window.__SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
-    const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
-
-    const FUNCTIONS_BASE = `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1`;
-    const PREMIUM_INVITE_FN = `${FUNCTIONS_BASE}/premium-invite`;
-    const PREMIUM_RESEND_FN = `${FUNCTIONS_BASE}/premium-resend`;
-
-    function fnHeaders(){
-      return {
-        "Content-Type": "application/json",
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-      };
-    }
+    window.__SUPABASE_URL = window.__SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
+    window.__SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
   </script>
 
-  <!-- ✅ Supabase SDK + your shared app.js + Paystack inline -->
+  <!-- Supabase SDK (optional here, but kept for consistency with your project) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Your shared helpers (theme, whatsapp, premium gate etc.) -->
   <script defer src="assets/js/app.js"></script>
+
+  <!-- Paystack (we ALSO load dynamically if blocked/missing) -->
   <script src="https://js.paystack.co/v1/inline.js"></script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "name":"Larmah Premium",
+    "url":"https://heylarmah.tech/premium.html",
+    "isPartOf":{"@type":"WebSite","name":"Larmah Enterprise","url":"https://heylarmah.tech/"},
+    "about":{"@type":"Service","name":"Premium Investment Tracks + Concierge","areaServed":"NG"}
+  }
+  </script>
 
   <style>
     :root{
@@ -372,7 +375,6 @@
       opacity:.9;
     }
     .hero-panel > *{ position:relative; z-index:1; }
-
     .hero-panel h3{ margin:0; font-size:1.05rem; letter-spacing:-0.2px; }
     .hero-panel p{ margin:8px 0 0; color: var(--muted); line-height:1.45; }
 
@@ -672,7 +674,9 @@
             <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
           </div>
         </div>
-        <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+        <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       </div>
 
       <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
@@ -716,7 +720,9 @@
         <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
-        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
     </div>
   </header>
@@ -781,7 +787,6 @@
       </div>
 
       <div class="tracks">
-        <!-- RE ACTIVE -->
         <article class="track">
           <div class="track-top">
             <div class="track-title">
@@ -809,7 +814,6 @@
           </div>
         </article>
 
-        <!-- RE PASSIVE -->
         <article class="track">
           <div class="track-top">
             <div class="track-title">
@@ -837,7 +841,6 @@
           </div>
         </article>
 
-        <!-- LOGISTICS FLEET -->
         <article class="track">
           <div class="track-top">
             <div class="track-title">
@@ -865,7 +868,6 @@
           </div>
         </article>
 
-        <!-- LOGISTICS FREIGHT -->
         <article class="track">
           <div class="track-top">
             <div class="track-title">
@@ -1080,6 +1082,8 @@
 
         <div class="notice" style="margin-top:12px;">
           <strong>Security:</strong> Payment verification + email delivery happens on the server (Supabase Edge Function). Your Paystack secret key is never exposed to the browser.
+          <br/><br/>
+          <strong>Important:</strong> Paystack inline works best on a real URL (http/https). If you opened this as a local file, run a local server (e.g. <span class="mono">python -m http.server</span>).
         </div>
       </div>
     </section>
@@ -1184,6 +1188,20 @@
     document.getElementById("year").textContent = new Date().getFullYear();
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    const SB_URL = (window.__SUPABASE_URL || "").trim();
+    const SB_ANON = (window.__SUPABASE_ANON_KEY || "").trim();
+    const FUNCTIONS_BASE = SB_URL ? `${SB_URL.replace(/\/$/, "")}/functions/v1` : "";
+    const PREMIUM_INVITE_URL = FUNCTIONS_BASE ? `${FUNCTIONS_BASE}/premium-invite` : "/functions/v1/premium-invite";
+    const PREMIUM_RESEND_URL = FUNCTIONS_BASE ? `${FUNCTIONS_BASE}/premium-resend` : "/functions/v1/premium-resend";
+
+    function fnHeaders(){
+      // Supabase Edge Functions typically accept apikey + Authorization
+      return {
+        "Content-Type":"application/json",
+        ...(SB_ANON ? { "apikey": SB_ANON, "Authorization": `Bearer ${SB_ANON}` } : {})
+      };
+    }
+
     function toast(msg){
       const t = document.getElementById("toast");
       if(!t) return;
@@ -1278,7 +1296,7 @@
     let __lastReceipt = null; // { ref, tier, amountNgn, email, name, phone, track, urgency }
 
     function setInviteStatus(kind, text){
-      if(!inviteStatus || !inviteDot || !inviteText) return;
+      if(!inviteStatus) return;
       inviteStatus.style.display = "flex";
       inviteDot.classList.remove("good","warn","bad");
       inviteDot.classList.add(kind === "good" ? "good" : kind === "warn" ? "warn" : "bad");
@@ -1286,10 +1304,10 @@
     }
 
     function showReceipt({ ref, tier, amountNgn }){
-      if(receiptRefEl) receiptRefEl.textContent = ref;
-      if(receiptTierEl) receiptTierEl.textContent = tier;
-      if(receiptAmtEl) receiptAmtEl.textContent = money(amountNgn);
-      if(receiptEl) receiptEl.classList.add("show");
+      receiptRefEl.textContent = ref;
+      receiptTierEl.textContent = tier;
+      receiptAmtEl.textContent = money(amountNgn);
+      receiptEl.classList.add("show");
     }
 
     async function copyToClipboard(txt){
@@ -1330,10 +1348,32 @@
     }
     window.shareOnWhatsApp = shareOnWhatsApp;
 
+    // ✅ Paystack loader: prevents “Opening Paystack…” hanging forever
+    function loadPaystackOnce(timeoutMs = 8000) {
+      if (window.PaystackPop?.setup) return Promise.resolve(true);
+
+      return new Promise((resolve) => {
+        const existing = document.querySelector('script[data-paystack="1"]');
+        if (existing) return resolve(!!window.PaystackPop?.setup);
+
+        const s = document.createElement("script");
+        s.src = "https://js.paystack.co/v1/inline.js";
+        s.async = true;
+        s.setAttribute("data-paystack", "1");
+
+        const t = setTimeout(() => resolve(false), timeoutMs);
+
+        s.onload = () => { clearTimeout(t); resolve(!!window.PaystackPop?.setup); };
+        s.onerror = () => { clearTimeout(t); resolve(false); };
+
+        document.head.appendChild(s);
+      });
+    }
+
     async function requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes }){
       setInviteStatus("warn", "Verifying payment and preparing your registration link…");
       try{
-        const res = await fetch(PREMIUM_INVITE_FN, {
+        const res = await fetch(PREMIUM_INVITE_URL, {
           method: "POST",
           headers: fnHeaders(),
           body: JSON.stringify({ paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes })
@@ -1346,21 +1386,21 @@
         setInviteStatus("good", "Registration link sent to your email. Check inbox/spam.");
         return { ok:true, data };
       } catch (e){
-        console.warn(e);
+        console.error(e);
         setInviteStatus("bad", "Network error. Payment was successful. Use Resend to send link.");
         return { ok:false, error: String(e||"") };
       }
     }
 
     async function resendInvite(){
-      const email = document.getElementById("p_email")?.value.trim() || "";
-      const tier = document.getElementById("p_tier")?.value || "Priority";
+      const email = document.getElementById("p_email").value.trim();
+      const tier = document.getElementById("p_tier").value;
       if(!email || !isValidEmail(email)) return toast("Enter a valid email first.");
 
       resendBtn.disabled = true;
       setInviteStatus("warn", "Resending your registration link…");
       try{
-        const res = await fetch(PREMIUM_RESEND_FN, {
+        const res = await fetch(PREMIUM_RESEND_URL, {
           method: "POST",
           headers: fnHeaders(),
           body: JSON.stringify({ email, tier })
@@ -1374,7 +1414,7 @@
         setInviteStatus("good", "Registration link resent. Check your email.");
         toast("Sent.");
       } catch (e){
-        console.warn(e);
+        console.error(e);
         setInviteStatus("bad", "Network error while resending.");
       }
       resendBtn.disabled = false;
@@ -1382,84 +1422,93 @@
     window.resendInvite = resendInvite;
 
     async function payWithPaystack(){
-      const name = document.getElementById("p_name")?.value.trim() || "";
-      const email = document.getElementById("p_email")?.value.trim() || "";
-      const phone = document.getElementById("p_phone")?.value.trim() || "";
-      const tier = document.getElementById("p_tier")?.value || "Priority";
-      const track = document.getElementById("p_track")?.value || "general";
-      const urgency = document.getElementById("p_urgency")?.value || "standard";
-      const notes = document.getElementById("p_notes")?.value.trim() || "";
+      const name = document.getElementById("p_name").value.trim();
+      const email = document.getElementById("p_email").value.trim();
+      const phone = document.getElementById("p_phone").value.trim();
+      const tier = document.getElementById("p_tier").value;
+      const track = document.getElementById("p_track").value;
+      const urgency = document.getElementById("p_urgency").value;
+      const notes = document.getElementById("p_notes").value.trim();
 
       if(!name) return toast("Full name is required.");
       if(!email || !isValidEmail(email)) return toast("Enter a valid email.");
       if(!PAYSTACK_PUBLIC_KEY) return toast("Paystack public key missing.");
 
+      // Important: Paystack inline hates file://
+      if(String(location.protocol).toLowerCase() === "file:"){
+        setInviteStatus("bad", "Open this page from http/https (not file://). Use a local server.");
+        return toast("Run a local server (python -m http.server) then open premium.html.");
+      }
+
       const amountNgn = TIER_AMOUNTS_NGN[tier] || 10000;
       const clientRef = makeClientRef();
-
-      if(!window.PaystackPop || typeof PaystackPop.setup !== "function"){
-        toast("Paystack script not loaded. Reload the page.");
-        return;
-      }
 
       payBtn.disabled = true;
       resendBtn.disabled = true;
       setInviteStatus("warn", "Opening Paystack…");
 
-      const handler = PaystackPop.setup({
-        key: PAYSTACK_PUBLIC_KEY,
-        email,
-        amount: Math.round(amountNgn * 100), // kobo
-        currency: "NGN",
-        ref: clientRef,
-        metadata: {
-          custom_fields: [
-            { display_name: "Customer Name", variable_name: "customer_name", value: name },
-            { display_name: "Phone", variable_name: "phone", value: phone },
-            { display_name: "Tier", variable_name: "tier", value: tier },
-            { display_name: "Track", variable_name: "track", value: track },
-            { display_name: "Urgency", variable_name: "urgency", value: urgency }
-          ],
-          notes
-        },
-        callback: async function(response){
-          const paystackRef = response?.reference || clientRef;
+      // Ensure Paystack is truly available (handles adblock delays)
+      const ok = await loadPaystackOnce();
+      if(!ok){
+        setInviteStatus("bad", "Paystack failed to load. Disable Adblock/Brave Shields and refresh.");
+        payBtn.disabled = false;
+        return;
+      }
 
-          __lastReceipt = { ref: paystackRef, tier, amountNgn, email, name, phone, track, urgency };
-          showReceipt({ ref: paystackRef, tier, amountNgn });
+      try{
+        const handler = window.PaystackPop.setup({
+          key: PAYSTACK_PUBLIC_KEY,
+          email,
+          amount: Math.round(amountNgn * 100),
+          currency: "NGN",
+          ref: clientRef,
+          metadata: {
+            custom_fields: [
+              { display_name: "Customer Name", variable_name: "customer_name", value: name },
+              { display_name: "Phone", variable_name: "phone", value: phone },
+              { display_name: "Tier", variable_name: "tier", value: tier },
+              { display_name: "Track", variable_name: "track", value: track },
+              { display_name: "Urgency", variable_name: "urgency", value: urgency }
+            ],
+            notes
+          },
+          callback: async (response) => {
+            const paystackRef = response?.reference || clientRef;
 
-          // server-side verify + email invite
-          const result = await requestInvite({
-            paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes
-          });
+            __lastReceipt = { ref: paystackRef, tier, amountNgn, email, name, phone, track, urgency };
+            showReceipt({ ref: paystackRef, tier, amountNgn });
 
-          resendBtn.disabled = false;
+            const result = await requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes });
+            resendBtn.disabled = false;
+            payBtn.disabled = false;
 
-          // Optional WhatsApp confirmation
-          openWA(buildMsg("Premium Payment Confirmation", {
-            Tier: tier,
-            Track: track,
-            Urgency: urgency,
-            Amount: money(amountNgn),
-            PaystackRef: paystackRef,
-            Email: email,
-            Name: name,
-            Phone: phone,
-            Notes: notes || "—",
-            Message: result.ok
-              ? "Hello Larmah, I’ve paid. Registration link should have been emailed to me."
-              : "Hello Larmah, I’ve paid. Please confirm my payment and send my registration link."
-          }));
+            openWA(buildMsg("Premium Payment Confirmation", {
+              Tier: tier,
+              Track: track,
+              Urgency: urgency,
+              Amount: money(amountNgn),
+              PaystackRef: paystackRef,
+              Email: email,
+              Name: name,
+              Phone: phone,
+              Notes: notes || "—",
+              Message: result.ok
+                ? "Hello Larmah, I’ve paid. Registration link should have been emailed to me."
+                : "Hello Larmah, I’ve paid. Please confirm my payment and send my registration link."
+            }));
+          },
+          onClose: () => {
+            setInviteStatus("bad", "Payment window closed.");
+            payBtn.disabled = false;
+          }
+        });
 
-          payBtn.disabled = false;
-        },
-        onClose: function(){
-          setInviteStatus("bad", "Payment window closed.");
-          payBtn.disabled = false;
-        }
-      });
-
-      handler.openIframe();
+        handler.openIframe();
+      }catch(err){
+        console.error(err);
+        setInviteStatus("bad", "Paystack could not open. Try another browser or disable blockers.");
+        payBtn.disabled = false;
+      }
     }
     window.payWithPaystack = payWithPaystack;
 
