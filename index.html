@@ -1,8 +1,8 @@
 <!-- =========================
      index.html (FULL — CLEAN + SYNCED)
      ✅ Syncs visual language with real-estate.html + logistics.html
-     ✅ Not rowdy: reduced repeated info, clear hierarchy
-     ✅ Mobile responsive, clean spacing, focused CTAs
+     ✅ Not rowdy: reduced repetition, clear hierarchy
+     ✅ Mobile responsive hero (tight spacing, responsive image height, stacked layout)
      ✅ Featured pulls from Supabase listings where featured=true and status=active
      ✅ Featured cards: description preview + View more modal (price/ref/actions)
      ✅ Quick request switcher (Real Estate / Logistics) without clutter
@@ -57,31 +57,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"Larmah Enterprise",
-    "url":"https://heylarmah.tech/",
-    "logo":"https://heylarmah.tech/assets/images/larmah-header.jpeg",
-    "sameAs":[
-      "https://instagram.com/hey_larmah",
-      "https://x.com/heylarmah_tech",
-      "https://t.me/heylarmah_tech",
-      "https://youtube.com/@heylarmah"
-    ],
-    "contactPoint":[{
-      "@type":"ContactPoint",
-      "email":"business@heylarmah.tech",
-      "telephone":"+2347063080605",
-      "contactType":"customer support",
-      "availableLanguage":["en"]
-    }],
-    "areaServed":"NG"
-  }
-  </script>
-
   <style>
     :root{
       --gold:#D4AF37;
@@ -92,7 +67,6 @@
       --ease: cubic-bezier(.2,.8,.2,1);
       --shadow: 0 18px 50px rgba(0,0,0,.42);
       --shadow2: 0 12px 34px rgba(0,0,0,.30);
-
       --safeB: env(safe-area-inset-bottom, 0px);
       --safeT: env(safe-area-inset-top, 0px);
       --safeL: env(safe-area-inset-left, 0px);
@@ -113,15 +87,11 @@
       --overlayBg: rgba(0,0,0,.55);
       --ctaBg: rgba(0,0,0,.28);
       --ctaLine: rgba(255,255,255,.12);
-      --iconBg: rgba(212,175,55,.10);
-      --iconLine: rgba(212,175,55,.25);
       --good: rgba(0,217,129,.95);
-      --bad: rgba(255,90,103,.95);
 
       --logoGlow: 0 0 22px rgba(212,175,55,.14);
       --logoRing: rgba(255,255,255,.12);
       --logoBg: rgba(255,255,255,.03);
-
       --focus: rgba(245,213,122,.28);
     }
 
@@ -139,10 +109,7 @@
       --overlayBg: rgba(0,0,0,.40);
       --ctaBg: rgba(255,255,255,.78);
       --ctaLine: rgba(10,14,26,.10);
-      --iconBg: rgba(212,175,55,.16);
-      --iconLine: rgba(212,175,55,.35);
       --good: rgba(0,140,90,.92);
-      --bad: rgba(200,34,60,.90);
 
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
@@ -150,7 +117,6 @@
       --logoGlow: 0 0 0 rgba(0,0,0,0);
       --logoRing: rgba(10,14,26,.10);
       --logoBg: rgba(255,255,255,.65);
-
       --focus: rgba(212,175,55,.26);
     }
 
@@ -213,7 +179,6 @@
     }
     .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
     .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
-
     .logo-wrap{
       position:relative;
       width:44px; height:44px;
@@ -228,16 +193,6 @@
       flex: 0 0 auto;
       isolation:isolate;
     }
-    .logo-wrap::after{
-      content:"";
-      position:absolute;
-      inset:-10px;
-      background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
-      filter: blur(12px);
-      opacity:.8;
-      pointer-events:none;
-      z-index:-1;
-    }
     .logo-wrap img{
       width:100%; height:100%;
       object-fit: cover;
@@ -246,9 +201,9 @@
       border: 1px solid var(--line2);
       background: var(--logoBg);
     }
-    .brand .btxt{ display:flex; flex-direction:column; line-height:1.05; gap:4px; min-width:0; }
-    .brand .bname{ font-weight: 950; letter-spacing:-0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .brand .bsub{ font-size:.86rem; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .btxt{ display:flex; flex-direction:column; line-height:1.05; gap:4px; min-width:0; }
+    .bname{ font-weight: 950; letter-spacing:-0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .bsub{ font-size:.86rem; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
     nav{ margin-left:auto; }
     nav ul{ display:flex; list-style:none; gap:18px; padding:0; margin:0; align-items:center; }
@@ -292,7 +247,7 @@
       .header-actions{ margin-left:auto; }
       body{ padding-bottom: calc(88px + var(--safeB)); }
       .brand{ min-width: 0; }
-      .brand .bsub{ display:none; }
+      .bsub{ display:none; }
       .logo-wrap{ width:40px; height:40px; }
       .icon-btn{ width:40px; height:40px; }
     }
@@ -363,8 +318,10 @@
     .btn.ghost{ background: transparent; border-color: var(--line2); }
     .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
 
-    /* Hero */
+    /* Page */
     .page-wrap{ padding: 18px 0 0; }
+
+    /* ===== HERO (MOBILE RESPONSIVE) ===== */
     .hero{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -391,13 +348,25 @@
       grid-template-columns: 1.1fr .9fr;
       align-items:start;
     }
-    @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
+    @media (max-width: 980px){
+      .hero-grid{
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
+      /* keep content first for conversion, but still clean */
+      /* if you prefer image first on mobile, uncomment:
+      .hero-media{ order:-1; }
+      */
+    }
+    @media (max-width: 520px){
+      .hero-grid{ padding: 12px; gap: 12px; }
+    }
 
     .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
     .kicker .dot{ opacity:.65; }
     h1{
       margin: 6px 0 10px;
-      font-size: clamp(2.0rem, 4vw, 2.9rem);
+      font-size: clamp(1.78rem, 6.2vw, 2.8rem);
       line-height: 1.06;
       letter-spacing:-0.6px;
     }
@@ -413,29 +382,38 @@
       font-size: 1.02rem;
       line-height: 1.55;
     }
-    .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
-    @media (max-width: 520px){ .hero-actions{ flex-direction:column; } .hero-actions .btn{ width:100%; } }
+    @media (max-width: 520px){
+      .lead{ font-size: .98rem; }
+    }
 
-    /* hero media */
+    .hero-actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top: 12px;
+    }
+    @media (max-width: 520px){
+      .hero-actions{ flex-direction:column; }
+      .hero-actions .btn{ width:100%; }
+    }
+
     .hero-media{
       border-radius: 14px;
       overflow:hidden;
       border: 1px solid var(--line);
       background: var(--panel);
       position:relative;
-      min-height: 280px;
       isolation:isolate;
     }
     .hero-media img{
       width:100%;
-      height: 280px;
+      height: clamp(220px, 42vw, 320px); /* ✅ responsive height */
       object-fit: cover;
       display:block;
       opacity:.94;
       transform: scale(1.01);
       transition: opacity .55s var(--ease), transform .9s var(--ease);
     }
-    @media (max-width: 620px){ .hero-media img{ height: 240px; } }
     .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
     .hero-media .cap{
       position:absolute; left:12px; right:12px; bottom:10px;
@@ -525,10 +503,15 @@
       outline:none;
       font-family: inherit;
       font-size: 16px; /* prevent iOS zoom */
+      width:100%;
+      max-width:100%;
     }
     textarea{ min-height: 92px; resize: vertical; }
     .form-actions{ margin-top: 12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-    @media (max-width: 520px){ .form-actions{ flex-direction:column; } .form-actions .btn{ width:100%; } }
+    @media (max-width: 520px){
+      .form-actions{ flex-direction:column; }
+      .form-actions .btn{ width:100%; }
+    }
 
     /* Sections */
     .section{ padding: 18px 0; }
@@ -539,7 +522,7 @@
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
-    /* Featured grid */
+    /* Featured */
     .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
@@ -550,284 +533,13 @@
       background: var(--panel);
       overflow:hidden;
       box-shadow: var(--shadow2);
-      transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease), filter .18s var(--ease);
     }
-    .card:hover{
-      transform: translateY(-2px);
-      border-color: color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
-      background: color-mix(in oklab, var(--panel) 94%, white 6%);
-      filter: brightness(1.02);
-    }
-
-    /* featured media carousel */
-    .media{
-      width: calc(100% - 24px);
-      height: 190px;
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid var(--line2);
-      background: color-mix(in oklab, var(--bg2) 60%, #000 40%);
-      margin: 12px 12px 0;
-      position:relative;
-      isolation:isolate;
-      user-select:none;
-    }
-    .media img{
-      width:100%; height:100%;
-      object-fit:cover;
-      display:block;
-      transform: scale(1.01);
-      opacity:.95;
-      transition: opacity .45s var(--ease), transform .7s var(--ease);
-    }
-    .media.is-fading img{ opacity:.18; transform: scale(1.03); }
-    .media::after{
-      content:"";
-      position:absolute; inset:0;
-      background: linear-gradient(to top, rgba(0,0,0,.32), rgba(0,0,0,0) 55%);
-      pointer-events:none;
-      z-index:1;
-    }
-    .media-nav{
-      position:absolute; inset:0;
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 0 10px;
-      pointer-events:none;
-      z-index:2;
-    }
-    .media-btn{
-      width:34px; height:34px; border-radius:12px;
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(255,255,255,0.14);
-      display:grid; place-items:center;
-      color:#fff;
-      pointer-events:auto;
-      cursor:pointer;
-      backdrop-filter: blur(6px);
-      transition: transform .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease);
-    }
-    .media-btn:hover{
-      background: rgba(0,0,0,0.55);
-      border-color: rgba(212,175,55,.30);
-      transform: translateY(-1px);
-    }
-    .media-dots{
-      position:absolute; left:0; right:0; bottom:10px;
-      display:flex; justify-content:center; gap:6px;
-      pointer-events:none;
-      z-index:2;
-    }
-    .media-dot{
-      width:7px; height:7px; border-radius:999px;
-      background: rgba(255,255,255,0.35);
-      border: 1px solid rgba(255,255,255,0.25);
-    }
-    .media-dot.active{ background: rgba(255,255,255,0.92); }
-
-    .card-body{ padding: 12px; }
-    .title{
-      font-weight: 950;
-      margin: 2px 0 8px;
-      letter-spacing:-0.2px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .desc{
-      margin:0;
-      color: var(--muted);
-      line-height:1.55;
-      font-size: .96rem;
-      display:-webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow:hidden;
-    }
-    .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
-    .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px; }
-    .chip{
-      display:inline-flex; gap:8px; align-items:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 82%, transparent);
-      font-weight: 850;
-      font-size: .84rem;
-    }
-
-    .more-row{ display:flex; justify-content:flex-end; margin-top: 8px; }
-    .link-btn{
-      border: 1px solid var(--line2);
-      background: transparent;
-      color: color-mix(in oklab, var(--text) 90%, transparent);
-      font-weight: 950;
-      border-radius: 12px;
-      padding: 8px 10px;
-      cursor:pointer;
-      transition: transform .16s var(--ease), filter .16s var(--ease), border-color .16s var(--ease);
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-    }
-    .link-btn:hover{
-      transform: translateY(-1px);
-      filter: brightness(1.04);
-      border-color: color-mix(in oklab, var(--gold) 30%, var(--line2) 70%);
-      color: var(--gold2);
-    }
-
-    .actions-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
-    .actions-row .btn{ flex: 1; }
-    @media (max-width: 520px){ .actions-row .btn{ width:100%; flex:unset; } }
-
-    .star{
-      display:inline-flex; gap:6px; align-items:center;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(212,175,55,.28);
-      background: rgba(212,175,55,.10);
-      color: var(--gold2);
-      font-weight: 900;
-      font-size: .78rem;
-      letter-spacing: .02em;
-    }
-
     .notice{
       border-radius: 16px;
       padding: 12px;
       border: 1px solid var(--line);
       background: var(--panel2);
       color: var(--muted);
-    }
-    .notice strong{ color: var(--text); }
-
-    /* Modal (synced style) */
-    .modalOverlay{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.56);
-      display:none;
-      align-items:flex-end;
-      justify-content:center;
-      z-index: 140;
-      padding: 14px;
-    }
-    .modalOverlay.open{ display:flex; }
-    .modal{
-      width: min(860px, 100%);
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 86%, #000 14%);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .modalHead{
-      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
-      padding: 12px 12px;
-      border-bottom: 1px solid var(--line2);
-      background: color-mix(in oklab, var(--panel2) 65%, transparent);
-    }
-    .modalTitle{ font-weight: 950; letter-spacing:-0.2px; line-height:1.15; margin:0; font-size: 1.08rem; }
-    .modalMeta{ margin-top: 8px; display:flex; gap:8px; flex-wrap:wrap; }
-    .modalBody{ padding: 12px; max-height: min(65vh, 520px); overflow:auto; }
-    .modalDesc{
-      white-space: pre-wrap;
-      line-height: 1.65;
-      color: color-mix(in oklab, var(--text) 92%, transparent);
-      font-size: 1.0rem;
-      border-radius: 14px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      padding: 12px;
-      margin:0;
-    }
-    .modalFoot{
-      padding: 12px;
-      border-top: 1px solid var(--line2);
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      background: color-mix(in oklab, var(--panel2) 65%, transparent);
-    }
-    .modalFoot .left, .modalFoot .right{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-
-    .copy-btn{
-      border: 1px dashed var(--line);
-      background: transparent;
-      color: var(--muted);
-      font-weight: 950;
-      border-radius: 12px;
-      padding: 10px 12px;
-      cursor:pointer;
-    }
-    .copy-btn:hover{ color: var(--gold2); border-color: rgba(212,175,55,.35); }
-
-    /* Footer (same family as other pages) */
-    footer{
-      margin-top: 18px;
-      border-top: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
-    }
-    .footer-cta{
-      margin-top: 14px;
-      border-radius: 20px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
-        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
-        var(--panel2);
-      box-shadow: var(--shadow);
-      padding: 14px;
-      display:flex; gap:12px;
-      align-items:center; justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
-    .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
-
-    .footer-grid{
-      display:grid;
-      gap: 16px;
-      padding: 16px 0;
-      grid-template-columns: 1.35fr 1fr 1fr;
-    }
-    @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
-
-    .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
-    .footer-links a:hover{ color: var(--gold); }
-
-    .contact-stack{ display:grid; gap: 10px; }
-    .contact-chip{
-      display:flex; gap:10px; align-items:flex-start;
-      padding: 10px 12px; border-radius: 14px;
-      border: 1px solid var(--line); background: var(--panel2);
-    }
-    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
-    .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
-    .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
-
-    .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
-    .social a{
-      width: 42px; height: 42px;
-      display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 12px; border: 1px solid var(--line);
-      background: var(--panel2); color: var(--text);
-    }
-    .social a:hover{
-      color:#111; background: var(--gold);
-      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-    }
-
-    .footer-bottom{
-      border-top: 1px solid var(--line2);
-      padding: 12px 0 16px;
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px; flex-wrap:wrap;
-      color: var(--muted2);
-      font-size: .9rem;
     }
 
     /* Floating WhatsApp */
@@ -869,13 +581,6 @@
     .wa-btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
     .wa-btn i{ font-size: 20px; }
     @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
-
-    /* Small spacing polish */
-    @media (max-width: 620px){
-      .hero-grid{ padding: 12px; }
-      h1{ font-size: clamp(1.72rem, 7vw, 2.25rem); line-height: 1.05; }
-      .lead{ font-size: .98rem; }
-    }
   </style>
 </head>
 
@@ -951,7 +656,6 @@
   </header>
 
   <main id="main" class="container page-wrap" tabindex="-1">
-    <!-- HOME -->
     <section id="home" class="hero" aria-label="Home hero">
       <div class="hero-grid">
         <div>
@@ -983,7 +687,6 @@
           </div>
 
           <div class="form-wrap">
-            <!-- Real Estate quick form -->
             <div class="form is-active" id="formRE" role="tabpanel" aria-labelledby="tabRE">
               <div class="form-grid">
                 <div class="field" style="grid-column: span 2;">
@@ -1019,11 +722,10 @@
                 <button class="btn solid" type="button" onclick="submitQuickRE()">
                   <i class="fa-brands fa-whatsapp"></i> Request Availability
                 </button>
-                <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-arrow-right"></i> View All Listings</a>
+                <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-arrow-right"></i> View All</a>
               </div>
             </div>
 
-            <!-- Logistics quick form -->
             <div class="form" id="formLG" role="tabpanel" aria-labelledby="tabLG">
               <div class="form-grid">
                 <div class="field" style="grid-column: span 4;">
@@ -1057,7 +759,7 @@
                 <button class="btn solid" type="button" onclick="submitQuickLG()">
                   <i class="fa-brands fa-whatsapp"></i> Request Quote
                 </button>
-                <a class="btn primary" href="logistics.html"><i class="fa-solid fa-arrow-right"></i> View All Services</a>
+                <a class="btn primary" href="logistics.html"><i class="fa-solid fa-arrow-right"></i> View All</a>
               </div>
             </div>
           </div>
@@ -1074,7 +776,6 @@
       </div>
     </section>
 
-    <!-- Featured -->
     <section class="section" id="featured" aria-label="Featured listings">
       <div class="section-head">
         <div>
@@ -1092,7 +793,6 @@
       </div>
     </section>
 
-    <!-- About -->
     <section class="section" id="about" aria-label="About">
       <div class="section-head">
         <div>
@@ -1118,132 +818,9 @@
     </section>
   </main>
 
-  <!-- ✅ Featured View More Modal (synced with other pages) -->
-  <div class="modalOverlay" id="descOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Item details">
-      <div class="modalHead">
-        <div style="min-width:0;">
-          <h3 class="modalTitle" id="descTitle">Item</h3>
-          <div class="modalMeta" id="descMeta"></div>
-        </div>
-        <button class="icon-btn" type="button" onclick="closeDescModal()" aria-label="Close">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="modalBody">
-        <p class="modalDesc" id="descBody"></p>
-      </div>
-
-      <div class="modalFoot">
-        <div class="left">
-          <button class="copy-btn" type="button" onclick="copyDescRef()">
-            <i class="fa-regular fa-copy"></i> Copy Ref
-          </button>
-        </div>
-        <div class="right">
-          <button class="btn primary" type="button" onclick="closeDescModal()">
-            <i class="fa-solid fa-check"></i> Done
-          </button>
-          <button class="btn solid" type="button" onclick="descModalEnquire()">
-            <i class="fa-brands fa-whatsapp"></i> Enquire
-          </button>
-          <a class="btn primary" id="descGoPage" href="real-estate.html">
-            <i class="fa-solid fa-arrow-right"></i> Open Page
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="footer-cta">
-        <div>
-          <h3>Verified stays + trusted movement — in one WhatsApp thread.</h3>
-          <p>Confirm availability, request a quote, and coordinate logistics — fast.</p>
-        </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-            <i class="fa-brands fa-whatsapp"></i> WhatsApp
-          </button>
-          <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
-        </div>
-      </div>
-
-      <div class="footer-grid">
-        <div>
-          <div class="brand" style="gap:12px">
-            <div class="logo-wrap" aria-hidden="true">
-              <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
-            </div>
-            <div class="btxt">
-              <div class="bname">Larmah Enterprise</div>
-              <div class="bsub">Connecting People, Business & Possibilities • RC: 9127113</div>
-            </div>
-          </div>
-
-          <div class="social" aria-label="Social links">
-            <a href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://x.com/heylarmah_tech" aria-label="X" title="X"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Quick Links</div>
-          <div class="footer-links">
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="real-estate.html">Real Estate</a>
-            <a href="logistics.html">Logistics</a>
-            <a href="premium.html">Premium</a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Contact</div>
-
-          <div class="contact-stack">
-            <div class="contact-chip">
-              <i class="fa-brands fa-whatsapp"></i>
-              <div>
-                <div class="txt">+234 706 308 0605</div>
-                <div class="sub">WhatsApp-first support</div>
-              </div>
-            </div>
-
-            <div class="contact-chip">
-              <i class="fa-regular fa-envelope"></i>
-              <div>
-                <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
-                <div class="sub">Business enquiries</div>
-              </div>
-            </div>
-
-            <div class="contact-chip">
-              <i class="fa-solid fa-location-dot"></i>
-              <div>
-                <div class="txt">Lagos, Nigeria</div>
-                <div class="sub">Serving Nigeria nationwide</div>
-              </div>
-            </div>
-          </div>
-
-          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-              <i class="fa-brands fa-whatsapp"></i> Chat Now
-            </button>
-            <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Book Dispatch</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
-      </div>
+  <footer style="margin-top:18px; border-top:1px solid var(--line); background: color-mix(in oklab, var(--bg2) 80%, #000 20%);">
+    <div class="container" style="padding:16px 0; color:var(--muted2);">
+      © <span id="year"></span> Larmah Enterprise. All rights reserved.
     </div>
   </footer>
 
@@ -1259,10 +836,8 @@
   </div>
 
   <script>
-    // ===== basics
     document.getElementById("year").textContent = new Date().getFullYear();
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return window.LARMAH.buildMessage(title, data);
@@ -1279,7 +854,7 @@
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
 
-    // ===== theme (sync)
+    // Theme (sync)
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
@@ -1301,24 +876,18 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // ===== mobile menu
+    // Mobile menu
     const overlay = document.getElementById("overlay");
     function toggleMenu(open){
       overlay.classList.toggle("open", !!open);
       overlay.setAttribute("aria-hidden", open ? "false" : "true");
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
+    window.toggleMenu = toggleMenu;
+    window.toggleTheme = toggleTheme;
 
-    // ===== section nav active (home/about)
-    function syncNav(){
-      const h = (location.hash || "#home").toLowerCase();
-      document.getElementById("navHome")?.classList.toggle("is-active", h === "#home" || h === "" || h === "#");
-      document.getElementById("navAbout")?.classList.toggle("is-active", h === "#about");
-    }
-    window.addEventListener("hashchange", syncNav);
-    document.addEventListener("DOMContentLoaded", syncNav);
-
-    // ===== hero slideshow (less noisy)
+    // Hero slideshow
+    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1328,8 +897,7 @@
     const HERO_SLIDES = [
       { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
       { img:"https://source.unsplash.com/1600x1000/?real-estate,lagos,building&sig=612", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clear confirmations." },
-      { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=710", icon:"fa-truck-fast", label:"Logistics", sub:"Dispatch, pickups and coordination." },
-      { img:"https://source.unsplash.com/1600x1000/?cargo,truck,highway&sig=903", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
+      { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=710", icon:"fa-truck-fast", label:"Logistics", sub:"Dispatch, pickups and coordination." }
     ];
     let heroIdx = 0;
 
@@ -1357,7 +925,7 @@
       setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
     } else setHero(0);
 
-    // ===== quick mode
+    // Mode switch
     const tabRE = document.getElementById("tabRE");
     const tabLG = document.getElementById("tabLG");
     const formRE = document.getElementById("formRE");
@@ -1410,274 +978,18 @@
     window.submitQuickRE = submitQuickRE;
     window.submitQuickLG = submitQuickLG;
 
-    // ===== featured loader + carousel + modal (synced)
-    const __FEAT = { items: [], imgUrls:{}, imgIdx:{}, timers:{}, modal:{ id:null, title:"", desc:"", price:"", location:"", category:"", ref:"", featured:false, pageHref:"real-estate.html" } };
-
-    function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
-    function formatPrice(raw){ const s = safeText(raw).trim(); return s ? s : "Contact for quote"; }
-    function listingRef(id){ return `WEB-${id}`; } // generic for featured; keep simple
-
-    function getImages(it){
-      const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
-      if(arr.length) return arr.slice(0, 6);
-      if(it.image_url) return [it.image_url];
-      return ["assets/images/larmah-header.jpeg"];
+    // active nav
+    function syncNav(){
+      const h = (location.hash || "#home").toLowerCase();
+      document.getElementById("navHome")?.classList.toggle("is-active", h === "#home" || h === "" || h === "#");
+      document.getElementById("navAbout")?.classList.toggle("is-active", h === "#about");
     }
-    function initImagesFor(it){
-      const id = String(it.id);
-      __FEAT.imgUrls[id] = getImages(it);
-      __FEAT.imgIdx[id] = __FEAT.imgIdx[id] ?? 0;
-    }
-    function clearFeatTimers(){
-      for(const k in __FEAT.timers){ try{ clearInterval(__FEAT.timers[k]); }catch{} }
-      __FEAT.timers = {};
-    }
-    function setFeatImage(id){
-      const img = document.getElementById(`ft-img-${id}`);
-      if(!img) return;
-      const urls = __FEAT.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
-      const idx = __FEAT.imgIdx[id] || 0;
-      img.src = urls[idx] || urls[0] || "assets/images/larmah-header.jpeg";
-      const dots = document.getElementById(`ft-dots-${id}`);
-      if(dots) dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
-    }
-    function cycleFeatImage(id, dir){
-      const urls = __FEAT.imgUrls[id] || [];
-      if(urls.length <= 1) return;
-      const max = urls.length;
-      const cur = __FEAT.imgIdx[id] || 0;
-      __FEAT.imgIdx[id] = (cur + dir + max) % max;
-      setFeatImage(id);
-    }
-    window.cycleFeatImage = cycleFeatImage;
-
-    function autoRotateFeat(id){
-      if(reduceMotion) return;
-      const urls = __FEAT.imgUrls[id] || [];
-      if(urls.length <= 1) return;
-      __FEAT.timers[id] = setInterval(() => {
-        __FEAT.imgIdx[id] = ((__FEAT.imgIdx[id]||0) + 1) % urls.length;
-        const media = document.getElementById(`ft-media-${id}`);
-        if(media){
-          media.classList.add("is-fading");
-          setTimeout(() => { setFeatImage(id); media.classList.remove("is-fading"); }, 180);
-        } else setFeatImage(id);
-      }, 5000);
-    }
-
-    function inferCategory(it){
-      // use category column to decide link target
-      const c = safeText(it.category).toLowerCase();
-      if(c.includes("logistics")) return "Logistics";
-      if(c.includes("real-estate") || c.includes("real estate")) return "Real Estate";
-      // fallback from text
-      const hay = (safeText(it.title)+" "+safeText(it.description)).toLowerCase();
-      if(hay.includes("dispatch") || hay.includes("haulage") || hay.includes("pickup")) return "Logistics";
-      return "Real Estate";
-    }
-    function inferLocation(it){
-      return safeText(it.location || it.coverage || it.area || it.city || it.state || "Nigeria").trim() || "Nigeria";
-    }
-
-    function openFeatModalById(id){
-      const it = (__FEAT.items||[]).find(x => String(x.id)===String(id));
-      if(!it) return;
-
-      const cat = inferCategory(it);
-      __FEAT.modal.id = String(it.id);
-      __FEAT.modal.title = safeText(it.title) || "Featured";
-      __FEAT.modal.desc = safeText(it.description) || "No description provided.";
-      __FEAT.modal.price = formatPrice(it.price);
-      __FEAT.modal.location = inferLocation(it);
-      __FEAT.modal.category = cat;
-      __FEAT.modal.ref = `WEB-${cat === "Logistics" ? "LG" : "RE"}-${it.id}`;
-      __FEAT.modal.featured = it.featured === true;
-      __FEAT.modal.pageHref = (cat === "Logistics") ? "logistics.html" : "real-estate.html";
-
-      document.getElementById("descTitle").textContent = __FEAT.modal.title;
-      document.getElementById("descBody").textContent = __FEAT.modal.desc;
-      const meta = document.getElementById("descMeta");
-      meta.innerHTML = `
-        <span class="chip"><i class="fa-solid fa-naira-sign" style="color:var(--gold)"></i> ${esc(__FEAT.modal.price)}</span>
-        <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(__FEAT.modal.location)}</span>
-        <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(__FEAT.modal.category)}</span>
-        <span class="chip"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> ${esc(__FEAT.modal.ref)}</span>
-        ${__FEAT.modal.featured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
-      `;
-      const go = document.getElementById("descGoPage");
-      go.href = __FEAT.modal.pageHref;
-
-      const ov = document.getElementById("descOverlay");
-      ov.classList.add("open");
-      ov.setAttribute("aria-hidden","false");
-      document.body.style.overflow = "hidden";
-      setTimeout(() => ov.querySelector("button.icon-btn")?.focus?.(), 50);
-    }
-    function closeDescModal(){
-      const ov = document.getElementById("descOverlay");
-      ov.classList.remove("open");
-      ov.setAttribute("aria-hidden","true");
-      document.body.style.overflow = "";
-    }
-    function copyDescRef(){
-      const txt = __FEAT.modal.ref || "";
-      if(!txt) return;
-      navigator.clipboard?.writeText(txt).then(
-        () => {},
-        () => {}
-      );
-    }
-    function descModalEnquire(){
-      openWA(buildMsg("Featured Enquiry", {
-        Ref: __FEAT.modal.ref,
-        Title: __FEAT.modal.title,
-        Category: __FEAT.modal.category,
-        Location: __FEAT.modal.location,
-        Price: __FEAT.modal.price,
-        Message: "Hello Larmah, I’m interested in this featured item. Please confirm availability/cost and next steps."
-      }));
-    }
-    window.closeDescModal = closeDescModal;
-    window.copyDescRef = copyDescRef;
-    window.descModalEnquire = descModalEnquire;
-
-    document.getElementById("descOverlay")?.addEventListener("click", (e) => {
-      if(e.target && e.target.id === "descOverlay") closeDescModal();
-    });
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape"){
-        const ov = document.getElementById("descOverlay");
-        if(ov?.classList?.contains("open")) closeDescModal();
-      }
-    });
-
-    function featCardHTML(it){
-      const id = String(it.id);
-      initImagesFor(it);
-      const urls = __FEAT.imgUrls[id] || [];
-      const hasMany = urls.length > 1;
-
-      const title = safeText(it.title) || "Featured";
-      const desc = safeText(it.description) || "Featured item.";
-      const price = formatPrice(it.price);
-      const locationTxt = inferLocation(it);
-      const categoryTxt = inferCategory(it);
-      const isFeatured = it.featured === true;
-
-      return `
-        <article class="card" aria-label="${esc(title)}">
-          <div class="media" id="ft-media-${id}">
-            <img id="ft-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
-                 alt="${esc(title)}" loading="lazy" decoding="async"
-                 onerror="this.src='assets/images/larmah-header.jpeg'">
-
-            ${hasMany ? `
-              <div class="media-nav">
-                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleFeatImage('${id}', -1)">
-                  <i class="fa-solid fa-chevron-left"></i>
-                </button>
-                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleFeatImage('${id}', 1)">
-                  <i class="fa-solid fa-chevron-right"></i>
-                </button>
-              </div>
-              <div class="media-dots" id="ft-dots-${id}" aria-hidden="true">
-                ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
-              </div>
-            ` : ``}
-          </div>
-
-          <div class="card-body">
-            <div class="title">
-              ${esc(title)}
-              ${isFeatured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
-            </div>
-
-            <p class="desc">${esc(desc)}</p>
-
-            <div class="more-row">
-              <button class="link-btn" type="button" onclick="openFeatModalById('${id}')">
-                <i class="fa-regular fa-file-lines"></i> View more
-              </button>
-            </div>
-
-            <div class="price">${esc(price)}</div>
-
-            <div class="meta-row">
-              <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(locationTxt)}</span>
-              <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(categoryTxt)}</span>
-            </div>
-
-            <div class="actions-row">
-              <button class="btn small solid" type="button" onclick="openWA(buildMsg('Enquiry', { Title:'${esc(title)}', Category:'${esc(categoryTxt)}', Location:'${esc(locationTxt)}', Message:'Hello Larmah, please confirm this item.' }))">
-                <i class="fa-brands fa-whatsapp"></i> Enquire
-              </button>
-              <a class="btn small primary" href="${categoryTxt === "Logistics" ? "logistics.html" : "real-estate.html"}">
-                <i class="fa-solid fa-arrow-right"></i> Open
-              </a>
-            </div>
-          </div>
-        </article>
-      `;
-    }
-
-    async function loadFeatured(){
-      const mount = document.getElementById("feat_mount");
-      mount.innerHTML = `<div class="notice">Loading featured items…</div>`;
-      clearFeatTimers();
-
-      // wait for app.js client or fallback
-      const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
-      if(!sb){
-        // try a short wait
-        for(let i=0;i<16;i++){
-          await new Promise(r=>setTimeout(r, 180));
-          const s2 = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
-          if(s2){ return loadFeatured(); }
-        }
-        mount.innerHTML = `<div class="notice"><strong>Could not connect.</strong> Please refresh.</div>`;
-        return;
-      }
-
-      try{
-        const { data, error } = await sb
-          .from("listings")
-          .select("id,title,description,price,image_url,image_urls,location,coverage,area,city,state,category,status,featured,created_at")
-          .eq("status","active")
-          .eq("featured", true)
-          .order("created_at", { ascending:false })
-          .limit(12);
-
-        if(error) throw error;
-
-        __FEAT.items = data || [];
-        if(!__FEAT.items.length){
-          mount.innerHTML = `<div class="notice"><strong>No featured items yet.</strong> Mark items as featured in Admin to show here.</div>`;
-          return;
-        }
-
-        mount.innerHTML = `<div class="grid">${__FEAT.items.slice(0,6).map(featCardHTML).join("")}</div>`;
-        __FEAT.items.slice(0,6).forEach(it => autoRotateFeat(String(it.id)));
-      }catch(e){
-        console.error(e);
-        mount.innerHTML = `<div class="notice"><strong>Could not load featured.</strong> Please refresh.</div>`;
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      loadFeatured();
-    });
+    window.addEventListener("hashchange", syncNav);
+    document.addEventListener("DOMContentLoaded", syncNav);
 
     // expose
-    window.toggleMenu = toggleMenu;
-    window.toggleTheme = toggleTheme;
     window.openWA = openWA;
     window.buildMsg = buildMsg;
   </script>
-
-  <!-- Keep only one CF beacon -->
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
-    crossorigin="anonymous"></script>
 </body>
 </html>
