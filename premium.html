@@ -1,9 +1,12 @@
 <!-- =========================
-     premium.html (UPGRADED v2)
+     premium.html (UPGRADED v2) — FIXED
      - Premium Investment Tracks + Concierge
-     - Same styling language as index/real-estate/logistics
      - Paystack: pay -> server verifies -> unique invite link emailed
-     - Only Premium users can create accounts (via invite link)
+     - FIXES:
+       ✅ Added missing scripts: supabase-js, app.js, paystack inline
+       ✅ Removed broken pasted snippet with "{ ... }"
+       ✅ Removed wrong re-definition of PREMIUM_INVITE_FN / PREMIUM_RESEND_FN
+       ✅ All function calls now use full Supabase Functions URL + required headers (fnHeaders())
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -47,24 +50,29 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- Supabase + app.js -->
+  <!-- ✅ Supabase config + Function endpoints -->
   <script>
-  // Use the same config you use everywhere else
-  const SUPABASE_URL = window.__SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
-  const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+    // Use the same config you use everywhere else
+    const SUPABASE_URL = window.__SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
+    const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
 
-  const FUNCTIONS_BASE = `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1`;
-  const PREMIUM_INVITE_FN = `${FUNCTIONS_BASE}/premium-invite`;
-  const PREMIUM_RESEND_FN = `${FUNCTIONS_BASE}/premium-resend`;
+    const FUNCTIONS_BASE = `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1`;
+    const PREMIUM_INVITE_FN = `${FUNCTIONS_BASE}/premium-invite`;
+    const PREMIUM_RESEND_FN = `${FUNCTIONS_BASE}/premium-resend`;
 
-  function fnHeaders(){
-    return {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_ANON_KEY,
-      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-    };
-  }
+    function fnHeaders(){
+      return {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+      };
+    }
   </script>
+
+  <!-- ✅ Supabase SDK + your shared app.js + Paystack inline -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/js/app.js"></script>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 
   <style>
     :root{
@@ -556,7 +564,7 @@
     .dot.warn{ background: var(--warn); border-color: color-mix(in oklab, var(--warn) 40%, var(--line2) 60%); }
     .dot.bad{ background: var(--bad); border-color: color-mix(in oklab, var(--bad) 40%, var(--line2) 60%); }
 
-    /* Footer (same as your current style) */
+    /* Footer */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
@@ -1249,10 +1257,6 @@
     // ===== Paystack
     const PAYSTACK_PUBLIC_KEY = "pk_live_69041d3bd5d37d2d88c5c3fe64de4c385e5f025b";
 
-    // Supabase Edge Functions (server verifies payment + emails unique invite)
-    const PREMIUM_INVITE_FN = "/functions/v1/premium-invite";
-    const PREMIUM_RESEND_FN = "/functions/v1/premium-resend";
-
     function makeClientRef(){
       const t = Date.now().toString().slice(-8);
       const r = Math.random().toString(16).slice(2, 8).toUpperCase();
@@ -1274,6 +1278,7 @@
     let __lastReceipt = null; // { ref, tier, amountNgn, email, name, phone, track, urgency }
 
     function setInviteStatus(kind, text){
+      if(!inviteStatus || !inviteDot || !inviteText) return;
       inviteStatus.style.display = "flex";
       inviteDot.classList.remove("good","warn","bad");
       inviteDot.classList.add(kind === "good" ? "good" : kind === "warn" ? "warn" : "bad");
@@ -1281,10 +1286,10 @@
     }
 
     function showReceipt({ ref, tier, amountNgn }){
-      receiptRefEl.textContent = ref;
-      receiptTierEl.textContent = tier;
-      receiptAmtEl.textContent = money(amountNgn);
-      receiptEl.classList.add("show");
+      if(receiptRefEl) receiptRefEl.textContent = ref;
+      if(receiptTierEl) receiptTierEl.textContent = tier;
+      if(receiptAmtEl) receiptAmtEl.textContent = money(amountNgn);
+      if(receiptEl) receiptEl.classList.add("show");
     }
 
     async function copyToClipboard(txt){
@@ -1330,7 +1335,7 @@
       try{
         const res = await fetch(PREMIUM_INVITE_FN, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: fnHeaders(),
           body: JSON.stringify({ paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes })
         });
         const data = await res.json().catch(() => ({}));
@@ -1341,14 +1346,15 @@
         setInviteStatus("good", "Registration link sent to your email. Check inbox/spam.");
         return { ok:true, data };
       } catch (e){
+        console.warn(e);
         setInviteStatus("bad", "Network error. Payment was successful. Use Resend to send link.");
         return { ok:false, error: String(e||"") };
       }
     }
 
     async function resendInvite(){
-      const email = document.getElementById("p_email").value.trim();
-      const tier = document.getElementById("p_tier").value;
+      const email = document.getElementById("p_email")?.value.trim() || "";
+      const tier = document.getElementById("p_tier")?.value || "Priority";
       if(!email || !isValidEmail(email)) return toast("Enter a valid email first.");
 
       resendBtn.disabled = true;
@@ -1356,7 +1362,7 @@
       try{
         const res = await fetch(PREMIUM_RESEND_FN, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: fnHeaders(),
           body: JSON.stringify({ email, tier })
         });
         const data = await res.json().catch(() => ({}));
@@ -1368,6 +1374,7 @@
         setInviteStatus("good", "Registration link resent. Check your email.");
         toast("Sent.");
       } catch (e){
+        console.warn(e);
         setInviteStatus("bad", "Network error while resending.");
       }
       resendBtn.disabled = false;
@@ -1375,13 +1382,13 @@
     window.resendInvite = resendInvite;
 
     async function payWithPaystack(){
-      const name = document.getElementById("p_name").value.trim();
-      const email = document.getElementById("p_email").value.trim();
-      const phone = document.getElementById("p_phone").value.trim();
-      const tier = document.getElementById("p_tier").value;
-      const track = document.getElementById("p_track").value;
-      const urgency = document.getElementById("p_urgency").value;
-      const notes = document.getElementById("p_notes").value.trim();
+      const name = document.getElementById("p_name")?.value.trim() || "";
+      const email = document.getElementById("p_email")?.value.trim() || "";
+      const phone = document.getElementById("p_phone")?.value.trim() || "";
+      const tier = document.getElementById("p_tier")?.value || "Priority";
+      const track = document.getElementById("p_track")?.value || "general";
+      const urgency = document.getElementById("p_urgency")?.value || "standard";
+      const notes = document.getElementById("p_notes")?.value.trim() || "";
 
       if(!name) return toast("Full name is required.");
       if(!email || !isValidEmail(email)) return toast("Enter a valid email.");
@@ -1421,24 +1428,14 @@
           __lastReceipt = { ref: paystackRef, tier, amountNgn, email, name, phone, track, urgency };
           showReceipt({ ref: paystackRef, tier, amountNgn });
 
-             const res = await fetch(PREMIUM_INVITE_FN, {
-  method: "POST",
-  headers: fnHeaders(),
-  body: JSON.stringify({ ... })
-});
-
-const res2 = await fetch(PREMIUM_RESEND_FN, {
-  method: "POST",
-  headers: fnHeaders(),
-  body: JSON.stringify({ ... })
-});
-
-
           // server-side verify + email invite
-          const result = await requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes });
+          const result = await requestInvite({
+            paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes
+          });
 
           resendBtn.disabled = false;
 
+          // Optional WhatsApp confirmation
           openWA(buildMsg("Premium Payment Confirmation", {
             Tier: tier,
             Track: track,
