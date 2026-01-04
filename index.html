@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no" />
 
   <title>Larmah Enterprise — Real Estate & Logistics</title>
   <meta name="description" content="Trust-first real estate and logistics across Nigeria — verified listings, WhatsApp-first support, and fast coordination for stays and movement." />
@@ -36,11 +35,9 @@
 
   <!-- Performance -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <link rel="preconnect" href="https://mskbumvopqnrhddfycfd.supabase.co" crossorigin />
-  <link rel="dns-prefetch" href="//wa.me" />
+  <link rel="preconnect" href="https://source.unsplash.com" crossorigin />
+  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
-  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -48,7 +45,6 @@
   <script>
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
     window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
-    window.__LARMAH_PAGE = "index";
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
@@ -82,45 +78,43 @@
     :root{
       --gold:#D4AF37;
       --gold2:#F5D57A;
-
       --radius: 18px;
-      --radius2: 24px;
-      --max: 1140px;
+      --radius2: 22px;
+      --max: 1120px;
       --ease: cubic-bezier(.2,.8,.2,1);
-
-      --shadow: 0 22px 66px rgba(0,0,0,.44);
-      --shadow2: 0 12px 30px rgba(0,0,0,.30);
-      --shadow3: 0 10px 18px rgba(0,0,0,.18);
+      --shadow: 0 18px 50px rgba(0,0,0,.42);
+      --shadow2: 0 12px 34px rgba(0,0,0,.30);
 
       --safeB: env(safe-area-inset-bottom, 0px);
       --safeT: env(safe-area-inset-top, 0px);
       --safeL: env(safe-area-inset-left, 0px);
       --safeR: env(safe-area-inset-right, 0px);
-
-      --containerPad: 16px;
-      --headerH: 68px;
     }
 
     html[data-theme="dark"]{
       --bg:#070A12;
       --bg2:#050810;
-      --panel: rgba(255,255,255,.035);
+      --panel: rgba(255,255,255,.03);
       --panel2: rgba(255,255,255,.02);
-      --panel3: rgba(255,255,255,.012);
-      --line: rgba(255,255,255,.11);
+      --line: rgba(255,255,255,.10);
       --line2: rgba(255,255,255,.08);
       --text:#E9EDF7;
-      --muted: rgba(233,237,247,.74);
+      --muted: rgba(233,237,247,.72);
       --muted2: rgba(233,237,247,.60);
-      --headerBg: rgba(7,10,18,.70);
-      --overlayBg: rgba(0,0,0,.60);
+      --headerBg: rgba(7,10,18,.72);
+      --overlayBg: rgba(0,0,0,.55);
       --ctaBg: rgba(0,0,0,.28);
       --ctaLine: rgba(255,255,255,.12);
+      --iconBg: rgba(212,175,55,.10);
+      --iconLine: rgba(212,175,55,.25);
       --good: rgba(0,217,129,.95);
-      --focus: rgba(245,213,122,.28);
+      --warn: rgba(255,187,0,.95);
+
+      --logoGlow: 0 0 22px rgba(212,175,55,.14);
       --logoRing: rgba(255,255,255,.12);
-      --logoGlow: 0 0 26px rgba(212,175,55,.14);
       --logoBg: rgba(255,255,255,.03);
+
+      --focus: rgba(245,213,122,.28);
     }
 
     html[data-theme="light"]{
@@ -128,24 +122,27 @@
       --bg2:#FFFFFF;
       --panel: rgba(10,14,26,.04);
       --panel2: rgba(10,14,26,.03);
-      --panel3: rgba(10,14,26,.02);
       --line: rgba(10,14,26,.12);
       --line2: rgba(10,14,26,.08);
       --text:#0E1526;
       --muted: rgba(14,21,38,.68);
       --muted2: rgba(14,21,38,.56);
-      --headerBg: rgba(255,255,255,.84);
+      --headerBg: rgba(255,255,255,.78);
       --overlayBg: rgba(0,0,0,.40);
-      --ctaBg: rgba(255,255,255,.82);
+      --ctaBg: rgba(255,255,255,.78);
       --ctaLine: rgba(10,14,26,.10);
+      --iconBg: rgba(212,175,55,.16);
+      --iconLine: rgba(212,175,55,.35);
       --good: rgba(0,140,90,.92);
-      --focus: rgba(212,175,55,.26);
+      --warn: rgba(180,110,0,.92);
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
-      --shadow3: 0 10px 14px rgba(0,0,0,.08);
-      --logoRing: rgba(10,14,26,.10);
+
       --logoGlow: 0 0 0 rgba(0,0,0,0);
-      --logoBg: rgba(255,255,255,.70);
+      --logoRing: rgba(10,14,26,.10);
+      --logoBg: rgba(255,255,255,.65);
+
+      --focus: rgba(212,175,55,.26);
     }
 
     *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
@@ -158,44 +155,28 @@
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color: var(--text);
       background:
-        radial-gradient(980px 440px at 16% 6%, rgba(212,175,55,.09), transparent 60%),
-        radial-gradient(980px 440px at 86% 10%, rgba(0,217,129,.05), transparent 62%),
-        radial-gradient(980px 540px at 50% 112%, rgba(0,122,255,.05), transparent 58%),
+        radial-gradient(900px 420px at 18% 6%, rgba(212,175,55,.10), transparent 60%),
+        radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.06), transparent 62%),
+        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.06), transparent 58%),
         linear-gradient(180deg, var(--bg2), var(--bg));
+      color: var(--text);
       overflow-x:hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       padding-bottom: 0;
     }
 
-    /* subtle premium grain */
-    body::before{
-      content:"";
-      position:fixed; inset:0;
-      pointer-events:none;
-      background-image:
-        linear-gradient(0deg, rgba(255,255,255,.015), rgba(255,255,255,.015)),
-        radial-gradient(circle at 25% 12%, rgba(255,255,255,.03), transparent 36%),
-        radial-gradient(circle at 78% 18%, rgba(255,255,255,.02), transparent 38%),
-        radial-gradient(circle at 50% 88%, rgba(255,255,255,.02), transparent 44%);
-      mix-blend-mode: overlay;
-      opacity:.55;
-      z-index:0;
-    }
-    body > *{ position:relative; z-index:1; }
-
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
-
     .container{
       max-width: var(--max);
       margin: 0 auto;
-      padding-left: max(var(--containerPad), var(--safeL));
-      padding-right: max(var(--containerPad), var(--safeR));
+      padding-left: max(16px, var(--safeL));
+      padding-right: max(16px, var(--safeR));
     }
 
+    /* Skip link */
     .skip{
       position:absolute; left:-999px; top:10px;
       padding:10px 12px;
@@ -213,6 +194,7 @@
       border-radius: 12px;
     }
 
+    /* Pages router */
     .page{ display:none; }
     .page.is-active{ display:block; }
 
@@ -220,28 +202,22 @@
     header{
       position:sticky;
       top:0;
-      z-index:60;
+      z-index:50;
       background: var(--headerBg);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line2);
     }
-    @supports (backdrop-filter: blur(10px)){
-      header{ backdrop-filter: blur(14px); }
-    }
-
     .header-inner{
-      height: var(--headerH);
       display:flex;
       align-items:center;
       gap:12px;
-      padding: 10px 0;
+      padding: 12px 0;
     }
-
     .brand{
       display:flex;
       align-items:center;
-      gap:12px;
-      min-width: 280px;
-      min-width: 0;
+      gap:10px;
+      min-width: 220px;
     }
 
     .logo-wrap{
@@ -251,13 +227,23 @@
       border-radius: 14px;
       padding: 2px;
       background:
-        radial-gradient(18px 18px at 25% 20%, rgba(245,213,122,.32), transparent 70%),
-        radial-gradient(20px 20px at 85% 80%, rgba(212,175,55,.20), transparent 70%),
+        radial-gradient(18px 18px at 25% 20%, rgba(245,213,122,.35), transparent 70%),
+        radial-gradient(20px 20px at 85% 80%, rgba(212,175,55,.22), transparent 70%),
         linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
       box-shadow: var(--logoGlow);
       border: 1px solid var(--logoRing);
       flex: 0 0 auto;
       isolation:isolate;
+    }
+    .logo-wrap::after{
+      content:"";
+      position:absolute;
+      inset:-10px;
+      background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
+      filter: blur(12px);
+      opacity: .8;
+      pointer-events:none;
+      z-index:-1;
     }
     .logo-wrap img{
       width:100%;
@@ -268,40 +254,26 @@
       border: 1px solid var(--line2);
       background: var(--logoBg);
     }
-
-    /* ✅ FIX: header logo (horizontal) is now properly constrained + aligned */
-    .brand-logo{
-      height: 26px;
-      width: auto;
-      max-width: min(320px, 48vw);
-      object-fit: contain;
-      display:block;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.28));
-      opacity: .98;
-    }
-
-    .brand-meta{
+    .brand .btxt{
       display:flex;
       flex-direction:column;
+      line-height:1.05;
+      gap:4px;
       min-width:0;
-      line-height:1.06;
-      gap:5px;
     }
-    .brand-meta .name{
+    .brand .bname{
       font-weight: 950;
-      letter-spacing:-0.25px;
+      letter-spacing:-0.2px;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      display:none; /* keep clean when logo shows */
     }
-    .brand-meta .sub{
+    .brand .bsub{
       font-size:.86rem;
       color: var(--muted);
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-      display:none; /* keep clean when logo shows */
     }
 
     nav{ margin-left:auto; }
@@ -317,15 +289,18 @@
       opacity:.9;
       font-weight: 850;
       font-size: .95rem;
-      position:relative;
     }
     .nav-link:hover{ color: var(--gold); opacity:1; }
-    .nav-link.is-active{ color: var(--gold); opacity: 1; }
+    .nav-link.is-active{
+      color: var(--gold);
+      opacity: 1;
+      position:relative;
+    }
     .nav-link.is-active::after{
       content:"";
       position:absolute;
       left:0; right:0;
-      bottom:-14px;
+      bottom:-12px;
       height:2px;
       background: rgba(212,175,55,.65);
       border-radius: 99px;
@@ -361,19 +336,14 @@
       transition: transform .16s var(--ease), filter .16s var(--ease);
     }
     .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .icon-btn:active{ transform: translateY(0); }
 
     @media (max-width: 980px){
       nav{ display:none; }
       .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
       .header-actions{ margin-left: auto; }
-      body{ padding-bottom: calc(94px + var(--safeB)); }
-      .brand-logo{ max-width: 52vw; height: 24px; }
-    }
-    @media (max-width: 520px){
-      .brand-logo{ max-width: 58vw; height: 22px; }
-      .logo-wrap{ width:40px; height:40px; }
-      .logo-wrap img{ border-radius: 11px; }
-      .icon-btn{ width:40px; height:40px; }
+      /* leave space for WA button so it never covers content */
+      body{ padding-bottom: calc(88px + var(--safeB)); }
     }
 
     /* Mobile sheet */
@@ -382,14 +352,14 @@
       background: var(--overlayBg);
       display:none;
       align-items:flex-end;
-      z-index:90;
+      z-index:80;
     }
     .overlay.open{ display:flex; }
     .sheet{
       width:100%;
       border-radius: 18px 18px 0 0;
       border: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 84%, #000 16%);
+      background: color-mix(in oklab, var(--bg2) 82%, #000 18%);
       box-shadow: var(--shadow);
       padding: 14px;
       padding-bottom: calc(14px + var(--safeB));
@@ -445,35 +415,49 @@
       user-select:none;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .btn:active{ transform: translateY(0); }
     .btn.solid{
-      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      background: var(--gold);
       color: #111;
       border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-      box-shadow: 0 10px 22px rgba(212,175,55,.14);
     }
-    .btn.primary{ background: var(--panel2); border-color: var(--line); }
-    .btn.ghost{ background: transparent; border-color: var(--line2); }
-    .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
-
-    /* Sections */
-    .section{ padding: 20px 0; }
-    .section-head{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 12px;
-      flex-wrap:wrap;
+    .btn.primary{
+      background: var(--panel2);
+      border-color: var(--line);
     }
-    h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
-    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.45; }
+    .btn.ghost{
+      background: transparent;
+      border-color: var(--line2);
+    }
+    .btn.small{
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 900;
+    }
 
-    /* Hero */
+    /* Chips */
+    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 88%, transparent);
+      font-weight: 900;
+      font-size: .92rem;
+    }
+    .chip i{ color: var(--gold); }
+
+    /* Hero/Home */
     .hero{ padding: 18px 0 0; }
     .hero-box{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, var(--panel2), var(--panel3));
+      background: var(--panel2);
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
@@ -483,9 +467,9 @@
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(520px 240px at 18% 0%, rgba(212,175,55,.18), transparent 60%),
-        radial-gradient(520px 260px at 86% 12%, rgba(0,217,129,.10), transparent 65%),
-        radial-gradient(640px 320px at 40% 105%, rgba(0,122,255,.08), transparent 62%);
+        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.20), transparent 60%),
+        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
+        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.10), transparent 62%);
       pointer-events:none;
       z-index:-1;
     }
@@ -510,7 +494,6 @@
       margin-bottom: 10px;
     }
     .kicker .dot{ opacity:.65; }
-
     h1{
       margin: 6px 0 10px;
       font-size: clamp(2.0rem, 4vw, 3.05rem);
@@ -527,17 +510,13 @@
       margin: 0;
       color: var(--muted);
       font-size: 1.02rem;
-      line-height: 1.60;
+      line-height: 1.55;
     }
-    @media (max-width: 620px){
-      h1{ font-size: clamp(1.72rem, 7vw, 2.25rem); line-height: 1.05; }
-      .lead{ font-size: .98rem; }
-    }
-
     .hero-actions{
       display:flex; gap:12px; flex-wrap:wrap;
       margin-top: 12px;
     }
+
     .live-row{
       display:flex; gap:12px; flex-wrap:wrap; align-items:center;
       margin-top: 12px;
@@ -549,90 +528,17 @@
       color: var(--good);
     }
     .live-dot i{ font-size: 9px; }
-
-    /* ✅ NEW: neat compact Highlights block (ONLY what you listed) */
-    .highlights{
-      margin-top: 14px;
-      border-radius: 18px;
-      border: 1px solid var(--line2);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
-      box-shadow: var(--shadow3);
-      padding: 12px;
-    }
-    .highlights-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom: 10px;
-      flex-wrap:wrap;
-    }
-    .highlights-title{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight: 950;
-      letter-spacing:-0.2px;
-    }
-    .highlights-title i{
-      width: 36px;
-      height: 36px;
-      border-radius: 14px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(212,175,55,.12);
-      border: 1px solid rgba(212,175,55,.25);
-      color: var(--gold2);
-    }
-    .highlights-sub{
-      color: var(--muted);
-      font-weight: 850;
-      font-size: .92rem;
-    }
-    .hi-grid{
-      display:grid;
-      gap: 10px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    @media (max-width: 980px){ .hi-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 520px){ .hi-grid{ grid-template-columns: 1fr; } }
-
-    .hi{
-      border-radius: 14px;
+    .trust-mini{
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight: 900;
+      font-size: .86rem;
+      color: var(--muted2);
+      padding: 8px 10px;
+      border-radius: 999px;
       border: 1px solid var(--line2);
       background: var(--panel2);
-      padding: 10px 10px;
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
     }
-    .hi .ic{
-      width: 38px;
-      height: 38px;
-      border-radius: 14px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(255,255,255,.02);
-      border: 1px solid var(--line2);
-      flex: 0 0 auto;
-    }
-    .hi .ic i{ color: var(--gold); }
-    .hi b{
-      display:block;
-      font-weight: 950;
-      letter-spacing:-0.15px;
-      line-height:1.2;
-    }
-    .hi span{
-      display:block;
-      color: var(--muted);
-      font-weight: 800;
-      font-size: .90rem;
-      margin-top: 3px;
-      line-height:1.35;
-    }
+    .trust-mini i{ color: var(--gold); }
 
     /* Switch tabs */
     .switcher{
@@ -675,6 +581,7 @@
       border: 1px solid color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
     }
     .seg button i{ color: var(--gold); }
+
     .switch-right{
       display:flex; gap:10px; flex-wrap:wrap; align-items:center;
       color: var(--muted);
@@ -688,9 +595,9 @@
     .form{
       margin-top: 12px;
       display:none;
-      border-radius: 18px;
+      border-radius: 16px;
       border: 1px solid var(--line2);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
+      background: var(--panel);
       padding: 12px;
     }
     .form.is-active{ display:block; }
@@ -721,7 +628,6 @@
     }
     textarea{ min-height: 92px; resize: vertical; }
     input::placeholder, textarea::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
-    @media (max-width: 620px){ input, select, textarea{ font-size: 16px; } }
 
     .form-actions{
       margin-top: 12px;
@@ -731,10 +637,10 @@
       flex-wrap:wrap;
     }
 
-    /* Add-on strip */
+    /* Logistics strip */
     .logistics-strip{
       margin-top: 12px;
-      border-radius: 18px;
+      border-radius: 16px;
       border: 1px solid var(--line);
       background: var(--panel);
       overflow:hidden;
@@ -745,7 +651,7 @@
       padding: 12px;
     }
     .logistics-strip.invert{
-      background: linear-gradient(135deg, rgba(212,175,55,.94), rgba(245,213,122,.84));
+      background: linear-gradient(135deg, rgba(212,175,55,.95), rgba(245,213,122,.86));
       border-color: rgba(212,175,55,.45);
       box-shadow: var(--shadow2);
     }
@@ -754,8 +660,8 @@
       width:42px; height:42px;
       display:flex; align-items:center; justify-content:center;
       border-radius: 14px;
-      background: rgba(212,175,55,.12);
-      border: 1px solid rgba(212,175,55,.26);
+      background: var(--iconBg);
+      border: 1px solid var(--iconLine);
       color: var(--gold2);
       flex: 0 0 auto;
     }
@@ -774,105 +680,55 @@
       border-color: rgba(0,0,0,.35);
     }
 
-    /* Hero media */
+    /* Hero carousel */
     .hero-media{
-      border-radius: 18px;
+      border-radius: 14px;
       overflow:hidden;
       border: 1px solid var(--line);
       background: var(--panel);
       position:relative;
-      min-height: 332px;
+      min-height: 320px;
       isolation:isolate;
-      box-shadow: var(--shadow3);
-    }
-    .hero-media::before{
-      content:"";
-      position:absolute; inset:0;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.00), rgba(0,0,0,.20)),
-        radial-gradient(520px 220px at 50% 110%, rgba(0,0,0,.35), transparent 60%);
-      pointer-events:none;
-      z-index:1;
     }
     .hero-media img{
       width:100%;
-      height: 332px;
+      height: 320px;
       object-fit: cover;
       display:block;
-      opacity:.96;
+      opacity:.94;
       transform: scale(1.01);
       transition: opacity .55s var(--ease), transform .9s var(--ease);
-      filter: contrast(1.03) saturate(1.02);
     }
     .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
     .hero-media .cap{
       position:absolute;
       left: 12px; right: 12px; bottom: 10px;
       padding: 10px 10px;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid var(--ctaLine);
       background: var(--ctaBg);
-      z-index:2;
-    }
-    @supports (backdrop-filter: blur(10px)){
-      .hero-media .cap{ backdrop-filter: blur(12px); }
+      backdrop-filter: blur(10px);
     }
     .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
     .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
-    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; z-index:2; }
+    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
     .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
     .hero-bar.run{ width: 100%; }
-    @media (max-width: 620px){
-      .hero-media{ min-height: 250px; }
-      .hero-media img{ height: 250px; }
-      .hero-media .cap{ left: 10px; right: 10px; bottom: 10px; }
-    }
 
-    /* Services / grid / cards */
-    .services{
-      display:grid;
-      gap: 14px;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    /* Sections */
+    .section{ padding: 18px 0; }
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 12px;
+      flex-wrap:wrap;
     }
-    @media (max-width: 980px){ .services{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 620px){ .services{ grid-template-columns: 1fr; } }
+    h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
+    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
-    .svc{
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
-      box-shadow: var(--shadow2);
-      padding: 14px;
-      position:relative;
-      overflow:hidden;
-    }
-    .svc::after{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(260px 120px at 30% 0%, rgba(212,175,55,.10), transparent 60%),
-        radial-gradient(260px 120px at 90% 25%, rgba(0,217,129,.06), transparent 60%);
-      pointer-events:none;
-      opacity:.9;
-    }
-    .svc-top{ display:flex; gap:10px; align-items:flex-start; position:relative; z-index:1; }
-    .svc-icn{
-      width:44px; height:44px;
-      border-radius: 14px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(212,175,55,.12);
-      border: 1px solid rgba(212,175,55,.25);
-      color: var(--gold2);
-      flex:0 0 auto;
-    }
-    .svc h3{ margin:0; font-size: 1.02rem; letter-spacing:-0.2px; }
-    .svc p{ margin: 6px 0 0; color: var(--muted); line-height: 1.50; }
-    .svc-actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
-    @media (max-width: 620px){
-      .svc-actions{ gap:8px; }
-      .svc-actions .btn{ flex:1; min-width: 0; }
-    }
-
+    /* ✅ Responsive grids (better tablet -> mobile) */
     .grid{
       display:grid;
       gap: 14px;
@@ -884,20 +740,14 @@
     .card{
       border-radius: var(--radius);
       border: 1px solid var(--line);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
+      background: var(--panel);
       overflow:hidden;
       box-shadow: var(--shadow2);
       transition: opacity .45s var(--ease), transform .45s var(--ease), filter .45s var(--ease);
     }
     .card:hover{ transform: translateY(-2px); filter: brightness(1.02); }
-    .card img{
-      width:100%;
-      aspect-ratio: 16 / 10;
-      height:auto;
-      object-fit: cover;
-      display:block;
-      opacity:.94;
-    }
+    .card.is-fading{ opacity:.22; transform: translateY(2px); filter:none; }
+    .card img{ width:100%; height: 180px; object-fit: cover; display:block; opacity:.92; }
     .card-body{ padding: 12px; }
     .card-title{ font-weight: 950; margin: 0 0 8px; letter-spacing:-0.15px; }
     .meta{ display:flex; gap:10px; flex-wrap:wrap; color: var(--muted); font-size: .9rem; }
@@ -910,10 +760,55 @@
       border: 1px solid var(--line2);
       background: var(--panel2);
       color: color-mix(in oklab, var(--text) 85%, transparent);
-      font-weight: 850;
+      font-weight: 800;
     }
 
-    /* Steps */
+    /* Services */
+    .services{
+      display:grid;
+      gap: 14px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    @media (max-width: 980px){ .services{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px){ .services{ grid-template-columns: 1fr; } }
+
+    .svc{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow2);
+      padding: 14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .svc::after{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(260px 120px at 30% 0%, rgba(212,175,55,.12), transparent 60%),
+        radial-gradient(260px 120px at 90% 25%, rgba(0,217,129,.07), transparent 60%);
+      pointer-events:none;
+      opacity:.9;
+    }
+    .svc-top{ display:flex; gap:10px; align-items:flex-start; position:relative; z-index:1; }
+    .svc-icn{
+      width:44px; height:44px;
+      border-radius: 14px;
+      display:flex; align-items:center; justify-content:center;
+      background: var(--iconBg);
+      border: 1px solid var(--iconLine);
+      color: var(--gold2);
+      flex:0 0 auto;
+    }
+    .svc h3{ margin:0; font-size: 1.02rem; letter-spacing:-0.2px; position:relative; z-index:1; }
+    .svc p{ margin: 6px 0 0; color: var(--muted); line-height: 1.45; position:relative; z-index:1; }
+    .svc-actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; position:relative; z-index:1; }
+    @media (max-width: 620px){
+      .svc-actions{ gap:8px; }
+      .svc-actions .btn{ flex:1; min-width: 0; }
+    }
+
+    /* How it works */
     .steps{
       display:grid;
       gap: 12px;
@@ -925,7 +820,7 @@
     .step{
       border-radius: var(--radius);
       border: 1px solid var(--line2);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
+      background: var(--panel);
       padding: 14px;
       box-shadow: var(--shadow2);
       display:flex;
@@ -933,7 +828,7 @@
       align-items:flex-start;
     }
     .step b{ display:block; }
-    .step span{ display:block; color: var(--muted); margin-top: 4px; line-height: 1.50; }
+    .step span{ display:block; color: var(--muted); margin-top: 4px; line-height: 1.45; }
     .step .n{
       width: 40px; height: 40px;
       border-radius: 14px;
@@ -945,20 +840,70 @@
       flex:0 0 auto;
     }
 
+    /* About page */
+    .about-wrap{
+      margin-top: 18px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .about-hero{
+      display:grid;
+      gap: 14px;
+      padding: 16px;
+      grid-template-columns: 1.15fr .85fr;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .about-hero{ grid-template-columns: 1fr; }
+    }
+    .about-hero h1{ font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
+    .about-card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      overflow:hidden;
+      box-shadow: var(--shadow2);
+    }
+    .about-card img{ width:100%; height: 200px; object-fit: cover; display:block; opacity:.92; }
+    .about-card .card-body{ padding: 12px; }
+    .about-points{ margin-top: 12px; display:grid; gap: 10px; }
+    .ap{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+    }
+    .ap i{ color: var(--gold); margin-top: 2px; width: 18px; }
+    .ap b{ display:block; }
+    .ap span{ color: var(--muted2); font-size: .92rem; display:block; margin-top: 3px; line-height: 1.35; }
+    .notice{
+      border-radius: 14px;
+      padding: 12px 12px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      color: var(--muted);
+    }
+
     /* Footer */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 82%, #000 18%);
+      background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
     }
     .footer-cta{
       margin-top: 14px;
-      border-radius: 24px;
+      border-radius: 20px;
       border: 1px solid var(--line);
       background:
-        radial-gradient(980px 440px at 15% 0%, rgba(212,175,55,.14), transparent 55%),
-        radial-gradient(980px 440px at 85% 20%, rgba(0,217,129,.08), transparent 60%),
-        linear-gradient(180deg, var(--panel2), var(--panel3));
+        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
+        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
+        var(--panel2);
       box-shadow: var(--shadow);
       padding: 14px;
       display:flex;
@@ -979,6 +924,7 @@
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
 
     .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
+    .brandtext{ min-width:0; }
     .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
     .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
 
@@ -987,7 +933,7 @@
       display:block;
       padding: 6px 0;
       color: color-mix(in oklab, var(--text) 84%, transparent);
-      font-weight: 650;
+      font-weight: 600;
     }
     .footer-links a:hover{ color: var(--gold); }
 
@@ -1016,7 +962,7 @@
     }
     .social a:hover{
       color: #111;
-      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      background: var(--gold);
       border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
     }
 
@@ -1037,7 +983,7 @@
       position: fixed;
       right: calc(16px + var(--safeR));
       bottom: calc(16px + var(--safeB));
-      z-index: 95;
+      z-index: 90;
       display:flex;
       gap:10px;
       align-items:center;
@@ -1051,15 +997,13 @@
       color: var(--text);
       font-weight: 950;
       box-shadow: var(--shadow2);
+      backdrop-filter: blur(10px);
       cursor:pointer;
     }
-    @supports (backdrop-filter: blur(10px)){
-      .wa-pill{ backdrop-filter: blur(10px); }
-    }
     .wa-btn{
-      width: 56px;
-      height: 56px;
-      border-radius: 20px;
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
       border: 1px solid color-mix(in oklab, var(--gold) 40%, var(--line) 60%);
       background: linear-gradient(180deg, var(--gold2), var(--gold));
       color: #111;
@@ -1072,11 +1016,45 @@
     }
     .wa-btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
     .wa-btn i{ font-size: 20px; }
-    @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
+    @media (min-width: 980px){
+      .wa-pill{ display:inline-flex; }
+    }
 
-    /* Reveal */
-    .reveal{ opacity:0; transform: translateY(10px); }
-    .reveal.show{ opacity:1; transform: translateY(0); transition: opacity .60s var(--ease), transform .60s var(--ease); }
+    /* ===== Mobile polish extras ===== */
+    @media (max-width: 620px){
+      .header-inner{ padding: 10px 0; gap:10px; }
+      .brand{ min-width: 0; }
+      .brand .bsub{ display:none; }
+      .logo-wrap{ width:40px; height:40px; border-radius: 13px; }
+      .logo-wrap img{ border-radius: 11px; }
+      .icon-btn{ width:40px; height:40px; }
+      .menu-btn{ border-radius: 12px; }
+
+      .hero{ padding: 14px 0 0; }
+      .hero-row{ padding: 12px; gap: 12px; }
+      h1{ font-size: clamp(1.72rem, 7vw, 2.25rem); line-height: 1.05; }
+      .lead{ font-size: .98rem; }
+
+      /* swipe chips on phone */
+      .chips{
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+        margin-right: -10px;
+      }
+      .chip{ flex: 0 0 auto; }
+
+      /* prevent iOS zoom */
+      input, select, textarea{ font-size: 16px; }
+
+      .hero-media{ min-height: 240px; }
+      .hero-media img{ height: 240px; }
+      .hero-media .cap{ left: 10px; right: 10px; bottom: 10px; }
+
+      .footer-cta > div:last-child{ width:100%; }
+      .footer-cta > div:last-child .btn{ width:100%; }
+    }
 
     @media (max-width: 520px){
       .hero-actions{ flex-direction:column; }
@@ -1095,12 +1073,11 @@
 
   <!-- Mobile nav -->
   <div class="overlay" id="overlay" aria-hidden="true">
-    <div class="sheet" role="dialog" aria-label="Menu" aria-modal="true">
+    <div class="sheet" role="dialog" aria-label="Menu">
       <div class="sheet-head">
         <div class="sheet-brandline">
           <div class="logo-wrap" aria-hidden="true">
-            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise"
-                 onerror="this.src='assets/images/larmah-header.jpeg';" />
+            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
           </div>
           <div style="min-width:0">
             <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
@@ -1113,16 +1090,12 @@
         </button>
       </div>
 
-      <a href="#home" data-sheet-link="1"><span><i class="fa-solid fa-house" style="color:var(--gold)"></i> Home</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="#about" data-sheet-link="1"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
-        <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-          <i class="fa-brands fa-whatsapp"></i> WhatsApp
-        </button>
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
         </button>
@@ -1134,23 +1107,18 @@
     <div class="container header-inner">
       <a class="brand" href="#home" aria-label="Larmah Home">
         <div class="logo-wrap" aria-hidden="true">
-          <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise"
-               onerror="this.src='assets/images/larmah-header.jpeg';" />
+          <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
         </div>
-
-        <!-- ✅ FIXED: Use a constrained horizontal logo in header -->
-        <img class="brand-logo"
-             src="assets/images/larmah-header.jpeg"
-             alt="Larmah Enterprise — Connecting People, Business & Possibilities"
-             decoding="async"
-             onerror="this.style.display='none'; this.insertAdjacentHTML('afterend','<span style=&quot;font-weight:950; letter-spacing:-.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;&quot;>Larmah Enterprise</span>');" />
+        <div class="btxt">
+          <div class="bname">Larmah Enterprise</div>
+          <div class="bsub">Real Estate • Logistics</div>
+        </div>
       </a>
 
       <nav aria-label="Primary navigation">
         <ul>
-          <li><a class="nav-link" data-nav="home" href="#home">Home</a></li>
           <li><a class="nav-link" data-nav="about" href="#about">About</a></li>
-          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+         <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
         </ul>
@@ -1161,7 +1129,7 @@
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
 
-        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu" aria-controls="overlay" aria-expanded="false">
+        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
           <i class="fa-solid fa-bars"></i>
         </button>
       </div>
@@ -1169,12 +1137,12 @@
   </header>
 
   <main id="main" class="container" tabindex="-1">
-    <div id="home" aria-hidden="true"></div>
-
-    <!-- HOME -->
+    <!-- ======================
+         HOME PAGE (DEFAULT)
+         ====================== -->
     <div class="page is-active" id="page-home" data-page="home">
       <section class="hero" aria-label="Hero">
-        <div class="hero-box reveal">
+        <div class="hero-box">
           <div class="hero-row">
             <div>
               <div class="kicker" aria-label="Trust badges">
@@ -1188,8 +1156,8 @@
               </h1>
 
               <p class="lead">
-                From premium shortlets and verified listings to dispatch and pickups — Larmah runs a scam-resistant,
-                fast-confirmation workflow that keeps bookings and deliveries clean, clear, and coordinated.
+                From premium shortlets and verified listings to dispatch, pickups, and freight coordination — Larmah runs a scam-resistant,
+                fast-confirmation workflow that keeps your bookings and deliveries clean, clear, and coordinated.
               </p>
 
               <div class="hero-actions">
@@ -1202,66 +1170,25 @@
                 </button>
               </div>
 
-              <!-- Keep this row (you want it) -->
               <div class="live-row" aria-live="polite">
                 <div class="live-dot"><i class="fa-solid fa-circle"></i> Fast responses available</div>
-                <div class="pill"><i class="fa-solid fa-receipt" style="color:var(--gold)"></i> Clear pricing & references</div>
-                <div class="pill"><i class="fa-solid fa-user-shield" style="color:var(--gold)"></i> Scam-resistant flow</div>
+                <div class="trust-mini"><i class="fa-solid fa-receipt"></i> Clear pricing & references</div>
+                <div class="trust-mini"><i class="fa-solid fa-user-shield"></i> Scam-resistant flow</div>
               </div>
 
-              <!-- ✅ Neat, reduced, professional highlights (ONLY your items) -->
-              <div class="highlights" aria-label="Key highlights">
-                <div class="highlights-head">
-                  <div class="highlights-title">
-                    <i class="fa-solid fa-sparkles" aria-hidden="true"></i>
-                    <div>
-                      Key Highlights
-                      <div class="highlights-sub">Clean, fast, and trust-first.</div>
-                    </div>
-                  </div>
-                  <button class="btn small primary" type="button"
-                          onclick="openWA(buildMsg('Pricing', { Message:'Hello Larmah, please share pricing and next steps.' }))">
-                    <i class="fa-brands fa-whatsapp"></i> Ask Pricing
-                  </button>
-                </div>
-
-                <div class="hi-grid">
-                  <div class="hi">
-                    <div class="ic"><i class="fa-solid fa-bolt"></i></div>
-                    <div><b>Fast responses available</b><span>Quick routing on WhatsApp.</span></div>
-                  </div>
-                  <div class="hi">
-                    <div class="ic"><i class="fa-solid fa-receipt"></i></div>
-                    <div><b>Clear pricing & references</b><span>Clean summaries and confirmations.</span></div>
-                  </div>
-                  <div class="hi">
-                    <div class="ic"><i class="fa-solid fa-user-shield"></i></div>
-                    <div><b>Scam-resistant flow</b><span>Trust-first steps, less risk.</span></div>
-                  </div>
-                  <div class="hi">
-                    <div class="ic"><i class="fa-solid fa-house"></i></div>
-                    <div><b>Shortlets • Rentals • Sales</b><span>Verified options for stays.</span></div>
-                  </div>
-                  <div class="hi">
-                    <div class="ic"><i class="fa-solid fa-motorcycle"></i></div>
-                    <div><b>Dispatch • Same-day</b><span>Pickups and deliveries.</span></div>
-                  </div>
-                  <div class="hi">
-                    <div class="ic"><i class="fa-brands fa-whatsapp"></i></div>
-                    <div><b>WhatsApp-first support</b><span>One thread, clearer execution.</span></div>
-                  </div>
-                </div>
+              <div class="chips" aria-label="Highlights">
+                <div class="chip"><i class="fa-solid fa-house"></i> Shortlets • Rentals • Sales</div>
+                <div class="chip"><i class="fa-solid fa-motorcycle"></i> Dispatch • Same-day</div>
+                <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage support</div>
               </div>
 
               <!-- Mode switch -->
               <div class="switcher" id="quick" aria-label="Quick request switcher">
                 <div class="seg" role="tablist" aria-label="Choose quick request">
-                  <button type="button" class="is-active" id="tabRealEstate" role="tab" aria-selected="true" aria-controls="formRealEstate" tabindex="0"
-                          onclick="setMode('realestate')">
+                  <button type="button" class="is-active" id="tabRealEstate" role="tab" aria-selected="true" onclick="setMode('realestate')">
                     <i class="fa-solid fa-house"></i> Real Estate
                   </button>
-                  <button type="button" id="tabLogistics" role="tab" aria-selected="false" aria-controls="formLogistics" tabindex="-1"
-                          onclick="setMode('logistics')">
+                  <button type="button" id="tabLogistics" role="tab" aria-selected="false" onclick="setMode('logistics')">
                     <i class="fa-solid fa-truck-fast"></i> Logistics
                   </button>
                 </div>
@@ -1285,12 +1212,12 @@
                   <div class="form-grid" style="margin-top:12px;">
                     <div class="field" style="grid-column: span 2;">
                       <label for="checkin">Check-in</label>
-                      <input id="checkin" type="date" autocomplete="off" />
+                      <input id="checkin" type="date" />
                     </div>
 
                     <div class="field" style="grid-column: span 2;">
                       <label for="checkout">Check-out</label>
-                      <input id="checkout" type="date" autocomplete="off" />
+                      <input id="checkout" type="date" />
                     </div>
 
                     <div class="field" style="grid-column: span 1;">
@@ -1350,7 +1277,9 @@
                       <div class="logi-icn"><i class="fa-solid fa-car"></i></div>
                       <div style="min-width:0">
                         <div class="logistics-title">Need airport pickup or dispatch while you stay?</div>
-                        <p class="logistics-sub">Add movement support to your booking — coordinated on WhatsApp.</p>
+                        <p class="logistics-sub">
+                          Add movement support to your booking — reliable pickup + delivery, coordinated on WhatsApp.
+                        </p>
                       </div>
                     </div>
                     <button class="btn small solid" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
@@ -1372,22 +1301,22 @@
                   <div class="form-grid" style="margin-top:12px;">
                     <div class="field" style="grid-column: span 4;">
                       <label for="pickup">Pickup location</label>
-                      <input id="pickup" type="text" placeholder="e.g., Lekki Phase 1" autocomplete="address-level2" />
+                      <input id="pickup" type="text" placeholder="e.g., Lekki Phase 1" />
                     </div>
 
                     <div class="field" style="grid-column: span 4;">
                       <label for="dropoff">Drop-off location</label>
-                      <input id="dropoff" type="text" placeholder="e.g., Victoria Island" autocomplete="address-level2" />
+                      <input id="dropoff" type="text" placeholder="e.g., Victoria Island" />
                     </div>
 
                     <div class="field" style="grid-column: span 2;">
                       <label for="pickDate">Date</label>
-                      <input id="pickDate" type="date" autocomplete="off" />
+                      <input id="pickDate" type="date" />
                     </div>
 
                     <div class="field" style="grid-column: span 2;">
                       <label for="pickTime">Time (optional)</label>
-                      <input id="pickTime" type="time" autocomplete="off" />
+                      <input id="pickTime" type="time" />
                     </div>
 
                     <div class="field" style="grid-column: span 2;">
@@ -1433,7 +1362,9 @@
                       <div class="logi-icn"><i class="fa-solid fa-building"></i></div>
                       <div style="min-width:0">
                         <div class="logistics-title">Need a shortlet too?</div>
-                        <p class="logistics-sub">Send dates + budget and we’ll respond with options.</p>
+                        <p class="logistics-sub">
+                          We can match verified stays fast — send dates + budget and we’ll respond.
+                        </p>
                       </div>
                     </div>
                     <button class="btn small primary" type="button" onclick="setMode('realestate'); scrollToEl('#quick')">
@@ -1449,12 +1380,7 @@
             </div>
 
             <aside class="hero-media" id="heroMedia" aria-label="Real estate and logistics carousel">
-              <img id="heroImg"
-                   src="assets/images/larmah-header.jpeg"
-                   alt="Larmah Enterprise"
-                   decoding="async"
-                   fetchpriority="high"
-                   onerror="this.src='assets/images/larmah-favicon.jpeg';">
+              <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11" alt="Luxury apartment interior" decoding="async" fetchpriority="high">
               <div class="cap">
                 <div class="hero-tag" id="heroTag">
                   <i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate
@@ -1467,7 +1393,7 @@
         </div>
       </section>
 
-      <section class="section reveal" id="services" aria-label="Services">
+      <section class="section" id="services" aria-label="Services">
         <div class="section-head">
           <div>
             <h2>Two pillars. One trust-first workflow.</h2>
@@ -1537,7 +1463,7 @@
         </div>
       </section>
 
-      <section class="section reveal" id="browse" aria-label="Browse featured">
+      <section class="section" id="browse" aria-label="Browse featured">
         <div class="section-head">
           <div>
             <h2>Featured Listings</h2>
@@ -1553,7 +1479,7 @@
         </div>
       </section>
 
-      <section class="section reveal" aria-label="How it works">
+      <section class="section" aria-label="How it works">
         <div class="section-head">
           <div>
             <h2>How it works</h2>
@@ -1586,7 +1512,7 @@
         </div>
       </section>
 
-      <section class="section reveal" aria-label="WhatsApp request CTA">
+      <section class="section" aria-label="WhatsApp request CTA">
         <div class="card" style="padding:14px;">
           <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
             <div>
@@ -1605,39 +1531,145 @@
       </section>
     </div>
 
-    <!-- ABOUT PAGE -->
+    <!-- ======================
+         ABOUT PAGE (INSIDE INDEX)
+         ====================== -->
     <div class="page" id="page-about" data-page="about">
-      <div id="about" aria-hidden="true"></div>
-
       <section class="section" aria-label="About Larmah Enterprise">
-        <div class="hero-box reveal" style="padding:16px;">
-          <div class="kicker">
-            <span>Trust-first</span><span class="dot">•</span>
-            <span>Verified operations</span><span class="dot">•</span>
-            <span>WhatsApp-first</span>
-          </div>
+        <div class="about-wrap">
+          <div class="about-hero">
+            <div>
+              <div class="kicker">
+                <span>Trust-first</span><span class="dot">•</span>
+                <span>Verified operations</span><span class="dot">•</span>
+                <span>WhatsApp-first</span>
+              </div>
 
-          <h1 style="font-size: clamp(1.8rem, 3.4vw, 2.6rem); margin-top:6px;">About Larmah Enterprise</h1>
-          <p class="lead">
-            Larmah Enterprise is a trust-first hub built on two pillars: verified real estate (shortlets, rentals, sales)
-            and dependable logistics (dispatch, pickups, haulage, and freight coordination).
-          </p>
+              <h1>About Larmah Enterprise</h1>
+              <p class="lead">
+                Larmah Enterprise is a trust-first hub built on two pillars: verified real estate (shortlets, rentals, sales)
+                and dependable logistics (dispatch, pickups, haulage, and freight coordination). We reduce friction with clear
+                confirmations, clean references, and WhatsApp-first support.
+              </p>
 
-          <div class="hero-actions" style="margin-top:14px;">
-            <a class="btn solid" href="#home"><i class="fa-solid fa-house"></i> Back to Home</a>
-            <button class="btn primary" type="button"
-              onclick="openWA(buildMsg('Business Enquiry', { Topic:'Partnership / Listings / Logistics', Message:'Hello Larmah, I’d like to discuss a business enquiry.' }))">
-              <i class="fa-brands fa-whatsapp"></i> Business Chat
-            </button>
-            <a class="btn ghost" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Join Premium</a>
-          </div>
+              <div class="hero-actions">
+                <a class="btn solid" href="#home"><i class="fa-solid fa-house"></i> Back to Home</a>
+                <button class="btn primary" type="button"
+                  onclick="openWA(buildMsg('Business Enquiry', { Topic:'Partnership / Listings / Logistics', Message:'Hello Larmah, I’d like to discuss a business enquiry.' }))">
+                  <i class="fa-brands fa-whatsapp"></i> Business Chat
+                </button>
+              </div>
 
-          <div style="margin-top:14px; color:var(--muted); line-height:1.6;">
-            <b style="color:var(--text)">Premium-only access:</b> only Premium subscribers are entitled to have an account.
-            <br/>
-            <b style="color:var(--text)">Business Email:</b> <a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a>
-            <br/>
-            <b style="color:var(--text)">WhatsApp:</b> +234 706 308 0605
+              <div class="about-points">
+                <div class="ap">
+                  <i class="fa-solid fa-circle-check"></i>
+                  <div>
+                    <b>Verified Listings</b>
+                    <span>Clear listing details, basic verification, and scam-resistant confirmations.</span>
+                  </div>
+                </div>
+                <div class="ap">
+                  <i class="fa-solid fa-truck-fast"></i>
+                  <div>
+                    <b>Logistics Support</b>
+                    <span>Dispatch, pickups, haulage and coordination across Nigeria with real-time WhatsApp updates.</span>
+                  </div>
+                </div>
+                <div class="ap">
+                  <i class="fa-solid fa-shield-halved"></i>
+                  <div>
+                    <b>Trust-first Process</b>
+                    <span>Simple workflows, clean references, and customer support focused on speed and clarity.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:14px;">
+                <h2 style="margin:0;">Premium Investment Tracks</h2>
+                <p class="subhead" style="margin:6px 0 0;">
+                  Premium subscribers can participate in curated opportunities across real estate and logistics — with guidance,
+                  sourcing, and coordinated execution.
+                </p>
+
+                <div class="about-points" style="margin-top:12px;">
+                  <div class="ap">
+                    <i class="fa-solid fa-building"></i>
+                    <div>
+                      <b>Real Estate — Active Investing</b>
+                      <span>
+                        Buy-to-rent (shortlets/longlets), fix-and-flip, joint ventures, land banking, development participation,
+                        and deal sourcing support.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="ap">
+                    <i class="fa-solid fa-coins"></i>
+                    <div>
+                      <b>Real Estate — Passive Investing</b>
+                      <span>
+                        Fractional participation, pooled deals, rent-share structures, property-backed notes, and curated
+                        income opportunities (subject to availability).
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="ap">
+                    <i class="fa-solid fa-truck"></i>
+                    <div>
+                      <b>Logistics — Fleet & Dispatch Returns</b>
+                      <span>
+                        Dispatch bike/vehicle rentals, partner-driver models, route-based earnings, managed operations,
+                        and utilization tracking.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="ap">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <div>
+                      <b>Logistics — Freight & Movement Plays</b>
+                      <span>
+                        Freight participation, haulage partnerships, warehousing support, last-mile delivery capacity,
+                        and contract-linked movement opportunities.
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="notice" style="margin-top:12px;">
+                  <b style="color:var(--text)">Premium-only access:</b> only Premium subscribers are entitled to have an account.
+                  Join Premium to unlock your dashboard and investment tracks.<br/>
+                  <b style="color:var(--text)">Business Email:</b> <a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a><br/>
+                  <b style="color:var(--text)">WhatsApp:</b> +234 706 308 0605
+                  <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <a class="btn small solid" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Join Premium</a>
+                    <button class="btn small primary" type="button"
+                      onclick="openWA(buildMsg('Premium Interest', { Topic:'Premium Investment Tracks', Message:'Hello Larmah, I want to join Premium and learn the available investment tracks.' }))">
+                      <i class="fa-brands fa-whatsapp"></i> Ask on WhatsApp
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="about-card">
+              <img src="https://source.unsplash.com/1200x800/?lagos,real-estate&sig=777" alt="Lagos real estate" loading="lazy" decoding="async">
+              <div class="card-body">
+                <div class="card-title">What we do</div>
+                <div class="meta">
+                  <span class="pill"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Shortlets & listings</span>
+                  <span class="pill"><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Dispatch & pickup</span>
+                </div>
+
+                <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+                  <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
+                  <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
+                  <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
@@ -1646,7 +1678,7 @@
 
   <footer>
     <div class="container">
-      <div class="footer-cta reveal">
+      <div class="footer-cta">
         <div>
           <h3>Verified stays + trusted movement — in one WhatsApp thread.</h3>
           <p>Confirm availability, request a quote, and coordinate logistics — fast.</p>
@@ -1662,18 +1694,18 @@
       </div>
 
       <div class="footer-grid">
-        <div class="reveal">
+        <div>
           <div class="brandline">
             <div class="logo-wrap" aria-hidden="true">
-              <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" onerror="this.src='assets/images/larmah-header.jpeg';" />
+              <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
             </div>
-            <div>
+            <div class="brandtext">
               <div class="brandname">Larmah Enterprise</div>
               <div class="tagline">RC: 9127113</div>
             </div>
           </div>
 
-          <div style="margin-top:10px; color:var(--muted); line-height:1.60;">
+          <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
             Verified real estate, shortlets, and logistics support — built for speed, clarity, and trust.
           </div>
 
@@ -1685,7 +1717,7 @@
           </div>
         </div>
 
-        <div class="reveal">
+        <div>
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
             <a href="index.html#home">Home</a>
@@ -1696,7 +1728,7 @@
           </div>
         </div>
 
-        <div class="reveal">
+        <div>
           <div class="footer-col-title">Contact</div>
 
           <div class="contact-stack">
@@ -1750,73 +1782,23 @@
     <button class="wa-pill" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
       WhatsApp Support
     </button>
-    <button class="wa-btn" type="button" aria-label="Open WhatsApp support"
-      onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-      <i class="fa-brands fa-whatsapp"></i>
-    </button>
   </div>
 
   <script>
     // Year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // ===== Mobile menu (focus trap + close on ESC)
+    // Mobile menu
     const overlay = document.getElementById("overlay");
-    const sheet = overlay.querySelector(".sheet");
-    const menuBtn = document.querySelector(".menu-btn");
-    const sheetLinks = Array.from(overlay.querySelectorAll("[data-sheet-link]"));
-
-    let __lastFocus = null;
-
-    function getFocusable(container){
-      return Array.from(container.querySelectorAll(
-        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
-      )).filter(el => !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length));
-    }
-
     function toggleMenu(open){
       overlay.classList.toggle("open", !!open);
       overlay.setAttribute("aria-hidden", open ? "false" : "true");
-      if(menuBtn) menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
-
-      if(open){
-        __lastFocus = document.activeElement;
-        const focusables = getFocusable(sheet);
-        setTimeout(() => (focusables[0] || sheet).focus?.(), 0);
-        document.body.style.overflow = "hidden";
-      }else{
-        document.body.style.overflow = "";
-        try{ (__lastFocus || menuBtn)?.focus?.(); }catch{}
-        __lastFocus = null;
-      }
     }
-
     overlay.addEventListener("click", (e) => {
       if(e.target === overlay) toggleMenu(false);
     });
-    sheetLinks.forEach(a => a.addEventListener("click", () => toggleMenu(false)));
 
-    window.addEventListener("keydown", (e) => {
-      if(e.key === "Escape" && overlay.classList.contains("open")) toggleMenu(false);
-      if(!overlay.classList.contains("open")) return;
-
-      if(e.key === "Tab"){
-        const focusables = getFocusable(sheet);
-        if(!focusables.length) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-
-        if(e.shiftKey && document.activeElement === first){
-          e.preventDefault();
-          last.focus();
-        } else if(!e.shiftKey && document.activeElement === last){
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    });
-
-    // ===== Helpers
+    // Helpers (globals used by app.js featured renderer)
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return window.LARMAH.buildMessage(title, data);
@@ -1838,8 +1820,8 @@
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    // ===== Theme
-    const THEME_KEY = "larmah_theme_v9";
+    // Theme
+    const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       try{ localStorage.setItem(THEME_KEY, theme); }catch{}
@@ -1847,6 +1829,7 @@
       if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
     }
     function toggleTheme(){
+      if(window.LARMAH?.toggleTheme) return window.LARMAH.toggleTheme();
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
       setTheme(cur === "dark" ? "light" : "dark");
     }
@@ -1859,10 +1842,9 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // ===== Router (home/about inside index)
+    // Router: “pages” inside index.html
     const pages = Array.from(document.querySelectorAll(".page"));
     const navLinks = Array.from(document.querySelectorAll('[data-nav]'));
-
     function setActivePage(name){
       pages.forEach(p => p.classList.toggle("is-active", p.dataset.page === name));
       navLinks.forEach(a => a.classList.toggle("is-active", a.dataset.nav === name));
@@ -1871,17 +1853,15 @@
       if(main) main.focus({preventScroll:true});
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-
     function getRoute(){
       const h = (location.hash || "#home").replace("#", "").trim().toLowerCase();
       if(h === "about") return "about";
       return "home";
     }
-
     window.addEventListener("hashchange", () => setActivePage(getRoute()));
     document.addEventListener("DOMContentLoaded", () => setActivePage(getRoute()));
 
-    // ===== Mode switch (Real Estate / Logistics)
+    // Mode switch (Real Estate / Logistics)
     const tabRealEstate = document.getElementById("tabRealEstate");
     const tabLogistics = document.getElementById("tabLogistics");
     const formRealEstate = document.getElementById("formRealEstate");
@@ -1891,29 +1871,14 @@
       const isLog = mode === "logistics";
       tabRealEstate.classList.toggle("is-active", !isLog);
       tabLogistics.classList.toggle("is-active", isLog);
-
       tabRealEstate.setAttribute("aria-selected", !isLog ? "true" : "false");
       tabLogistics.setAttribute("aria-selected", isLog ? "true" : "false");
-
-      tabRealEstate.tabIndex = !isLog ? 0 : -1;
-      tabLogistics.tabIndex = isLog ? 0 : -1;
-
       formRealEstate.classList.toggle("is-active", !isLog);
       formLogistics.classList.toggle("is-active", isLog);
     }
     window.setMode = setMode;
 
-    function tabKeyNav(e){
-      if(e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
-      e.preventDefault();
-      const next = (document.activeElement === tabRealEstate) ? tabLogistics : tabRealEstate;
-      next.focus();
-      next.click();
-    }
-    tabRealEstate.addEventListener("keydown", tabKeyNav);
-    tabLogistics.addEventListener("keydown", tabKeyNav);
-
-    // ===== Date mins
+    // Date mins (today)
     function toISODate(d){
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth()+1).padStart(2,"0");
@@ -1939,7 +1904,7 @@
       });
     }
 
-    // ===== WhatsApp submits
+    // Real estate submit -> WhatsApp
     function submitRealEstate(){
       const checkin = (document.getElementById("checkin").value || "Not set");
       const checkout = (document.getElementById("checkout").value || "Not set");
@@ -1960,6 +1925,7 @@
     }
     window.submitRealEstate = submitRealEstate;
 
+    // Logistics submit -> WhatsApp
     function submitLogistics(){
       const pickup = (document.getElementById("pickup").value || "Not set");
       const dropoff = (document.getElementById("dropoff").value || "Not set");
@@ -1982,7 +1948,7 @@
     }
     window.submitLogistics = submitLogistics;
 
-    // ===== HERO carousel
+    // HERO carousel
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1993,7 +1959,7 @@
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766726716955-9ot7tl3d.jpeg", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792878193-vc0a7pto.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clean confirmations." },
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792082908-wa7yd8n5.jpeg", icon:"fa-truck-fast", label:"Logistics", sub:"Trusted movement with clear coordination." },
-      { img:"assets/images/larmah-header.jpeg", icon:"fa-sparkles", label:"Fast Support", sub:"WhatsApp-first coordination." }
+      { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=515", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
     ];
 
     let heroIdx = 0;
@@ -2008,9 +1974,7 @@
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
       heroMedia.classList.add("is-fading");
       runHeroProgress();
-
       setTimeout(() => {
-        heroImg.onerror = () => { heroImg.src = "assets/images/larmah-header.jpeg"; };
         heroImg.src = s.img;
         heroImg.alt = s.label;
         heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
@@ -2036,9 +2000,8 @@
     let featStart = 0;
 
     function renderFeaturedPlaceholder(){
-      const ph = () => `
-        <img src="assets/images/larmah-header.jpeg" alt="Featured listing" loading="lazy" decoding="async"
-             onerror="this.src='assets/images/larmah-favicon.jpeg';">
+      const ph = (i) => `
+        <img src="assets/images/larmah-header.jpeg" alt="Featured listing" loading="lazy" decoding="async">
         <div class="card-body">
           <div class="card-title">Loading featured…</div>
           <div class="meta">
@@ -2051,13 +2014,15 @@
           </div>
         </div>
       `;
-      featEls.forEach((el) => { if(el) el.innerHTML = ph(); });
+      featEls.forEach((el, i) => { if(el) el.innerHTML = ph(i); });
     }
     renderFeaturedPlaceholder();
 
+    // Boot DB featured safely after app.js loads
     async function bootFeaturedDB(){
-      for(let i=0;i<32;i++){
-        if(typeof window.loadFeaturedFromDB === "function") break;
+      // wait for app.js to create supabase + featured loader
+      for(let i=0;i<30;i++){
+        if(typeof window.loadFeaturedFromDB === "function" || (window.LARMAH?.supabase?.ensure && window.supabaseClient)) break;
         await new Promise(r => setTimeout(r, 150));
       }
       if(typeof window.loadFeaturedFromDB === "function"){
@@ -2068,26 +2033,7 @@
       if(getRoute() === "home") bootFeaturedDB();
     });
 
-    // ===== Reveal
-    function bootReveal(){
-      const els = Array.from(document.querySelectorAll(".reveal"));
-      if(!("IntersectionObserver" in window)){
-        els.forEach(el => el.classList.add("show"));
-        return;
-      }
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(en => {
-          if(en.isIntersecting){
-            en.target.classList.add("show");
-            io.unobserve(en.target);
-          }
-        });
-      }, { threshold: 0.12 });
-      els.forEach(el => io.observe(el));
-    }
-    document.addEventListener("DOMContentLoaded", bootReveal);
-
-    // Expose globals (for app.js)
+    // Expose globals used by app.js-rendered featured cards
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
     window.openWA = openWA;
