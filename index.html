@@ -1,3 +1,12 @@
+<!-- =========================
+     index.html (FULL — CLEAN + SYNCED)
+     ✅ Syncs visual language with real-estate.html + logistics.html
+     ✅ Not rowdy: reduced repeated info, clear hierarchy
+     ✅ Mobile responsive, clean spacing, focused CTAs
+     ✅ Featured pulls from Supabase listings where featured=true and status=active
+     ✅ Featured cards: description preview + View more modal (price/ref/actions)
+     ✅ Quick request switcher (Real Estate / Logistics) without clutter
+========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
 <head>
@@ -35,13 +44,12 @@
 
   <!-- Performance -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link rel="preconnect" href="https://source.unsplash.com" crossorigin />
-  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- ✅ Supabase + App.js (Featured pulls from DB) -->
+  <!-- ✅ Supabase + app.js -->
   <script>
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
     window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
@@ -108,7 +116,7 @@
       --iconBg: rgba(212,175,55,.10);
       --iconLine: rgba(212,175,55,.25);
       --good: rgba(0,217,129,.95);
-      --warn: rgba(255,187,0,.95);
+      --bad: rgba(255,90,103,.95);
 
       --logoGlow: 0 0 22px rgba(212,175,55,.14);
       --logoRing: rgba(255,255,255,.12);
@@ -134,7 +142,8 @@
       --iconBg: rgba(212,175,55,.16);
       --iconLine: rgba(212,175,55,.35);
       --good: rgba(0,140,90,.92);
-      --warn: rgba(180,110,0,.92);
+      --bad: rgba(200,34,60,.90);
+
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
 
@@ -164,11 +173,11 @@
       overflow-x:hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      padding-bottom: 0;
     }
 
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
+
     .container{
       max-width: var(--max);
       margin: 0 auto;
@@ -176,7 +185,6 @@
       padding-right: max(16px, var(--safeR));
     }
 
-    /* Skip link */
     .skip{
       position:absolute; left:-999px; top:10px;
       padding:10px 12px;
@@ -194,10 +202,6 @@
       border-radius: 12px;
     }
 
-    /* Pages router */
-    .page{ display:none; }
-    .page.is-active{ display:block; }
-
     /* Header */
     header{
       position:sticky;
@@ -207,23 +211,12 @@
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line2);
     }
-    .header-inner{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding: 12px 0;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width: 220px;
-    }
+    .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
+    .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
 
     .logo-wrap{
       position:relative;
-      width:44px;
-      height:44px;
+      width:44px; height:44px;
       border-radius: 14px;
       padding: 2px;
       background:
@@ -241,61 +234,27 @@
       inset:-10px;
       background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
       filter: blur(12px);
-      opacity: .8;
+      opacity:.8;
       pointer-events:none;
       z-index:-1;
     }
     .logo-wrap img{
-      width:100%;
-      height:100%;
+      width:100%; height:100%;
       object-fit: cover;
       display:block;
       border-radius: 12px;
       border: 1px solid var(--line2);
       background: var(--logoBg);
     }
-    .brand .btxt{
-      display:flex;
-      flex-direction:column;
-      line-height:1.05;
-      gap:4px;
-      min-width:0;
-    }
-    .brand .bname{
-      font-weight: 950;
-      letter-spacing:-0.2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .brand .bsub{
-      font-size:.86rem;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .brand .btxt{ display:flex; flex-direction:column; line-height:1.05; gap:4px; min-width:0; }
+    .brand .bname{ font-weight: 950; letter-spacing:-0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .brand .bsub{ font-size:.86rem; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
     nav{ margin-left:auto; }
-    nav ul{
-      display:flex;
-      list-style:none;
-      gap:18px;
-      padding:0; margin:0;
-      align-items:center;
-    }
-    .nav-link{
-      color: var(--text);
-      opacity:.9;
-      font-weight: 850;
-      font-size: .95rem;
-    }
+    nav ul{ display:flex; list-style:none; gap:18px; padding:0; margin:0; align-items:center; }
+    .nav-link{ color: var(--text); opacity:.9; font-weight: 850; font-size: .95rem; position:relative; }
     .nav-link:hover{ color: var(--gold); opacity:1; }
-    .nav-link.is-active{
-      color: var(--gold);
-      opacity: 1;
-      position:relative;
-    }
+    .nav-link.is-active{ color: var(--gold); opacity:1; }
     .nav-link.is-active::after{
       content:"";
       position:absolute;
@@ -303,16 +262,21 @@
       bottom:-12px;
       height:2px;
       background: rgba(212,175,55,.65);
-      border-radius: 99px;
+      border-radius: 999px;
     }
 
-    .header-actions{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      margin-left: 10px;
+    .header-actions{ display:flex; gap:10px; align-items:center; margin-left: 10px; }
+    .icon-btn{
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      display:inline-flex; align-items:center; justify-content:center;
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
     }
-
+    .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
     .menu-btn{
       display:none;
       border: 1px solid var(--line);
@@ -322,28 +286,15 @@
       padding: 10px 12px;
       cursor:pointer;
     }
-    .icon-btn{
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-      transition: transform .16s var(--ease), filter .16s var(--ease);
-    }
-    .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-    .icon-btn:active{ transform: translateY(0); }
-
     @media (max-width: 980px){
       nav{ display:none; }
-      .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
-      .header-actions{ margin-left: auto; }
-      /* leave space for WA button so it never covers content */
+      .menu-btn{ display:inline-flex; }
+      .header-actions{ margin-left:auto; }
       body{ padding-bottom: calc(88px + var(--safeB)); }
+      .brand{ min-width: 0; }
+      .brand .bsub{ display:none; }
+      .logo-wrap{ width:40px; height:40px; }
+      .icon-btn{ width:40px; height:40px; }
     }
 
     /* Mobile sheet */
@@ -373,12 +324,8 @@
       margin-bottom: 10px;
       gap: 10px;
     }
-    .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
     .sheet a{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding: 14px 12px;
       border-radius: 14px;
       border: 1px solid var(--line2);
@@ -387,12 +334,7 @@
       margin-bottom: 10px;
       font-weight: 900;
     }
-    .sheet-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 8px;
-    }
+    .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; }
     .sheet-actions .btn{ flex:1; min-width: 0; }
 
     /* Buttons */
@@ -410,51 +352,20 @@
       cursor:pointer;
       font-weight: 950;
       transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
-      text-decoration:none;
       white-space: nowrap;
       user-select:none;
+      text-decoration:none;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
     .btn:active{ transform: translateY(0); }
-    .btn.solid{
-      background: var(--gold);
-      color: #111;
-      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-    }
-    .btn.primary{
-      background: var(--panel2);
-      border-color: var(--line);
-    }
-    .btn.ghost{
-      background: transparent;
-      border-color: var(--line2);
-    }
-    .btn.small{
-      min-height: 40px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-weight: 900;
-    }
+    .btn.solid{ background: var(--gold); color:#111; border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
+    .btn.primary{ background: var(--panel2); border-color: var(--line); }
+    .btn.ghost{ background: transparent; border-color: var(--line2); }
+    .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
 
-    /* Chips */
-    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 88%, transparent);
-      font-weight: 900;
-      font-size: .92rem;
-    }
-    .chip i{ color: var(--gold); }
-
-    /* Hero/Home */
-    .hero{ padding: 18px 0 0; }
-    .hero-box{
+    /* Hero */
+    .page-wrap{ padding: 18px 0 0; }
+    .hero{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
       background: var(--panel2);
@@ -463,7 +374,7 @@
       position:relative;
       isolation:isolate;
     }
-    .hero-box::before{
+    .hero::before{
       content:"";
       position:absolute; inset:-2px;
       background:
@@ -473,32 +384,22 @@
       pointer-events:none;
       z-index:-1;
     }
-    .hero-row{
+    .hero-grid{
       display:grid;
       gap: 14px;
       padding: 16px;
+      grid-template-columns: 1.1fr .9fr;
       align-items:start;
     }
-    @media (min-width: 980px){
-      .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; }
-    }
+    @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
 
-    .kicker{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      color: var(--muted);
-      font-weight: 850;
-      letter-spacing: .1px;
-      margin-bottom: 10px;
-    }
+    .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
     .kicker .dot{ opacity:.65; }
     h1{
       margin: 6px 0 10px;
-      font-size: clamp(2.0rem, 4vw, 3.05rem);
-      line-height: 1.02;
-      letter-spacing: -0.6px;
+      font-size: clamp(2.0rem, 4vw, 2.9rem);
+      line-height: 1.06;
+      letter-spacing:-0.6px;
     }
     .gold{
       background: linear-gradient(180deg, var(--gold2), var(--gold));
@@ -507,40 +408,50 @@
       color: transparent;
     }
     .lead{
-      margin: 0;
+      margin:0;
       color: var(--muted);
       font-size: 1.02rem;
       line-height: 1.55;
     }
-    .hero-actions{
-      display:flex; gap:12px; flex-wrap:wrap;
-      margin-top: 12px;
-    }
+    .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
+    @media (max-width: 520px){ .hero-actions{ flex-direction:column; } .hero-actions .btn{ width:100%; } }
 
-    .live-row{
-      display:flex; gap:12px; flex-wrap:wrap; align-items:center;
-      margin-top: 12px;
+    /* hero media */
+    .hero-media{
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      position:relative;
+      min-height: 280px;
+      isolation:isolate;
     }
-    .live-dot{
-      display:inline-flex; align-items:center; gap:8px;
-      font-weight: 950;
-      font-size: .86rem;
-      color: var(--good);
+    .hero-media img{
+      width:100%;
+      height: 280px;
+      object-fit: cover;
+      display:block;
+      opacity:.94;
+      transform: scale(1.01);
+      transition: opacity .55s var(--ease), transform .9s var(--ease);
     }
-    .live-dot i{ font-size: 9px; }
-    .trust-mini{
-      display:inline-flex; align-items:center; gap:8px;
-      font-weight: 900;
-      font-size: .86rem;
-      color: var(--muted2);
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
+    @media (max-width: 620px){ .hero-media img{ height: 240px; } }
+    .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
+    .hero-media .cap{
+      position:absolute; left:12px; right:12px; bottom:10px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--ctaLine);
+      background: var(--ctaBg);
+      backdrop-filter: blur(10px);
     }
-    .trust-mini i{ color: var(--gold); }
+    .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
+    .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
+    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
+    .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
+    .hero-bar.run{ width: 100%; }
 
-    /* Switch tabs */
+    /* Switcher */
     .switcher{
       margin-top: 14px;
       border-top: 1px solid var(--line2);
@@ -552,13 +463,11 @@
       justify-content:space-between;
     }
     .seg{
-      display:flex;
-      gap: 6px;
+      display:flex; gap:6px;
       padding: 6px;
       border-radius: 16px;
       border: 1px solid var(--line);
       background: var(--panel);
-      width: fit-content;
     }
     .seg button{
       border: 0;
@@ -581,14 +490,8 @@
       border: 1px solid color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
     }
     .seg button i{ color: var(--gold); }
-
-    .switch-right{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      color: var(--muted);
-      font-weight: 850;
-      font-size: .92rem;
-    }
-    .switch-right b{ color: var(--text); }
+    .switch-note{ color: var(--muted); font-weight: 850; font-size: .92rem; }
+    .switch-note b{ color: var(--text); }
 
     /* Forms */
     .form-wrap{ margin-top: 10px; }
@@ -611,129 +514,33 @@
     @media (max-width: 520px){ .form-grid{ grid-template-columns: 1fr; } }
 
     .field{ display:flex; flex-direction:column; gap:6px; }
-    label{
-      font-size: .78rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--muted2);
-    }
+    label{ font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
     input, select, textarea{
       border-radius: 14px;
       border: 1px solid var(--line);
       background: var(--panel2);
       color: var(--text);
-      padding: 12px 12px;
+      padding: 12px;
       min-height: 46px;
       outline:none;
+      font-family: inherit;
+      font-size: 16px; /* prevent iOS zoom */
     }
     textarea{ min-height: 92px; resize: vertical; }
-    input::placeholder, textarea::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
-
-    .form-actions{
-      margin-top: 12px;
-      display:flex;
-      gap:12px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    /* Logistics strip */
-    .logistics-strip{
-      margin-top: 12px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      overflow:hidden;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-      justify-content:space-between;
-      padding: 12px;
-    }
-    .logistics-strip.invert{
-      background: linear-gradient(135deg, rgba(212,175,55,.95), rgba(245,213,122,.86));
-      border-color: rgba(212,175,55,.45);
-      box-shadow: var(--shadow2);
-    }
-    .logistics-left{ display:flex; gap: 10px; align-items:flex-start; min-width: 0; }
-    .logi-icn{
-      width:42px; height:42px;
-      display:flex; align-items:center; justify-content:center;
-      border-radius: 14px;
-      background: var(--iconBg);
-      border: 1px solid var(--iconLine);
-      color: var(--gold2);
-      flex: 0 0 auto;
-    }
-    .logistics-strip.invert .logi-icn{
-      background: rgba(0,0,0,.12);
-      border-color: rgba(0,0,0,.18);
-      color: #111;
-    }
-    .logistics-title{ font-weight: 950; margin: 0 0 2px; letter-spacing: -0.2px; }
-    .logistics-sub{ margin: 0; font-size: .94rem; line-height: 1.35; color: var(--muted); }
-    .logistics-strip.invert .logistics-title{ color:#111; }
-    .logistics-strip.invert .logistics-sub{ color: rgba(0,0,0,.78); }
-    .logistics-strip.invert .btn.solid{
-      background: #0b0f1a;
-      color: var(--gold2);
-      border-color: rgba(0,0,0,.35);
-    }
-
-    /* Hero carousel */
-    .hero-media{
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      position:relative;
-      min-height: 320px;
-      isolation:isolate;
-    }
-    .hero-media img{
-      width:100%;
-      height: 320px;
-      object-fit: cover;
-      display:block;
-      opacity:.94;
-      transform: scale(1.01);
-      transition: opacity .55s var(--ease), transform .9s var(--ease);
-    }
-    .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
-    .hero-media .cap{
-      position:absolute;
-      left: 12px; right: 12px; bottom: 10px;
-      padding: 10px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--ctaLine);
-      background: var(--ctaBg);
-      backdrop-filter: blur(10px);
-    }
-    .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
-    .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
-    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
-    .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
-    .hero-bar.run{ width: 100%; }
+    .form-actions{ margin-top: 12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    @media (max-width: 520px){ .form-actions{ flex-direction:column; } .form-actions .btn{ width:100%; } }
 
     /* Sections */
     .section{ padding: 18px 0; }
     .section-head{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 12px;
-      flex-wrap:wrap;
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:12px; margin-bottom: 12px; flex-wrap:wrap;
     }
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
-    /* ✅ Responsive grids (better tablet -> mobile) */
-    .grid{
-      display:grid;
-      gap: 14px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+    /* Featured grid */
+    .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
 
@@ -743,154 +550,221 @@
       background: var(--panel);
       overflow:hidden;
       box-shadow: var(--shadow2);
-      transition: opacity .45s var(--ease), transform .45s var(--ease), filter .45s var(--ease);
+      transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease), filter .18s var(--ease);
     }
-    .card:hover{ transform: translateY(-2px); filter: brightness(1.02); }
-    .card.is-fading{ opacity:.22; transform: translateY(2px); filter:none; }
-    .card img{ width:100%; height: 180px; object-fit: cover; display:block; opacity:.92; }
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
+      background: color-mix(in oklab, var(--panel) 94%, white 6%);
+      filter: brightness(1.02);
+    }
+
+    /* featured media carousel */
+    .media{
+      width: calc(100% - 24px);
+      height: 190px;
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid var(--line2);
+      background: color-mix(in oklab, var(--bg2) 60%, #000 40%);
+      margin: 12px 12px 0;
+      position:relative;
+      isolation:isolate;
+      user-select:none;
+    }
+    .media img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+      transform: scale(1.01);
+      opacity:.95;
+      transition: opacity .45s var(--ease), transform .7s var(--ease);
+    }
+    .media.is-fading img{ opacity:.18; transform: scale(1.03); }
+    .media::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,.32), rgba(0,0,0,0) 55%);
+      pointer-events:none;
+      z-index:1;
+    }
+    .media-nav{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 10px;
+      pointer-events:none;
+      z-index:2;
+    }
+    .media-btn{
+      width:34px; height:34px; border-radius:12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.14);
+      display:grid; place-items:center;
+      color:#fff;
+      pointer-events:auto;
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+      transition: transform .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease);
+    }
+    .media-btn:hover{
+      background: rgba(0,0,0,0.55);
+      border-color: rgba(212,175,55,.30);
+      transform: translateY(-1px);
+    }
+    .media-dots{
+      position:absolute; left:0; right:0; bottom:10px;
+      display:flex; justify-content:center; gap:6px;
+      pointer-events:none;
+      z-index:2;
+    }
+    .media-dot{
+      width:7px; height:7px; border-radius:999px;
+      background: rgba(255,255,255,0.35);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .media-dot.active{ background: rgba(255,255,255,0.92); }
+
     .card-body{ padding: 12px; }
-    .card-title{ font-weight: 950; margin: 0 0 8px; letter-spacing:-0.15px; }
-    .meta{ display:flex; gap:10px; flex-wrap:wrap; color: var(--muted); font-size: .9rem; }
-    .pill{
-      display:inline-flex;
-      align-items:center;
+    .title{
+      font-weight: 950;
+      margin: 2px 0 8px;
+      letter-spacing:-0.2px;
+      display:flex;
       gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .desc{
+      margin:0;
+      color: var(--muted);
+      line-height:1.55;
+      font-size: .96rem;
+      display:-webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+    .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
+    .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px; }
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
       padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid var(--line2);
       background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 85%, transparent);
-      font-weight: 800;
+      color: color-mix(in oklab, var(--text) 82%, transparent);
+      font-weight: 850;
+      font-size: .84rem;
     }
 
-    /* Services */
-    .services{
-      display:grid;
-      gap: 14px;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-    @media (max-width: 980px){ .services{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 620px){ .services{ grid-template-columns: 1fr; } }
-
-    .svc{
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: var(--panel);
-      box-shadow: var(--shadow2);
-      padding: 14px;
-      position:relative;
-      overflow:hidden;
-    }
-    .svc::after{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(260px 120px at 30% 0%, rgba(212,175,55,.12), transparent 60%),
-        radial-gradient(260px 120px at 90% 25%, rgba(0,217,129,.07), transparent 60%);
-      pointer-events:none;
-      opacity:.9;
-    }
-    .svc-top{ display:flex; gap:10px; align-items:flex-start; position:relative; z-index:1; }
-    .svc-icn{
-      width:44px; height:44px;
-      border-radius: 14px;
-      display:flex; align-items:center; justify-content:center;
-      background: var(--iconBg);
-      border: 1px solid var(--iconLine);
-      color: var(--gold2);
-      flex:0 0 auto;
-    }
-    .svc h3{ margin:0; font-size: 1.02rem; letter-spacing:-0.2px; position:relative; z-index:1; }
-    .svc p{ margin: 6px 0 0; color: var(--muted); line-height: 1.45; position:relative; z-index:1; }
-    .svc-actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; position:relative; z-index:1; }
-    @media (max-width: 620px){
-      .svc-actions{ gap:8px; }
-      .svc-actions .btn{ flex:1; min-width: 0; }
-    }
-
-    /* How it works */
-    .steps{
-      display:grid;
-      gap: 12px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    @media (max-width: 980px){ .steps{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 620px){ .steps{ grid-template-columns: 1fr; } }
-
-    .step{
-      border-radius: var(--radius);
+    .more-row{ display:flex; justify-content:flex-end; margin-top: 8px; }
+    .link-btn{
       border: 1px solid var(--line2);
-      background: var(--panel);
-      padding: 14px;
-      box-shadow: var(--shadow2);
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-    }
-    .step b{ display:block; }
-    .step span{ display:block; color: var(--muted); margin-top: 4px; line-height: 1.45; }
-    .step .n{
-      width: 40px; height: 40px;
-      border-radius: 14px;
-      display:flex; align-items:center; justify-content:center;
-      background: color-mix(in oklab, var(--gold) 18%, transparent);
-      border: 1px solid color-mix(in oklab, var(--gold) 30%, var(--line2) 70%);
+      background: transparent;
+      color: color-mix(in oklab, var(--text) 90%, transparent);
       font-weight: 950;
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease), border-color .16s var(--ease);
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+    }
+    .link-btn:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      border-color: color-mix(in oklab, var(--gold) 30%, var(--line2) 70%);
       color: var(--gold2);
-      flex:0 0 auto;
     }
 
-    /* About page */
-    .about-wrap{
-      margin-top: 18px;
-      border-radius: var(--radius2);
+    .actions-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
+    .actions-row .btn{ flex: 1; }
+    @media (max-width: 520px){ .actions-row .btn{ width:100%; flex:unset; } }
+
+    .star{
+      display:inline-flex; gap:6px; align-items:center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,.28);
+      background: rgba(212,175,55,.10);
+      color: var(--gold2);
+      font-weight: 900;
+      font-size: .78rem;
+      letter-spacing: .02em;
+    }
+
+    .notice{
+      border-radius: 16px;
+      padding: 12px;
       border: 1px solid var(--line);
       background: var(--panel2);
+      color: var(--muted);
+    }
+    .notice strong{ color: var(--text); }
+
+    /* Modal (synced style) */
+    .modalOverlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.56);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      z-index: 140;
+      padding: 14px;
+    }
+    .modalOverlay.open{ display:flex; }
+    .modal{
+      width: min(860px, 100%);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 86%, #000 14%);
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    .about-hero{
-      display:grid;
-      gap: 14px;
-      padding: 16px;
-      grid-template-columns: 1.15fr .85fr;
-      align-items:start;
+    .modalHead{
+      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
+      padding: 12px 12px;
+      border-bottom: 1px solid var(--line2);
+      background: color-mix(in oklab, var(--panel2) 65%, transparent);
     }
-    @media (max-width: 980px){
-      .about-hero{ grid-template-columns: 1fr; }
-    }
-    .about-hero h1{ font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
-    .about-card{
-      border-radius: var(--radius);
+    .modalTitle{ font-weight: 950; letter-spacing:-0.2px; line-height:1.15; margin:0; font-size: 1.08rem; }
+    .modalMeta{ margin-top: 8px; display:flex; gap:8px; flex-wrap:wrap; }
+    .modalBody{ padding: 12px; max-height: min(65vh, 520px); overflow:auto; }
+    .modalDesc{
+      white-space: pre-wrap;
+      line-height: 1.65;
+      color: color-mix(in oklab, var(--text) 92%, transparent);
+      font-size: 1.0rem;
+      border-radius: 14px;
       border: 1px solid var(--line2);
-      background: var(--panel);
-      overflow:hidden;
-      box-shadow: var(--shadow2);
+      background: var(--panel2);
+      padding: 12px;
+      margin:0;
     }
-    .about-card img{ width:100%; height: 200px; object-fit: cover; display:block; opacity:.92; }
-    .about-card .card-body{ padding: 12px; }
-    .about-points{ margin-top: 12px; display:grid; gap: 10px; }
-    .ap{
+    .modalFoot{
+      padding: 12px;
+      border-top: 1px solid var(--line2);
       display:flex;
       gap:10px;
-      align-items:flex-start;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line2);
-      background: var(--panel);
+      flex-wrap:wrap;
+      justify-content:space-between;
+      background: color-mix(in oklab, var(--panel2) 65%, transparent);
     }
-    .ap i{ color: var(--gold); margin-top: 2px; width: 18px; }
-    .ap b{ display:block; }
-    .ap span{ color: var(--muted2); font-size: .92rem; display:block; margin-top: 3px; line-height: 1.35; }
-    .notice{
-      border-radius: 14px;
-      padding: 12px 12px;
-      border: 1px solid var(--line2);
-      background: var(--panel);
-      color: var(--muted);
-    }
+    .modalFoot .left, .modalFoot .right{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
 
-    /* Footer */
+    .copy-btn{
+      border: 1px dashed var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-weight: 950;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor:pointer;
+    }
+    .copy-btn:hover{ color: var(--gold2); border-color: rgba(212,175,55,.35); }
+
+    /* Footer (same family as other pages) */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
@@ -906,10 +780,8 @@
         var(--panel2);
       box-shadow: var(--shadow);
       padding: 14px;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; gap:12px;
+      align-items:center; justify-content:space-between;
       flex-wrap:wrap;
     }
     .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
@@ -923,29 +795,15 @@
     }
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
 
-    .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
-    .brandtext{ min-width:0; }
-    .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
-    .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
-
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    .footer-links a{
-      display:block;
-      padding: 6px 0;
-      color: color-mix(in oklab, var(--text) 84%, transparent);
-      font-weight: 600;
-    }
+    .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
     .footer-links a:hover{ color: var(--gold); }
 
     .contact-stack{ display:grid; gap: 10px; }
     .contact-chip{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
+      display:flex; gap:10px; align-items:flex-start;
+      padding: 10px 12px; border-radius: 14px;
+      border: 1px solid var(--line); background: var(--panel2);
     }
     .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
     .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
@@ -955,25 +813,19 @@
     .social a{
       width: 42px; height: 42px;
       display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--text);
+      border-radius: 12px; border: 1px solid var(--line);
+      background: var(--panel2); color: var(--text);
     }
     .social a:hover{
-      color: #111;
-      background: var(--gold);
+      color:#111; background: var(--gold);
       border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
     }
 
     .footer-bottom{
       border-top: 1px solid var(--line2);
       padding: 12px 0 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
       color: var(--muted2);
       font-size: .9rem;
     }
@@ -1016,54 +868,13 @@
     }
     .wa-btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
     .wa-btn i{ font-size: 20px; }
-    @media (min-width: 980px){
-      .wa-pill{ display:inline-flex; }
-    }
+    @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
 
-    /* ===== Mobile polish extras ===== */
+    /* Small spacing polish */
     @media (max-width: 620px){
-      .header-inner{ padding: 10px 0; gap:10px; }
-      .brand{ min-width: 0; }
-      .brand .bsub{ display:none; }
-      .logo-wrap{ width:40px; height:40px; border-radius: 13px; }
-      .logo-wrap img{ border-radius: 11px; }
-      .icon-btn{ width:40px; height:40px; }
-      .menu-btn{ border-radius: 12px; }
-
-      .hero{ padding: 14px 0 0; }
-      .hero-row{ padding: 12px; gap: 12px; }
+      .hero-grid{ padding: 12px; }
       h1{ font-size: clamp(1.72rem, 7vw, 2.25rem); line-height: 1.05; }
       .lead{ font-size: .98rem; }
-
-      /* swipe chips on phone */
-      .chips{
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 6px;
-        margin-right: -10px;
-      }
-      .chip{ flex: 0 0 auto; }
-
-      /* prevent iOS zoom */
-      input, select, textarea{ font-size: 16px; }
-
-      .hero-media{ min-height: 240px; }
-      .hero-media img{ height: 240px; }
-      .hero-media .cap{ left: 10px; right: 10px; bottom: 10px; }
-
-      .footer-cta > div:last-child{ width:100%; }
-      .footer-cta > div:last-child .btn{ width:100%; }
-    }
-
-    @media (max-width: 520px){
-      .hero-actions{ flex-direction:column; }
-      .hero-actions .btn{ width:100%; }
-      .form-actions{ flex-direction:column; }
-      .form-actions .btn{ width:100%; }
-      .logistics-strip{ flex-direction:column; align-items:stretch; }
-      .logistics-strip .btn{ width:100%; }
-      .form-grid .field{ grid-column: 1 / -1 !important; }
     }
   </style>
 </head>
@@ -1075,29 +886,32 @@
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="sheet" role="dialog" aria-label="Menu">
       <div class="sheet-head">
-        <div class="sheet-brandline">
+        <div class="brand" style="min-width:0">
           <div class="logo-wrap" aria-hidden="true">
             <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
           </div>
-          <div style="min-width:0">
-            <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
-            <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
+          <div class="btxt">
+            <div class="bname">Larmah Enterprise</div>
+            <div class="bsub" style="display:block">Real Estate • Logistics</div>
           </div>
         </div>
-
         <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <a href="#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="#home" onclick="toggleMenu(false)"><span><i class="fa-solid fa-house" style="color:var(--gold)"></i> Home</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="#about" onclick="toggleMenu(false)"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
-        <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
+        <button class="btn primary" type="button" onclick="toggleTheme()">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
+        </button>
+        <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
         </button>
       </div>
     </div>
@@ -1117,18 +931,18 @@
 
       <nav aria-label="Primary navigation">
         <ul>
-          <li><a class="nav-link" data-nav="about" href="#about">About</a></li>
-         <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+          <li><a class="nav-link is-active" id="navHome" href="#home">Home</a></li>
+          <li><a class="nav-link" id="navAbout" href="#about">About</a></li>
+          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
         </ul>
       </nav>
 
       <div class="header-actions">
-        <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme" title="Toggle theme">
+        <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
-
         <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -1136,546 +950,213 @@
     </div>
   </header>
 
-  <main id="main" class="container" tabindex="-1">
-    <!-- ======================
-         HOME PAGE (DEFAULT)
-         ====================== -->
-    <div class="page is-active" id="page-home" data-page="home">
-      <section class="hero" aria-label="Hero">
-        <div class="hero-box">
-          <div class="hero-row">
-            <div>
-              <div class="kicker" aria-label="Trust badges">
-                <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span><span class="dot">•</span>
-                <span><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span><span class="dot">•</span>
-                <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
-              </div>
-
-              <h1>
-                Verified <span class="gold">stays</span> and trusted <span class="gold">movement</span> across Nigeria.
-              </h1>
-
-              <p class="lead">
-                From premium shortlets and verified listings to dispatch, pickups, and freight coordination — Larmah runs a scam-resistant,
-                fast-confirmation workflow that keeps your bookings and deliveries clean, clear, and coordinated.
-              </p>
-
-              <div class="hero-actions">
-                <button class="btn solid" type="button" onclick="scrollToEl('#browse')"><i class="fa-solid fa-sparkles"></i> Browse Featured</button>
-                <button class="btn primary" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
-                  <i class="fa-solid fa-truck-fast"></i> Book Logistics
-                </button>
-                <button class="btn ghost" type="button" onclick="openWA(buildMsg('General Enquiry', { Topic:'Real Estate / Logistics', Message:'Hello Larmah, I need assistance.' }))">
-                  <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-                </button>
-              </div>
-
-              <div class="live-row" aria-live="polite">
-                <div class="live-dot"><i class="fa-solid fa-circle"></i> Fast responses available</div>
-                <div class="trust-mini"><i class="fa-solid fa-receipt"></i> Clear pricing & references</div>
-                <div class="trust-mini"><i class="fa-solid fa-user-shield"></i> Scam-resistant flow</div>
-              </div>
-
-              <div class="chips" aria-label="Highlights">
-                <div class="chip"><i class="fa-solid fa-house"></i> Shortlets • Rentals • Sales</div>
-                <div class="chip"><i class="fa-solid fa-motorcycle"></i> Dispatch • Same-day</div>
-                <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage support</div>
-              </div>
-
-              <!-- Mode switch -->
-              <div class="switcher" id="quick" aria-label="Quick request switcher">
-                <div class="seg" role="tablist" aria-label="Choose quick request">
-                  <button type="button" class="is-active" id="tabRealEstate" role="tab" aria-selected="true" onclick="setMode('realestate')">
-                    <i class="fa-solid fa-house"></i> Real Estate
-                  </button>
-                  <button type="button" id="tabLogistics" role="tab" aria-selected="false" onclick="setMode('logistics')">
-                    <i class="fa-solid fa-truck-fast"></i> Logistics
-                  </button>
-                </div>
-
-                <div class="switch-right">
-                  <span>Tip: <b>budget + location</b> = faster matching.</span>
-                </div>
-              </div>
-
-              <div class="form-wrap" aria-label="Quick forms">
-                <!-- REAL ESTATE FORM -->
-                <div class="form is-active" id="formRealEstate" role="tabpanel" aria-labelledby="tabRealEstate">
-                  <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-                    <div style="font-weight:950; letter-spacing:-0.2px;">
-                      Shortlet / Stay Request
-                      <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Check availability, confirm price, reserve via WhatsApp.</div>
-                    </div>
-                    <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> View All</a>
-                  </div>
-
-                  <div class="form-grid" style="margin-top:12px;">
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="checkin">Check-in</label>
-                      <input id="checkin" type="date" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="checkout">Check-out</label>
-                      <input id="checkout" type="date" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 1;">
-                      <label for="guests">Guests</label>
-                      <select id="guests">
-                        <option value="1">1</option>
-                        <option value="2" selected>2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5+">5+</option>
-                      </select>
-                    </div>
-
-                    <div class="field" style="grid-column: span 1;">
-                      <label for="category">Category</label>
-                      <select id="category">
-                        <option value="Any" selected>Any</option>
-                        <option value="Studio">Studio</option>
-                        <option value="1 Bedroom">1 Bedroom</option>
-                        <option value="2 Bedroom">2 Bedroom</option>
-                        <option value="3 Bedroom">3 Bedroom</option>
-                        <option value="Family">Family</option>
-                        <option value="Business">Business</option>
-                        <option value="Premium">Premium</option>
-                      </select>
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="location">Location</label>
-                      <select id="location">
-                        <option value="Any" selected>Any</option>
-                        <option value="Ikoyi">Ikoyi</option>
-                        <option value="Lekki">Lekki</option>
-                        <option value="Victoria Island">Victoria Island</option>
-                        <option value="Yaba">Yaba</option>
-                        <option value="Mainland">Mainland</option>
-                      </select>
-                    </div>
-
-                    <div class="field" style="grid-column: span 8;">
-                      <label for="budget">Budget (optional)</label>
-                      <input id="budget" type="text" inputmode="numeric" placeholder="e.g., ₦120,000 per night / ₦500k total" />
-                    </div>
-                  </div>
-
-                  <div class="form-actions">
-                    <button class="btn solid" type="button" onclick="submitRealEstate()">
-                      <i class="fa-solid fa-calendar-check"></i> Request Availability
-                    </button>
-                    <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
-                      <i class="fa-brands fa-whatsapp"></i> Chat Support
-                    </button>
-                  </div>
-
-                  <div class="logistics-strip invert" aria-label="Logistics add-on">
-                    <div class="logistics-left">
-                      <div class="logi-icn"><i class="fa-solid fa-car"></i></div>
-                      <div style="min-width:0">
-                        <div class="logistics-title">Need airport pickup or dispatch while you stay?</div>
-                        <p class="logistics-sub">
-                          Add movement support to your booking — reliable pickup + delivery, coordinated on WhatsApp.
-                        </p>
-                      </div>
-                    </div>
-                    <button class="btn small solid" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
-                      <i class="fa-solid fa-truck-fast"></i> Add Logistics
-                    </button>
-                  </div>
-                </div>
-
-                <!-- LOGISTICS FORM -->
-                <div class="form" id="formLogistics" role="tabpanel" aria-labelledby="tabLogistics">
-                  <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-                    <div style="font-weight:950; letter-spacing:-0.2px;">
-                      Logistics / Dispatch Request
-                      <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Get a quote, assign rider/vehicle, track updates via WhatsApp.</div>
-                    </div>
-                    <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck"></i> Logistics Page</a>
-                  </div>
-
-                  <div class="form-grid" style="margin-top:12px;">
-                    <div class="field" style="grid-column: span 4;">
-                      <label for="pickup">Pickup location</label>
-                      <input id="pickup" type="text" placeholder="e.g., Lekki Phase 1" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 4;">
-                      <label for="dropoff">Drop-off location</label>
-                      <input id="dropoff" type="text" placeholder="e.g., Victoria Island" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="pickDate">Date</label>
-                      <input id="pickDate" type="date" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="pickTime">Time (optional)</label>
-                      <input id="pickTime" type="time" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="vehicle">Vehicle</label>
-                      <select id="vehicle">
-                        <option value="Dispatch Bike" selected>Dispatch Bike</option>
-                        <option value="Car">Car</option>
-                        <option value="Van">Van</option>
-                        <option value="Mini Truck">Mini Truck</option>
-                        <option value="Truck / Haulage">Truck / Haulage</option>
-                      </select>
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="loadType">Load type</label>
-                      <select id="loadType">
-                        <option value="Documents">Documents</option>
-                        <option value="Small Package" selected>Small Package</option>
-                        <option value="Food / Consumables">Food / Consumables</option>
-                        <option value="Fragile Items">Fragile Items</option>
-                        <option value="Bulk / Freight">Bulk / Freight</option>
-                        <option value="Other">Other</option>
-                      </select>
-                    </div>
-
-                    <div class="field" style="grid-column: span 8;">
-                      <label for="logNotes">Notes (optional)</label>
-                      <textarea id="logNotes" placeholder="Add landmark, size/weight, urgency, special instructions..."></textarea>
-                    </div>
-                  </div>
-
-                  <div class="form-actions">
-                    <button class="btn solid" type="button" onclick="submitLogistics()">
-                      <i class="fa-solid fa-paper-plane"></i> Request Quote
-                    </button>
-                    <button class="btn primary" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
-                      <i class="fa-brands fa-whatsapp"></i> Chat Support
-                    </button>
-                  </div>
-
-                  <div class="logistics-strip" aria-label="Real estate add-on">
-                    <div class="logistics-left">
-                      <div class="logi-icn"><i class="fa-solid fa-building"></i></div>
-                      <div style="min-width:0">
-                        <div class="logistics-title">Need a shortlet too?</div>
-                        <p class="logistics-sub">
-                          We can match verified stays fast — send dates + budget and we’ll respond.
-                        </p>
-                      </div>
-                    </div>
-                    <button class="btn small primary" type="button" onclick="setMode('realestate'); scrollToEl('#quick')">
-                      <i class="fa-solid fa-house"></i> Switch to Real Estate
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div style="margin-top:10px; color:var(--muted); font-size:.92rem;">
-                Pro tip: If you’re in a rush, send “URGENT” + your details on WhatsApp for priority routing.
-              </div>
-            </div>
-
-            <aside class="hero-media" id="heroMedia" aria-label="Real estate and logistics carousel">
-              <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11" alt="Luxury apartment interior" decoding="async" fetchpriority="high">
-              <div class="cap">
-                <div class="hero-tag" id="heroTag">
-                  <i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate
-                </div>
-                <div class="hero-sub" id="heroSub">Verified listings and premium stays.</div>
-              </div>
-              <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="services" aria-label="Services">
-        <div class="section-head">
-          <div>
-            <h2>Two pillars. One trust-first workflow.</h2>
-            <p class="subhead">Choose a service and we’ll coordinate the rest on WhatsApp.</p>
-          </div>
-          <button class="btn small solid" type="button" onclick="openWA(buildMsg('Service Enquiry', { Message:'Hello Larmah, please share your current offerings and pricing.' }))">
-            <i class="fa-brands fa-whatsapp"></i> Ask Pricing
-          </button>
-        </div>
-
-        <div class="services">
-          <div class="svc">
-            <div class="svc-top">
-              <div class="svc-icn"><i class="fa-solid fa-house"></i></div>
-              <div>
-                <h3>Shortlets & Stays</h3>
-                <p>Verified options, clear pricing, and quick confirmations for Lagos stays.</p>
-                <div class="svc-actions">
-                  <button class="btn small solid" type="button" onclick="setMode('realestate'); scrollToEl('#quick')"><i class="fa-solid fa-calendar-check"></i> Request</button>
-                  <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> View</a>
-                </div>
-              </div>
-            </div>
+  <main id="main" class="container page-wrap" tabindex="-1">
+    <!-- HOME -->
+    <section id="home" class="hero" aria-label="Home hero">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker">
+            <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span><span class="dot">•</span>
+            <span><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span><span class="dot">•</span>
+            <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
           </div>
 
-          <div class="svc">
-            <div class="svc-top">
-              <div class="svc-icn"><i class="fa-solid fa-building-user"></i></div>
-              <div>
-                <h3>Rentals & Sales</h3>
-                <p>Trust-first sourcing for rentals and sales with cleaner documentation steps.</p>
-                <div class="svc-actions">
-                  <button class="btn small solid" type="button" onclick="openWA(buildMsg('Property Enquiry', { Type:'Rentals / Sales', Location:'', Budget:'', Message:'Hello Larmah, I need verified property options.' }))"><i class="fa-brands fa-whatsapp"></i> Enquire</button>
-                  <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-arrow-right"></i> Explore</a>
-                </div>
-              </div>
-            </div>
+          <h1>Verified <span class="gold">stays</span> & trusted <span class="gold">movement</span>.</h1>
+          <p class="lead">Browse featured listings, then request a booking or quote in one clean flow.</p>
+
+          <div class="hero-actions">
+            <a class="btn solid" href="#featured"><i class="fa-solid fa-sparkles"></i> Browse Featured</a>
+            <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
+            <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
           </div>
 
-          <div class="svc">
-            <div class="svc-top">
-              <div class="svc-icn"><i class="fa-solid fa-motorcycle"></i></div>
-              <div>
-                <h3>Dispatch & Pickup</h3>
-                <p>Same-day movement, pickups, deliveries — updates handled on WhatsApp.</p>
-                <div class="svc-actions">
-                  <button class="btn small solid" type="button" onclick="setMode('logistics'); scrollToEl('#quick')"><i class="fa-solid fa-paper-plane"></i> Quote</button>
-                  <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Details</a>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="svc">
-            <div class="svc-top">
-              <div class="svc-icn"><i class="fa-solid fa-boxes-stacked"></i></div>
-              <div>
-                <h3>Freight & Haulage</h3>
-                <p>Support for heavier loads and longer routes — coordinated, documented, tracked.</p>
-                <div class="svc-actions">
-                  <button class="btn small solid" type="button" onclick="openWA(buildMsg('Freight / Haulage Request', { Pickup:'', Dropoff:'', Load:'', Vehicle:'Truck / Haulage', Message:'Hello Larmah, I need freight movement support.' }))"><i class="fa-brands fa-whatsapp"></i> Request</button>
-                  <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-arrow-right"></i> Explore</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="browse" aria-label="Browse featured">
-        <div class="section-head">
-          <div>
-            <h2>Featured Listings</h2>
-            <p class="subhead">Pulled from DB (featured=true) and rotates automatically.</p>
-          </div>
-          <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
-        </div>
-
-        <div class="grid" id="featuredGrid">
-          <article class="card" id="feat0" aria-label="Featured listing 1"></article>
-          <article class="card" id="feat1" aria-label="Featured listing 2"></article>
-          <article class="card" id="feat2" aria-label="Featured listing 3"></article>
-        </div>
-      </section>
-
-      <section class="section" aria-label="How it works">
-        <div class="section-head">
-          <div>
-            <h2>How it works</h2>
-            <p class="subhead">Simple. Clear. WhatsApp-first.</p>
-          </div>
-        </div>
-
-        <div class="steps">
-          <div class="step">
-            <div class="n">1</div>
-            <div>
-              <b>Send your details</b>
-              <span>Dates + location + budget (real estate), or pickup + drop-off + load (logistics).</span>
-            </div>
-          </div>
-          <div class="step">
-            <div class="n">2</div>
-            <div>
-              <b>We confirm options</b>
-              <span>We share verified options, prices, and the best route to execute quickly.</span>
-            </div>
-          </div>
-          <div class="step">
-            <div class="n">3</div>
-            <div>
-              <b>We coordinate & update</b>
-              <span>Booking and movement updates happen in one thread — fewer mistakes, faster delivery.</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" aria-label="WhatsApp request CTA">
-        <div class="card" style="padding:14px;">
-          <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-            <div>
-              <h2 style="margin:0">Need something specific?</h2>
-              <p class="subhead" style="margin:6px 0 0">Tell us what you want — stays or movement — and we’ll respond via WhatsApp.</p>
-            </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <button class="btn solid" type="button"
-                onclick="openWA(buildMsg('Custom Request', { Type:'Real Estate / Logistics', Details:'', Message:'Hello Larmah, I need assistance. Here are my details...' }))">
-                <i class="fa-brands fa-whatsapp"></i> Start Request
+          <div class="switcher" id="quick">
+            <div class="seg" role="tablist" aria-label="Quick request">
+              <button type="button" class="is-active" id="tabRE" role="tab" aria-selected="true" onclick="setMode('realestate')">
+                <i class="fa-solid fa-house"></i> Real Estate
               </button>
-              <a class="btn primary" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Join Premium</a>
+              <button type="button" id="tabLG" role="tab" aria-selected="false" onclick="setMode('logistics')">
+                <i class="fa-solid fa-truck-fast"></i> Logistics
+              </button>
             </div>
+            <div class="switch-note">Tip: <b>budget + location</b> = faster matching.</div>
           </div>
-        </div>
-      </section>
-    </div>
 
-    <!-- ======================
-         ABOUT PAGE (INSIDE INDEX)
-         ====================== -->
-    <div class="page" id="page-about" data-page="about">
-      <section class="section" aria-label="About Larmah Enterprise">
-        <div class="about-wrap">
-          <div class="about-hero">
-            <div>
-              <div class="kicker">
-                <span>Trust-first</span><span class="dot">•</span>
-                <span>Verified operations</span><span class="dot">•</span>
-                <span>WhatsApp-first</span>
+          <div class="form-wrap">
+            <!-- Real Estate quick form -->
+            <div class="form is-active" id="formRE" role="tabpanel" aria-labelledby="tabRE">
+              <div class="form-grid">
+                <div class="field" style="grid-column: span 2;">
+                  <label for="re_in">Check-in</label>
+                  <input id="re_in" type="date" />
+                </div>
+                <div class="field" style="grid-column: span 2;">
+                  <label for="re_out">Check-out</label>
+                  <input id="re_out" type="date" />
+                </div>
+                <div class="field" style="grid-column: span 2;">
+                  <label for="re_loc">Location</label>
+                  <select id="re_loc">
+                    <option value="Any" selected>Any</option>
+                    <option value="Ikoyi">Ikoyi</option>
+                    <option value="Lekki">Lekki</option>
+                    <option value="Victoria Island">Victoria Island</option>
+                    <option value="Yaba">Yaba</option>
+                    <option value="Mainland">Mainland</option>
+                    <option value="Abuja">Abuja</option>
+                  </select>
+                </div>
+                <div class="field" style="grid-column: span 2;">
+                  <label for="re_budget">Budget (optional)</label>
+                  <input id="re_budget" placeholder="e.g., ₦120k/night" />
+                </div>
+                <div class="field" style="grid-column: span 8;">
+                  <label for="re_notes">Notes (optional)</label>
+                  <textarea id="re_notes" placeholder="Any preference? (pool, balcony, generator...)"></textarea>
+                </div>
               </div>
-
-              <h1>About Larmah Enterprise</h1>
-              <p class="lead">
-                Larmah Enterprise is a trust-first hub built on two pillars: verified real estate (shortlets, rentals, sales)
-                and dependable logistics (dispatch, pickups, haulage, and freight coordination). We reduce friction with clear
-                confirmations, clean references, and WhatsApp-first support.
-              </p>
-
-              <div class="hero-actions">
-                <a class="btn solid" href="#home"><i class="fa-solid fa-house"></i> Back to Home</a>
-                <button class="btn primary" type="button"
-                  onclick="openWA(buildMsg('Business Enquiry', { Topic:'Partnership / Listings / Logistics', Message:'Hello Larmah, I’d like to discuss a business enquiry.' }))">
-                  <i class="fa-brands fa-whatsapp"></i> Business Chat
+              <div class="form-actions">
+                <button class="btn solid" type="button" onclick="submitQuickRE()">
+                  <i class="fa-brands fa-whatsapp"></i> Request Availability
                 </button>
-              </div>
-
-              <div class="about-points">
-                <div class="ap">
-                  <i class="fa-solid fa-circle-check"></i>
-                  <div>
-                    <b>Verified Listings</b>
-                    <span>Clear listing details, basic verification, and scam-resistant confirmations.</span>
-                  </div>
-                </div>
-                <div class="ap">
-                  <i class="fa-solid fa-truck-fast"></i>
-                  <div>
-                    <b>Logistics Support</b>
-                    <span>Dispatch, pickups, haulage and coordination across Nigeria with real-time WhatsApp updates.</span>
-                  </div>
-                </div>
-                <div class="ap">
-                  <i class="fa-solid fa-shield-halved"></i>
-                  <div>
-                    <b>Trust-first Process</b>
-                    <span>Simple workflows, clean references, and customer support focused on speed and clarity.</span>
-                  </div>
-                </div>
-              </div>
-
-              <div style="margin-top:14px;">
-                <h2 style="margin:0;">Premium Investment Tracks</h2>
-                <p class="subhead" style="margin:6px 0 0;">
-                  Premium subscribers can participate in curated opportunities across real estate and logistics — with guidance,
-                  sourcing, and coordinated execution.
-                </p>
-
-                <div class="about-points" style="margin-top:12px;">
-                  <div class="ap">
-                    <i class="fa-solid fa-building"></i>
-                    <div>
-                      <b>Real Estate — Active Investing</b>
-                      <span>
-                        Buy-to-rent (shortlets/longlets), fix-and-flip, joint ventures, land banking, development participation,
-                        and deal sourcing support.
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="ap">
-                    <i class="fa-solid fa-coins"></i>
-                    <div>
-                      <b>Real Estate — Passive Investing</b>
-                      <span>
-                        Fractional participation, pooled deals, rent-share structures, property-backed notes, and curated
-                        income opportunities (subject to availability).
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="ap">
-                    <i class="fa-solid fa-truck"></i>
-                    <div>
-                      <b>Logistics — Fleet & Dispatch Returns</b>
-                      <span>
-                        Dispatch bike/vehicle rentals, partner-driver models, route-based earnings, managed operations,
-                        and utilization tracking.
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="ap">
-                    <i class="fa-solid fa-boxes-stacked"></i>
-                    <div>
-                      <b>Logistics — Freight & Movement Plays</b>
-                      <span>
-                        Freight participation, haulage partnerships, warehousing support, last-mile delivery capacity,
-                        and contract-linked movement opportunities.
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="notice" style="margin-top:12px;">
-                  <b style="color:var(--text)">Premium-only access:</b> only Premium subscribers are entitled to have an account.
-                  Join Premium to unlock your dashboard and investment tracks.<br/>
-                  <b style="color:var(--text)">Business Email:</b> <a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a><br/>
-                  <b style="color:var(--text)">WhatsApp:</b> +234 706 308 0605
-                  <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-                    <a class="btn small solid" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Join Premium</a>
-                    <button class="btn small primary" type="button"
-                      onclick="openWA(buildMsg('Premium Interest', { Topic:'Premium Investment Tracks', Message:'Hello Larmah, I want to join Premium and learn the available investment tracks.' }))">
-                      <i class="fa-brands fa-whatsapp"></i> Ask on WhatsApp
-                    </button>
-                  </div>
-                </div>
+                <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-arrow-right"></i> View All Listings</a>
               </div>
             </div>
 
-            <div class="about-card">
-              <img src="https://source.unsplash.com/1200x800/?lagos,real-estate&sig=777" alt="Lagos real estate" loading="lazy" decoding="async">
-              <div class="card-body">
-                <div class="card-title">What we do</div>
-                <div class="meta">
-                  <span class="pill"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Shortlets & listings</span>
-                  <span class="pill"><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Dispatch & pickup</span>
+            <!-- Logistics quick form -->
+            <div class="form" id="formLG" role="tabpanel" aria-labelledby="tabLG">
+              <div class="form-grid">
+                <div class="field" style="grid-column: span 4;">
+                  <label for="lg_pick">Pickup</label>
+                  <input id="lg_pick" placeholder="e.g., Lekki Phase 1" />
                 </div>
-
-                <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-                  <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
-                  <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
-                  <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
+                <div class="field" style="grid-column: span 4;">
+                  <label for="lg_drop">Drop-off</label>
+                  <input id="lg_drop" placeholder="e.g., Victoria Island" />
+                </div>
+                <div class="field" style="grid-column: span 2;">
+                  <label for="lg_date">Date</label>
+                  <input id="lg_date" type="date" />
+                </div>
+                <div class="field" style="grid-column: span 2;">
+                  <label for="lg_vehicle">Vehicle</label>
+                  <select id="lg_vehicle">
+                    <option value="Dispatch Bike" selected>Dispatch Bike</option>
+                    <option value="Car">Car</option>
+                    <option value="Van">Van</option>
+                    <option value="Mini Truck">Mini Truck</option>
+                    <option value="Truck / Haulage">Truck / Haulage</option>
+                  </select>
+                </div>
+                <div class="field" style="grid-column: span 4;">
+                  <label for="lg_notes">Notes (optional)</label>
+                  <input id="lg_notes" placeholder="Size/weight, urgency, landmarks..." />
                 </div>
               </div>
+              <div class="form-actions">
+                <button class="btn solid" type="button" onclick="submitQuickLG()">
+                  <i class="fa-brands fa-whatsapp"></i> Request Quote
+                </button>
+                <a class="btn primary" href="logistics.html"><i class="fa-solid fa-arrow-right"></i> View All Services</a>
+              </div>
             </div>
-
           </div>
         </div>
-      </section>
-    </div>
+
+        <aside class="hero-media" id="heroMedia" aria-label="Showcase carousel">
+          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611" alt="Showcase" decoding="async" fetchpriority="high">
+          <div class="cap">
+            <div class="hero-tag" id="heroTag"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate</div>
+            <div class="hero-sub" id="heroSub">Verified listings and premium stays.</div>
+          </div>
+          <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Featured -->
+    <section class="section" id="featured" aria-label="Featured listings">
+      <div class="section-head">
+        <div>
+          <h2>Featured</h2>
+          <p class="subhead">Featured items are pulled from your DB (featured=true). View more for full details.</p>
+        </div>
+        <button class="btn small solid" type="button"
+          onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </button>
+      </div>
+
+      <div id="feat_mount">
+        <div class="notice">Loading featured items…</div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section" id="about" aria-label="About">
+      <div class="section-head">
+        <div>
+          <h2>About</h2>
+          <p class="subhead">Two pillars: verified real estate + dependable logistics, coordinated on WhatsApp.</p>
+        </div>
+        <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
+      </div>
+
+      <div class="notice">
+        <strong>Larmah Enterprise</strong> helps clients book verified stays and coordinate trusted movement across Nigeria.
+        We keep it clean: clear confirmation, clean references, and fast support in one WhatsApp thread.
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate Page</a>
+        <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics Page</a>
+        <button class="btn solid" type="button"
+          onclick="openWA(buildMsg('Business Enquiry', { Message:'Hello Larmah, I have a business enquiry.' }))">
+          <i class="fa-brands fa-whatsapp"></i> Business Chat
+        </button>
+      </div>
+    </section>
   </main>
 
+  <!-- ✅ Featured View More Modal (synced with other pages) -->
+  <div class="modalOverlay" id="descOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Item details">
+      <div class="modalHead">
+        <div style="min-width:0;">
+          <h3 class="modalTitle" id="descTitle">Item</h3>
+          <div class="modalMeta" id="descMeta"></div>
+        </div>
+        <button class="icon-btn" type="button" onclick="closeDescModal()" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modalBody">
+        <p class="modalDesc" id="descBody"></p>
+      </div>
+
+      <div class="modalFoot">
+        <div class="left">
+          <button class="copy-btn" type="button" onclick="copyDescRef()">
+            <i class="fa-regular fa-copy"></i> Copy Ref
+          </button>
+        </div>
+        <div class="right">
+          <button class="btn primary" type="button" onclick="closeDescModal()">
+            <i class="fa-solid fa-check"></i> Done
+          </button>
+          <button class="btn solid" type="button" onclick="descModalEnquire()">
+            <i class="fa-brands fa-whatsapp"></i> Enquire
+          </button>
+          <a class="btn primary" id="descGoPage" href="real-estate.html">
+            <i class="fa-solid fa-arrow-right"></i> Open Page
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -1687,26 +1168,20 @@
           <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </button>
-          <button class="btn primary" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
-            <i class="fa-solid fa-truck-fast"></i> Quick Quote
-          </button>
+          <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
         </div>
       </div>
 
       <div class="footer-grid">
         <div>
-          <div class="brandline">
+          <div class="brand" style="gap:12px">
             <div class="logo-wrap" aria-hidden="true">
               <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
             </div>
-            <div class="brandtext">
-              <div class="brandname">Larmah Enterprise</div>
-              <div class="tagline">RC: 9127113</div>
+            <div class="btxt">
+              <div class="bname">Larmah Enterprise</div>
+              <div class="bsub">Connecting People, Business & Possibilities • RC: 9127113</div>
             </div>
-          </div>
-
-          <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
-            Verified real estate, shortlets, and logistics support — built for speed, clarity, and trust.
           </div>
 
           <div class="social" aria-label="Social links">
@@ -1720,8 +1195,8 @@
         <div>
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
-            <a href="index.html#home">Home</a>
-            <a href="index.html#about">About</a>
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
             <a href="real-estate.html">Real Estate</a>
             <a href="logistics.html">Logistics</a>
             <a href="premium.html">Premium</a>
@@ -1761,18 +1236,13 @@
             <button class="btn small solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> Chat Now
             </button>
-            <a class="btn small primary" href="logistics.html">
-              <i class="fa-solid fa-truck-fast"></i> Book Dispatch
-            </a>
+            <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Book Dispatch</a>
           </div>
         </div>
       </div>
 
       <div class="footer-bottom">
         <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="premium.html" style="color:var(--muted2)"><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</a>
-        </div>
       </div>
     </div>
   </footer>
@@ -1782,45 +1252,34 @@
     <button class="wa-pill" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
       WhatsApp Support
     </button>
+    <button class="wa-btn" type="button" aria-label="Chat on WhatsApp"
+      onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+      <i class="fa-brands fa-whatsapp"></i>
+    </button>
   </div>
 
   <script>
-    // Year
+    // ===== basics
     document.getElementById("year").textContent = new Date().getFullYear();
-
-    // Mobile menu
-    const overlay = document.getElementById("overlay");
-    function toggleMenu(open){
-      overlay.classList.toggle("open", !!open);
-      overlay.setAttribute("aria-hidden", open ? "false" : "true");
-    }
-    overlay.addEventListener("click", (e) => {
-      if(e.target === overlay) toggleMenu(false);
-    });
-
-    // Helpers (globals used by app.js featured renderer)
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return window.LARMAH.buildMessage(title, data);
       const lines = [title, ""];
       for(const [k,v] of Object.entries(data || {})){
-        if((v ?? "").toString().trim().length) lines.push(`${k}: ${v}`);
+        const val = (v ?? "").toString().trim();
+        if(val) lines.push(`${k}: ${val}`);
       }
       return lines.join("\n");
     }
     function openWA(text){
       if(window.LARMAH?.openWhatsApp) return window.LARMAH.openWhatsApp(text);
       const phone = "2347063080605";
-      const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
-    function scrollToEl(sel){
-      const el = document.querySelector(sel);
-      if(!el) return;
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
 
-    // Theme
+    // ===== theme (sync)
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
@@ -1842,113 +1301,24 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // Router: “pages” inside index.html
-    const pages = Array.from(document.querySelectorAll(".page"));
-    const navLinks = Array.from(document.querySelectorAll('[data-nav]'));
-    function setActivePage(name){
-      pages.forEach(p => p.classList.toggle("is-active", p.dataset.page === name));
-      navLinks.forEach(a => a.classList.toggle("is-active", a.dataset.nav === name));
-      toggleMenu(false);
-      const main = document.getElementById("main");
-      if(main) main.focus({preventScroll:true});
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    // ===== mobile menu
+    const overlay = document.getElementById("overlay");
+    function toggleMenu(open){
+      overlay.classList.toggle("open", !!open);
+      overlay.setAttribute("aria-hidden", open ? "false" : "true");
     }
-    function getRoute(){
-      const h = (location.hash || "#home").replace("#", "").trim().toLowerCase();
-      if(h === "about") return "about";
-      return "home";
+    overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
+
+    // ===== section nav active (home/about)
+    function syncNav(){
+      const h = (location.hash || "#home").toLowerCase();
+      document.getElementById("navHome")?.classList.toggle("is-active", h === "#home" || h === "" || h === "#");
+      document.getElementById("navAbout")?.classList.toggle("is-active", h === "#about");
     }
-    window.addEventListener("hashchange", () => setActivePage(getRoute()));
-    document.addEventListener("DOMContentLoaded", () => setActivePage(getRoute()));
+    window.addEventListener("hashchange", syncNav);
+    document.addEventListener("DOMContentLoaded", syncNav);
 
-    // Mode switch (Real Estate / Logistics)
-    const tabRealEstate = document.getElementById("tabRealEstate");
-    const tabLogistics = document.getElementById("tabLogistics");
-    const formRealEstate = document.getElementById("formRealEstate");
-    const formLogistics = document.getElementById("formLogistics");
-
-    function setMode(mode){
-      const isLog = mode === "logistics";
-      tabRealEstate.classList.toggle("is-active", !isLog);
-      tabLogistics.classList.toggle("is-active", isLog);
-      tabRealEstate.setAttribute("aria-selected", !isLog ? "true" : "false");
-      tabLogistics.setAttribute("aria-selected", isLog ? "true" : "false");
-      formRealEstate.classList.toggle("is-active", !isLog);
-      formLogistics.classList.toggle("is-active", isLog);
-    }
-    window.setMode = setMode;
-
-    // Date mins (today)
-    function toISODate(d){
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth()+1).padStart(2,"0");
-      const dd = String(d.getDate()).padStart(2,"0");
-      return `${yyyy}-${mm}-${dd}`;
-    }
-    const todayISO = toISODate(new Date());
-    const checkinEl = document.getElementById("checkin");
-    const checkoutEl = document.getElementById("checkout");
-    const pickDateEl = document.getElementById("pickDate");
-
-    if(checkinEl){ checkinEl.min = todayISO; }
-    if(checkoutEl){ checkoutEl.min = todayISO; }
-    if(pickDateEl){ pickDateEl.min = todayISO; }
-
-    if(checkinEl && checkoutEl){
-      checkinEl.addEventListener("change", () => {
-        if(!checkinEl.value) return;
-        checkoutEl.min = checkinEl.value;
-        if(checkoutEl.value && checkoutEl.value < checkinEl.value){
-          checkoutEl.value = checkinEl.value;
-        }
-      });
-    }
-
-    // Real estate submit -> WhatsApp
-    function submitRealEstate(){
-      const checkin = (document.getElementById("checkin").value || "Not set");
-      const checkout = (document.getElementById("checkout").value || "Not set");
-      const guests = (document.getElementById("guests").value || "2");
-      const category = (document.getElementById("category").value || "Any");
-      const locationVal = (document.getElementById("location").value || "Any");
-      const budget = (document.getElementById("budget").value || "");
-
-      openWA(buildMsg("Real Estate — Availability Request", {
-        Checkin: checkin,
-        Checkout: checkout,
-        Guests: guests,
-        Category: category,
-        Location: locationVal,
-        Budget: budget,
-        Message: "Hello Larmah, please confirm available verified options and total cost."
-      }));
-    }
-    window.submitRealEstate = submitRealEstate;
-
-    // Logistics submit -> WhatsApp
-    function submitLogistics(){
-      const pickup = (document.getElementById("pickup").value || "Not set");
-      const dropoff = (document.getElementById("dropoff").value || "Not set");
-      const date = (document.getElementById("pickDate").value || "Not set");
-      const time = (document.getElementById("pickTime").value || "");
-      const vehicle = (document.getElementById("vehicle").value || "Dispatch Bike");
-      const loadType = (document.getElementById("loadType").value || "Small Package");
-      const notes = (document.getElementById("logNotes").value || "");
-
-      openWA(buildMsg("Logistics — Quote Request", {
-        Pickup: pickup,
-        Dropoff: dropoff,
-        Date: date,
-        Time: time,
-        Vehicle: vehicle,
-        Load: loadType,
-        Notes: notes,
-        Message: "Hello Larmah, please share pricing, ETA, and next steps for this movement."
-      }));
-    }
-    window.submitLogistics = submitLogistics;
-
-    // HERO carousel
+    // ===== hero slideshow (less noisy)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1956,13 +1326,13 @@
     const heroBar = document.getElementById("heroBar");
 
     const HERO_SLIDES = [
-      { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766726716955-9ot7tl3d.jpeg", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
-      { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792878193-vc0a7pto.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clean confirmations." },
-      { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792082908-wa7yd8n5.jpeg", icon:"fa-truck-fast", label:"Logistics", sub:"Trusted movement with clear coordination." },
-      { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=515", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
+      { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
+      { img:"https://source.unsplash.com/1600x1000/?real-estate,lagos,building&sig=612", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clear confirmations." },
+      { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=710", icon:"fa-truck-fast", label:"Logistics", sub:"Dispatch, pickups and coordination." },
+      { img:"https://source.unsplash.com/1600x1000/?cargo,truck,highway&sig=903", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
     ];
-
     let heroIdx = 0;
+
     function runHeroProgress(){
       if(!heroBar) return;
       heroBar.classList.remove("run");
@@ -1970,8 +1340,8 @@
       heroBar.classList.add("run");
     }
     function setHero(i){
-      if(!heroMedia || !heroImg || !heroTag || !heroSub) return;
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
+      if(!heroMedia || !heroImg || !heroTag || !heroSub) return;
       heroMedia.classList.add("is-fading");
       runHeroProgress();
       setTimeout(() => {
@@ -1982,69 +1352,329 @@
         setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
       }, 220);
     }
-
-    const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if(!reduce){
+    if(!reduceMotion){
       setHero(0);
-      setInterval(() => {
-        if(getRoute() !== "home") return;
-        heroIdx = (heroIdx + 1) % HERO_SLIDES.length;
-        setHero(heroIdx);
+      setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
+    } else setHero(0);
+
+    // ===== quick mode
+    const tabRE = document.getElementById("tabRE");
+    const tabLG = document.getElementById("tabLG");
+    const formRE = document.getElementById("formRE");
+    const formLG = document.getElementById("formLG");
+
+    function setMode(mode){
+      const isLog = mode === "logistics";
+      tabRE.classList.toggle("is-active", !isLog);
+      tabLG.classList.toggle("is-active", isLog);
+      tabRE.setAttribute("aria-selected", !isLog ? "true" : "false");
+      tabLG.setAttribute("aria-selected", isLog ? "true" : "false");
+      formRE.classList.toggle("is-active", !isLog);
+      formLG.classList.toggle("is-active", isLog);
+    }
+    window.setMode = setMode;
+
+    // date mins
+    function toISODate(d){
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    const todayISO = toISODate(new Date());
+    document.getElementById("re_in")?.setAttribute("min", todayISO);
+    document.getElementById("re_out")?.setAttribute("min", todayISO);
+    document.getElementById("lg_date")?.setAttribute("min", todayISO);
+
+    // submit quick WA
+    function submitQuickRE(){
+      openWA(buildMsg("Real Estate — Availability Request", {
+        Checkin: document.getElementById("re_in").value || "Not set",
+        Checkout: document.getElementById("re_out").value || "Not set",
+        Location: document.getElementById("re_loc").value || "Any",
+        Budget: document.getElementById("re_budget").value || "",
+        Notes: document.getElementById("re_notes").value || "",
+        Message: "Hello Larmah, please confirm available verified options and total cost."
+      }));
+    }
+    function submitQuickLG(){
+      openWA(buildMsg("Logistics — Quote Request", {
+        Pickup: document.getElementById("lg_pick").value || "Not set",
+        Dropoff: document.getElementById("lg_drop").value || "Not set",
+        Date: document.getElementById("lg_date").value || "Not set",
+        Vehicle: document.getElementById("lg_vehicle").value || "Dispatch Bike",
+        Notes: document.getElementById("lg_notes").value || "",
+        Message: "Hello Larmah, please share pricing, ETA, and next steps."
+      }));
+    }
+    window.submitQuickRE = submitQuickRE;
+    window.submitQuickLG = submitQuickLG;
+
+    // ===== featured loader + carousel + modal (synced)
+    const __FEAT = { items: [], imgUrls:{}, imgIdx:{}, timers:{}, modal:{ id:null, title:"", desc:"", price:"", location:"", category:"", ref:"", featured:false, pageHref:"real-estate.html" } };
+
+    function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
+    function formatPrice(raw){ const s = safeText(raw).trim(); return s ? s : "Contact for quote"; }
+    function listingRef(id){ return `WEB-${id}`; } // generic for featured; keep simple
+
+    function getImages(it){
+      const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
+      if(arr.length) return arr.slice(0, 6);
+      if(it.image_url) return [it.image_url];
+      return ["assets/images/larmah-header.jpeg"];
+    }
+    function initImagesFor(it){
+      const id = String(it.id);
+      __FEAT.imgUrls[id] = getImages(it);
+      __FEAT.imgIdx[id] = __FEAT.imgIdx[id] ?? 0;
+    }
+    function clearFeatTimers(){
+      for(const k in __FEAT.timers){ try{ clearInterval(__FEAT.timers[k]); }catch{} }
+      __FEAT.timers = {};
+    }
+    function setFeatImage(id){
+      const img = document.getElementById(`ft-img-${id}`);
+      if(!img) return;
+      const urls = __FEAT.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
+      const idx = __FEAT.imgIdx[id] || 0;
+      img.src = urls[idx] || urls[0] || "assets/images/larmah-header.jpeg";
+      const dots = document.getElementById(`ft-dots-${id}`);
+      if(dots) dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
+    }
+    function cycleFeatImage(id, dir){
+      const urls = __FEAT.imgUrls[id] || [];
+      if(urls.length <= 1) return;
+      const max = urls.length;
+      const cur = __FEAT.imgIdx[id] || 0;
+      __FEAT.imgIdx[id] = (cur + dir + max) % max;
+      setFeatImage(id);
+    }
+    window.cycleFeatImage = cycleFeatImage;
+
+    function autoRotateFeat(id){
+      if(reduceMotion) return;
+      const urls = __FEAT.imgUrls[id] || [];
+      if(urls.length <= 1) return;
+      __FEAT.timers[id] = setInterval(() => {
+        __FEAT.imgIdx[id] = ((__FEAT.imgIdx[id]||0) + 1) % urls.length;
+        const media = document.getElementById(`ft-media-${id}`);
+        if(media){
+          media.classList.add("is-fading");
+          setTimeout(() => { setFeatImage(id); media.classList.remove("is-fading"); }, 180);
+        } else setFeatImage(id);
       }, 5000);
-    } else {
-      setHero(0);
     }
 
-    // ===== Featured placeholders + globals expected by your app.js featured loader
-    const featEls = [document.getElementById("feat0"), document.getElementById("feat1"), document.getElementById("feat2")];
-    let featStart = 0;
+    function inferCategory(it){
+      // use category column to decide link target
+      const c = safeText(it.category).toLowerCase();
+      if(c.includes("logistics")) return "Logistics";
+      if(c.includes("real-estate") || c.includes("real estate")) return "Real Estate";
+      // fallback from text
+      const hay = (safeText(it.title)+" "+safeText(it.description)).toLowerCase();
+      if(hay.includes("dispatch") || hay.includes("haulage") || hay.includes("pickup")) return "Logistics";
+      return "Real Estate";
+    }
+    function inferLocation(it){
+      return safeText(it.location || it.coverage || it.area || it.city || it.state || "Nigeria").trim() || "Nigeria";
+    }
 
-    function renderFeaturedPlaceholder(){
-      const ph = (i) => `
-        <img src="assets/images/larmah-header.jpeg" alt="Featured listing" loading="lazy" decoding="async">
-        <div class="card-body">
-          <div class="card-title">Loading featured…</div>
-          <div class="meta">
-            <span class="pill"><i class="fa-solid fa-circle-notch fa-spin" style="color:var(--gold)"></i> Fetching</span>
-            <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span>
-          </div>
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn small solid" type="button" disabled><i class="fa-brands fa-whatsapp"></i> Enquire</button>
-            <a class="btn small primary" href="real-estate.html">View</a>
-          </div>
-        </div>
+    function openFeatModalById(id){
+      const it = (__FEAT.items||[]).find(x => String(x.id)===String(id));
+      if(!it) return;
+
+      const cat = inferCategory(it);
+      __FEAT.modal.id = String(it.id);
+      __FEAT.modal.title = safeText(it.title) || "Featured";
+      __FEAT.modal.desc = safeText(it.description) || "No description provided.";
+      __FEAT.modal.price = formatPrice(it.price);
+      __FEAT.modal.location = inferLocation(it);
+      __FEAT.modal.category = cat;
+      __FEAT.modal.ref = `WEB-${cat === "Logistics" ? "LG" : "RE"}-${it.id}`;
+      __FEAT.modal.featured = it.featured === true;
+      __FEAT.modal.pageHref = (cat === "Logistics") ? "logistics.html" : "real-estate.html";
+
+      document.getElementById("descTitle").textContent = __FEAT.modal.title;
+      document.getElementById("descBody").textContent = __FEAT.modal.desc;
+      const meta = document.getElementById("descMeta");
+      meta.innerHTML = `
+        <span class="chip"><i class="fa-solid fa-naira-sign" style="color:var(--gold)"></i> ${esc(__FEAT.modal.price)}</span>
+        <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(__FEAT.modal.location)}</span>
+        <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(__FEAT.modal.category)}</span>
+        <span class="chip"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> ${esc(__FEAT.modal.ref)}</span>
+        ${__FEAT.modal.featured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
       `;
-      featEls.forEach((el, i) => { if(el) el.innerHTML = ph(i); });
-    }
-    renderFeaturedPlaceholder();
+      const go = document.getElementById("descGoPage");
+      go.href = __FEAT.modal.pageHref;
 
-    // Boot DB featured safely after app.js loads
-    async function bootFeaturedDB(){
-      // wait for app.js to create supabase + featured loader
-      for(let i=0;i<30;i++){
-        if(typeof window.loadFeaturedFromDB === "function" || (window.LARMAH?.supabase?.ensure && window.supabaseClient)) break;
-        await new Promise(r => setTimeout(r, 150));
-      }
-      if(typeof window.loadFeaturedFromDB === "function"){
-        try{ await window.loadFeaturedFromDB(); } catch(e){}
-      }
+      const ov = document.getElementById("descOverlay");
+      ov.classList.add("open");
+      ov.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => ov.querySelector("button.icon-btn")?.focus?.(), 50);
     }
-    document.addEventListener("DOMContentLoaded", () => {
-      if(getRoute() === "home") bootFeaturedDB();
+    function closeDescModal(){
+      const ov = document.getElementById("descOverlay");
+      ov.classList.remove("open");
+      ov.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+    }
+    function copyDescRef(){
+      const txt = __FEAT.modal.ref || "";
+      if(!txt) return;
+      navigator.clipboard?.writeText(txt).then(
+        () => {},
+        () => {}
+      );
+    }
+    function descModalEnquire(){
+      openWA(buildMsg("Featured Enquiry", {
+        Ref: __FEAT.modal.ref,
+        Title: __FEAT.modal.title,
+        Category: __FEAT.modal.category,
+        Location: __FEAT.modal.location,
+        Price: __FEAT.modal.price,
+        Message: "Hello Larmah, I’m interested in this featured item. Please confirm availability/cost and next steps."
+      }));
+    }
+    window.closeDescModal = closeDescModal;
+    window.copyDescRef = copyDescRef;
+    window.descModalEnquire = descModalEnquire;
+
+    document.getElementById("descOverlay")?.addEventListener("click", (e) => {
+      if(e.target && e.target.id === "descOverlay") closeDescModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        const ov = document.getElementById("descOverlay");
+        if(ov?.classList?.contains("open")) closeDescModal();
+      }
     });
 
-    // Expose globals used by app.js-rendered featured cards
+    function featCardHTML(it){
+      const id = String(it.id);
+      initImagesFor(it);
+      const urls = __FEAT.imgUrls[id] || [];
+      const hasMany = urls.length > 1;
+
+      const title = safeText(it.title) || "Featured";
+      const desc = safeText(it.description) || "Featured item.";
+      const price = formatPrice(it.price);
+      const locationTxt = inferLocation(it);
+      const categoryTxt = inferCategory(it);
+      const isFeatured = it.featured === true;
+
+      return `
+        <article class="card" aria-label="${esc(title)}">
+          <div class="media" id="ft-media-${id}">
+            <img id="ft-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
+                 alt="${esc(title)}" loading="lazy" decoding="async"
+                 onerror="this.src='assets/images/larmah-header.jpeg'">
+
+            ${hasMany ? `
+              <div class="media-nav">
+                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleFeatImage('${id}', -1)">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleFeatImage('${id}', 1)">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="media-dots" id="ft-dots-${id}" aria-hidden="true">
+                ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
+              </div>
+            ` : ``}
+          </div>
+
+          <div class="card-body">
+            <div class="title">
+              ${esc(title)}
+              ${isFeatured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
+            </div>
+
+            <p class="desc">${esc(desc)}</p>
+
+            <div class="more-row">
+              <button class="link-btn" type="button" onclick="openFeatModalById('${id}')">
+                <i class="fa-regular fa-file-lines"></i> View more
+              </button>
+            </div>
+
+            <div class="price">${esc(price)}</div>
+
+            <div class="meta-row">
+              <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(locationTxt)}</span>
+              <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(categoryTxt)}</span>
+            </div>
+
+            <div class="actions-row">
+              <button class="btn small solid" type="button" onclick="openWA(buildMsg('Enquiry', { Title:'${esc(title)}', Category:'${esc(categoryTxt)}', Location:'${esc(locationTxt)}', Message:'Hello Larmah, please confirm this item.' }))">
+                <i class="fa-brands fa-whatsapp"></i> Enquire
+              </button>
+              <a class="btn small primary" href="${categoryTxt === "Logistics" ? "logistics.html" : "real-estate.html"}">
+                <i class="fa-solid fa-arrow-right"></i> Open
+              </a>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    async function loadFeatured(){
+      const mount = document.getElementById("feat_mount");
+      mount.innerHTML = `<div class="notice">Loading featured items…</div>`;
+      clearFeatTimers();
+
+      // wait for app.js client or fallback
+      const sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
+      if(!sb){
+        // try a short wait
+        for(let i=0;i<16;i++){
+          await new Promise(r=>setTimeout(r, 180));
+          const s2 = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
+          if(s2){ return loadFeatured(); }
+        }
+        mount.innerHTML = `<div class="notice"><strong>Could not connect.</strong> Please refresh.</div>`;
+        return;
+      }
+
+      try{
+        const { data, error } = await sb
+          .from("listings")
+          .select("id,title,description,price,image_url,image_urls,location,coverage,area,city,state,category,status,featured,created_at")
+          .eq("status","active")
+          .eq("featured", true)
+          .order("created_at", { ascending:false })
+          .limit(12);
+
+        if(error) throw error;
+
+        __FEAT.items = data || [];
+        if(!__FEAT.items.length){
+          mount.innerHTML = `<div class="notice"><strong>No featured items yet.</strong> Mark items as featured in Admin to show here.</div>`;
+          return;
+        }
+
+        mount.innerHTML = `<div class="grid">${__FEAT.items.slice(0,6).map(featCardHTML).join("")}</div>`;
+        __FEAT.items.slice(0,6).forEach(it => autoRotateFeat(String(it.id)));
+      }catch(e){
+        console.error(e);
+        mount.innerHTML = `<div class="notice"><strong>Could not load featured.</strong> Please refresh.</div>`;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadFeatured();
+    });
+
+    // expose
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
     window.openWA = openWA;
     window.buildMsg = buildMsg;
-    window.scrollToEl = scrollToEl;
-    window.esc = esc;
-    window.featEls = featEls;
-    window.featStart = featStart;
   </script>
 
-  <!-- ✅ Keep only ONE Cloudflare beacon script -->
+  <!-- Keep only one CF beacon -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
     integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
     data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
