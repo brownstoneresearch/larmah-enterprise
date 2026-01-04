@@ -1,7 +1,7 @@
 <!-- =========================
      real-estate.html (FULL)
      ✅ Pagination added (smart controls + per-page)
-     ✅ Description fully visible (no clamp) + styled
+     ✅ Description preview + View more modal popup
      ✅ Only rotates images for visible page items
      ✅ Syncs with index.html Featured: listings.featured=true
      ✅ Catalog from Supabase: public.listings (category='real-estate', status='active')
@@ -160,7 +160,6 @@
 
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
-
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
 
     .skip{
@@ -228,23 +227,12 @@
 
     nav{ margin-left:auto; }
     nav ul{ display:flex; list-style:none; gap:18px; padding:0; margin:0; align-items:center; }
-    .nav-link{
-      color: var(--text);
-      opacity:.9;
-      font-weight: 850;
-      font-size: .95rem;
-      position:relative;
-    }
+    .nav-link{ color: var(--text); opacity:.9; font-weight: 850; font-size: .95rem; position:relative; }
     .nav-link:hover{ color: var(--gold); opacity:1; }
     .nav-link.active{ color: var(--gold); opacity:1; }
     .nav-link.active::after{
-      content:"";
-      position:absolute;
-      left:0; right:0;
-      bottom:-12px;
-      height:2px;
-      background: rgba(212,175,55,.65);
-      border-radius: 999px;
+      content:""; position:absolute; left:0; right:0; bottom:-12px; height:2px;
+      background: rgba(212,175,55,.65); border-radius: 999px;
     }
 
     .header-actions{ display:flex; gap:10px; align-items:center; margin-left: 10px; }
@@ -294,64 +282,33 @@
       padding: 14px;
     }
     .sheet-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--line2);
-      margin-bottom: 10px;
-      gap: 10px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding-bottom: 10px; border-bottom: 1px solid var(--line2);
+      margin-bottom: 10px; gap: 10px;
     }
     .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
     .sheet a{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: var(--text);
-      margin-bottom: 10px;
-      font-weight: 900;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 12px 12px; border-radius: 14px; border: 1px solid var(--line2);
+      background: var(--panel2); color: var(--text); margin-bottom: 10px; font-weight: 900;
     }
     .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 8px; }
 
     /* Buttons */
     .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      border-radius: 14px;
-      padding: 12px 16px;
-      min-height: 46px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      cursor:pointer;
-      font-weight: 950;
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      border-radius: 14px; padding: 12px 16px; min-height: 46px;
+      border: 1px solid var(--line); background: var(--panel); color: var(--text);
+      cursor:pointer; font-weight: 950;
       transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
-      white-space: nowrap;
-      user-select:none;
-      text-decoration:none;
+      white-space: nowrap; user-select:none; text-decoration:none;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
     .btn:active{ transform: translateY(0); }
-    .btn.solid{
-      background: var(--gold);
-      color: #111;
-      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-    }
+    .btn.solid{ background: var(--gold); color:#111; border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
     .btn.primary{ background: var(--panel2); border-color: var(--line); }
     .btn.ghost{ background: transparent; border-color: var(--line2); }
-    .btn.small{
-      min-height: 40px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-weight: 900;
-    }
+    .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
 
     /* Page */
     .page-wrap{ padding: 18px 0 0; }
@@ -378,8 +335,7 @@
       z-index:-1;
     }
     .hero-grid{
-      display:grid;
-      gap: 14px;
+      display:grid; gap: 14px;
       grid-template-columns: 1.05fr .95fr;
       align-items:start;
     }
@@ -400,36 +356,22 @@
       background-clip: text;
       color: transparent;
     }
-    .lead{
-      margin:0;
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.55;
-    }
+    .lead{ margin:0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
-    @media (max-width: 520px){
-      .hero-actions{ flex-direction:column; }
-      .hero-actions .btn{ width:100%; }
-    }
+    @media (max-width: 520px){ .hero-actions{ flex-direction:column; } .hero-actions .btn{ width:100%; } }
 
     .meta{ margin-top: 12px; color: var(--muted); font-size: .88rem; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
     .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 7px 10px; border-radius: 999px;
+      border: 1px solid var(--line2); background: var(--panel2);
       color: color-mix(in oklab, var(--text) 80%, transparent);
-      font-weight: 800;
-      font-size:.84rem;
+      font-weight: 800; font-size:.84rem;
     }
     .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
 
     .hero-media{
-      border-radius: 14px;
-      overflow:hidden;
+      border-radius: 14px; overflow:hidden;
       border: 1px solid var(--line);
       background: var(--panel);
       position:relative;
@@ -437,19 +379,15 @@
       isolation:isolate;
     }
     .hero-media img{
-      width:100%;
-      height: 320px;
-      object-fit: cover;
-      display:block;
-      opacity:.94;
-      transform: scale(1.01);
+      width:100%; height: 320px;
+      object-fit: cover; display:block;
+      opacity:.94; transform: scale(1.01);
       transition: opacity .55s var(--ease), transform .9s var(--ease);
     }
     .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
     .hero-media .cap{
       position:absolute; left:16px; right:16px; bottom:12px;
-      padding: 10px;
-      border-radius: 12px;
+      padding: 10px; border-radius: 12px;
       border: 1px solid var(--ctaLine);
       background: var(--ctaBg);
       backdrop-filter: blur(10px);
@@ -463,12 +401,8 @@
     /* Sections */
     .section{ padding: 18px 0; }
     .section-head{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 12px;
-      flex-wrap:wrap;
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:12px; margin-bottom: 12px; flex-wrap:wrap;
     }
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
@@ -489,26 +423,14 @@
     .field{ display:flex; flex-direction:column; gap:6px; }
     label{ font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
     input, select, textarea{
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--text);
-      padding: 12px;
-      min-height: 46px;
-      outline:none;
-      font-family: inherit;
+      border-radius: 14px; border: 1px solid var(--line);
+      background: var(--panel2); color: var(--text);
+      padding: 12px; min-height: 46px; outline:none; font-family: inherit;
     }
     textarea{ min-height: 96px; resize: vertical; }
     input::placeholder, textarea::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
 
-    .pillbar{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      padding-top: 12px;
-      margin-top: 10px;
-      border-top: 1px solid var(--line2);
-    }
+    .pillbar{ display:flex; gap:8px; flex-wrap:wrap; padding-top: 12px; margin-top: 10px; border-top: 1px solid var(--line2); }
 
     /* Grid Cards */
     .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -543,8 +465,7 @@
       user-select:none;
     }
     .media img{
-      width:100%;
-      height:100%;
+      width:100%; height:100%;
       object-fit:cover;
       display:block;
       transform: scale(1.01);
@@ -596,29 +517,46 @@
     }
     .media-dot.active{ background: rgba(255,255,255,0.92); }
 
-    /* Title supports featured badge */
     .card-body{ padding: 12px; }
     .title{
-      font-weight: 950;
-      margin: 2px 0 8px;
-      letter-spacing:-0.2px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
+      font-weight: 950; margin: 2px 0 8px; letter-spacing:-0.2px;
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
     }
 
-    /* ✅ FULL DESCRIPTION (no clamp) + styled */
+    /* ✅ Description preview */
     .desc{
-      margin: 0;
+      margin:0;
       color: var(--muted);
-      line-height: 1.55;
+      line-height:1.55;
       font-size: .96rem;
-      white-space: pre-wrap;
-      border-radius: 14px;
+      display:-webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+    .more-row{
+      display:flex;
+      justify-content:flex-end;
+      margin-top: 8px;
+    }
+    .link-btn{
       border: 1px solid var(--line2);
-      background: var(--panel2);
-      padding: 10px 12px;
+      background: transparent;
+      color: color-mix(in oklab, var(--text) 90%, transparent);
+      font-weight: 950;
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease), border-color .16s var(--ease);
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+    }
+    .link-btn:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      border-color: color-mix(in oklab, var(--gold) 30%, var(--line2) 70%);
+      color: var(--gold2);
     }
 
     .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
@@ -647,7 +585,6 @@
     }
     .notice strong{ color: var(--text); }
 
-    /* Booking / request card */
     .request-card{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -729,7 +666,77 @@
       user-select:none;
     }
 
-    /* Footer (current styling) */
+    /* ✅ Modal (View More) */
+    .modalOverlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.56);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      z-index: 140;
+      padding: 14px;
+    }
+    .modalOverlay.open{ display:flex; }
+    .modal{
+      width: min(860px, 100%);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 86%, #000 14%);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modalHead{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+      padding: 12px 12px;
+      border-bottom: 1px solid var(--line2);
+      background: color-mix(in oklab, var(--panel2) 65%, transparent);
+    }
+    .modalTitle{
+      font-weight: 950;
+      letter-spacing:-0.2px;
+      line-height:1.15;
+      margin:0;
+      font-size: 1.05rem;
+    }
+    .modalMeta{
+      margin-top: 6px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .86rem;
+    }
+    .modalBody{
+      padding: 12px;
+      max-height: min(65vh, 520px);
+      overflow:auto;
+    }
+    .modalDesc{
+      white-space: pre-wrap;
+      line-height: 1.65;
+      color: color-mix(in oklab, var(--text) 92%, transparent);
+      font-size: 1.0rem;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      padding: 12px;
+      margin:0;
+    }
+    .modalFoot{
+      padding: 12px;
+      border-top: 1px solid var(--line2);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      background: color-mix(in oklab, var(--panel2) 65%, transparent);
+    }
+
+    /* Footer */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
@@ -768,8 +775,7 @@
 
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
     .footer-links a{
-      display:block;
-      padding: 6px 0;
+      display:block; padding: 6px 0;
       color: color-mix(in oklab, var(--text) 84%, transparent);
       font-weight: 600;
     }
@@ -777,11 +783,8 @@
 
     .contact-stack{ display:grid; gap: 10px; }
     .contact-chip{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding: 10px 12px;
-      border-radius: 14px;
+      display:flex; gap:10px; align-items:flex-start;
+      padding: 10px 12px; border-radius: 14px;
       border: 1px solid var(--line);
       background: var(--panel2);
     }
@@ -793,10 +796,8 @@
     .social a{
       width: 42px; height: 42px;
       display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--text);
+      border-radius: 12px; border: 1px solid var(--line);
+      background: var(--panel2); color: var(--text);
     }
     .social a:hover{
       color:#111;
@@ -999,7 +1000,7 @@
       </div>
     </section>
 
-    <!-- ✅ Booking request (WhatsApp + optional DB request insert) -->
+    <!-- ✅ Booking request -->
     <section class="section" id="book" aria-label="Booking request">
       <div class="section-head">
         <div>
@@ -1092,7 +1093,7 @@
       <div class="section-head">
         <div>
           <h2>Listings</h2>
-          <p class="subhead">Search + filter by category, location, and Featured (syncs with homepage). Pagination keeps it clean.</p>
+          <p class="subhead">Search + filter by category, location, and Featured (syncs with homepage). Use “View more” for full details.</p>
         </div>
         <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Sourcing</a>
       </div>
@@ -1170,7 +1171,7 @@
     </section>
   </main>
 
-  <!-- Current footer styling -->
+  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -1285,13 +1286,47 @@
     </button>
   </div>
 
+  <!-- ✅ View More Modal -->
+  <div class="modalOverlay" id="descOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Listing description">
+      <div class="modalHead">
+        <div style="min-width:0;">
+          <h3 class="modalTitle" id="descTitle">Description</h3>
+          <div class="modalMeta" id="descMeta"></div>
+        </div>
+        <button class="icon-btn" type="button" onclick="closeDescModal()" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modalBody">
+        <p class="modalDesc" id="descBody"></p>
+      </div>
+
+      <div class="modalFoot">
+        <button class="btn primary" type="button" onclick="closeDescModal()">
+          <i class="fa-solid fa-check"></i> Done
+        </button>
+        <button class="btn solid" type="button" onclick="descModalWhatsApp()">
+          <i class="fa-brands fa-whatsapp"></i> Enquire on WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
     // ---- basics
     document.getElementById("year").textContent = new Date().getFullYear();
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+    const escJS = (s) => (s ?? "").toString()
+      .replace(/\\/g, "\\\\")
+      .replace(/'/g, "\\'")
+      .replace(/\r/g, "")
+      .replace(/\n/g, "\\n");
 
     function toast(msg){
       const t = document.getElementById("toast");
@@ -1302,7 +1337,7 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // ---- theme (match index)
+    // ---- theme
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
@@ -1329,7 +1364,7 @@
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // ---- WA helpers (uses app.js if present)
+    // ---- WA helpers
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -1344,6 +1379,72 @@
       const phone = "2347063080605";
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
+
+    // ---- View More modal state
+    const __DESC = { title:"", desc:"", ref:"", location:"", category:"" };
+
+    function openDescModal(title, desc, meta){
+      __DESC.title = title || "Listing";
+      __DESC.desc = desc || "";
+      __DESC.ref = meta?.ref || "";
+      __DESC.location = meta?.location || "";
+      __DESC.category = meta?.category || "";
+
+      const ov = document.getElementById("descOverlay");
+      const t = document.getElementById("descTitle");
+      const m = document.getElementById("descMeta");
+      const b = document.getElementById("descBody");
+
+      if(t) t.textContent = __DESC.title;
+      if(b) b.textContent = __DESC.desc || "No description provided.";
+
+      if(m){
+        const bits = [];
+        if(__DESC.ref) bits.push(`Ref: ${__DESC.ref}`);
+        if(__DESC.location) bits.push(`Location: ${__DESC.location}`);
+        if(__DESC.category) bits.push(`Category: ${__DESC.category}`);
+        m.textContent = bits.join("  •  ");
+      }
+
+      ov.classList.add("open");
+      ov.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => {
+        const closeBtn = ov.querySelector("button.icon-btn");
+        closeBtn?.focus?.();
+      }, 50);
+    }
+
+    function closeDescModal(){
+      const ov = document.getElementById("descOverlay");
+      ov.classList.remove("open");
+      ov.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+
+    function descModalWhatsApp(){
+      openWA(buildMsg("Real Estate Enquiry", {
+        Ref: __DESC.ref,
+        Title: __DESC.title,
+        Location: __DESC.location,
+        Category: __DESC.category,
+        Message: "Hello Larmah, I saw this listing description. Please confirm availability and next steps."
+      }));
+    }
+
+    document.getElementById("descOverlay")?.addEventListener("click", (e) => {
+      if(e.target && e.target.id === "descOverlay") closeDescModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        const ov = document.getElementById("descOverlay");
+        if(ov?.classList?.contains("open")) closeDescModal();
+      }
+    });
+
+    window.openDescModal = openDescModal;
+    window.closeDescModal = closeDescModal;
+    window.descModalWhatsApp = descModalWhatsApp;
 
     // ---- hero slideshow (5s)
     const heroMedia = document.getElementById("heroMedia");
@@ -1385,16 +1486,8 @@
       setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
     } else setHero(0);
 
-    // ---- Supabase listings + card image auto-rotate (5s) + pagination
-    const __RE = {
-      items: [],
-      imgUrls: {},
-      imgIdx: {},
-      timers: {},
-      page: 1,
-      pageSize: 9,
-      lastTotal: 0
-    };
+    // ---- Supabase listings + card image rotate + pagination
+    const __RE = { items: [], imgUrls: {}, imgIdx: {}, timers: {}, page: 1, pageSize: 9 };
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
@@ -1491,6 +1584,12 @@
       const ref = listingRef(id);
       const isFeatured = it.featured === true;
 
+      const jsTitle = escJS(title);
+      const jsDesc = escJS(desc);
+      const jsRef = escJS(ref);
+      const jsLoc = escJS(locationTxt);
+      const jsCat = escJS(categoryTxt);
+
       return `
         <article class="card" aria-label="${esc(title)}">
           <div class="media" id="re-media-${id}">
@@ -1520,6 +1619,12 @@
             </div>
 
             <p class="desc">${esc(desc)}</p>
+            <div class="more-row">
+              <button class="link-btn" type="button"
+                onclick="openDescModal('${jsTitle}', '${jsDesc}', {ref:'${jsRef}', location:'${jsLoc}', category:'${jsCat}'})">
+                <i class="fa-regular fa-file-lines"></i> View more
+              </button>
+            </div>
 
             <div class="price">${esc(price)}</div>
 
@@ -1542,30 +1647,26 @@
       `;
     }
 
-    // ✅ Smart pager builder (limited buttons + ellipses)
+    // ✅ Smart pager buttons
     function pagerButtons(page, totalPages){
       const btns = [];
-      const add = (p, label, active=false, disabled=false) => {
-        btns.push({ type:"btn", p, label, active, disabled });
-      };
+      const add = (p, label, active=false) => btns.push({ type:"btn", p, label, active });
       const ell = () => btns.push({ type:"ell" });
 
       if(totalPages <= 1) return btns;
 
-      const maxBtns = 7; // window
+      const maxBtns = 7;
       const half = Math.floor(maxBtns / 2);
 
       let start = Math.max(1, page - half);
       let end = Math.min(totalPages, page + half);
 
-      // balance
       if(end - start + 1 < maxBtns){
         const missing = maxBtns - (end - start + 1);
         start = Math.max(1, start - missing);
         end = Math.min(totalPages, end + missing);
       }
 
-      // always show first
       add(1, "1", page===1);
       if(start > 2) ell();
 
@@ -1583,7 +1684,6 @@
       const totalPages = Math.max(1, Math.ceil(total / pageSize));
       const from = total ? ((page - 1) * pageSize) + 1 : 0;
       const to = Math.min(total, page * pageSize);
-
       const btns = pagerButtons(page, totalPages);
 
       return `
@@ -1600,7 +1700,7 @@
 
             ${btns.map(b => {
               if(b.type === "ell") return `<span class="pager-ellipsis" aria-hidden="true">…</span>`;
-              return `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="reGoPage(${b.p})" ${b.disabled?'disabled':''} aria-label="Go to page ${b.label}">${b.label}</button>`;
+              return `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="reGoPage(${b.p})" aria-label="Go to page ${b.label}">${b.label}</button>`;
             }).join("")}
 
             <button class="pager-btn" type="button" onclick="reGoPage(${page+1})" ${page>=totalPages?'disabled':''} aria-label="Next page">
@@ -1667,10 +1767,7 @@
         ${pagerHTML(__RE.page, __RE.pageSize, total)}
       `;
 
-      // only rotate visible page items
       pageItems.forEach(it => autoRotateImages(String(it.id)));
-
-      __RE.lastTotal = total;
     }
 
     function reGoPage(p){
@@ -1739,7 +1836,6 @@
     }
     window.reBookFromCard = reBookFromCard;
 
-    // Booking Request -> WhatsApp
     function submitBookingRequest(){
       const checkin = (document.getElementById("bk_checkin").value || "Not set");
       const checkout = (document.getElementById("bk_checkout").value || "Not set");
@@ -1762,7 +1858,6 @@
     }
     window.submitBookingRequest = submitBookingRequest;
 
-    // Booking Request -> DB (public.requests) + WhatsApp fallback
     async function submitBookingToDB(){
       const fields = {
         Checkin: (document.getElementById("bk_checkin").value || ""),
@@ -1811,7 +1906,6 @@
     }
     window.submitBookingToDB = submitBookingToDB;
 
-    // Date mins (today)
     function toISODate(d){
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth()+1).padStart(2,"0");
@@ -1884,7 +1978,6 @@
       loadRealEstate();
     });
 
-    // expose
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
   </script>
