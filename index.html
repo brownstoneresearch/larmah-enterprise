@@ -1,10 +1,10 @@
 <!-- =========================
-     index.html (FULL — CLEAN + SYNCED)
-     ✅ Syncs visual language with real-estate.html + logistics.html
-     ✅ Not rowdy: reduced repetition, clear hierarchy
-     ✅ Mobile responsive hero (tight spacing, responsive image height, stacked layout)
+     index.html (FULL — CLEAN + SYNCED + UPDATED FOOTER)
+     ✅ Hero is mobile responsive
+     ✅ Footer matches Real Estate / Logistics pages (footer-cta + footer-grid + footer-bottom + badges)
+     ✅ Not rowdy: reduced repetition, clean hierarchy
      ✅ Featured pulls from Supabase listings where featured=true and status=active
-     ✅ Featured cards: description preview + View more modal (price/ref/actions)
+     ✅ Featured cards: preview + View more modal (price/ref/actions)
      ✅ Quick request switcher (Real Estate / Logistics) without clutter
 ========================= -->
 <!DOCTYPE html>
@@ -67,6 +67,7 @@
       --ease: cubic-bezier(.2,.8,.2,1);
       --shadow: 0 18px 50px rgba(0,0,0,.42);
       --shadow2: 0 12px 34px rgba(0,0,0,.30);
+
       --safeB: env(safe-area-inset-bottom, 0px);
       --safeT: env(safe-area-inset-top, 0px);
       --safeL: env(safe-area-inset-left, 0px);
@@ -88,10 +89,12 @@
       --ctaBg: rgba(0,0,0,.28);
       --ctaLine: rgba(255,255,255,.12);
       --good: rgba(0,217,129,.95);
+      --bad: rgba(255,90,103,.95);
 
       --logoGlow: 0 0 22px rgba(212,175,55,.14);
       --logoRing: rgba(255,255,255,.12);
       --logoBg: rgba(255,255,255,.03);
+
       --focus: rgba(245,213,122,.28);
     }
 
@@ -110,6 +113,7 @@
       --ctaBg: rgba(255,255,255,.78);
       --ctaLine: rgba(10,14,26,.10);
       --good: rgba(0,140,90,.92);
+      --bad: rgba(200,34,60,.90);
 
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
@@ -117,6 +121,7 @@
       --logoGlow: 0 0 0 rgba(0,0,0,0);
       --logoRing: rgba(10,14,26,.10);
       --logoBg: rgba(255,255,255,.65);
+
       --focus: rgba(212,175,55,.26);
     }
 
@@ -179,6 +184,7 @@
     }
     .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
     .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
+
     .logo-wrap{
       position:relative;
       width:44px; height:44px;
@@ -212,8 +218,7 @@
     .nav-link.is-active{ color: var(--gold); opacity:1; }
     .nav-link.is-active::after{
       content:"";
-      position:absolute;
-      left:0; right:0;
+      position:absolute; left:0; right:0;
       bottom:-12px;
       height:2px;
       background: rgba(212,175,55,.65);
@@ -246,7 +251,7 @@
       .menu-btn{ display:inline-flex; }
       .header-actions{ margin-left:auto; }
       body{ padding-bottom: calc(88px + var(--safeB)); }
-      .brand{ min-width: 0; }
+      .brand{ min-width:0; }
       .bsub{ display:none; }
       .logo-wrap{ width:40px; height:40px; }
       .icon-btn{ width:40px; height:40px; }
@@ -289,8 +294,8 @@
       margin-bottom: 10px;
       font-weight: 900;
     }
-    .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; }
-    .sheet-actions .btn{ flex:1; min-width: 0; }
+    .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 8px; }
+    .sheet-actions .btn{ flex:1; min-width:0; }
 
     /* Buttons */
     .btn{
@@ -313,7 +318,11 @@
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
     .btn:active{ transform: translateY(0); }
-    .btn.solid{ background: var(--gold); color:#111; border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
+    .btn.solid{
+      background: var(--gold);
+      color:#111;
+      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
+    }
     .btn.primary{ background: var(--panel2); border-color: var(--line); }
     .btn.ghost{ background: transparent; border-color: var(--line2); }
     .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
@@ -321,7 +330,7 @@
     /* Page */
     .page-wrap{ padding: 18px 0 0; }
 
-    /* ===== HERO (MOBILE RESPONSIVE) ===== */
+    /* HERO (mobile responsive) */
     .hero{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -349,24 +358,19 @@
       align-items:start;
     }
     @media (max-width: 980px){
-      .hero-grid{
-        grid-template-columns: 1fr;
-        padding: 14px;
-      }
-      /* keep content first for conversion, but still clean */
-      /* if you prefer image first on mobile, uncomment:
+      .hero-grid{ grid-template-columns: 1fr; padding: 14px; }
+      /* Uncomment to show image first on mobile:
       .hero-media{ order:-1; }
       */
     }
-    @media (max-width: 520px){
-      .hero-grid{ padding: 12px; gap: 12px; }
-    }
+    @media (max-width: 520px){ .hero-grid{ padding: 12px; gap: 12px; } }
 
     .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
     .kicker .dot{ opacity:.65; }
+
     h1{
       margin: 6px 0 10px;
-      font-size: clamp(1.78rem, 6.2vw, 2.8rem);
+      font-size: clamp(1.78rem, 6.2vw, 2.9rem);
       line-height: 1.06;
       letter-spacing:-0.6px;
     }
@@ -382,9 +386,7 @@
       font-size: 1.02rem;
       line-height: 1.55;
     }
-    @media (max-width: 520px){
-      .lead{ font-size: .98rem; }
-    }
+    @media (max-width: 520px){ .lead{ font-size: .98rem; } }
 
     .hero-actions{
       display:flex;
@@ -522,18 +524,7 @@
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
-    /* Featured */
-    .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
-
-    .card{
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: var(--panel);
-      overflow:hidden;
-      box-shadow: var(--shadow2);
-    }
+    /* Featured mount (kept simple here; your loader will inject grid/cards) */
     .notice{
       border-radius: 16px;
       padding: 12px;
@@ -541,6 +532,167 @@
       background: var(--panel2);
       color: var(--muted);
     }
+
+    /* Modal (shared style; HTML exists if your featured uses it) */
+    .modalOverlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.56);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      z-index: 140;
+      padding: 14px;
+    }
+    .modalOverlay.open{ display:flex; }
+    .modal{
+      width: min(860px, 100%);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 86%, #000 14%);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modalHead{
+      display:flex; gap:10px; align-items:flex-start; justify-content:space-between;
+      padding: 12px 12px;
+      border-bottom: 1px solid var(--line2);
+      background: color-mix(in oklab, var(--panel2) 65%, transparent);
+    }
+    .modalTitle{ font-weight: 950; letter-spacing:-0.2px; line-height:1.15; margin:0; font-size: 1.08rem; }
+    .modalMeta{ margin-top: 8px; display:flex; gap:8px; flex-wrap:wrap; }
+    .modalBody{ padding: 12px; max-height: min(65vh, 520px); overflow:auto; }
+    .modalDesc{
+      white-space: pre-wrap;
+      line-height: 1.65;
+      color: color-mix(in oklab, var(--text) 92%, transparent);
+      font-size: 1.0rem;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      padding: 12px;
+      margin:0;
+    }
+    .modalFoot{
+      padding: 12px;
+      border-top: 1px solid var(--line2);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      background: color-mix(in oklab, var(--panel2) 65%, transparent);
+    }
+    .modalFoot .left, .modalFoot .right{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .copy-btn{
+      border: 1px dashed var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-weight: 950;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor:pointer;
+    }
+    .copy-btn:hover{ color: var(--gold2); border-color: rgba(212,175,55,.35); }
+
+    /* ✅ UPDATED FOOTER (match other pages) */
+    footer{
+      margin-top: 18px;
+      border-top: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
+    }
+    .footer-cta{
+      margin-top: 14px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
+        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
+        var(--panel2);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
+    .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
+
+    .footer-grid{
+      display:grid;
+      gap: 16px;
+      padding: 16px 0;
+      grid-template-columns: 1.35fr 1fr 1fr;
+    }
+    @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
+
+    .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
+    .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
+    .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
+
+    .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
+    .footer-links a{
+      display:block;
+      padding: 6px 0;
+      color: color-mix(in oklab, var(--text) 84%, transparent);
+      font-weight: 600;
+    }
+    .footer-links a:hover{ color: var(--gold); }
+
+    .contact-stack{ display:grid; gap: 10px; }
+    .contact-chip{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+    }
+    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
+    .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
+    .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
+
+    .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .social a{
+      width: 42px; height: 42px;
+      display:inline-flex; align-items:center; justify-content:center;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--text);
+    }
+    .social a:hover{
+      color:#111;
+      background: var(--gold);
+      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
+    }
+
+    .footer-bottom{
+      border-top: 1px solid var(--line2);
+      padding: 12px 0 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      color: var(--muted2);
+      font-size: .9rem;
+    }
+    .footer-badges{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 80%, transparent);
+      font-weight: 850;
+      font-size: .84rem;
+    }
+    .badge i{ color: var(--gold); }
 
     /* Floating WhatsApp */
     .wa-float{
@@ -818,9 +970,106 @@
     </section>
   </main>
 
-  <footer style="margin-top:18px; border-top:1px solid var(--line); background: color-mix(in oklab, var(--bg2) 80%, #000 20%);">
-    <div class="container" style="padding:16px 0; color:var(--muted2);">
-      © <span id="year"></span> Larmah Enterprise. All rights reserved.
+  <!-- ✅ Updated footer (matches other pages) -->
+  <footer>
+    <div class="container">
+      <div class="footer-cta">
+        <div>
+          <h3>Verified stays + trusted movement — WhatsApp-first.</h3>
+          <p>Confirm availability, request a quote, and coordinate logistics — fast.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </button>
+          <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
+          <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
+        </div>
+      </div>
+
+      <div class="footer-grid">
+        <div>
+          <div class="brandline">
+            <div class="logo-wrap" aria-hidden="true">
+              <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+            </div>
+            <div style="min-width:0;">
+              <div class="brandname">Larmah Enterprise</div>
+              <div class="tagline">Connecting People, Business & Possibilities • RC: 9127113</div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
+            Verified real estate, shortlets, and logistics support — with clean references and WhatsApp-first coordination.
+          </div>
+
+          <div class="social" aria-label="Social links">
+            <a href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://x.com/heylarmah_tech" aria-label="X" title="X"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            <a href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Quick Links</div>
+          <div class="footer-links">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="real-estate.html">Real Estate</a>
+            <a href="logistics.html">Logistics</a>
+            <a href="premium.html">Premium</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Contact</div>
+
+          <div class="contact-stack">
+            <div class="contact-chip">
+              <i class="fa-brands fa-whatsapp"></i>
+              <div>
+                <div class="txt">+234 706 308 0605</div>
+                <div class="sub">WhatsApp-first support</div>
+              </div>
+            </div>
+
+            <div class="contact-chip">
+              <i class="fa-regular fa-envelope"></i>
+              <div>
+                <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
+                <div class="sub">Business enquiries</div>
+              </div>
+            </div>
+
+            <div class="contact-chip">
+              <i class="fa-solid fa-location-dot"></i>
+              <div>
+                <div class="txt">Lagos, Nigeria</div>
+                <div class="sub">Serving Nigeria nationwide</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+              <i class="fa-brands fa-whatsapp"></i> Chat Now
+            </button>
+            <a class="btn small primary" href="premium.html">
+              <i class="fa-solid fa-crown"></i> Go Premium
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+        <div class="footer-badges">
+          <span class="badge"><i class="fa-solid fa-shield-halved"></i> Trust-first</span>
+          <span class="badge"><i class="fa-solid fa-hashtag"></i> Traceable refs</span>
+          <span class="badge"><i class="fa-solid fa-headset"></i> Support</span>
+        </div>
+      </div>
     </div>
   </footer>
 
@@ -838,6 +1087,8 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return window.LARMAH.buildMessage(title, data);
@@ -887,7 +1138,6 @@
     window.toggleTheme = toggleTheme;
 
     // Hero slideshow
-    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -942,7 +1192,7 @@
     }
     window.setMode = setMode;
 
-    // date mins
+    // Date mins
     function toISODate(d){
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth()+1).padStart(2,"0");
