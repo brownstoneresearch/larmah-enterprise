@@ -1,48 +1,43 @@
 <!-- =========================
-     real-estate.html (FULL)
+     logistics.html (FULL — UPGRADED + SYNCED WITH INDEX FEATURED)
      ✅ Pagination added (smart controls + per-page)
      ✅ Description preview + View more modal popup
      ✅ Only rotates images for visible page items
-     ✅ Syncs with index.html Featured: listings.featured=true
-     ✅ Catalog from Supabase: public.listings (category='real-estate', status='active')
-     ✅ Includes Booking Request (dates/guests/budget) -> WhatsApp + optional DB request insert
-     ✅ Keeps current footer styling + WA float + image carousel per card
+     ✅ DB source: public.listings
+     ✅ Featured = listings.featured = true (and status=active)
+     ✅ Keeps: footer styling + quote form + WA float + card image carousel
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="robots" content="index,follow" />
 
-  <title>Real Estate | Larmah Enterprise</title>
-  <meta name="description" content="Verified shortlets, rentals, and property sales across Nigeria — trust-first sourcing with WhatsApp-first support and clean reference tracking." />
-  <meta name="keywords" content="Real Estate Nigeria, Shortlets Lagos, Apartments Lekki, Ikoyi Rentals, Verified Property, Larmah Enterprise" />
+  <title>Logistics | Larmah Enterprise</title>
+  <meta name="description" content="Trusted dispatch, pickups, haulage and logistics coordination across Nigeria — WhatsApp-first support with trackable references." />
+  <meta name="keywords" content="Logistics Nigeria, Dispatch Lagos, Haulage Nigeria, Airport Pickup Lagos, Delivery Service Nigeria, Larmah Logistics" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
   <meta name="color-scheme" content="dark light" />
-  <link rel="canonical" href="https://heylarmah.tech/real-estate.html" />
+  <meta name="robots" content="index,follow" />
+  <link rel="canonical" href="https://heylarmah.tech/logistics.html" />
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="en_NG" />
-  <meta property="og:url" content="https://heylarmah.tech/real-estate.html" />
-  <meta property="og:title" content="Larmah Real Estate | Verified Listings" />
-  <meta property="og:description" content="Shortlets, rentals, and sales — verified sourcing with WhatsApp-first support." />
+  <meta property="og:url" content="https://heylarmah.tech/logistics.html" />
+  <meta property="og:title" content="Larmah Logistics | Trusted Movement" />
+  <meta property="og:description" content="Dispatch, pickups, haulage and coordination across Nigeria — WhatsApp-first support." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:alt" content="Larmah Real Estate — Verified Listings" />
+  <meta property="og:image:alt" content="Larmah Logistics — Trusted Movement" />
 
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Larmah Real Estate" />
-  <meta name="twitter:description" content="Find your next space with verified peace of mind." />
+  <meta name="twitter:title" content="Larmah Logistics" />
+  <meta name="twitter:description" content="Dispatch, pickups, haulage and coordination — trust-first." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
-  <!-- Icons -->
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
 
-  <!-- Performance -->
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
@@ -60,40 +55,33 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
-  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@type":"CollectionPage",
-    "name":"Larmah Real Estate",
-    "url":"https://heylarmah.tech/real-estate.html",
+    "name":"Larmah Logistics",
+    "url":"https://heylarmah.tech/logistics.html",
     "isPartOf":{"@type":"WebSite","name":"Larmah Enterprise","url":"https://heylarmah.tech/"},
-    "about":{"@type":"Service","name":"Real Estate (Verified Listings)","areaServed":"NG"}
+    "about":{"@type":"Service","name":"Logistics & Dispatch (Trusted)","areaServed":"NG"}
   }
   </script>
 
   <style>
+    /* (Same styling base as your current logistics page) */
     :root{
-      --gold:#D4AF37;
-      --gold2:#F5D57A;
-      --radius: 18px;
-      --radius2: 22px;
-      --max: 1120px;
+      --gold:#D4AF37; --gold2:#F5D57A;
+      --radius: 18px; --radius2: 22px; --max: 1120px;
       --ease: cubic-bezier(.2,.8,.2,1);
       --shadow: 0 18px 50px rgba(0,0,0,.42);
       --shadow2: 0 12px 34px rgba(0,0,0,.30);
     }
 
     html[data-theme="dark"]{
-      --bg:#070A12;
-      --bg2:#050810;
-      --panel: rgba(255,255,255,.03);
-      --panel2: rgba(255,255,255,.02);
-      --line: rgba(255,255,255,.10);
-      --line2: rgba(255,255,255,.08);
+      --bg:#070A12; --bg2:#050810;
+      --panel: rgba(255,255,255,.03); --panel2: rgba(255,255,255,.02);
+      --line: rgba(255,255,255,.10); --line2: rgba(255,255,255,.08);
       --text:#E9EDF7;
-      --muted: rgba(233,237,247,.72);
-      --muted2: rgba(233,237,247,.60);
+      --muted: rgba(233,237,247,.72); --muted2: rgba(233,237,247,.60);
       --headerBg: rgba(7,10,18,.72);
       --overlayBg: rgba(0,0,0,.55);
       --ctaBg: rgba(0,0,0,.28);
@@ -110,15 +98,11 @@
     }
 
     html[data-theme="light"]{
-      --bg:#F7F7FB;
-      --bg2:#FFFFFF;
-      --panel: rgba(10,14,26,.04);
-      --panel2: rgba(10,14,26,.03);
-      --line: rgba(10,14,26,.12);
-      --line2: rgba(10,14,26,.08);
+      --bg:#F7F7FB; --bg2:#FFFFFF;
+      --panel: rgba(10,14,26,.04); --panel2: rgba(10,14,26,.03);
+      --line: rgba(10,14,26,.12); --line2: rgba(10,14,26,.08);
       --text:#0E1526;
-      --muted: rgba(14,21,38,.68);
-      --muted2: rgba(14,21,38,.56);
+      --muted: rgba(14,21,38,.68); --muted2: rgba(14,21,38,.56);
       --headerBg: rgba(255,255,255,.78);
       --overlayBg: rgba(0,0,0,.40);
       --ctaBg: rgba(255,255,255,.78);
@@ -179,7 +163,6 @@
       border-radius: 12px;
     }
 
-    /* Header */
     header{
       position:sticky; top:0; z-index:50;
       background: var(--headerBg);
@@ -264,7 +247,6 @@
       .header-actions{ margin-left:auto; }
     }
 
-    /* Mobile sheet */
     .overlay{
       position:fixed; inset:0;
       background: var(--overlayBg);
@@ -294,7 +276,6 @@
     }
     .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 8px; }
 
-    /* Buttons */
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:10px;
       border-radius: 14px; padding: 12px 16px; min-height: 46px;
@@ -310,10 +291,8 @@
     .btn.ghost{ background: transparent; border-color: var(--line2); }
     .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
 
-    /* Page */
     .page-wrap{ padding: 18px 0 0; }
 
-    /* Hero */
     .hero{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -334,11 +313,7 @@
       pointer-events:none;
       z-index:-1;
     }
-    .hero-grid{
-      display:grid; gap: 14px;
-      grid-template-columns: 1.05fr .95fr;
-      align-items:start;
-    }
+    .hero-grid{ display:grid; gap: 14px; grid-template-columns: 1.05fr .95fr; align-items:start; }
     @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
 
     .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
@@ -348,7 +323,7 @@
       margin: 6px 0 10px;
       font-size: clamp(2.0rem, 4vw, 2.8rem);
       line-height: 1.06;
-      letter-spacing: -0.6px;
+      letter-spacing:-0.6px;
     }
     .gold{
       background: linear-gradient(180deg, var(--gold2), var(--gold));
@@ -379,15 +354,19 @@
       isolation:isolate;
     }
     .hero-media img{
-      width:100%; height: 320px;
-      object-fit: cover; display:block;
-      opacity:.94; transform: scale(1.01);
+      width:100%;
+      height: 320px;
+      object-fit: cover;
+      display:block;
+      opacity:.94;
+      transform: scale(1.01);
       transition: opacity .55s var(--ease), transform .9s var(--ease);
     }
     .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
     .hero-media .cap{
       position:absolute; left:16px; right:16px; bottom:12px;
-      padding: 10px; border-radius: 12px;
+      padding: 10px;
+      border-radius: 12px;
       border: 1px solid var(--ctaLine);
       background: var(--ctaBg);
       backdrop-filter: blur(10px);
@@ -395,19 +374,14 @@
     .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
     .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
     .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
-    .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
-    .hero-bar.run{ width: 100%; }
+    .hero-bar{ height:100%; width:0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
+    .hero-bar.run{ width:100%; }
 
-    /* Sections */
     .section{ padding: 18px 0; }
-    .section-head{
-      display:flex; align-items:flex-end; justify-content:space-between;
-      gap:12px; margin-bottom: 12px; flex-wrap:wrap;
-    }
+    .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom: 12px; flex-wrap:wrap; }
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
-    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
+    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height:1.4; }
 
-    /* Filters */
     .filters{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -432,7 +406,6 @@
 
     .pillbar{ display:flex; gap:8px; flex-wrap:wrap; padding-top: 12px; margin-top: 10px; border-top: 1px solid var(--line2); }
 
-    /* Grid Cards */
     .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     @media (max-width: 1024px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 640px){ .grid{ grid-template-columns: 1fr; } }
@@ -523,22 +496,12 @@
       display:flex; gap:8px; align-items:center; flex-wrap:wrap;
     }
 
-    /* ✅ Description preview */
+    /* ✅ Description preview + View more */
     .desc{
-      margin:0;
-      color: var(--muted);
-      line-height:1.55;
-      font-size: .96rem;
-      display:-webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow:hidden;
+      margin:0; color: var(--muted); line-height:1.55; font-size: .96rem;
+      display:-webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow:hidden;
     }
-    .more-row{
-      display:flex;
-      justify-content:flex-end;
-      margin-top: 8px;
-    }
+    .more-row{ display:flex; justify-content:flex-end; margin-top: 8px; }
     .link-btn{
       border: 1px solid var(--line2);
       background: transparent;
@@ -585,16 +548,6 @@
     }
     .notice strong{ color: var(--text); }
 
-    .request-card{
-      border-radius: var(--radius2);
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      padding: 14px;
-      margin-top: 14px;
-    }
-
     /* ✅ Pagination */
     .pager{
       margin-top: 14px;
@@ -636,11 +589,7 @@
       color: var(--text);
       font-weight: 900;
     }
-    .pager-select select{
-      min-height: 38px;
-      padding: 8px 10px;
-      border-radius: 12px;
-    }
+    .pager-select select{ min-height: 38px; padding: 8px 10px; border-radius: 12px; }
     .pager-btn{
       min-height: 40px;
       padding: 10px 12px;
@@ -659,14 +608,9 @@
       border-color: rgba(212,175,55,.35);
       color: var(--gold2);
     }
-    .pager-ellipsis{
-      padding: 8px 6px;
-      color: var(--muted2);
-      font-weight: 950;
-      user-select:none;
-    }
+    .pager-ellipsis{ padding: 8px 6px; color: var(--muted2); font-weight: 950; user-select:none; }
 
-    /* ✅ Modal (View More) */
+    /* ✅ Modal */
     .modalOverlay{
       position:fixed; inset:0;
       background: rgba(0,0,0,.56);
@@ -736,7 +680,6 @@
       background: color-mix(in oklab, var(--panel2) 65%, transparent);
     }
 
-    /* Footer */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
@@ -752,21 +695,14 @@
         var(--panel2);
       box-shadow: var(--shadow);
       padding: 14px;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; gap:12px;
+      align-items:center; justify-content:space-between;
       flex-wrap:wrap;
     }
     .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
     .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
 
-    .footer-grid{
-      display:grid;
-      gap: 16px;
-      padding: 16px 0;
-      grid-template-columns: 1.35fr 1fr 1fr;
-    }
+    .footer-grid{ display:grid; gap: 16px; padding: 16px 0; grid-template-columns: 1.35fr 1fr 1fr; }
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
 
     .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
@@ -774,19 +710,14 @@
     .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
 
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    .footer-links a{
-      display:block; padding: 6px 0;
-      color: color-mix(in oklab, var(--text) 84%, transparent);
-      font-weight: 600;
-    }
+    .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
     .footer-links a:hover{ color: var(--gold); }
 
     .contact-stack{ display:grid; gap: 10px; }
     .contact-chip{
       display:flex; gap:10px; align-items:flex-start;
       padding: 10px 12px; border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
+      border: 1px solid var(--line); background: var(--panel2);
     }
     .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
     .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
@@ -799,39 +730,17 @@
       border-radius: 12px; border: 1px solid var(--line);
       background: var(--panel2); color: var(--text);
     }
-    .social a:hover{
-      color:#111;
-      background: var(--gold);
-      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-    }
+    .social a:hover{ color:#111; background: var(--gold); border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
 
     .footer-bottom{
       border-top: 1px solid var(--line2);
       padding: 12px 0 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
       color: var(--muted2);
       font-size: .9rem;
     }
-    .footer-badges{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
-    .badge{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 80%, transparent);
-      font-weight: 850;
-      font-size: .84rem;
-    }
-    .badge i{ color: var(--gold); }
 
-    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
@@ -850,7 +759,6 @@
     }
     .toast.show{ display:block; }
 
-    /* Floating WhatsApp */
     .wa-float{
       position: fixed;
       right: 16px;
@@ -892,7 +800,7 @@
   </style>
 </head>
 
-<body data-page="real-estate">
+<body data-page="logistics">
   <a class="skip" href="#main">Skip to content</a>
 
   <!-- Mobile nav -->
@@ -915,15 +823,15 @@
       </div>
 
       <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
-      <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
-      <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
         </button>
-        <button class="btn solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+        <button class="btn solid" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
           <i class="fa-brands fa-whatsapp"></i> WhatsApp
         </button>
       </div>
@@ -945,8 +853,8 @@
       <nav aria-label="Primary navigation">
         <ul>
           <li><a class="nav-link" href="index.html#about">About</a></li>
-          <li><a class="nav-link active" href="real-estate.html">Real Estate</a></li>
-          <li><a class="nav-link" href="logistics.html">Logistics</a></li>
+          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+          <li><a class="nav-link active" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
         </ul>
       </nav>
@@ -964,173 +872,88 @@
   </header>
 
   <main id="main" class="container page-wrap" tabindex="-1">
-    <section class="hero" aria-label="Real Estate hero">
+    <section class="hero" aria-label="Logistics hero">
       <div class="hero-grid">
         <div>
           <div class="kicker">
-            <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span><span class="dot">•</span>
-            <span><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified listings</span><span class="dot">•</span>
+            <span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Fast dispatch</span><span class="dot">•</span>
+            <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trusted movement</span><span class="dot">•</span>
             <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
           </div>
 
-          <h1>Verified <span class="gold">Real Estate</span> Catalog.</h1>
-          <p class="lead">Browse verified stays, rentals, and sales. Mark any catalogue item as <b>featured</b> in Admin to show on homepage.</p>
+          <h1>Trusted <span class="gold">Logistics</span> across Nigeria.</h1>
+          <p class="lead">Dispatch, pickups, haulage, and movement coordination — with clean references and clear confirmations.</p>
 
           <div class="hero-actions">
-            <a class="btn solid" href="#catalog"><i class="fa-solid fa-magnifying-glass"></i> Browse Listings</a>
-            <a class="btn primary" href="#book"><i class="fa-solid fa-calendar-check"></i> Booking Request</a>
-            <a class="btn ghost" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Add Logistics</a>
+            <a class="btn solid" href="#services"><i class="fa-solid fa-list-check"></i> Browse Services</a>
+            <a class="btn primary" href="#quote"><i class="fa-solid fa-receipt"></i> Request Quote</a>
+            <button class="btn ghost" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
+            </button>
           </div>
 
           <div class="meta">
-            <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span>
-            <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Scam-resistant</span>
+            <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span>
+            <span class="pill"><i class="fa-solid fa-clock" style="color:var(--gold)"></i> Fast response</span>
             <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> Traceable refs</span>
           </div>
         </div>
 
-        <aside class="hero-media" id="heroMedia" aria-label="Real estate showcase">
-          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611" alt="Real estate showcase" decoding="async" fetchpriority="high">
+        <aside class="hero-media" id="heroMedia" aria-label="Logistics showcase">
+          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=710" alt="Logistics showcase" decoding="async" fetchpriority="high">
           <div class="cap">
-            <div class="hero-tag" id="heroTag"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate</div>
-            <div class="hero-sub" id="heroSub">Verified shortlets, rentals, and sales.</div>
+            <div class="hero-tag" id="heroTag"><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</div>
+            <div class="hero-sub" id="heroSub">Dispatch, haulage, and trusted coordination.</div>
           </div>
           <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
         </aside>
       </div>
     </section>
 
-    <!-- ✅ Booking request -->
-    <section class="section" id="book" aria-label="Booking request">
+    <section class="section" id="services" aria-label="Logistics Services">
       <div class="section-head">
         <div>
-          <h2>Booking Request</h2>
-          <p class="subhead">Send dates + location + budget. We confirm options fast on WhatsApp.</p>
+          <h2>Services</h2>
+          <p class="subhead">Filter by service type, coverage, and Featured. Use “View more” for full details.</p>
         </div>
-        <button class="btn small solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with a booking.' }))">
-          <i class="fa-brands fa-whatsapp"></i> Chat Support
-        </button>
-      </div>
-
-      <div class="request-card">
-        <div class="filters-grid" style="grid-template-columns: repeat(8, minmax(0, 1fr));">
-          <div class="field" style="grid-column: span 2;">
-            <label for="bk_checkin">Check-in</label>
-            <input id="bk_checkin" type="date" />
-          </div>
-
-          <div class="field" style="grid-column: span 2;">
-            <label for="bk_checkout">Check-out</label>
-            <input id="bk_checkout" type="date" />
-          </div>
-
-          <div class="field" style="grid-column: span 1;">
-            <label for="bk_guests">Guests</label>
-            <select id="bk_guests">
-              <option value="1">1</option>
-              <option value="2" selected>2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5+">5+</option>
-            </select>
-          </div>
-
-          <div class="field" style="grid-column: span 1;">
-            <label for="bk_cat">Category</label>
-            <select id="bk_cat">
-              <option value="Any" selected>Any</option>
-              <option value="Studio">Studio</option>
-              <option value="1 Bedroom">1 Bedroom</option>
-              <option value="2 Bedroom">2 Bedroom</option>
-              <option value="3 Bedroom">3 Bedroom</option>
-              <option value="Family">Family</option>
-              <option value="Business">Business</option>
-              <option value="Premium">Premium</option>
-            </select>
-          </div>
-
-          <div class="field" style="grid-column: span 2;">
-            <label for="bk_location">Location</label>
-            <select id="bk_location">
-              <option value="Any" selected>Any</option>
-              <option value="Ikoyi">Ikoyi</option>
-              <option value="Lekki">Lekki</option>
-              <option value="Victoria Island">Victoria Island</option>
-              <option value="Yaba">Yaba</option>
-              <option value="Mainland">Mainland</option>
-              <option value="Abuja">Abuja</option>
-            </select>
-          </div>
-
-          <div class="field" style="grid-column: span 8;">
-            <label for="bk_budget">Budget</label>
-            <input id="bk_budget" type="text" placeholder="e.g., ₦120,000 per night / ₦500k total" />
-          </div>
-
-          <div class="field" style="grid-column: span 8;">
-            <label for="bk_notes">Notes</label>
-            <textarea id="bk_notes" placeholder="Any preference? (pool, balcony, generator, proximity, etc.)"></textarea>
-          </div>
-        </div>
-
-        <div class="pillbar" style="border-top:0; margin-top:12px; padding-top:0;">
-          <button class="btn solid" type="button" onclick="submitBookingRequest()">
-            <i class="fa-brands fa-whatsapp"></i> Send Booking Request
-          </button>
-          <button class="btn primary" type="button" onclick="submitBookingToDB()">
-            <i class="fa-solid fa-inbox"></i> Save Request (DB)
-          </button>
-          <a class="btn ghost" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Go Premium</a>
-        </div>
-
-        <div class="notice" style="margin-top:12px;">
-          <strong>Tip:</strong> If you want the item to appear on the homepage Featured section, set <strong>featured=true</strong> in Admin.
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="catalog" aria-label="Real Estate Catalog">
-      <div class="section-head">
-        <div>
-          <h2>Listings</h2>
-          <p class="subhead">Search + filter by category, location, and Featured (syncs with homepage). Use “View more” for full details.</p>
-        </div>
-        <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Sourcing</a>
+        <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Handling</a>
       </div>
 
       <div class="filters" aria-label="Filters">
         <div class="filters-grid">
-          <div class="field" style="grid-column: span 1;">
-            <label for="re_q">Search</label>
-            <input id="re_q" placeholder="Title, features, area..." autocomplete="off" />
+          <div class="field">
+            <label for="lg_q">Search</label>
+            <input id="lg_q" placeholder="Dispatch, airport pickup, haulage..." autocomplete="off" />
           </div>
 
           <div class="field">
-            <label for="re_cat">Category</label>
-            <select id="re_cat">
+            <label for="lg_type">Service Type</label>
+            <select id="lg_type">
               <option value="all" selected>All</option>
-              <option value="shortlet">Shortlet</option>
-              <option value="rent">Rent</option>
-              <option value="buy">Buy</option>
+              <option value="dispatch">Dispatch</option>
+              <option value="haulage">Haulage</option>
+              <option value="pickup">Pickup</option>
+              <option value="airport">Airport</option>
+              <option value="interstate">Interstate</option>
+              <option value="escort">Escort</option>
             </select>
           </div>
 
           <div class="field">
-            <label for="re_loc">Location</label>
-            <select id="re_loc">
+            <label for="lg_cov">Coverage</label>
+            <select id="lg_cov">
               <option value="all" selected>Any</option>
-              <option value="Ikoyi">Ikoyi</option>
-              <option value="Lekki">Lekki</option>
-              <option value="Victoria Island">Victoria Island</option>
-              <option value="Yaba">Yaba</option>
-              <option value="Mainland">Mainland</option>
+              <option value="Lagos">Lagos</option>
               <option value="Abuja">Abuja</option>
+              <option value="Port Harcourt">Port Harcourt</option>
+              <option value="Interstate">Interstate</option>
+              <option value="Nationwide">Nationwide</option>
             </select>
           </div>
 
           <div class="field">
-            <label for="re_sort">Sort</label>
-            <select id="re_sort">
+            <label for="lg_sort">Sort</label>
+            <select id="lg_sort">
               <option value="new" selected>Newest</option>
               <option value="az">Title A–Z</option>
               <option value="za">Title Z–A</option>
@@ -1138,8 +961,8 @@
           </div>
 
           <div class="field">
-            <label for="re_feat">Featured</label>
-            <select id="re_feat">
+            <label for="lg_feat">Featured</label>
+            <select id="lg_feat">
               <option value="all" selected>All</option>
               <option value="featured">Featured only</option>
             </select>
@@ -1147,44 +970,113 @@
         </div>
 
         <div class="pillbar" aria-label="Quick filters">
-          <button class="btn small" type="button" onclick="reQuick('Lekki')">Lekki</button>
-          <button class="btn small" type="button" onclick="reQuick('Victoria Island')">VI</button>
-          <button class="btn small" type="button" onclick="reQuick('Ikoyi')">Ikoyi</button>
-          <button class="btn small" type="button" onclick="reSetCat('shortlet')">Shortlet</button>
-          <button class="btn small" type="button" onclick="reSetCat('rent')">Rent</button>
-          <button class="btn small" type="button" onclick="reSetCat('buy')">Buy</button>
+          <button class="btn small" type="button" onclick="lgQuick('Dispatch')">Dispatch</button>
+          <button class="btn small" type="button" onclick="lgQuick('Haulage')">Haulage</button>
+          <button class="btn small" type="button" onclick="lgQuick('Airport')">Airport</button>
+          <button class="btn small" type="button" onclick="lgSetType('interstate')">Interstate</button>
+          <button class="btn small" type="button" onclick="lgSetCoverage('Lagos')">Lagos</button>
 
-          <button class="btn small" type="button" onclick="reSetFeatured(true)">
+          <button class="btn small" type="button" onclick="lgSetFeatured(true)">
             <i class="fa-solid fa-star" style="color:var(--gold)"></i> Featured
           </button>
 
-          <button class="btn small" type="button" onclick="reReset()"
+          <button class="btn small" type="button" onclick="lgReset()"
             style="color:var(--bad);border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
             <i class="fa-solid fa-rotate-left"></i> Reset
           </button>
         </div>
       </div>
 
-      <div id="re_mount">
-        <div class="notice">Loading verified listings…</div>
+      <div id="lg_mount">
+        <div class="notice">Loading active logistics services…</div>
+      </div>
+    </section>
+
+    <section class="section" id="quote" aria-label="Request a Quote">
+      <div class="section-head">
+        <div>
+          <h2>Request a Quote</h2>
+          <p class="subhead">Share pickup + dropoff + item details for fast pricing.</p>
+        </div>
+      </div>
+
+      <div class="filters" style="padding:16px;">
+        <div class="filters-grid" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+          <div class="field" style="grid-column: span 2;">
+            <label for="q_name">Name</label>
+            <input id="q_name" placeholder="Full name" autocomplete="name" />
+          </div>
+          <div class="field" style="grid-column: span 2;">
+            <label for="q_phone">WhatsApp Number</label>
+            <input id="q_phone" placeholder="+234..." inputmode="tel" autocomplete="tel" />
+          </div>
+
+          <div class="field" style="grid-column: span 2;">
+            <label for="q_pick">Pickup Location</label>
+            <input id="q_pick" placeholder="Pickup address / area" autocomplete="street-address" />
+          </div>
+          <div class="field" style="grid-column: span 2;">
+            <label for="q_drop">Dropoff Location</label>
+            <input id="q_drop" placeholder="Dropoff address / area" autocomplete="street-address" />
+          </div>
+
+          <div class="field">
+            <label for="q_service">Service</label>
+            <select id="q_service">
+              <option value="Dispatch">Dispatch</option>
+              <option value="Pickup">Pickup</option>
+              <option value="Airport Pickup">Airport Pickup</option>
+              <option value="Haulage">Haulage</option>
+              <option value="Interstate">Interstate</option>
+              <option value="Escort">Escort</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="q_date">Date/Time</label>
+            <input id="q_date" placeholder="e.g., Today 4pm" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="q_item">Item Type</label>
+            <input id="q_item" placeholder="Parcel, luggage, cargo..." autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="q_weight">Weight/Size</label>
+            <input id="q_weight" placeholder="e.g., 5kg / medium" autocomplete="off" />
+          </div>
+
+          <div class="field" style="grid-column: span 4;">
+            <label for="q_notes">Notes</label>
+            <textarea id="q_notes" placeholder="Fragile? Floor level? Special handling?"></textarea>
+          </div>
+        </div>
+
+        <div class="pillbar" style="border-top:0; margin-top:12px; padding-top:0;">
+          <button class="btn solid" type="button" onclick="sendLogisticsQuote()">
+            <i class="fa-brands fa-whatsapp"></i> Send Quote Request
+          </button>
+          <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
+          <a class="btn ghost" href="real-estate.html"><i class="fa-solid fa-building"></i> Browse Stays</a>
+        </div>
+
+        <div class="notice" style="margin-top:12px;">
+          <strong>Tip:</strong> If you’re booking a shortlet, share your check-in time so we coordinate pickup/delivery smoothly.
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-cta">
         <div>
-          <h3>Verified stays. Clear confirmation. WhatsApp-first.</h3>
-          <p>Confirm availability and coordinate logistics — in one chat.</p>
+          <h3>Fast dispatch. Clear confirmation. WhatsApp-first.</h3>
+          <p>We coordinate movement — you stay in control.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn solid" type="button"
-            onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+          <button class="btn solid" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </button>
-          <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
+          <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
           <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
         </div>
       </div>
@@ -1202,7 +1094,7 @@
           </div>
 
           <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
-            Verified real estate, shortlets, and logistics support — with clean references and WhatsApp-first coordination.
+            Trusted logistics and verified real estate across Nigeria — with clean references and WhatsApp-first coordination.
           </div>
 
           <div class="social" aria-label="Social links">
@@ -1253,13 +1145,11 @@
           </div>
 
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn small solid" type="button"
-              onclick="openWA(buildMsg('Real Estate Enquiry', { Message:'Hello Larmah, I need a verified listing.' }))">
-              <i class="fa-brands fa-whatsapp"></i> Chat Now
+            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Dispatch Booking', { Message:'Hello Larmah, I want to book dispatch.' }))">
+              <i class="fa-brands fa-whatsapp"></i> Book Now
             </button>
-
-            <a class="btn small primary" href="premium.html">
-              <i class="fa-solid fa-crown"></i> Go Premium
+            <a class="btn small primary" href="real-estate.html">
+              <i class="fa-solid fa-building"></i> Browse Stays
             </a>
           </div>
         </div>
@@ -1267,28 +1157,22 @@
 
       <div class="footer-bottom">
         <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
-        <div class="footer-badges">
-          <span class="badge"><i class="fa-solid fa-shield-halved"></i> Trust-first</span>
-          <span class="badge"><i class="fa-solid fa-hashtag"></i> Traceable refs</span>
-          <span class="badge"><i class="fa-solid fa-headset"></i> Support</span>
-        </div>
       </div>
     </div>
   </footer>
 
-  <!-- Floating WhatsApp -->
   <div class="wa-float" aria-label="Floating WhatsApp support">
-    <button class="wa-pill" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+    <button class="wa-pill" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
       WhatsApp Support
     </button>
-    <button class="wa-btn" type="button" aria-label="Chat on WhatsApp" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+    <button class="wa-btn" type="button" aria-label="Chat on WhatsApp" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
       <i class="fa-brands fa-whatsapp"></i>
     </button>
   </div>
 
   <!-- ✅ View More Modal -->
   <div class="modalOverlay" id="descOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Listing description">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Service description">
       <div class="modalHead">
         <div style="min-width:0;">
           <h3 class="modalTitle" id="descTitle">Description</h3>
@@ -1317,7 +1201,7 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
   <script>
-    // ---- basics
+    // ===== basics
     document.getElementById("year").textContent = new Date().getFullYear();
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -1337,7 +1221,7 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // ---- theme
+    // ===== theme
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
@@ -1356,7 +1240,7 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // ---- mobile menu
+    // ===== mobile menu
     const overlay = document.getElementById("overlay");
     function toggleMenu(open){
       overlay.classList.toggle("open", !!open);
@@ -1364,7 +1248,7 @@
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // ---- WA helpers
+    // ===== WA helpers
     function buildMsg(title, data){
       if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
       const lines = [title, ""];
@@ -1380,15 +1264,15 @@
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
 
-    // ---- View More modal state
-    const __DESC = { title:"", desc:"", ref:"", location:"", category:"" };
+    // ===== View More modal state
+    const __DESC = { title:"", desc:"", ref:"", coverage:"", type:"" };
 
     function openDescModal(title, desc, meta){
-      __DESC.title = title || "Listing";
+      __DESC.title = title || "Service";
       __DESC.desc = desc || "";
       __DESC.ref = meta?.ref || "";
-      __DESC.location = meta?.location || "";
-      __DESC.category = meta?.category || "";
+      __DESC.coverage = meta?.coverage || "";
+      __DESC.type = meta?.type || "";
 
       const ov = document.getElementById("descOverlay");
       const t = document.getElementById("descTitle");
@@ -1401,8 +1285,8 @@
       if(m){
         const bits = [];
         if(__DESC.ref) bits.push(`Ref: ${__DESC.ref}`);
-        if(__DESC.location) bits.push(`Location: ${__DESC.location}`);
-        if(__DESC.category) bits.push(`Category: ${__DESC.category}`);
+        if(__DESC.coverage) bits.push(`Coverage: ${__DESC.coverage}`);
+        if(__DESC.type) bits.push(`Type: ${__DESC.type}`);
         m.textContent = bits.join("  •  ");
       }
 
@@ -1423,12 +1307,12 @@
     }
 
     function descModalWhatsApp(){
-      openWA(buildMsg("Real Estate Enquiry", {
+      openWA(buildMsg("Logistics Enquiry", {
         Ref: __DESC.ref,
-        Title: __DESC.title,
-        Location: __DESC.location,
-        Category: __DESC.category,
-        Message: "Hello Larmah, I saw this listing description. Please confirm availability and next steps."
+        Service: __DESC.title,
+        Coverage: __DESC.coverage,
+        Type: __DESC.type,
+        Message: "Hello Larmah, I saw this service description. Please confirm availability and cost."
       }));
     }
 
@@ -1446,7 +1330,7 @@
     window.closeDescModal = closeDescModal;
     window.descModalWhatsApp = descModalWhatsApp;
 
-    // ---- hero slideshow (5s)
+    // ===== hero slideshow
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1454,11 +1338,12 @@
     const heroBar = document.getElementById("heroBar");
 
     const HERO_SLIDES = [
-      { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611", icon:"fa-house", label:"Shortlets", sub:"Verified shortlets and premium stays." },
-      { img:"https://source.unsplash.com/1600x1000/?real-estate,building,lagos&sig=612", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clear confirmations." },
-      { img:"https://source.unsplash.com/1600x1000/?apartment,living-room,modern&sig=613", icon:"fa-house", label:"Rentals", sub:"Quality rentals in high-demand areas." },
-      { img:"https://source.unsplash.com/1600x1000/?villa,luxury,interior&sig=614", icon:"fa-house", label:"Premium", sub:"High-standard options when you need the best." },
-      { img:"https://source.unsplash.com/1600x1000/?condo,interior,design&sig=615", icon:"fa-house", label:"Comfort-first", sub:"Spaces designed for work & rest." }
+      { img:"https://source.unsplash.com/1600x1000/?delivery,courier,city&sig=901", icon:"fa-truck-fast", label:"Dispatch", sub:"Fast dispatch across major cities." },
+      { img:"https://source.unsplash.com/1600x1000/?warehouse,logistics,packages&sig=902", icon:"fa-boxes-stacked", label:"Coordination", sub:"Clear confirmations and references." },
+      { img:"https://source.unsplash.com/1600x1000/?cargo,truck,highway&sig=903", icon:"fa-truck-ramp-box", label:"Haulage", sub:"Trusted haulage for heavy movement." },
+      { img:"https://source.unsplash.com/1600x1000/?airport,transport,car&sig=904", icon:"fa-plane-arrival", label:"Airport Pickup", sub:"Pickup coordination for guests and teams." },
+      { img:"https://source.unsplash.com/1600x1000/?shipping,container,port&sig=905", icon:"fa-ship", label:"Interstate", sub:"Interstate and nationwide delivery options." },
+      { img:"https://source.unsplash.com/1600x1000/?motorbike,delivery,africa&sig=906", icon:"fa-motorcycle", label:"Last Mile", sub:"Last-mile delivery with tracking updates." }
     ];
     let heroIdx = 0;
 
@@ -1483,11 +1368,11 @@
     }
     if(!reduceMotion){
       setHero(0);
-      setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
+      setInterval(() => { heroIdx=(heroIdx+1)%HERO_SLIDES.length; setHero(heroIdx); }, 5000);
     } else setHero(0);
 
-    // ---- Supabase listings + card image rotate + pagination
-    const __RE = { items: [], imgUrls: {}, imgIdx: {}, timers: {}, page: 1, pageSize: 9 };
+    // ===== Supabase services + pagination + carousel
+    const __LG = { items: [], imgUrls: {}, imgIdx: {}, timers: {}, page: 1, pageSize: 9 };
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
@@ -1504,15 +1389,20 @@
     function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
     function formatPrice(raw){ const s = safeText(raw).trim(); return s ? s : "Contact for quote"; }
 
-    function inferCategory(it){
-      const hay = (safeText(it.listing_type) + " " + safeText(it.type) + " " + safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" "))).toLowerCase();
-      if(hay.includes("shortlet") || hay.includes("airbnb")) return "shortlet";
-      if(hay.includes("rent") || hay.includes("year") || hay.includes("annual")) return "rent";
-      if(hay.includes("buy") || hay.includes("sale") || hay.includes("purchase")) return "buy";
+    function inferType(it){
+      const hay = (safeText(it.service_type) + " " + safeText(it.type) + " " + safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" "))).toLowerCase();
+      if(hay.includes("haul")) return "haulage";
+      if(hay.includes("airport")) return "airport";
+      if(hay.includes("interstate") || hay.includes("nationwide")) return "interstate";
+      if(hay.includes("escort")) return "escort";
+      if(hay.includes("pickup")) return "pickup";
+      if(hay.includes("dispatch") || hay.includes("delivery") || hay.includes("courier")) return "dispatch";
       return "";
     }
-    function inferLocation(it){ return safeText(it.location || it.area || it.city || it.state || "").trim(); }
-    function listingRef(id){ return `WEB-RE-${id}`; }
+    function inferCoverage(it){
+      return safeText(it.coverage || it.location || it.area || it.city || it.state || "").trim();
+    }
+    function listingRef(id){ return `WEB-LG-${id}`; }
 
     function getImages(it){
       const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
@@ -1522,47 +1412,42 @@
     }
     function initImagesFor(it){
       const id = String(it.id);
-      __RE.imgUrls[id] = getImages(it);
-      __RE.imgIdx[id] = __RE.imgIdx[id] ?? 0;
+      __LG.imgUrls[id] = getImages(it);
+      __LG.imgIdx[id] = __LG.imgIdx[id] ?? 0;
     }
-
     function clearAllTimers(){
-      for(const k in __RE.timers){
-        try{ clearInterval(__RE.timers[k]); } catch {}
+      for(const k in __LG.timers){
+        try{ clearInterval(__LG.timers[k]); }catch{}
       }
-      __RE.timers = {};
+      __LG.timers = {};
     }
-
     function setCardImage(id){
-      const img = document.getElementById(`re-img-${id}`);
+      const img = document.getElementById(`lg-img-${id}`);
       if(!img) return;
-      const urls = __RE.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
-      const idx = __RE.imgIdx[id] || 0;
+      const urls = __LG.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
+      const idx = __LG.imgIdx[id] || 0;
       img.src = urls[idx] || urls[0] || "assets/images/larmah-header.jpeg";
-
-      const dots = document.getElementById(`re-dots-${id}`);
-      if(dots){
-        dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
-      }
+      const dots = document.getElementById(`lg-dots-${id}`);
+      if(dots) dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
     }
-    function cycleReImage(id, dir){
-      const urls = __RE.imgUrls[id] || [];
+    function cycleLgImage(id, dir){
+      const urls = __LG.imgUrls[id] || [];
       if(urls.length <= 1) return;
       const max = urls.length;
-      const cur = __RE.imgIdx[id] || 0;
-      __RE.imgIdx[id] = (cur + dir + max) % max;
+      const cur = __LG.imgIdx[id] || 0;
+      __LG.imgIdx[id] = (cur + dir + max) % max;
       setCardImage(id);
     }
-    window.cycleReImage = cycleReImage;
+    window.cycleLgImage = cycleLgImage;
 
     function autoRotateImages(id){
       if(reduceMotion) return;
-      const urls = __RE.imgUrls[id] || [];
+      const urls = __LG.imgUrls[id] || [];
       if(urls.length <= 1) return;
 
-      __RE.timers[id] = setInterval(() => {
-        __RE.imgIdx[id] = ((__RE.imgIdx[id]||0) + 1) % urls.length;
-        const media = document.getElementById(`re-media-${id}`);
+      __LG.timers[id] = setInterval(() => {
+        __LG.imgIdx[id] = ((__LG.imgIdx[id]||0) + 1) % urls.length;
+        const media = document.getElementById(`lg-media-${id}`);
         if(media){
           media.classList.add("is-fading");
           setTimeout(() => { setCardImage(id); media.classList.remove("is-fading"); }, 180);
@@ -1573,40 +1458,40 @@
     function cardHTML(it){
       const id = String(it.id);
       initImagesFor(it);
-      const urls = __RE.imgUrls[id] || [];
+      const urls = __LG.imgUrls[id] || [];
       const hasMany = urls.length > 1;
 
-      const title = safeText(it.title) || "Listing";
-      const desc = safeText(it.description) || "Verified listing.";
+      const title = safeText(it.title) || "Logistics Service";
+      const desc = safeText(it.description) || "Trusted logistics support.";
       const price = formatPrice(it.price);
-      const locationTxt = inferLocation(it) || "Nigeria";
-      const categoryTxt = inferCategory(it) || "listing";
+      const coverage = inferCoverage(it) || "Nigeria";
+      const stype = inferType(it) || "service";
       const ref = listingRef(id);
       const isFeatured = it.featured === true;
 
       const jsTitle = escJS(title);
       const jsDesc = escJS(desc);
       const jsRef = escJS(ref);
-      const jsLoc = escJS(locationTxt);
-      const jsCat = escJS(categoryTxt);
+      const jsCov = escJS(coverage);
+      const jsType = escJS(stype);
 
       return `
         <article class="card" aria-label="${esc(title)}">
-          <div class="media" id="re-media-${id}">
-            <img id="re-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
+          <div class="media" id="lg-media-${id}">
+            <img id="lg-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
                  alt="${esc(title)}" loading="lazy" decoding="async"
                  onerror="this.src='assets/images/larmah-header.jpeg'">
 
             ${hasMany ? `
               <div class="media-nav">
-                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleReImage('${id}', -1)">
+                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleLgImage('${id}', -1)">
                   <i class="fa-solid fa-chevron-left"></i>
                 </button>
-                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleReImage('${id}', 1)">
+                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleLgImage('${id}', 1)">
                   <i class="fa-solid fa-chevron-right"></i>
                 </button>
               </div>
-              <div class="media-dots" id="re-dots-${id}" aria-hidden="true">
+              <div class="media-dots" id="lg-dots-${id}" aria-hidden="true">
                 ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
               </div>
             ` : ``}
@@ -1621,7 +1506,7 @@
             <p class="desc">${esc(desc)}</p>
             <div class="more-row">
               <button class="link-btn" type="button"
-                onclick="openDescModal('${jsTitle}', '${jsDesc}', {ref:'${jsRef}', location:'${jsLoc}', category:'${jsCat}'})">
+                onclick="openDescModal('${jsTitle}', '${jsDesc}', {ref:'${jsRef}', coverage:'${jsCov}', type:'${jsType}'})">
                 <i class="fa-regular fa-file-lines"></i> View more
               </button>
             </div>
@@ -1629,17 +1514,17 @@
             <div class="price">${esc(price)}</div>
 
             <div class="meta">
-              <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(locationTxt)}</span>
-              <span class="pill"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(categoryTxt)}</span>
+              <span class="pill"><i class="fa-solid fa-route" style="color:var(--gold)"></i> ${esc(coverage)}</span>
+              <span class="pill"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(stype)}</span>
               <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> <span class="mono">${esc(ref)}</span></span>
             </div>
 
             <div class="actions-row">
-              <button class="btn small solid" type="button" onclick="reEnquire('${id}')">
+              <button class="btn small solid" type="button" onclick="lgEnquire('${id}')">
                 <i class="fa-brands fa-whatsapp"></i> Enquire
               </button>
-              <button class="btn small primary" type="button" onclick="reBookFromCard('${id}')">
-                <i class="fa-solid fa-calendar-check"></i> Book
+              <button class="btn small primary" type="button" onclick="lgEmail('${id}')">
+                <i class="fa-regular fa-envelope"></i> Email
               </button>
             </div>
           </div>
@@ -1647,7 +1532,6 @@
       `;
     }
 
-    // ✅ Smart pager buttons
     function pagerButtons(page, totalPages){
       const btns = [];
       const add = (p, label, active=false) => btns.push({ type:"btn", p, label, active });
@@ -1687,29 +1571,29 @@
       const btns = pagerButtons(page, totalPages);
 
       return `
-        <div class="pager" role="navigation" aria-label="Listings pagination">
+        <div class="pager" role="navigation" aria-label="Services pagination">
           <div class="pager-left">
             <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>–<b>${to}</b> of <b>${total}</b></span>
             <span class="pill"><i class="fa-solid fa-file-lines" style="color:var(--gold)"></i> Page <b>${page}</b> / <b>${totalPages}</b></span>
           </div>
 
           <div class="pager-right">
-            <button class="pager-btn" type="button" onclick="reGoPage(${page-1})" ${page<=1?'disabled':''} aria-label="Previous page">
+            <button class="pager-btn" type="button" onclick="lgGoPage(${page-1})" ${page<=1?'disabled':''} aria-label="Previous page">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
 
             ${btns.map(b => {
               if(b.type === "ell") return `<span class="pager-ellipsis" aria-hidden="true">…</span>`;
-              return `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="reGoPage(${b.p})" aria-label="Go to page ${b.label}">${b.label}</button>`;
+              return `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="lgGoPage(${b.p})" aria-label="Go to page ${b.label}">${b.label}</button>`;
             }).join("")}
 
-            <button class="pager-btn" type="button" onclick="reGoPage(${page+1})" ${page>=totalPages?'disabled':''} aria-label="Next page">
+            <button class="pager-btn" type="button" onclick="lgGoPage(${page+1})" ${page>=totalPages?'disabled':''} aria-label="Next page">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
 
             <div class="pager-select" aria-label="Items per page">
               <span style="color:var(--muted2); font-weight:950;">Per page</span>
-              <select id="re_pageSize" onchange="reSetPageSize(this.value)">
+              <select id="lg_pageSize" onchange="lgSetPageSize(this.value)">
                 ${[6,9,12,18,24].map(n => `<option value="${n}" ${Number(pageSize)===n?'selected':''}>${n}</option>`).join("")}
               </select>
             </div>
@@ -1718,23 +1602,23 @@
       `;
     }
 
-    function getReFiltered(){
-      const q = safeText(document.getElementById("re_q").value).toLowerCase().trim();
-      const cat = document.getElementById("re_cat").value;
-      const loc = document.getElementById("re_loc").value;
-      const sort = document.getElementById("re_sort").value;
-      const feat = document.getElementById("re_feat").value;
+    function getLgFiltered(){
+      const q = safeText(document.getElementById("lg_q").value).toLowerCase().trim();
+      const type = document.getElementById("lg_type").value;
+      const cov = document.getElementById("lg_cov").value;
+      const sort = document.getElementById("lg_sort").value;
+      const feat = document.getElementById("lg_feat").value;
 
-      let items = (__RE.items || []).slice();
+      let items = (__LG.items || []).slice();
 
       if(q){
         items = items.filter(it => {
-          const hay = (safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" ")) + " " + inferLocation(it)).toLowerCase();
+          const hay = (safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" ")) + " " + safeText(inferCoverage(it))).toLowerCase();
           return hay.includes(q);
         });
       }
-      if(cat !== "all") items = items.filter(it => inferCategory(it) === cat);
-      if(loc !== "all") items = items.filter(it => inferLocation(it).toLowerCase().includes(loc.toLowerCase()));
+      if(type !== "all") items = items.filter(it => inferType(it) === type);
+      if(cov !== "all") items = items.filter(it => safeText(inferCoverage(it)).toLowerCase().includes(cov.toLowerCase()));
       if(feat === "featured") items = items.filter(it => it.featured === true);
 
       if(sort === "az") items.sort((a,b)=> safeText(a.title).localeCompare(safeText(b.title)));
@@ -1744,190 +1628,120 @@
       return items;
     }
 
-    function renderRealEstate(){
-      const mount = document.getElementById("re_mount");
-      const itemsAll = getReFiltered();
+    function renderLogistics(){
+      const mount = document.getElementById("lg_mount");
+      const itemsAll = getLgFiltered();
       const total = itemsAll.length;
 
       if(!total){
         clearAllTimers();
-        mount.innerHTML = `<div class="notice"><strong>No matches found.</strong> Try adjusting filters.</div>`;
+        mount.innerHTML = `<div class="notice"><strong>No matches found.</strong> Try adjusting filters or request a quote below.</div>`;
         return;
       }
 
-      const totalPages = Math.max(1, Math.ceil(total / __RE.pageSize));
-      __RE.page = Math.min(Math.max(1, __RE.page), totalPages);
+      const totalPages = Math.max(1, Math.ceil(total / __LG.pageSize));
+      __LG.page = Math.min(Math.max(1, __LG.page), totalPages);
 
-      const start = (__RE.page - 1) * __RE.pageSize;
-      const pageItems = itemsAll.slice(start, start + __RE.pageSize);
+      const start = (__LG.page - 1) * __LG.pageSize;
+      const pageItems = itemsAll.slice(start, start + __LG.pageSize);
 
       clearAllTimers();
       mount.innerHTML = `
         <div class="grid">${pageItems.map(cardHTML).join("")}</div>
-        ${pagerHTML(__RE.page, __RE.pageSize, total)}
+        ${pagerHTML(__LG.page, __LG.pageSize, total)}
       `;
 
       pageItems.forEach(it => autoRotateImages(String(it.id)));
     }
 
-    function reGoPage(p){
+    function lgGoPage(p){
       const next = Number(p);
       if(!Number.isFinite(next)) return;
-      __RE.page = Math.max(1, next);
-      renderRealEstate();
-      document.getElementById("catalog")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
+      __LG.page = Math.max(1, next);
+      renderLogistics();
+      document.getElementById("services")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
     }
-    function reSetPageSize(n){
+    function lgSetPageSize(n){
       const v = Math.max(3, Math.min(60, Number(n) || 9));
-      __RE.pageSize = v;
-      __RE.page = 1;
-      renderRealEstate();
+      __LG.pageSize = v;
+      __LG.page = 1;
+      renderLogistics();
     }
-    window.reGoPage = reGoPage;
-    window.reSetPageSize = reSetPageSize;
+    window.lgGoPage = lgGoPage;
+    window.lgSetPageSize = lgSetPageSize;
 
-    function reQuick(word){
-      const el = document.getElementById("re_q");
+    function lgQuick(word){
+      const el = document.getElementById("lg_q");
       el.value = (el.value ? el.value + " " : "") + word;
-      __RE.page = 1;
-      renderRealEstate();
+      __LG.page = 1;
+      renderLogistics();
     }
-    function reSetCat(v){ document.getElementById("re_cat").value = v; __RE.page = 1; renderRealEstate(); }
-    function reSetFeatured(on){ document.getElementById("re_feat").value = on ? "featured" : "all"; __RE.page = 1; renderRealEstate(); }
-    function reReset(){
-      document.getElementById("re_q").value = "";
-      document.getElementById("re_cat").value = "all";
-      document.getElementById("re_loc").value = "all";
-      document.getElementById("re_sort").value = "new";
-      document.getElementById("re_feat").value = "all";
-      __RE.page = 1;
-      renderRealEstate();
+    function lgSetType(v){ document.getElementById("lg_type").value = v; __LG.page = 1; renderLogistics(); }
+    function lgSetCoverage(v){ document.getElementById("lg_cov").value = v; __LG.page = 1; renderLogistics(); }
+    function lgSetFeatured(on){ document.getElementById("lg_feat").value = on ? "featured" : "all"; __LG.page = 1; renderLogistics(); }
+    function lgReset(){
+      document.getElementById("lg_q").value = "";
+      document.getElementById("lg_type").value = "all";
+      document.getElementById("lg_cov").value = "all";
+      document.getElementById("lg_sort").value = "new";
+      document.getElementById("lg_feat").value = "all";
+      __LG.page = 1;
+      renderLogistics();
     }
-    window.reQuick = reQuick;
-    window.reSetCat = reSetCat;
-    window.reSetFeatured = reSetFeatured;
-    window.reReset = reReset;
+    window.lgQuick = lgQuick;
+    window.lgSetType = lgSetType;
+    window.lgSetCoverage = lgSetCoverage;
+    window.lgSetFeatured = lgSetFeatured;
+    window.lgReset = lgReset;
 
-    function reEnquire(id){
-      const it = (__RE.items||[]).find(x => String(x.id)===String(id));
+    function lgEnquire(id){
+      const it = (__LG.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
 
-      openWA(buildMsg("Real Estate Enquiry", {
+      openWA(buildMsg("Logistics Enquiry", {
         Ref: listingRef(id),
-        Title: safeText(it.title),
-        Location: inferLocation(it) || "",
-        Category: inferCategory(it) || "",
-        Price: formatPrice(it.price),
+        Service: safeText(it.title),
+        Coverage: inferCoverage(it) || "",
+        Type: inferType(it) || "",
+        Quote: formatPrice(it.price),
         Featured: it.featured === true ? "Yes" : "No",
-        Message: "Hello Larmah, please confirm availability and next steps."
+        Message: "Hello Larmah, please confirm availability and cost."
       }));
     }
-    window.reEnquire = reEnquire;
-
-    function reBookFromCard(id){
-      const it = (__RE.items||[]).find(x => String(x.id)===String(id));
+    function lgEmail(id){
+      const it = (__LG.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
-      document.getElementById("bk_notes").value =
-        `Interested in: ${safeText(it.title)}\nRef: ${listingRef(id)}\nLocation: ${inferLocation(it) || ""}\nPrice: ${formatPrice(it.price)}\n\n`;
-      document.getElementById("bk_location").value = inferLocation(it) || "Any";
-      document.getElementById("bk_cat").value = safeText(it.type) || "Any";
-      document.getElementById("book").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
-      toast("Booking form pre-filled ✅");
+
+      const BUSINESS_EMAIL = "business@heylarmah.tech";
+      const subject = `Logistics Enquiry — ${listingRef(id)} — ${safeText(it.title) || "Service"}`;
+      const body =
+`Hello Larmah Team,
+
+I’m interested in this logistics service:
+
+Ref: ${listingRef(id)}
+Service: ${safeText(it.title)}
+Coverage: ${inferCoverage(it) || ""}
+Type: ${inferType(it) || ""}
+Quote: ${formatPrice(it.price)}
+Featured: ${it.featured === true ? "Yes" : "No"}
+
+My Name:
+My Phone:
+Pickup:
+Dropoff:
+Date/Time:
+Notes:
+
+Thank you.`;
+      window.location.href = `mailto:${encodeURIComponent(BUSINESS_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
-    window.reBookFromCard = reBookFromCard;
+    window.lgEnquire = lgEnquire;
+    window.lgEmail = lgEmail;
 
-    function submitBookingRequest(){
-      const checkin = (document.getElementById("bk_checkin").value || "Not set");
-      const checkout = (document.getElementById("bk_checkout").value || "Not set");
-      const guests = (document.getElementById("bk_guests").value || "2");
-      const category = (document.getElementById("bk_cat").value || "Any");
-      const locationVal = (document.getElementById("bk_location").value || "Any");
-      const budget = (document.getElementById("bk_budget").value || "");
-      const notes = (document.getElementById("bk_notes").value || "");
-
-      openWA(buildMsg("Real Estate — Booking Request", {
-        Checkin: checkin,
-        Checkout: checkout,
-        Guests: guests,
-        Category: category,
-        Location: locationVal,
-        Budget: budget,
-        Notes: notes,
-        Message: "Hello Larmah, please confirm available verified options and total cost."
-      }));
-    }
-    window.submitBookingRequest = submitBookingRequest;
-
-    async function submitBookingToDB(){
-      const fields = {
-        Checkin: (document.getElementById("bk_checkin").value || ""),
-        Checkout: (document.getElementById("bk_checkout").value || ""),
-        Guests: (document.getElementById("bk_guests").value || ""),
-        Category: (document.getElementById("bk_cat").value || ""),
-        Location: (document.getElementById("bk_location").value || ""),
-        Budget: (document.getElementById("bk_budget").value || ""),
-        Notes: (document.getElementById("bk_notes").value || "")
-      };
-
-      if(!fields.Location || fields.Location === "Any"){
-        toast("Please select a location.");
-        return;
-      }
-
-      try{
-        const sb = await waitForSB();
-        if(!sb) throw new Error("Supabase not ready.");
-
-        if(window.LARMAH?.submitRequest){
-          await LARMAH.submitRequest({
-            header: "New Real Estate Booking Request",
-            category: "real-estate",
-            fields,
-            refPrefix: "RE"
-          });
-          toast("Submitted. We’ll respond on WhatsApp ✅");
-          return;
-        }
-
-        const { error } = await sb.from("requests").insert([{
-          category: "real-estate",
-          payload: fields,
-          status: "new"
-        }]);
-        if(error) throw error;
-
-        toast("Saved ✅ (We’ll respond on WhatsApp)");
-        submitBookingRequest();
-      }catch(e){
-        console.warn(e);
-        toast(e?.message || "Could not save. Sending via WhatsApp…");
-        submitBookingRequest();
-      }
-    }
-    window.submitBookingToDB = submitBookingToDB;
-
-    function toISODate(d){
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth()+1).padStart(2,"0");
-      const dd = String(d.getDate()).padStart(2,"0");
-      return `${yyyy}-${mm}-${dd}`;
-    }
-    const todayISO = toISODate(new Date());
-    const bkIn = document.getElementById("bk_checkin");
-    const bkOut = document.getElementById("bk_checkout");
-    if(bkIn) bkIn.min = todayISO;
-    if(bkOut) bkOut.min = todayISO;
-    if(bkIn && bkOut){
-      bkIn.addEventListener("change", () => {
-        if(!bkIn.value) return;
-        bkOut.min = bkIn.value;
-        if(bkOut.value && bkOut.value < bkIn.value) bkOut.value = bkIn.value;
-      });
-    }
-
-    async function loadRealEstate(){
-      const mount = document.getElementById("re_mount");
-      mount.innerHTML = `<div class="notice">Loading verified listings…</div>`;
+    async function loadLogistics(){
+      const mount = document.getElementById("lg_mount");
+      mount.innerHTML = `<div class="notice">Loading active logistics services…</div>`;
 
       try{
         const sb = await waitForSB();
@@ -1935,47 +1749,80 @@
 
         const { data, error } = await sb
           .from("listings")
-          .select("id,title,description,price,image_url,image_urls,location,area,city,state,listing_type,type,tags,category,status,featured,sort_rank,created_at")
-          .eq("category", "real-estate")
+          .select("id,title,description,price,image_url,image_urls,coverage,location,area,city,state,service_type,type,tags,category,status,featured,sort_rank,created_at")
+          .eq("category", "logistics")
           .eq("status", "active")
           .order("created_at", { ascending: false })
           .limit(500);
 
         if(error) throw error;
 
-        __RE.items = data || [];
-        __RE.page = 1;
+        __LG.items = data || [];
+        __LG.page = 1;
 
-        if(!__RE.items.length){
+        if(!__LG.items.length){
           clearAllTimers();
-          mount.innerHTML = `<div class="notice"><strong>No active listings currently.</strong> Please check back soon.</div>`;
+          mount.innerHTML = `<div class="notice"><strong>No active services currently.</strong> Please request a quote below.</div>`;
           return;
         }
 
-        renderRealEstate();
+        renderLogistics();
 
         if(window.LARMAH?.realtime?.subscribe){
-          LARMAH.realtime.subscribe("listings", () => loadRealEstate(), "re-page", { debounceMs: 800 });
+          LARMAH.realtime.subscribe("listings", () => loadLogistics(), "lg-page", { debounceMs: 800 });
         }
       } catch(err){
         console.error(err);
         clearAllTimers();
         mount.innerHTML = `<div class="notice" style="border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
-          <strong>Could not load listings.</strong> Please refresh or try again later.
+          <strong>Could not load services.</strong> Please refresh or try again later.
         </div>`;
       }
     }
 
+    async function sendLogisticsQuote(){
+      const fields = {
+        Name: document.getElementById("q_name").value.trim(),
+        Phone: document.getElementById("q_phone").value.trim(),
+        Pickup: document.getElementById("q_pick").value.trim(),
+        Dropoff: document.getElementById("q_drop").value.trim(),
+        Service: document.getElementById("q_service").value,
+        DateTime: document.getElementById("q_date").value.trim(),
+        Item: document.getElementById("q_item").value.trim(),
+        WeightSize: document.getElementById("q_weight").value.trim(),
+        Notes: document.getElementById("q_notes").value.trim()
+      };
+
+      if(!fields.Name || !fields.Phone){
+        toast("Name and WhatsApp number are required.");
+        return;
+      }
+
+      if(window.LARMAH?.submitRequest){
+        await LARMAH.submitRequest({
+          header: "New Logistics Quote Request",
+          category: "logistics",
+          fields,
+          refPrefix: "LG"
+        });
+        toast("Submitted. We’ll respond on WhatsApp.");
+        return;
+      }
+
+      openWA(buildMsg("Logistics Quote Request", fields));
+    }
+    window.sendLogisticsQuote = sendLogisticsQuote;
+
     document.addEventListener("DOMContentLoaded", () => {
-      const resetPage = () => { __RE.page = 1; renderRealEstate(); };
+      const resetPage = () => { __LG.page = 1; renderLogistics(); };
 
-      document.getElementById("re_q")?.addEventListener("input", resetPage);
-      document.getElementById("re_cat")?.addEventListener("change", resetPage);
-      document.getElementById("re_loc")?.addEventListener("change", resetPage);
-      document.getElementById("re_sort")?.addEventListener("change", resetPage);
-      document.getElementById("re_feat")?.addEventListener("change", resetPage);
+      document.getElementById("lg_q")?.addEventListener("input", resetPage);
+      document.getElementById("lg_type")?.addEventListener("change", resetPage);
+      document.getElementById("lg_cov")?.addEventListener("change", resetPage);
+      document.getElementById("lg_sort")?.addEventListener("change", resetPage);
+      document.getElementById("lg_feat")?.addEventListener("change", resetPage);
 
-      loadRealEstate();
+      loadLogistics();
     });
 
     window.toggleMenu = toggleMenu;
