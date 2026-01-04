@@ -1,5 +1,8 @@
 <!-- =========================
      logistics.html (FULL — UPGRADED + SYNCED WITH INDEX FEATURED)
+     ✅ Pagination added (smart controls + per-page)
+     ✅ Description fully visible (no clamp) + styled
+     ✅ Only rotates images for visible page items
      ✅ DB source: public.listings
      ✅ Featured = listings.featured = true (and status=active)
      ✅ Adds: Featured filter + ⭐ badge + quick Featured chip
@@ -439,7 +442,6 @@
       padding: 14px;
       margin-bottom: 14px;
     }
-    /* ✅ UPDATED: added Featured column */
     .filters-grid{ display:grid; gap: 10px; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; }
     @media (max-width: 980px){ .filters-grid{ grid-template-columns: 1fr 1fr; } }
     @media (max-width: 520px){ .filters-grid{ grid-template-columns: 1fr; } }
@@ -548,18 +550,35 @@
 
     .card-body{ padding: 12px; }
 
-    /* ✅ Title updated to support Featured badge */
-    .title{ font-weight: 950; margin: 2px 0 6px; letter-spacing:-0.2px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-    .desc{
-      margin:0; color: var(--muted); line-height:1.45; font-size: .96rem;
-      display:-webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow:hidden;
+    .title{
+      font-weight: 950;
+      margin: 2px 0 8px;
+      letter-spacing:-0.2px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
     }
+
+    /* ✅ FULL DESCRIPTION (no clamp) + styled */
+    .desc{
+      margin:0;
+      color: var(--muted);
+      line-height:1.55;
+      font-size: .96rem;
+      white-space: pre-wrap;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      padding: 10px 12px;
+    }
+
     .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
     .actions-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
     .actions-row .btn{ flex: 1; }
     @media (max-width: 520px){ .actions-row .btn{ width:100%; flex:unset; } }
 
-    /* ✅ Featured badge */
+    /* Featured badge */
     .star{
       display:inline-flex; gap:6px; align-items:center;
       padding: 4px 10px;
@@ -580,6 +599,77 @@
       color: var(--muted);
     }
     .notice strong{ color: var(--text); }
+
+    /* ✅ Pagination */
+    .pager{
+      margin-top: 14px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: var(--shadow2);
+      padding: 12px;
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .pager-left{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .92rem;
+    }
+    .pager-right{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .pager-select{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 900;
+    }
+    .pager-select select{
+      min-height: 38px;
+      padding: 8px 10px;
+      border-radius: 12px;
+    }
+    .pager-btn{
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 950;
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
+    }
+    .pager-btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .pager-btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; }
+    .pager-btn.active{
+      background: rgba(212,175,55,.16);
+      border-color: rgba(212,175,55,.35);
+      color: var(--gold2);
+    }
+    .pager-ellipsis{
+      padding: 8px 6px;
+      color: var(--muted2);
+      font-weight: 950;
+      user-select:none;
+    }
 
     /* Footer (current styling) */
     footer{
@@ -821,7 +911,7 @@
       <div class="section-head">
         <div>
           <h2>Services</h2>
-          <p class="subhead">Filter by service type, coverage, and Featured (syncs with homepage).</p>
+          <p class="subhead">Filter by service type, coverage, and Featured (syncs with homepage). Pagination keeps it clean.</p>
         </div>
         <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Handling</a>
       </div>
@@ -867,7 +957,6 @@
             </select>
           </div>
 
-          <!-- ✅ NEW: Featured filter -->
           <div class="field">
             <label for="lg_feat">Featured</label>
             <select id="lg_feat">
@@ -884,7 +973,6 @@
           <button class="btn small" type="button" onclick="lgSetType('interstate')">Interstate</button>
           <button class="btn small" type="button" onclick="lgSetCoverage('Lagos')">Lagos</button>
 
-          <!-- ✅ NEW: Featured quick -->
           <button class="btn small" type="button" onclick="lgSetFeatured(true)">
             <i class="fa-solid fa-star" style="color:var(--gold)"></i> Featured
           </button>
@@ -974,7 +1062,7 @@
     </section>
   </main>
 
-  <!-- ✅ Current footer styling (unchanged) -->
+  <!-- Current footer styling (unchanged) -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -1182,8 +1270,15 @@
       setInterval(() => { heroIdx=(heroIdx+1)%HERO_SLIDES.length; setHero(heroIdx); }, 5000);
     } else setHero(0);
 
-    // ===== Supabase services + card image auto-rotate (5s)
-    const __LG = { items: [], imgUrls: {}, imgIdx: {}, timers: {} };
+    // ===== Supabase services + card image auto-rotate (5s) + pagination
+    const __LG = {
+      items: [],
+      imgUrls: {},
+      imgIdx: {},
+      timers: {},
+      page: 1,
+      pageSize: 9
+    };
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
@@ -1308,6 +1403,7 @@
               ${esc(title)}
               ${isFeatured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
             </div>
+
             <p class="desc">${esc(desc)}</p>
 
             <div class="price">${esc(price)}</div>
@@ -1331,13 +1427,84 @@
       `;
     }
 
-    function renderLogistics(){
-      const mount = document.getElementById("lg_mount");
+    // ✅ Smart pager builder (limited buttons + ellipses)
+    function pagerButtons(page, totalPages){
+      const btns = [];
+      const add = (p, label, active=false, disabled=false) => btns.push({ type:"btn", p, label, active, disabled });
+      const ell = () => btns.push({ type:"ell" });
+
+      if(totalPages <= 1) return btns;
+
+      const maxBtns = 7;
+      const half = Math.floor(maxBtns / 2);
+
+      let start = Math.max(1, page - half);
+      let end = Math.min(totalPages, page + half);
+
+      if(end - start + 1 < maxBtns){
+        const missing = maxBtns - (end - start + 1);
+        start = Math.max(1, start - missing);
+        end = Math.min(totalPages, end + missing);
+      }
+
+      add(1, "1", page===1);
+      if(start > 2) ell();
+
+      for(let p = Math.max(2, start); p <= Math.min(totalPages-1, end); p++){
+        add(p, String(p), p===page);
+      }
+
+      if(end < totalPages - 1) ell();
+      if(totalPages > 1) add(totalPages, String(totalPages), page===totalPages);
+
+      return btns;
+    }
+
+    function pagerHTML(page, pageSize, total){
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      const from = total ? ((page - 1) * pageSize) + 1 : 0;
+      const to = Math.min(total, page * pageSize);
+
+      const btns = pagerButtons(page, totalPages);
+
+      return `
+        <div class="pager" role="navigation" aria-label="Services pagination">
+          <div class="pager-left">
+            <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>–<b>${to}</b> of <b>${total}</b></span>
+            <span class="pill"><i class="fa-solid fa-file-lines" style="color:var(--gold)"></i> Page <b>${page}</b> / <b>${totalPages}</b></span>
+          </div>
+
+          <div class="pager-right">
+            <button class="pager-btn" type="button" onclick="lgGoPage(${page-1})" ${page<=1?'disabled':''} aria-label="Previous page">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            ${btns.map(b => {
+              if(b.type === "ell") return `<span class="pager-ellipsis" aria-hidden="true">…</span>`;
+              return `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="lgGoPage(${b.p})" aria-label="Go to page ${b.label}">${b.label}</button>`;
+            }).join("")}
+
+            <button class="pager-btn" type="button" onclick="lgGoPage(${page+1})" ${page>=totalPages?'disabled':''} aria-label="Next page">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <div class="pager-select" aria-label="Items per page">
+              <span style="color:var(--muted2); font-weight:950;">Per page</span>
+              <select id="lg_pageSize" onchange="lgSetPageSize(this.value)">
+                ${[6,9,12,18,24].map(n => `<option value="${n}" ${Number(pageSize)===n?'selected':''}>${n}</option>`).join("")}
+              </select>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function getLgFiltered(){
       const q = safeText(document.getElementById("lg_q").value).toLowerCase().trim();
       const type = document.getElementById("lg_type").value;
       const cov = document.getElementById("lg_cov").value;
       const sort = document.getElementById("lg_sort").value;
-      const feat = document.getElementById("lg_feat").value; // ✅ NEW
+      const feat = document.getElementById("lg_feat").value;
 
       let items = (__LG.items || []).slice();
 
@@ -1349,49 +1516,81 @@
       }
       if(type !== "all") items = items.filter(it => inferType(it) === type);
       if(cov !== "all") items = items.filter(it => safeText(inferCoverage(it)).toLowerCase().includes(cov.toLowerCase()));
-      if(feat === "featured") items = items.filter(it => it.featured === true); // ✅ NEW
+      if(feat === "featured") items = items.filter(it => it.featured === true);
 
       if(sort === "az") items.sort((a,b)=> safeText(a.title).localeCompare(safeText(b.title)));
       else if(sort === "za") items.sort((a,b)=> safeText(b.title).localeCompare(safeText(a.title)));
       else items.sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
 
-      if(!items.length){
+      return items;
+    }
+
+    function renderLogistics(){
+      const mount = document.getElementById("lg_mount");
+      const itemsAll = getLgFiltered();
+      const total = itemsAll.length;
+
+      if(!total){
         clearAllTimers();
         mount.innerHTML = `<div class="notice"><strong>No matches found.</strong> Try adjusting filters or request a quote below.</div>`;
         return;
       }
 
+      const totalPages = Math.max(1, Math.ceil(total / __LG.pageSize));
+      __LG.page = Math.min(Math.max(1, __LG.page), totalPages);
+
+      const start = (__LG.page - 1) * __LG.pageSize;
+      const pageItems = itemsAll.slice(start, start + __LG.pageSize);
+
       clearAllTimers();
-      mount.innerHTML = `<div class="grid">${items.map(cardHTML).join("")}</div>`;
-      items.forEach(it => autoRotateImages(String(it.id)));
+      mount.innerHTML = `
+        <div class="grid">${pageItems.map(cardHTML).join("")}</div>
+        ${pagerHTML(__LG.page, __LG.pageSize, total)}
+      `;
+
+      // only rotate visible page items
+      pageItems.forEach(it => autoRotateImages(String(it.id)));
     }
+
+    function lgGoPage(p){
+      const next = Number(p);
+      if(!Number.isFinite(next)) return;
+      __LG.page = Math.max(1, next);
+      renderLogistics();
+      document.getElementById("services")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
+    }
+    function lgSetPageSize(n){
+      const v = Math.max(3, Math.min(60, Number(n) || 9));
+      __LG.pageSize = v;
+      __LG.page = 1;
+      renderLogistics();
+    }
+    window.lgGoPage = lgGoPage;
+    window.lgSetPageSize = lgSetPageSize;
 
     function lgQuick(word){
       const el = document.getElementById("lg_q");
       el.value = (el.value ? el.value + " " : "") + word;
+      __LG.page = 1;
       renderLogistics();
     }
-    function lgSetType(v){ document.getElementById("lg_type").value = v; renderLogistics(); }
-    function lgSetCoverage(v){ document.getElementById("lg_cov").value = v; renderLogistics(); }
-
-    // ✅ NEW
-    function lgSetFeatured(on){
-      document.getElementById("lg_feat").value = on ? "featured" : "all";
-      renderLogistics();
-    }
+    function lgSetType(v){ document.getElementById("lg_type").value = v; __LG.page = 1; renderLogistics(); }
+    function lgSetCoverage(v){ document.getElementById("lg_cov").value = v; __LG.page = 1; renderLogistics(); }
+    function lgSetFeatured(on){ document.getElementById("lg_feat").value = on ? "featured" : "all"; __LG.page = 1; renderLogistics(); }
 
     function lgReset(){
       document.getElementById("lg_q").value = "";
       document.getElementById("lg_type").value = "all";
       document.getElementById("lg_cov").value = "all";
       document.getElementById("lg_sort").value = "new";
-      document.getElementById("lg_feat").value = "all"; // ✅ NEW
+      document.getElementById("lg_feat").value = "all";
+      __LG.page = 1;
       renderLogistics();
     }
     window.lgQuick = lgQuick;
     window.lgSetType = lgSetType;
     window.lgSetCoverage = lgSetCoverage;
-    window.lgSetFeatured = lgSetFeatured; // ✅ NEW
+    window.lgSetFeatured = lgSetFeatured;
     window.lgReset = lgReset;
 
     function lgEnquire(id){
@@ -1447,18 +1646,19 @@ Thank you.`;
         const sb = await waitForSB();
         if(!sb) throw new Error("Supabase not ready. Ensure assets/js/app.js has your SUPABASE_URL + SUPABASE_ANON_KEY.");
 
-        // ✅ UPDATED: include featured + sort_rank
         const { data, error } = await sb
           .from("listings")
           .select("id,title,description,price,image_url,image_urls,coverage,location,area,city,state,service_type,type,tags,category,status,featured,sort_rank,created_at")
           .eq("category", "logistics")
           .eq("status", "active")
           .order("created_at", { ascending: false })
-          .limit(200);
+          .limit(500);
 
         if(error) throw error;
 
         __LG.items = data || [];
+        __LG.page = 1;
+
         if(!__LG.items.length){
           clearAllTimers();
           mount.innerHTML = `<div class="notice"><strong>No active services currently.</strong> Please request a quote below.</div>`;
@@ -1513,11 +1713,14 @@ Thank you.`;
     window.sendLogisticsQuote = sendLogisticsQuote;
 
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("lg_q")?.addEventListener("input", renderLogistics);
-      document.getElementById("lg_type")?.addEventListener("change", renderLogistics);
-      document.getElementById("lg_cov")?.addEventListener("change", renderLogistics);
-      document.getElementById("lg_sort")?.addEventListener("change", renderLogistics);
-      document.getElementById("lg_feat")?.addEventListener("change", renderLogistics); // ✅ NEW
+      const resetPage = () => { __LG.page = 1; renderLogistics(); };
+
+      document.getElementById("lg_q")?.addEventListener("input", resetPage);
+      document.getElementById("lg_type")?.addEventListener("change", resetPage);
+      document.getElementById("lg_cov")?.addEventListener("change", resetPage);
+      document.getElementById("lg_sort")?.addEventListener("change", resetPage);
+      document.getElementById("lg_feat")?.addEventListener("change", resetPage);
+
       loadLogistics();
     });
 
