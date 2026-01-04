@@ -1421,6 +1421,19 @@
           __lastReceipt = { ref: paystackRef, tier, amountNgn, email, name, phone, track, urgency };
           showReceipt({ ref: paystackRef, tier, amountNgn });
 
+             const res = await fetch(PREMIUM_INVITE_FN, {
+  method: "POST",
+  headers: fnHeaders(),
+  body: JSON.stringify({ ... })
+});
+
+const res2 = await fetch(PREMIUM_RESEND_FN, {
+  method: "POST",
+  headers: fnHeaders(),
+  body: JSON.stringify({ ... })
+});
+
+
           // server-side verify + email invite
           const result = await requestInvite({ paystackRef, clientRef, name, email, phone, tier, amountNgn, track, urgency, notes });
 
