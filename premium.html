@@ -49,24 +49,20 @@
 
   <!-- Supabase + app.js -->
   <script>
-    window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
-    window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="assets/js/app.js"></script>
+  // Use the same config you use everywhere else
+  const SUPABASE_URL = window.__SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
+  const SUPABASE_ANON_KEY = window.__SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
 
-  <!-- Paystack -->
-  <script src="https://js.paystack.co/v1/inline.js"></script>
+  const FUNCTIONS_BASE = `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1`;
+  const PREMIUM_INVITE_FN = `${FUNCTIONS_BASE}/premium-invite`;
+  const PREMIUM_RESEND_FN = `${FUNCTIONS_BASE}/premium-resend`;
 
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebPage",
-    "name":"Larmah Premium",
-    "url":"https://heylarmah.tech/premium.html",
-    "isPartOf":{"@type":"WebSite","name":"Larmah Enterprise","url":"https://heylarmah.tech/"},
-    "about":{"@type":"Service","name":"Premium Investment Tracks + Concierge (Real Estate + Logistics)","areaServed":"NG"}
+  function fnHeaders(){
+    return {
+      "Content-Type": "application/json",
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+    };
   }
   </script>
 
