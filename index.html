@@ -82,12 +82,9 @@
     :root{
       --gold:#D4AF37;
       --gold2:#F5D57A;
-      --ink:#0b0f1a;
 
       --radius: 18px;
       --radius2: 24px;
-      --radius3: 28px;
-
       --max: 1140px;
       --ease: cubic-bezier(.2,.8,.2,1);
 
@@ -120,13 +117,10 @@
       --ctaBg: rgba(0,0,0,.28);
       --ctaLine: rgba(255,255,255,.12);
       --good: rgba(0,217,129,.95);
-      --warn: rgba(255,187,0,.95);
-
-      --logoGlow: 0 0 26px rgba(212,175,55,.14);
-      --logoRing: rgba(255,255,255,.12);
-      --logoBg: rgba(255,255,255,.03);
-
       --focus: rgba(245,213,122,.28);
+      --logoRing: rgba(255,255,255,.12);
+      --logoGlow: 0 0 26px rgba(212,175,55,.14);
+      --logoBg: rgba(255,255,255,.03);
     }
 
     html[data-theme="light"]{
@@ -145,17 +139,13 @@
       --ctaBg: rgba(255,255,255,.82);
       --ctaLine: rgba(10,14,26,.10);
       --good: rgba(0,140,90,.92);
-      --warn: rgba(180,110,0,.92);
-
+      --focus: rgba(212,175,55,.26);
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
       --shadow3: 0 10px 14px rgba(0,0,0,.08);
-
-      --logoGlow: 0 0 0 rgba(0,0,0,0);
       --logoRing: rgba(10,14,26,.10);
+      --logoGlow: 0 0 0 rgba(0,0,0,0);
       --logoBg: rgba(255,255,255,.70);
-
-      --focus: rgba(212,175,55,.26);
     }
 
     *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
@@ -180,7 +170,7 @@
       padding-bottom: 0;
     }
 
-    /* cinematic micro-grain */
+    /* subtle premium grain */
     body::before{
       content:"";
       position:fixed; inset:0;
@@ -206,7 +196,6 @@
       padding-right: max(var(--containerPad), var(--safeR));
     }
 
-    /* Skip link */
     .skip{
       position:absolute; left:-999px; top:10px;
       padding:10px 12px;
@@ -252,6 +241,7 @@
       align-items:center;
       gap:12px;
       min-width: 280px;
+      min-width: 0;
     }
 
     .logo-wrap{
@@ -269,15 +259,6 @@
       flex: 0 0 auto;
       isolation:isolate;
     }
-    .logo-wrap::after{
-      content:"";
-      position:absolute; inset:-10px;
-      background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
-      filter: blur(12px);
-      opacity: .8;
-      pointer-events:none;
-      z-index:-1;
-    }
     .logo-wrap img{
       width:100%;
       height:100%;
@@ -286,6 +267,17 @@
       border-radius: 12px;
       border: 1px solid var(--line2);
       background: var(--logoBg);
+    }
+
+    /* ✅ FIX: header logo (horizontal) is now properly constrained + aligned */
+    .brand-logo{
+      height: 26px;
+      width: auto;
+      max-width: min(320px, 48vw);
+      object-fit: contain;
+      display:block;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.28));
+      opacity: .98;
     }
 
     .brand-meta{
@@ -301,6 +293,7 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
+      display:none; /* keep clean when logo shows */
     }
     .brand-meta .sub{
       font-size:.86rem;
@@ -308,25 +301,7 @@
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
-    }
-
-    /* Mature wordmark on desktop (optional) */
-    .wordmark{
-      display:none;
-      align-items:center;
-      gap:10px;
-      min-width:0;
-    }
-    .wordmark img{
-      height: 26px;
-      width: auto;
-      display:block;
-      opacity:.98;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,.25));
-    }
-    @media (min-width: 1080px){
-      .wordmark{ display:flex; }
-      .brand{ min-width: 380px; }
+      display:none; /* keep clean when logo shows */
     }
 
     nav{ margin-left:auto; }
@@ -345,10 +320,7 @@
       position:relative;
     }
     .nav-link:hover{ color: var(--gold); opacity:1; }
-    .nav-link.is-active{
-      color: var(--gold);
-      opacity: 1;
-    }
+    .nav-link.is-active{ color: var(--gold); opacity: 1; }
     .nav-link.is-active::after{
       content:"";
       position:absolute;
@@ -389,15 +361,19 @@
       transition: transform .16s var(--ease), filter .16s var(--ease);
     }
     .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-    .icon-btn:active{ transform: translateY(0); }
 
     @media (max-width: 980px){
       nav{ display:none; }
       .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
       .header-actions{ margin-left: auto; }
       body{ padding-bottom: calc(94px + var(--safeB)); }
-      .brand{ min-width: 0; }
-      .wordmark{ display:none !important; }
+      .brand-logo{ max-width: 52vw; height: 24px; }
+    }
+    @media (max-width: 520px){
+      .brand-logo{ max-width: 58vw; height: 22px; }
+      .logo-wrap{ width:40px; height:40px; }
+      .logo-wrap img{ border-radius: 11px; }
+      .icon-btn{ width:40px; height:40px; }
     }
 
     /* Mobile sheet */
@@ -469,45 +445,17 @@
       user-select:none;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
-    .btn:active{ transform: translateY(0); }
     .btn.solid{
       background: linear-gradient(180deg, var(--gold2), var(--gold));
       color: #111;
       border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
       box-shadow: 0 10px 22px rgba(212,175,55,.14);
     }
-    .btn.primary{
-      background: var(--panel2);
-      border-color: var(--line);
-    }
-    .btn.ghost{
-      background: transparent;
-      border-color: var(--line2);
-    }
-    .btn.small{
-      min-height: 40px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-weight: 900;
-    }
+    .btn.primary{ background: var(--panel2); border-color: var(--line); }
+    .btn.ghost{ background: transparent; border-color: var(--line2); }
+    .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
 
-    /* Badges / chips */
-    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 88%, transparent);
-      font-weight: 900;
-      font-size: .92rem;
-    }
-    .chip i{ color: var(--gold); }
-
-    /* Section layout */
+    /* Sections */
     .section{ padding: 20px 0; }
     .section-head{
       display:flex;
@@ -520,53 +468,10 @@
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.45; }
 
-    /* Cards */
-    .card{
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
-      overflow:hidden;
-      box-shadow: var(--shadow2);
-      transition: opacity .45s var(--ease), transform .45s var(--ease), filter .45s var(--ease);
-    }
-    .card:hover{ transform: translateY(-2px); filter: brightness(1.02); }
-    .card img{
-      width:100%;
-      aspect-ratio: 16 / 10;
-      height:auto;
-      object-fit: cover;
-      display:block;
-      opacity:.94;
-      filter: contrast(1.02) saturate(1.01);
-    }
-    .card-body{ padding: 12px; }
-    .card-title{ font-weight: 950; margin: 0 0 8px; letter-spacing:-0.15px; }
-    .meta{ display:flex; gap:10px; flex-wrap:wrap; color: var(--muted); font-size: .9rem; }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 85%, transparent);
-      font-weight: 850;
-    }
-
-    /* Grid */
-    .grid{
-      display:grid;
-      gap: 14px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
-
     /* Hero */
     .hero{ padding: 18px 0 0; }
     .hero-box{
-      border-radius: var(--radius3);
+      border-radius: var(--radius2);
       border: 1px solid var(--line);
       background: linear-gradient(180deg, var(--panel2), var(--panel3));
       box-shadow: var(--shadow);
@@ -624,6 +529,10 @@
       font-size: 1.02rem;
       line-height: 1.60;
     }
+    @media (max-width: 620px){
+      h1{ font-size: clamp(1.72rem, 7vw, 2.25rem); line-height: 1.05; }
+      .lead{ font-size: .98rem; }
+    }
 
     .hero-actions{
       display:flex; gap:12px; flex-wrap:wrap;
@@ -640,40 +549,90 @@
       color: var(--good);
     }
     .live-dot i{ font-size: 9px; }
-    .trust-mini{
-      display:inline-flex; align-items:center; gap:8px;
-      font-weight: 900;
-      font-size: .86rem;
-      color: var(--muted2);
-      padding: 8px 10px;
-      border-radius: 999px;
+
+    /* ✅ NEW: neat compact Highlights block (ONLY what you listed) */
+    .highlights{
+      margin-top: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line2);
+      background: linear-gradient(180deg, var(--panel), var(--panel3));
+      box-shadow: var(--shadow3);
+      padding: 12px;
+    }
+    .highlights-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 10px;
+      flex-wrap:wrap;
+    }
+    .highlights-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 950;
+      letter-spacing:-0.2px;
+    }
+    .highlights-title i{
+      width: 36px;
+      height: 36px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(212,175,55,.12);
+      border: 1px solid rgba(212,175,55,.25);
+      color: var(--gold2);
+    }
+    .highlights-sub{
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .92rem;
+    }
+    .hi-grid{
+      display:grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    @media (max-width: 980px){ .hi-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px){ .hi-grid{ grid-template-columns: 1fr; } }
+
+    .hi{
+      border-radius: 14px;
       border: 1px solid var(--line2);
       background: var(--panel2);
-    }
-    .trust-mini i{ color: var(--gold); }
-
-    /* Trust “reality” strip */
-    .proofbar{
-      margin-top: 12px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:stretch;
-    }
-    .proof{
-      flex: 1 1 180px;
+      padding: 10px 10px;
       display:flex;
       gap:10px;
       align-items:flex-start;
-      padding: 12px 12px;
-      border-radius: 16px;
-      border: 1px solid var(--line2);
-      background: var(--panel);
-      box-shadow: var(--shadow3);
     }
-    .proof i{ color: var(--gold); margin-top: 2px; width: 18px; }
-    .proof b{ display:block; font-weight: 950; }
-    .proof span{ display:block; color: var(--muted); line-height:1.35; margin-top: 2px; font-weight: 750; }
+    .hi .ic{
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(255,255,255,.02);
+      border: 1px solid var(--line2);
+      flex: 0 0 auto;
+    }
+    .hi .ic i{ color: var(--gold); }
+    .hi b{
+      display:block;
+      font-weight: 950;
+      letter-spacing:-0.15px;
+      line-height:1.2;
+    }
+    .hi span{
+      display:block;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: .90rem;
+      margin-top: 3px;
+      line-height:1.35;
+    }
 
     /* Switch tabs */
     .switcher{
@@ -761,9 +720,8 @@
       outline:none;
     }
     textarea{ min-height: 92px; resize: vertical; }
-    input::placeholder, textarea::placeholder{
-      color: color-mix(in oklab, var(--muted2) 88%, transparent);
-    }
+    input::placeholder, textarea::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
+    @media (max-width: 620px){ input, select, textarea{ font-size: 16px; } }
 
     .form-actions{
       margin-top: 12px;
@@ -864,8 +822,13 @@
     .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; z-index:2; }
     .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
     .hero-bar.run{ width: 100%; }
+    @media (max-width: 620px){
+      .hero-media{ min-height: 250px; }
+      .hero-media img{ height: 250px; }
+      .hero-media .cap{ left: 10px; right: 10px; bottom: 10px; }
+    }
 
-    /* Services */
+    /* Services / grid / cards */
     .services{
       display:grid;
       gap: 14px;
@@ -902,15 +865,55 @@
       color: var(--gold2);
       flex:0 0 auto;
     }
-    .svc h3{ margin:0; font-size: 1.02rem; letter-spacing:-0.2px; position:relative; z-index:1; }
-    .svc p{ margin: 6px 0 0; color: var(--muted); line-height: 1.50; position:relative; z-index:1; }
-    .svc-actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; position:relative; z-index:1; }
+    .svc h3{ margin:0; font-size: 1.02rem; letter-spacing:-0.2px; }
+    .svc p{ margin: 6px 0 0; color: var(--muted); line-height: 1.50; }
+    .svc-actions{ margin-top: 12px; display:flex; gap:10px; flex-wrap:wrap; }
     @media (max-width: 620px){
       .svc-actions{ gap:8px; }
       .svc-actions .btn{ flex:1; min-width: 0; }
     }
 
-    /* How it works */
+    .grid{
+      display:grid;
+      gap: 14px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--panel), var(--panel3));
+      overflow:hidden;
+      box-shadow: var(--shadow2);
+      transition: opacity .45s var(--ease), transform .45s var(--ease), filter .45s var(--ease);
+    }
+    .card:hover{ transform: translateY(-2px); filter: brightness(1.02); }
+    .card img{
+      width:100%;
+      aspect-ratio: 16 / 10;
+      height:auto;
+      object-fit: cover;
+      display:block;
+      opacity:.94;
+    }
+    .card-body{ padding: 12px; }
+    .card-title{ font-weight: 950; margin: 0 0 8px; letter-spacing:-0.15px; }
+    .meta{ display:flex; gap:10px; flex-wrap:wrap; color: var(--muted); font-size: .9rem; }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 85%, transparent);
+      font-weight: 850;
+    }
+
+    /* Steps */
     .steps{
       display:grid;
       gap: 12px;
@@ -940,123 +943,6 @@
       font-weight: 950;
       color: var(--gold2);
       flex:0 0 auto;
-    }
-
-    /* Testimonials */
-    .quotes{
-      display:grid;
-      gap: 14px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-    @media (max-width: 980px){ .quotes{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 620px){ .quotes{ grid-template-columns: 1fr; } }
-
-    .quote{
-      border-radius: var(--radius);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
-      box-shadow: var(--shadow2);
-      padding: 14px;
-      position:relative;
-      overflow:hidden;
-    }
-    .quote::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(420px 200px at 20% 0%, rgba(212,175,55,.10), transparent 60%);
-      pointer-events:none;
-      opacity:.9;
-    }
-    .quote .t{
-      position:relative;
-      z-index:1;
-      color: color-mix(in oklab, var(--text) 92%, transparent);
-      line-height: 1.55;
-      font-weight: 750;
-      margin: 0;
-    }
-    .quote .who{
-      position:relative;
-      z-index:1;
-      margin-top: 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      color: var(--muted);
-      font-weight: 850;
-      font-size: .92rem;
-    }
-    .quote .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 85%, transparent);
-      font-weight: 850;
-      font-size: .88rem;
-    }
-    .quote .tag i{ color: var(--gold); }
-
-    /* About page */
-    .about-wrap{
-      margin-top: 18px;
-      border-radius: var(--radius3);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, var(--panel2), var(--panel3));
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .about-hero{
-      display:grid;
-      gap: 14px;
-      padding: 16px;
-      grid-template-columns: 1.15fr .85fr;
-      align-items:start;
-    }
-    @media (max-width: 980px){
-      .about-hero{ grid-template-columns: 1fr; }
-    }
-    .about-hero h1{ font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
-    .about-card{
-      border-radius: var(--radius);
-      border: 1px solid var(--line2);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
-      overflow:hidden;
-      box-shadow: var(--shadow2);
-    }
-    .about-card img{
-      width:100%;
-      aspect-ratio: 16 / 10;
-      height:auto;
-      object-fit: cover;
-      display:block;
-      opacity:.94;
-    }
-    .about-card .card-body{ padding: 12px; }
-    .about-points{ margin-top: 12px; display:grid; gap: 10px; }
-    .ap{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line2);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
-    }
-    .ap i{ color: var(--gold); margin-top: 2px; width: 18px; }
-    .ap b{ display:block; }
-    .ap span{ color: var(--muted2); font-size: .92rem; display:block; margin-top: 3px; line-height: 1.40; }
-    .notice{
-      border-radius: 14px;
-      padding: 12px 12px;
-      border: 1px solid var(--line2);
-      background: linear-gradient(180deg, var(--panel), var(--panel3));
-      color: var(--muted);
-      line-height: 1.5;
     }
 
     /* Footer */
@@ -1093,7 +979,6 @@
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
 
     .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
-    .brandtext{ min-width:0; }
     .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
     .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
 
@@ -1187,44 +1072,11 @@
     }
     .wa-btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
     .wa-btn i{ font-size: 20px; }
-    @media (min-width: 980px){
-      .wa-pill{ display:inline-flex; }
-    }
+    @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
 
-    /* Reveal animation */
+    /* Reveal */
     .reveal{ opacity:0; transform: translateY(10px); }
     .reveal.show{ opacity:1; transform: translateY(0); transition: opacity .60s var(--ease), transform .60s var(--ease); }
-
-    /* Mobile polish */
-    @media (max-width: 620px){
-      :root{ --containerPad: 14px; }
-
-      .brand-meta .sub{ display:none; }
-      .logo-wrap{ width:40px; height:40px; border-radius: 13px; }
-      .logo-wrap img{ border-radius: 11px; }
-      .icon-btn{ width:40px; height:40px; }
-
-      h1{ font-size: clamp(1.72rem, 7vw, 2.25rem); line-height: 1.05; }
-      .lead{ font-size: .98rem; }
-
-      .chips{
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 6px;
-        margin-right: -10px;
-      }
-      .chip{ flex: 0 0 auto; }
-
-      input, select, textarea{ font-size: 16px; }
-
-      .hero-media{ min-height: 250px; }
-      .hero-media img{ height: 250px; }
-      .hero-media .cap{ left: 10px; right: 10px; bottom: 10px; }
-
-      .footer-cta > div:last-child{ width:100%; }
-      .footer-cta > div:last-child .btn{ width:100%; }
-    }
 
     @media (max-width: 520px){
       .hero-actions{ flex-direction:column; }
@@ -1240,14 +1092,6 @@
 
 <body>
   <a class="skip" href="#main">Skip to content</a>
-
-  <noscript>
-    <div class="container" style="padding:12px 0;">
-      <div class="notice" style="border-color: rgba(255,187,0,.35);">
-        <b style="color:var(--text)">JavaScript is disabled.</b> Featured listings + quick WhatsApp forms may not work properly.
-      </div>
-    </div>
-  </noscript>
 
   <!-- Mobile nav -->
   <div class="overlay" id="overlay" aria-hidden="true">
@@ -1294,14 +1138,12 @@
                onerror="this.src='assets/images/larmah-header.jpeg';" />
         </div>
 
-        <div class="brand-meta">
-          <div class="name">Larmah Enterprise</div>
-          <div class="sub">Real Estate • Logistics</div>
-        </div>
-
-        <div class="wordmark" aria-hidden="true" title="Larmah Enterprise">
-          <img src="assets/images/larmah-header.jpeg" alt="" loading="eager" decoding="async" />
-        </div>
+        <!-- ✅ FIXED: Use a constrained horizontal logo in header -->
+        <img class="brand-logo"
+             src="assets/images/larmah-header.jpeg"
+             alt="Larmah Enterprise — Connecting People, Business & Possibilities"
+             decoding="async"
+             onerror="this.style.display='none'; this.insertAdjacentHTML('afterend','<span style=&quot;font-weight:950; letter-spacing:-.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;&quot;>Larmah Enterprise</span>');" />
       </a>
 
       <nav aria-label="Primary navigation">
@@ -1327,12 +1169,9 @@
   </header>
 
   <main id="main" class="container" tabindex="-1">
-    <!-- anchor for #home -->
     <div id="home" aria-hidden="true"></div>
 
-    <!-- ======================
-         HOME PAGE
-         ====================== -->
+    <!-- HOME -->
     <div class="page is-active" id="page-home" data-page="home">
       <section class="hero" aria-label="Hero">
         <div class="hero-box reveal">
@@ -1349,7 +1188,7 @@
               </h1>
 
               <p class="lead">
-                From premium shortlets and verified listings to dispatch, pickups, and freight coordination — Larmah runs a scam-resistant,
+                From premium shortlets and verified listings to dispatch and pickups — Larmah runs a scam-resistant,
                 fast-confirmation workflow that keeps bookings and deliveries clean, clear, and coordinated.
               </p>
 
@@ -1363,39 +1202,53 @@
                 </button>
               </div>
 
+              <!-- Keep this row (you want it) -->
               <div class="live-row" aria-live="polite">
                 <div class="live-dot"><i class="fa-solid fa-circle"></i> Fast responses available</div>
-                <div class="trust-mini"><i class="fa-solid fa-receipt"></i> Clear pricing & references</div>
-                <div class="trust-mini"><i class="fa-solid fa-user-shield"></i> Scam-resistant flow</div>
+                <div class="pill"><i class="fa-solid fa-receipt" style="color:var(--gold)"></i> Clear pricing & references</div>
+                <div class="pill"><i class="fa-solid fa-user-shield" style="color:var(--gold)"></i> Scam-resistant flow</div>
               </div>
 
-              <div class="chips" aria-label="Highlights">
-                <div class="chip"><i class="fa-solid fa-house"></i> Shortlets • Rentals • Sales</div>
-                <div class="chip"><i class="fa-solid fa-motorcycle"></i> Dispatch • Same-day</div>
-                <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage support</div>
-              </div>
+              <!-- ✅ Neat, reduced, professional highlights (ONLY your items) -->
+              <div class="highlights" aria-label="Key highlights">
+                <div class="highlights-head">
+                  <div class="highlights-title">
+                    <i class="fa-solid fa-sparkles" aria-hidden="true"></i>
+                    <div>
+                      Key Highlights
+                      <div class="highlights-sub">Clean, fast, and trust-first.</div>
+                    </div>
+                  </div>
+                  <button class="btn small primary" type="button"
+                          onclick="openWA(buildMsg('Pricing', { Message:'Hello Larmah, please share pricing and next steps.' }))">
+                    <i class="fa-brands fa-whatsapp"></i> Ask Pricing
+                  </button>
+                </div>
 
-              <!-- “Reality” proof: how you operate -->
-              <div class="proofbar" aria-label="Operational proof">
-                <div class="proof">
-                  <i class="fa-solid fa-clipboard-check"></i>
-                  <div>
-                    <b>Verification-first</b>
-                    <span>Basic checks + clean confirmations before any commitment.</span>
+                <div class="hi-grid">
+                  <div class="hi">
+                    <div class="ic"><i class="fa-solid fa-bolt"></i></div>
+                    <div><b>Fast responses available</b><span>Quick routing on WhatsApp.</span></div>
                   </div>
-                </div>
-                <div class="proof">
-                  <i class="fa-solid fa-route"></i>
-                  <div>
-                    <b>Route + ETA clarity</b>
-                    <span>Quotes include pickup/drop-off details and handling notes.</span>
+                  <div class="hi">
+                    <div class="ic"><i class="fa-solid fa-receipt"></i></div>
+                    <div><b>Clear pricing & references</b><span>Clean summaries and confirmations.</span></div>
                   </div>
-                </div>
-                <div class="proof">
-                  <i class="fa-solid fa-message"></i>
-                  <div>
-                    <b>One WhatsApp thread</b>
-                    <span>Less confusion: booking + movement updates stay in one place.</span>
+                  <div class="hi">
+                    <div class="ic"><i class="fa-solid fa-user-shield"></i></div>
+                    <div><b>Scam-resistant flow</b><span>Trust-first steps, less risk.</span></div>
+                  </div>
+                  <div class="hi">
+                    <div class="ic"><i class="fa-solid fa-house"></i></div>
+                    <div><b>Shortlets • Rentals • Sales</b><span>Verified options for stays.</span></div>
+                  </div>
+                  <div class="hi">
+                    <div class="ic"><i class="fa-solid fa-motorcycle"></i></div>
+                    <div><b>Dispatch • Same-day</b><span>Pickups and deliveries.</span></div>
+                  </div>
+                  <div class="hi">
+                    <div class="ic"><i class="fa-brands fa-whatsapp"></i></div>
+                    <div><b>WhatsApp-first support</b><span>One thread, clearer execution.</span></div>
                   </div>
                 </div>
               </div>
@@ -1497,7 +1350,7 @@
                       <div class="logi-icn"><i class="fa-solid fa-car"></i></div>
                       <div style="min-width:0">
                         <div class="logistics-title">Need airport pickup or dispatch while you stay?</div>
-                        <p class="logistics-sub">Add movement support to your booking — reliable pickup + delivery, coordinated on WhatsApp.</p>
+                        <p class="logistics-sub">Add movement support to your booking — coordinated on WhatsApp.</p>
                       </div>
                     </div>
                     <button class="btn small solid" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
@@ -1580,7 +1433,7 @@
                       <div class="logi-icn"><i class="fa-solid fa-building"></i></div>
                       <div style="min-width:0">
                         <div class="logistics-title">Need a shortlet too?</div>
-                        <p class="logistics-sub">We can match verified stays fast — send dates + budget and we’ll respond.</p>
+                        <p class="logistics-sub">Send dates + budget and we’ll respond with options.</p>
                       </div>
                     </div>
                     <button class="btn small primary" type="button" onclick="setMode('realestate'); scrollToEl('#quick')">
@@ -1733,39 +1586,6 @@
         </div>
       </section>
 
-      <section class="section reveal" aria-label="Client notes">
-        <div class="section-head">
-          <div>
-            <h2>What clients value</h2>
-            <p class="subhead">Short, realistic feedback — speed, clarity, and trust.</p>
-          </div>
-        </div>
-
-        <div class="quotes">
-          <div class="quote">
-            <p class="t">“I got options quickly, pricing was clear, and the confirmation steps were straight. No confusion.”</p>
-            <div class="who">
-              <span>Client • Lagos</span>
-              <span class="tag"><i class="fa-solid fa-house"></i> Shortlet</span>
-            </div>
-          </div>
-          <div class="quote">
-            <p class="t">“Pickup and drop-off were coordinated properly. Updates came in one thread, so everything stayed clean.”</p>
-            <div class="who">
-              <span>Client • VI</span>
-              <span class="tag"><i class="fa-solid fa-truck-fast"></i> Dispatch</span>
-            </div>
-          </div>
-          <div class="quote">
-            <p class="t">“Best part is the workflow. It feels professional — references, notes, and next steps are always clear.”</p>
-            <div class="who">
-              <span>Client • Lekki</span>
-              <span class="tag"><i class="fa-solid fa-shield-halved"></i> Trust-first</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section class="section reveal" aria-label="WhatsApp request CTA">
         <div class="card" style="padding:14px;">
           <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
@@ -1785,153 +1605,39 @@
       </section>
     </div>
 
-    <!-- ======================
-         ABOUT PAGE (INSIDE INDEX)
-         ====================== -->
+    <!-- ABOUT PAGE -->
     <div class="page" id="page-about" data-page="about">
       <div id="about" aria-hidden="true"></div>
 
       <section class="section" aria-label="About Larmah Enterprise">
-        <div class="about-wrap reveal">
-          <div class="about-hero">
-            <div>
-              <div class="kicker">
-                <span>Trust-first</span><span class="dot">•</span>
-                <span>Verified operations</span><span class="dot">•</span>
-                <span>WhatsApp-first</span>
-              </div>
+        <div class="hero-box reveal" style="padding:16px;">
+          <div class="kicker">
+            <span>Trust-first</span><span class="dot">•</span>
+            <span>Verified operations</span><span class="dot">•</span>
+            <span>WhatsApp-first</span>
+          </div>
 
-              <h1>About Larmah Enterprise</h1>
-              <p class="lead">
-                Larmah Enterprise is a trust-first hub built on two pillars: verified real estate (shortlets, rentals, sales)
-                and dependable logistics (dispatch, pickups, haulage, and freight coordination). We reduce friction with clear
-                confirmations, clean references, and WhatsApp-first support.
-              </p>
+          <h1 style="font-size: clamp(1.8rem, 3.4vw, 2.6rem); margin-top:6px;">About Larmah Enterprise</h1>
+          <p class="lead">
+            Larmah Enterprise is a trust-first hub built on two pillars: verified real estate (shortlets, rentals, sales)
+            and dependable logistics (dispatch, pickups, haulage, and freight coordination).
+          </p>
 
-              <div class="hero-actions">
-                <a class="btn solid" href="#home"><i class="fa-solid fa-house"></i> Back to Home</a>
-                <button class="btn primary" type="button"
-                  onclick="openWA(buildMsg('Business Enquiry', { Topic:'Partnership / Listings / Logistics', Message:'Hello Larmah, I’d like to discuss a business enquiry.' }))">
-                  <i class="fa-brands fa-whatsapp"></i> Business Chat
-                </button>
-              </div>
+          <div class="hero-actions" style="margin-top:14px;">
+            <a class="btn solid" href="#home"><i class="fa-solid fa-house"></i> Back to Home</a>
+            <button class="btn primary" type="button"
+              onclick="openWA(buildMsg('Business Enquiry', { Topic:'Partnership / Listings / Logistics', Message:'Hello Larmah, I’d like to discuss a business enquiry.' }))">
+              <i class="fa-brands fa-whatsapp"></i> Business Chat
+            </button>
+            <a class="btn ghost" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Join Premium</a>
+          </div>
 
-              <div class="about-points">
-                <div class="ap">
-                  <i class="fa-solid fa-circle-check"></i>
-                  <div>
-                    <b>Verified Listings</b>
-                    <span>Clear listing details, basic verification, and scam-resistant confirmations.</span>
-                  </div>
-                </div>
-                <div class="ap">
-                  <i class="fa-solid fa-truck-fast"></i>
-                  <div>
-                    <b>Logistics Support</b>
-                    <span>Dispatch, pickups, haulage and coordination across Nigeria with WhatsApp updates.</span>
-                  </div>
-                </div>
-                <div class="ap">
-                  <i class="fa-solid fa-shield-halved"></i>
-                  <div>
-                    <b>Trust-first Process</b>
-                    <span>Simple workflows, clean references, and customer support focused on speed and clarity.</span>
-                  </div>
-                </div>
-              </div>
-
-              <div style="margin-top:14px;">
-                <h2 style="margin:0;">Premium Investment Tracks</h2>
-                <p class="subhead" style="margin:6px 0 0;">
-                  Premium subscribers can participate in curated opportunities across real estate and logistics — with guidance,
-                  sourcing, and coordinated execution.
-                </p>
-
-                <div class="about-points" style="margin-top:12px;">
-                  <div class="ap">
-                    <i class="fa-solid fa-building"></i>
-                    <div>
-                      <b>Real Estate — Active Investing</b>
-                      <span>
-                        Buy-to-rent (shortlets/longlets), fix-and-flip, joint ventures, land banking, development participation,
-                        and deal sourcing support.
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="ap">
-                    <i class="fa-solid fa-coins"></i>
-                    <div>
-                      <b>Real Estate — Passive Investing</b>
-                      <span>
-                        Fractional participation, pooled deals, rent-share structures, property-backed notes, and curated
-                        income opportunities (subject to availability).
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="ap">
-                    <i class="fa-solid fa-truck"></i>
-                    <div>
-                      <b>Logistics — Fleet & Dispatch Returns</b>
-                      <span>
-                        Dispatch bike/vehicle rentals, partner-driver models, route-based earnings, managed operations,
-                        and utilization tracking.
-                      </span>
-                    </div>
-                  </div>
-
-                  <div class="ap">
-                    <i class="fa-solid fa-boxes-stacked"></i>
-                    <div>
-                      <b>Logistics — Freight & Movement Plays</b>
-                      <span>
-                        Freight participation, haulage partnerships, warehousing support, last-mile delivery capacity,
-                        and contract-linked movement opportunities.
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="notice" style="margin-top:12px;">
-                  <b style="color:var(--text)">Premium-only access:</b> only Premium subscribers are entitled to have an account.
-                  Join Premium to unlock your dashboard and investment tracks.<br/>
-                  <b style="color:var(--text)">Business Email:</b> <a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a><br/>
-                  <b style="color:var(--text)">WhatsApp:</b> +234 706 308 0605
-                  <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-                    <a class="btn small solid" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Join Premium</a>
-                    <button class="btn small primary" type="button"
-                      onclick="openWA(buildMsg('Premium Interest', { Topic:'Premium Investment Tracks', Message:'Hello Larmah, I want to join Premium and learn the available investment tracks.' }))">
-                      <i class="fa-brands fa-whatsapp"></i> Ask on WhatsApp
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="about-card">
-              <img src="assets/images/larmah-header.jpeg" alt="Lagos real estate" loading="lazy" decoding="async"
-                   onerror="this.src='https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766726716955-9ot7tl3d.jpeg';" />
-              <div class="card-body">
-                <div class="card-title">What we do</div>
-                <div class="meta">
-                  <span class="pill"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Shortlets & listings</span>
-                  <span class="pill"><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Dispatch & pickup</span>
-                </div>
-
-                <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-                  <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
-                  <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
-                  <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
-                </div>
-
-                <div style="margin-top:12px; color:var(--muted); line-height:1.55; font-size:.92rem;">
-                  <i class="fa-solid fa-circle-check" style="color:var(--gold); margin-right:8px;"></i>
-                  We keep confirmations structured: details → pricing → next step.
-                </div>
-              </div>
-            </div>
-
+          <div style="margin-top:14px; color:var(--muted); line-height:1.6;">
+            <b style="color:var(--text)">Premium-only access:</b> only Premium subscribers are entitled to have an account.
+            <br/>
+            <b style="color:var(--text)">Business Email:</b> <a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a>
+            <br/>
+            <b style="color:var(--text)">WhatsApp:</b> +234 706 308 0605
           </div>
         </div>
       </section>
@@ -1961,7 +1667,7 @@
             <div class="logo-wrap" aria-hidden="true">
               <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" onerror="this.src='assets/images/larmah-header.jpeg';" />
             </div>
-            <div class="brandtext">
+            <div>
               <div class="brandname">Larmah Enterprise</div>
               <div class="tagline">RC: 9127113</div>
             </div>
@@ -2054,7 +1760,7 @@
     // Year
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // ===== Mobile menu (with focus trap)
+    // ===== Mobile menu (focus trap + close on ESC)
     const overlay = document.getElementById("overlay");
     const sheet = overlay.querySelector(".sheet");
     const menuBtn = document.querySelector(".menu-btn");
@@ -2088,7 +1794,6 @@
     overlay.addEventListener("click", (e) => {
       if(e.target === overlay) toggleMenu(false);
     });
-
     sheetLinks.forEach(a => a.addEventListener("click", () => toggleMenu(false)));
 
     window.addEventListener("keydown", (e) => {
@@ -2134,7 +1839,7 @@
     }
 
     // ===== Theme
-    const THEME_KEY = "larmah_theme_v8";
+    const THEME_KEY = "larmah_theme_v9";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       try{ localStorage.setItem(THEME_KEY, theme); }catch{}
@@ -2142,7 +1847,6 @@
       if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
     }
     function toggleTheme(){
-      if(window.LARMAH?.toggleTheme) return window.LARMAH.toggleTheme();
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
       setTheme(cur === "dark" ? "light" : "dark");
     }
@@ -2155,7 +1859,7 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // ===== Router: “pages” inside index.html
+    // ===== Router (home/about inside index)
     const pages = Array.from(document.querySelectorAll(".page"));
     const navLinks = Array.from(document.querySelectorAll('[data-nav]'));
 
@@ -2163,11 +1867,8 @@
       pages.forEach(p => p.classList.toggle("is-active", p.dataset.page === name));
       navLinks.forEach(a => a.classList.toggle("is-active", a.dataset.nav === name));
       toggleMenu(false);
-
-      // keep focus + reduce confusion
       const main = document.getElementById("main");
       if(main) main.focus({preventScroll:true});
-
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
@@ -2180,7 +1881,7 @@
     window.addEventListener("hashchange", () => setActivePage(getRoute()));
     document.addEventListener("DOMContentLoaded", () => setActivePage(getRoute()));
 
-    // ===== Mode switch (Real Estate / Logistics) + keyboard support
+    // ===== Mode switch (Real Estate / Logistics)
     const tabRealEstate = document.getElementById("tabRealEstate");
     const tabLogistics = document.getElementById("tabLogistics");
     const formRealEstate = document.getElementById("formRealEstate");
@@ -2212,7 +1913,7 @@
     tabRealEstate.addEventListener("keydown", tabKeyNav);
     tabLogistics.addEventListener("keydown", tabKeyNav);
 
-    // ===== Date mins (today)
+    // ===== Date mins
     function toISODate(d){
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth()+1).padStart(2,"0");
@@ -2281,7 +1982,7 @@
     }
     window.submitLogistics = submitLogistics;
 
-    // ===== HERO carousel (your real assets first)
+    // ===== HERO carousel
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -2292,7 +1993,7 @@
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766726716955-9ot7tl3d.jpeg", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792878193-vc0a7pto.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clean confirmations." },
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792082908-wa7yd8n5.jpeg", icon:"fa-truck-fast", label:"Logistics", sub:"Trusted movement with clear coordination." },
-      { img:"assets/images/larmah-header.jpeg", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
+      { img:"assets/images/larmah-header.jpeg", icon:"fa-sparkles", label:"Fast Support", sub:"WhatsApp-first coordination." }
     ];
 
     let heroIdx = 0;
@@ -2367,7 +2068,7 @@
       if(getRoute() === "home") bootFeaturedDB();
     });
 
-    // ===== Reveal on scroll
+    // ===== Reveal
     function bootReveal(){
       const els = Array.from(document.querySelectorAll(".reveal"));
       if(!("IntersectionObserver" in window)){
@@ -2386,7 +2087,7 @@
     }
     document.addEventListener("DOMContentLoaded", bootReveal);
 
-    // Expose globals used by app.js-rendered featured cards
+    // Expose globals (for app.js)
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
     window.openWA = openWA;
