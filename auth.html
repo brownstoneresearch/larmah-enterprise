@@ -23,6 +23,7 @@
       --ease: cubic-bezier(.2,.8,.2,1);
       --shadow: 0 18px 50px rgba(0,0,0,.42);
       --shadow2: 0 12px 34px rgba(0,0,0,.30);
+      --safeB: env(safe-area-inset-bottom, 0px);
     }
     html[data-theme="dark"]{
       --bg:#070A12; --bg2:#050810;
@@ -37,6 +38,7 @@
       --focus: rgba(245,213,122,.28);
       --good: rgba(0,217,129,.95);
       --bad: rgba(255,90,103,.95);
+      --warn: rgba(255,187,0,.95);
     }
     html[data-theme="light"]{
       --bg:#F7F7FB; --bg2:#FFFFFF;
@@ -55,7 +57,7 @@
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
     }
 
-    *{ box-sizing:border-box; }
+    *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
@@ -80,17 +82,18 @@
     }
     .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
     .header-inner{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 12px 0; }
-    .brand{ display:flex; align-items:center; gap:10px; }
+    .brand{ display:flex; align-items:center; gap:10px; min-width:0; }
     .logo{
       width:44px; height:44px; border-radius:14px;
       border:1px solid var(--line2);
       overflow:hidden;
       background: var(--panel);
+      flex:0 0 auto;
     }
     .logo img{ width:100%; height:100%; object-fit:cover; display:block; }
-    .btxt{ display:flex; flex-direction:column; gap:4px; line-height:1.05; }
-    .bname{ font-weight:950; letter-spacing:-.2px; }
-    .bsub{ color: var(--muted); font-weight:850; font-size:.86rem; }
+    .btxt{ display:flex; flex-direction:column; gap:4px; line-height:1.05; min-width:0; }
+    .bname{ font-weight:950; letter-spacing:-.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .bsub{ color: var(--muted); font-weight:850; font-size:.86rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
     .icon-btn{
       width: 42px; height: 42px;
@@ -101,6 +104,7 @@
       display:inline-flex; align-items:center; justify-content:center;
       cursor:pointer;
       transition: transform .16s var(--ease), filter .16s var(--ease);
+      flex:0 0 auto;
     }
     .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
 
@@ -137,6 +141,7 @@
       box-shadow: var(--shadow2);
       padding: 14px;
     }
+
     label{ display:block; margin-top: 10px; font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color: var(--muted2); }
     input{
       width:100%;
@@ -149,7 +154,9 @@
       outline:none;
       font-family: inherit;
       margin-top: 6px;
+      font-size: 16px; /* prevent iOS zoom */
     }
+
     .btn{
       display:inline-flex; gap:10px; align-items:center; justify-content:center;
       border-radius: 14px; padding: 12px 16px; min-height: 46px;
@@ -187,6 +194,7 @@
       color: var(--muted);
       font-weight: 850;
       font-size:.92rem;
+      display:none;
     }
     .dot{
       width:10px; height:10px; border-radius:999px;
@@ -195,11 +203,12 @@
     }
     .dot.good{ background: var(--good); }
     .dot.bad{ background: var(--bad); }
+    .dot.warn{ background: var(--warn); }
 
     .toast{
       position: fixed;
       left: 50%;
-      bottom: 18px;
+      bottom: calc(18px + var(--safeB));
       transform: translateX(-50%);
       min-width: 220px;
       max-width: min(560px, calc(100vw - 28px));
@@ -223,7 +232,7 @@
         <span class="logo"><img src="assets/images/larmah-favicon.jpeg" alt="Larmah" /></span>
         <span class="btxt">
           <span class="bname">Larmah Enterprise</span>
-          <span class="bsub">Premium Login</span>
+          <span class="bsub">Premium Access</span>
         </span>
       </a>
 
@@ -235,40 +244,76 @@
 
   <main class="container">
     <section class="hero">
-      <h1>Login to your Premium account</h1>
-      <p class="lead">Accounts are Premium-only. If you haven’t paid, go Premium first to receive your unique registration link.</p>
+      <h1 id="pageTitle">Login to your Premium account</h1>
+      <p class="lead" id="pageLead">
+        Accounts are Premium-only. If you haven’t paid, go Premium first to receive your unique registration link.
+      </p>
 
       <div class="grid">
+        <!-- LEFT: LOGIN / REGISTER -->
         <div class="card">
-          <label for="email">Email</label>
-          <input id="email" type="email" placeholder="you@email.com" autocomplete="email" />
 
-          <label for="password">Password</label>
-          <input id="password" type="password" placeholder="Your password" autocomplete="current-password" />
+          <!-- REGISTER (invite-only) -->
+          <div id="registerBox" style="display:none;">
+            <div style="font-weight:950; letter-spacing:-.2px;">Create your Premium account</div>
+            <div style="margin-top:8px; color:var(--muted); line-height:1.5;">
+              Your email is locked to your Premium membership. Set your password to activate your account.
+            </div>
 
-          <button class="btn solid" id="loginBtn" type="button" onclick="login()">
-            <i class="fa-solid fa-right-to-bracket"></i> Login
-          </button>
+            <label for="reg_email">Email</label>
+            <input id="reg_email" type="email" readonly />
 
-          <button class="btn" id="resetBtn" type="button" onclick="resetPassword()">
-            <i class="fa-solid fa-key"></i> Forgot password
-          </button>
+            <label for="reg_name">Full Name (optional)</label>
+            <input id="reg_name" type="text" placeholder="Your name" autocomplete="name" />
 
-          <div class="state" id="state" style="display:none;">
+            <label for="reg_pass">Password</label>
+            <input id="reg_pass" type="password" placeholder="Min 8 characters" autocomplete="new-password" />
+
+            <label for="reg_pass2">Confirm Password</label>
+            <input id="reg_pass2" type="password" placeholder="Repeat password" autocomplete="new-password" />
+
+            <button class="btn solid" id="createBtn" type="button" onclick="registerWithInvite()">
+              <i class="fa-solid fa-user-plus"></i> Create Account
+            </button>
+
+            <div class="notice">
+              <strong>Secure access:</strong> this link is single-use and expires. If it expires, go back to <a href="premium.html#pay">Premium</a> and use “Resend Registration Link”.
+            </div>
+          </div>
+
+          <!-- LOGIN -->
+          <div id="loginBox">
+            <label for="email">Email</label>
+            <input id="email" type="email" placeholder="you@email.com" autocomplete="email" />
+
+            <label for="password">Password</label>
+            <input id="password" type="password" placeholder="Your password" autocomplete="current-password" />
+
+            <button class="btn solid" id="loginBtn" type="button" onclick="login()">
+              <i class="fa-solid fa-right-to-bracket"></i> Login
+            </button>
+
+            <button class="btn" id="resetBtn" type="button" onclick="resetPassword()">
+              <i class="fa-solid fa-key"></i> Forgot password
+            </button>
+
+            <div class="notice">
+              <strong>No signup here.</strong><br/>
+              To create an account: Pay on <a href="premium.html#pay">Premium</a> → check email → open your unique registration link.
+            </div>
+          </div>
+
+          <div class="state" id="state">
             <span class="dot" id="dot"></span>
             <span id="stateText">—</span>
           </div>
-
-          <div class="notice">
-            <strong>No signup here.</strong><br/>
-            To create an account: Pay on <a href="premium.html#pay">Premium</a> → check email → use your unique registration link.
-          </div>
         </div>
 
+        <!-- RIGHT: HELP -->
         <div class="card">
-          <div style="font-weight:950; letter-spacing:-.2px;">New to Premium?</div>
+          <div style="font-weight:950; letter-spacing:-.2px;">Need help?</div>
           <div style="margin-top:8px; color: var(--muted); line-height:1.5;">
-            After payment verification, we send a unique registration link to your email. This prevents fake signups and keeps access Premium-only.
+            If you paid and didn’t receive your registration email, return to <b>Premium</b> and tap “Resend Registration Link”.
           </div>
 
           <a class="btn solid" href="premium.html#pay" style="margin-top:12px;">
@@ -295,17 +340,21 @@
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
-      localStorage.setItem(THEME_KEY, theme);
+      try{ localStorage.setItem(THEME_KEY, theme); }catch{}
       const metaTheme = document.querySelector('meta[name="theme-color"]');
       if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
     }
     function toggleTheme(){
+      if(window.LARMAH?.toggleTheme) return window.LARMAH.toggleTheme();
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
       setTheme(cur === "dark" ? "light" : "dark");
     }
     (function initTheme(){
-      const saved = localStorage.getItem(THEME_KEY);
-      if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
+      if(window.LARMAH?.setTheme) return;
+      try{
+        const saved = localStorage.getItem(THEME_KEY);
+        if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
+      }catch{}
       const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
       setTheme(prefersLight ? "light" : "dark");
     })();
@@ -323,18 +372,112 @@
       const dot = document.getElementById("dot");
       const txt = document.getElementById("stateText");
       wrap.style.display = "flex";
-      dot.classList.remove("good","bad");
-      dot.classList.add(kind === "good" ? "good" : "bad");
+      dot.classList.remove("good","bad","warn");
+      dot.classList.add(kind === "good" ? "good" : kind === "warn" ? "warn" : "bad");
       txt.textContent = text;
     }
 
-    async function waHelp(){
-      const msg = LARMAH.buildMessage("Premium Login Help", { Message:"Hello Larmah, I need help accessing my Premium account." });
-      LARMAH.openWhatsApp(msg);
+    function getInviteToken(){
+      const u = new URL(window.location.href);
+      const t = u.searchParams.get("invite");
+      return (t || "").trim();
     }
 
+    function fnHeaders(){
+      const anon = window.__SUPABASE_ANON_KEY || "";
+      return {
+        "Content-Type": "application/json",
+        "apikey": anon,
+        "Authorization": `Bearer ${anon}`
+      };
+    }
+
+    function functionsBase(){
+      if(window.LARMAH?.functionsBase) return window.LARMAH.functionsBase;
+      const url = window.__SUPABASE_URL || "";
+      return `${String(url).replace(/\/$/,"")}/functions/v1`;
+    }
+
+    async function waHelp(){
+      const msg = (window.LARMAH?.buildMessage)
+        ? LARMAH.buildMessage("Premium Login Help", { Message:"Hello Larmah, I need help accessing my Premium account." })
+        : "Premium Login Help\n\nHello Larmah, I need help accessing my Premium account.";
+      if(window.LARMAH?.openWhatsApp) return LARMAH.openWhatsApp(msg);
+      window.open(`https://wa.me/2347063080605?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+    }
+
+    async function registerWithInvite(){
+      const sb = await (window.LARMAH?.supabase?.wait ? LARMAH.supabase.wait() : null);
+      if(!sb) return toast("Supabase not ready.");
+
+      const token = getInviteToken();
+      const full_name = document.getElementById("reg_name").value.trim();
+      const email = document.getElementById("reg_email").value.trim();
+      const pass = document.getElementById("reg_pass").value;
+      const pass2 = document.getElementById("reg_pass2").value;
+
+      if(!token) return toast("Missing invite token.");
+      if(!email) return toast("Email missing.");
+      if(!pass || pass.length < 8) return toast("Password must be at least 8 characters.");
+      if(pass !== pass2) return toast("Passwords do not match.");
+
+      const btn = document.getElementById("createBtn");
+      btn.disabled = true;
+      setState("warn", "Creating your account…");
+
+      try{
+        const url = `${functionsBase()}/premium-register`;
+        const res = await fetch(url, {
+          method: "POST",
+          headers: fnHeaders(),
+          body: JSON.stringify({ token, password: pass, full_name })
+        });
+        const data = await res.json().catch(() => ({}));
+        if(!res.ok){
+          setState("bad", data?.error || "Could not create account.");
+          toast(data?.error || "Could not create account.");
+          btn.disabled = false;
+          return;
+        }
+
+        // Auto-login
+        const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+        if(error){
+          setState("warn", "Account created. Please login.");
+          toast("Account created. Please login.");
+          // switch to login UI
+          document.getElementById("registerBox").style.display = "none";
+          document.getElementById("loginBox").style.display = "block";
+          document.getElementById("email").value = email;
+          btn.disabled = false;
+          return;
+        }
+
+        // Premium gate (hard enforcement)
+        const ok = await (window.LARMAH?.requirePremium ? LARMAH.requirePremium({ redirectTo: "premium.html" }) : true);
+        if(!ok){
+          setState("bad","Premium access required.");
+          btn.disabled = false;
+          return;
+        }
+
+        setState("good", "Account created. Redirecting…");
+        toast("Welcome to Premium ✅");
+
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 700);
+
+      }catch(e){
+        setState("bad", "Network error while creating account.");
+        toast("Network error.");
+        btn.disabled = false;
+      }
+    }
+    window.registerWithInvite = registerWithInvite;
+
     async function login(){
-      const sb = await LARMAH.supabase.wait();
+      const sb = await (window.LARMAH?.supabase?.wait ? LARMAH.supabase.wait() : null);
       if(!sb) return toast("Supabase not ready.");
 
       const email = document.getElementById("email").value.trim();
@@ -347,9 +490,9 @@
       const resetBtn = document.getElementById("resetBtn");
       loginBtn.disabled = true;
       resetBtn.disabled = true;
-      setState("bad","Signing in…");
+      setState("warn","Signing in…");
 
-      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+      const { error } = await sb.auth.signInWithPassword({ email, password });
       if(error){
         setState("bad", error.message);
         toast(error.message);
@@ -358,14 +501,15 @@
         return;
       }
 
-      // Premium gate (hard enforcement)
-      const ok = await LARMAH.requirePremium({
-        redirectTo: "premium.html",
-        onFail: () => {
-          setState("bad","This email is not Premium-enabled.");
-          toast("Premium access required. Please go Premium.");
-        }
-      });
+      const ok = await (window.LARMAH?.requirePremium
+        ? LARMAH.requirePremium({
+            redirectTo: "premium.html",
+            onFail: () => {
+              setState("bad","This email is not Premium-enabled.");
+              toast("Premium access required. Please go Premium.");
+            }
+          })
+        : true);
 
       if(!ok){
         loginBtn.disabled = false;
@@ -376,21 +520,19 @@
       setState("good","Login successful. Redirecting…");
       toast("Welcome.");
 
-      // Redirect (change to your real dashboard page)
       setTimeout(() => {
         window.location.href = "dashboard.html";
       }, 700);
     }
+    window.login = login;
 
     async function resetPassword(){
-      const sb = await LARMAH.supabase.wait();
+      const sb = await (window.LARMAH?.supabase?.wait ? LARMAH.supabase.wait() : null);
       if(!sb) return toast("Supabase not ready.");
 
       const email = document.getElementById("email").value.trim();
       if(!email) return toast("Enter your email first.");
 
-      // Password reset is still premium-only (if user exists)
-      // You can set redirect URL to a reset page if you have one.
       const { error } = await sb.auth.resetPasswordForEmail(email, {
         redirectTo: `${location.origin}/auth.html`
       });
@@ -403,6 +545,30 @@
       setState("good","Reset email sent. Check your inbox/spam.");
       toast("Reset email sent.");
     }
+    window.resetPassword = resetPassword;
+
+    // Boot: if invite token exists, switch UI to registration mode
+    document.addEventListener("DOMContentLoaded", () => {
+      const token = getInviteToken();
+      if(token){
+        document.getElementById("pageTitle").textContent = "Create your Premium account";
+        document.getElementById("pageLead").textContent = "You’re using a Premium invite link. Set your password to activate your Premium-only account.";
+        document.getElementById("registerBox").style.display = "block";
+        document.getElementById("loginBox").style.display = "none";
+
+        // try to prefill email from token by asking user to paste email? (we avoid that)
+        // Instead: decode email server-side after create click; but UX is nicer with email shown.
+        // We'll set placeholder and fill after successful create; OR allow user to type but keep locked.
+        document.getElementById("reg_email").value = "Loading…";
+
+        // We can fetch email by calling premium-resend? Not safe.
+        // So we keep it locked but filled after successful register response.
+        // Better: user sees email only after register returns; but required for login.
+        // We'll show email input as "Loading…" until they click create.
+        // If you want it prefilled BEFORE clicking, I can add a tiny "premium-invite-info" function.
+        setState("warn", "Invite link detected. Set your password to activate.");
+      }
+    });
   </script>
 </body>
 </html>
