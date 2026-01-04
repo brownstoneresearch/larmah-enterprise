@@ -1,12 +1,13 @@
 <!-- =========================
      real-estate.html (FULL)
-     ✅ Pagination added (smart controls + per-page)
+     ✅ Cleaner layout (less repetition)
      ✅ Description preview + View more modal popup
+     ✅ Modal includes price, ref + Enquire + Book actions
+     ✅ Pagination added (smart controls + per-page)
      ✅ Only rotates images for visible page items
-     ✅ Syncs with index.html Featured: listings.featured=true
-     ✅ Catalog from Supabase: public.listings (category='real-estate', status='active')
-     ✅ Includes Booking Request (dates/guests/budget) -> WhatsApp + optional DB request insert
-     ✅ Keeps current footer styling + WA float + image carousel per card
+     ✅ Syncs with index Featured: listings.featured=true
+     ✅ Supabase: public.listings (category='real-estate', status='active')
+     ✅ Booking Request -> WhatsApp + optional DB insert
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -46,8 +47,6 @@
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-  <link rel="preconnect" href="https://source.unsplash.com" crossorigin />
-  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -60,7 +59,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
-  <!-- Structured Data -->
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -164,11 +162,8 @@
 
     .skip{
       position:absolute; left:-999px; top:10px;
-      padding:10px 12px;
-      border-radius: 12px;
-      background: var(--gold);
-      color:#111;
-      font-weight: 950;
+      padding:10px 12px; border-radius: 12px;
+      background: var(--gold); color:#111; font-weight: 950;
       z-index: 999;
     }
     .skip:focus{ left: 12px; outline: none; }
@@ -205,8 +200,7 @@
     }
     .logo-wrap::after{
       content:"";
-      position:absolute;
-      inset:-10px;
+      position:absolute; inset:-10px;
       background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
       filter: blur(12px);
       opacity:.8;
@@ -283,14 +277,21 @@
     }
     .sheet-head{
       display:flex; align-items:center; justify-content:space-between;
-      padding-bottom: 10px; border-bottom: 1px solid var(--line2);
-      margin-bottom: 10px; gap: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line2);
+      margin-bottom: 10px;
+      gap: 10px;
     }
     .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
     .sheet a{
       display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding: 12px 12px; border-radius: 14px; border: 1px solid var(--line2);
-      background: var(--panel2); color: var(--text); margin-bottom: 10px; font-weight: 900;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: var(--text);
+      margin-bottom: 10px;
+      font-weight: 900;
     }
     .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 8px; }
 
@@ -298,22 +299,35 @@
     .btn{
       display:inline-flex; align-items:center; justify-content:center; gap:10px;
       border-radius: 14px; padding: 12px 16px; min-height: 46px;
-      border: 1px solid var(--line); background: var(--panel); color: var(--text);
-      cursor:pointer; font-weight: 950;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      cursor:pointer;
+      font-weight: 950;
       transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
-      white-space: nowrap; user-select:none; text-decoration:none;
+      white-space: nowrap;
+      user-select:none;
+      text-decoration:none;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
     .btn:active{ transform: translateY(0); }
-    .btn.solid{ background: var(--gold); color:#111; border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
+    .btn.solid{
+      background: var(--gold);
+      color: #111;
+      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
+    }
     .btn.primary{ background: var(--panel2); border-color: var(--line); }
     .btn.ghost{ background: transparent; border-color: var(--line2); }
-    .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
+    .btn.small{
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 900;
+    }
 
-    /* Page */
     .page-wrap{ padding: 18px 0 0; }
 
-    /* Hero */
+    /* Hero (cleaner) */
     .hero{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -335,20 +349,20 @@
       z-index:-1;
     }
     .hero-grid{
-      display:grid; gap: 14px;
-      grid-template-columns: 1.05fr .95fr;
+      display:grid;
+      gap: 14px;
+      grid-template-columns: 1.1fr .9fr;
       align-items:start;
     }
     @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
 
     .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
     .kicker .dot{ opacity:.65; }
-
     h1{
       margin: 6px 0 10px;
       font-size: clamp(2.0rem, 4vw, 2.8rem);
       line-height: 1.06;
-      letter-spacing: -0.6px;
+      letter-spacing:-0.6px;
     }
     .gold{
       background: linear-gradient(180deg, var(--gold2), var(--gold));
@@ -358,20 +372,14 @@
     }
     .lead{ margin:0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
-    @media (max-width: 520px){ .hero-actions{ flex-direction:column; } .hero-actions .btn{ width:100%; } }
-
-    .meta{ margin-top: 12px; color: var(--muted); font-size: .88rem; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
-    .pill{
-      display:inline-flex; gap:8px; align-items:center;
-      padding: 7px 10px; border-radius: 999px;
-      border: 1px solid var(--line2); background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 80%, transparent);
-      font-weight: 800; font-size:.84rem;
+    @media (max-width: 520px){
+      .hero-actions{ flex-direction:column; }
+      .hero-actions .btn{ width:100%; }
     }
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace; }
 
     .hero-media{
-      border-radius: 14px; overflow:hidden;
+      border-radius: 14px;
+      overflow:hidden;
       border: 1px solid var(--line);
       background: var(--panel);
       position:relative;
@@ -379,15 +387,19 @@
       isolation:isolate;
     }
     .hero-media img{
-      width:100%; height: 320px;
-      object-fit: cover; display:block;
-      opacity:.94; transform: scale(1.01);
+      width:100%;
+      height: 320px;
+      object-fit: cover;
+      display:block;
+      opacity:.94;
+      transform: scale(1.01);
       transition: opacity .55s var(--ease), transform .9s var(--ease);
     }
     .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
     .hero-media .cap{
       position:absolute; left:16px; right:16px; bottom:12px;
-      padding: 10px; border-radius: 12px;
+      padding: 10px;
+      border-radius: 12px;
       border: 1px solid var(--ctaLine);
       background: var(--ctaBg);
       backdrop-filter: blur(10px);
@@ -398,7 +410,6 @@
     .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
     .hero-bar.run{ width: 100%; }
 
-    /* Sections */
     .section{ padding: 18px 0; }
     .section-head{
       display:flex; align-items:flex-end; justify-content:space-between;
@@ -407,7 +418,6 @@
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
-    /* Filters */
     .filters{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -430,9 +440,13 @@
     textarea{ min-height: 96px; resize: vertical; }
     input::placeholder, textarea::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
 
-    .pillbar{ display:flex; gap:8px; flex-wrap:wrap; padding-top: 12px; margin-top: 10px; border-top: 1px solid var(--line2); }
+    .pillbar{
+      display:flex; gap:8px; flex-wrap:wrap;
+      padding-top: 12px; margin-top: 10px;
+      border-top: 1px solid var(--line2);
+    }
 
-    /* Grid Cards */
+    /* Cards */
     .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     @media (max-width: 1024px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 640px){ .grid{ grid-template-columns: 1fr; } }
@@ -523,7 +537,7 @@
       display:flex; gap:8px; align-items:center; flex-wrap:wrap;
     }
 
-    /* ✅ Description preview */
+    /* Description preview */
     .desc{
       margin:0;
       color: var(--muted);
@@ -534,6 +548,29 @@
       -webkit-box-orient: vertical;
       overflow:hidden;
     }
+
+    .meta-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .9rem;
+    }
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 82%, transparent);
+      font-weight: 850;
+      font-size: .84rem;
+    }
+
+    .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
+
     .more-row{
       display:flex;
       justify-content:flex-end;
@@ -559,7 +596,6 @@
       color: var(--gold2);
     }
 
-    .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
     .actions-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
     .actions-row .btn{ flex: 1; }
     @media (max-width: 520px){ .actions-row .btn{ width:100%; flex:unset; } }
@@ -595,7 +631,7 @@
       margin-top: 14px;
     }
 
-    /* ✅ Pagination */
+    /* Pagination */
     .pager{
       margin-top: 14px;
       border-radius: var(--radius2);
@@ -610,25 +646,19 @@
       justify-content:space-between;
     }
     .pager-left{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+      display:flex; gap:10px; flex-wrap:wrap;
       align-items:center;
       color: var(--muted);
       font-weight: 850;
       font-size: .92rem;
     }
     .pager-right{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
+      display:flex; gap:8px; flex-wrap:wrap;
       align-items:center;
       justify-content:flex-end;
     }
     .pager-select{
-      display:flex;
-      gap:8px;
-      align-items:center;
+      display:flex; gap:8px; align-items:center;
       padding: 8px 10px;
       border-radius: 14px;
       border: 1px solid var(--line2);
@@ -636,11 +666,7 @@
       color: var(--text);
       font-weight: 900;
     }
-    .pager-select select{
-      min-height: 38px;
-      padding: 8px 10px;
-      border-radius: 12px;
-    }
+    .pager-select select{ min-height: 38px; padding: 8px 10px; border-radius: 12px; }
     .pager-btn{
       min-height: 40px;
       padding: 10px 12px;
@@ -659,14 +685,9 @@
       border-color: rgba(212,175,55,.35);
       color: var(--gold2);
     }
-    .pager-ellipsis{
-      padding: 8px 6px;
-      color: var(--muted2);
-      font-weight: 950;
-      user-select:none;
-    }
+    .pager-ellipsis{ padding: 8px 6px; color: var(--muted2); font-weight: 950; user-select:none; }
 
-    /* ✅ Modal (View More) */
+    /* Modal */
     .modalOverlay{
       position:fixed; inset:0;
       background: rgba(0,0,0,.56);
@@ -699,16 +720,13 @@
       letter-spacing:-0.2px;
       line-height:1.15;
       margin:0;
-      font-size: 1.05rem;
+      font-size: 1.08rem;
     }
     .modalMeta{
-      margin-top: 6px;
+      margin-top: 8px;
       display:flex;
       gap:8px;
       flex-wrap:wrap;
-      color: var(--muted);
-      font-weight: 850;
-      font-size: .86rem;
     }
     .modalBody{
       padding: 12px;
@@ -732,9 +750,22 @@
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-      justify-content:flex-end;
+      justify-content:space-between;
       background: color-mix(in oklab, var(--panel2) 65%, transparent);
     }
+    .modalFoot .left, .modalFoot .right{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .copy-btn{
+      border: 1px dashed var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-weight: 950;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor:pointer;
+    }
+    .copy-btn:hover{ color: var(--gold2); border-color: rgba(212,175,55,.35); }
 
     /* Footer */
     footer{
@@ -752,10 +783,8 @@
         var(--panel2);
       box-shadow: var(--shadow);
       padding: 14px;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; gap: 12px;
+      align-items:center; justify-content:space-between;
       flex-wrap:wrap;
     }
     .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
@@ -775,7 +804,8 @@
 
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
     .footer-links a{
-      display:block; padding: 6px 0;
+      display:block;
+      padding: 6px 0;
       color: color-mix(in oklab, var(--text) 84%, transparent);
       font-weight: 600;
     }
@@ -784,7 +814,8 @@
     .contact-stack{ display:grid; gap: 10px; }
     .contact-chip{
       display:flex; gap:10px; align-items:flex-start;
-      padding: 10px 12px; border-radius: 14px;
+      padding: 10px 12px;
+      border-radius: 14px;
       border: 1px solid var(--line);
       background: var(--panel2);
     }
@@ -796,8 +827,10 @@
     .social a{
       width: 42px; height: 42px;
       display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 12px; border: 1px solid var(--line);
-      background: var(--panel2); color: var(--text);
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--text);
     }
     .social a:hover{
       color:#111;
@@ -968,24 +1001,18 @@
       <div class="hero-grid">
         <div>
           <div class="kicker">
-            <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span><span class="dot">•</span>
-            <span><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified listings</span><span class="dot">•</span>
+            <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Verified & scam-resistant</span>
+            <span class="dot">•</span>
             <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
           </div>
 
           <h1>Verified <span class="gold">Real Estate</span> Catalog.</h1>
-          <p class="lead">Browse verified stays, rentals, and sales. Mark any catalogue item as <b>featured</b> in Admin to show on homepage.</p>
+          <p class="lead">Browse stays, rentals, and sales. Use filters + pagination to find what you need fast.</p>
 
           <div class="hero-actions">
             <a class="btn solid" href="#catalog"><i class="fa-solid fa-magnifying-glass"></i> Browse Listings</a>
             <a class="btn primary" href="#book"><i class="fa-solid fa-calendar-check"></i> Booking Request</a>
             <a class="btn ghost" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Add Logistics</a>
-          </div>
-
-          <div class="meta">
-            <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span>
-            <span class="pill"><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Scam-resistant</span>
-            <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> Traceable refs</span>
           </div>
         </div>
 
@@ -1000,7 +1027,7 @@
       </div>
     </section>
 
-    <!-- ✅ Booking request -->
+    <!-- Booking request -->
     <section class="section" id="book" aria-label="Booking request">
       <div class="section-head">
         <div>
@@ -1084,7 +1111,7 @@
         </div>
 
         <div class="notice" style="margin-top:12px;">
-          <strong>Tip:</strong> If you want the item to appear on the homepage Featured section, set <strong>featured=true</strong> in Admin.
+          <strong>Tip:</strong> To show on homepage Featured, set <strong>featured=true</strong> in Admin.
         </div>
       </div>
     </section>
@@ -1093,7 +1120,7 @@
       <div class="section-head">
         <div>
           <h2>Listings</h2>
-          <p class="subhead">Search + filter by category, location, and Featured (syncs with homepage). Use “View more” for full details.</p>
+          <p class="subhead">Search + filter. Tap <b>View more</b> for full details, ref, and actions.</p>
         </div>
         <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Sourcing</a>
       </div>
@@ -1171,7 +1198,7 @@
     </section>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer (kept) -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -1288,10 +1315,10 @@
 
   <!-- ✅ View More Modal -->
   <div class="modalOverlay" id="descOverlay" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Listing description">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Listing details">
       <div class="modalHead">
         <div style="min-width:0;">
-          <h3 class="modalTitle" id="descTitle">Description</h3>
+          <h3 class="modalTitle" id="descTitle">Listing</h3>
           <div class="modalMeta" id="descMeta"></div>
         </div>
         <button class="icon-btn" type="button" onclick="closeDescModal()" aria-label="Close">
@@ -1304,12 +1331,22 @@
       </div>
 
       <div class="modalFoot">
-        <button class="btn primary" type="button" onclick="closeDescModal()">
-          <i class="fa-solid fa-check"></i> Done
-        </button>
-        <button class="btn solid" type="button" onclick="descModalWhatsApp()">
-          <i class="fa-brands fa-whatsapp"></i> Enquire on WhatsApp
-        </button>
+        <div class="left">
+          <button class="copy-btn" type="button" onclick="copyDescRef()">
+            <i class="fa-regular fa-copy"></i> Copy Ref
+          </button>
+        </div>
+        <div class="right">
+          <button class="btn primary" type="button" onclick="closeDescModal()">
+            <i class="fa-solid fa-check"></i> Done
+          </button>
+          <button class="btn solid" type="button" onclick="descModalEnquire()">
+            <i class="fa-brands fa-whatsapp"></i> Enquire
+          </button>
+          <button class="btn primary" type="button" onclick="descModalBook()">
+            <i class="fa-solid fa-calendar-check"></i> Book this
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -1320,13 +1357,7 @@
     // ---- basics
     document.getElementById("year").textContent = new Date().getFullYear();
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-    const escJS = (s) => (s ?? "").toString()
-      .replace(/\\/g, "\\\\")
-      .replace(/'/g, "\\'")
-      .replace(/\r/g, "")
-      .replace(/\n/g, "\\n");
 
     function toast(msg){
       const t = document.getElementById("toast");
@@ -1380,73 +1411,7 @@
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
 
-    // ---- View More modal state
-    const __DESC = { title:"", desc:"", ref:"", location:"", category:"" };
-
-    function openDescModal(title, desc, meta){
-      __DESC.title = title || "Listing";
-      __DESC.desc = desc || "";
-      __DESC.ref = meta?.ref || "";
-      __DESC.location = meta?.location || "";
-      __DESC.category = meta?.category || "";
-
-      const ov = document.getElementById("descOverlay");
-      const t = document.getElementById("descTitle");
-      const m = document.getElementById("descMeta");
-      const b = document.getElementById("descBody");
-
-      if(t) t.textContent = __DESC.title;
-      if(b) b.textContent = __DESC.desc || "No description provided.";
-
-      if(m){
-        const bits = [];
-        if(__DESC.ref) bits.push(`Ref: ${__DESC.ref}`);
-        if(__DESC.location) bits.push(`Location: ${__DESC.location}`);
-        if(__DESC.category) bits.push(`Category: ${__DESC.category}`);
-        m.textContent = bits.join("  •  ");
-      }
-
-      ov.classList.add("open");
-      ov.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-      setTimeout(() => {
-        const closeBtn = ov.querySelector("button.icon-btn");
-        closeBtn?.focus?.();
-      }, 50);
-    }
-
-    function closeDescModal(){
-      const ov = document.getElementById("descOverlay");
-      ov.classList.remove("open");
-      ov.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-    }
-
-    function descModalWhatsApp(){
-      openWA(buildMsg("Real Estate Enquiry", {
-        Ref: __DESC.ref,
-        Title: __DESC.title,
-        Location: __DESC.location,
-        Category: __DESC.category,
-        Message: "Hello Larmah, I saw this listing description. Please confirm availability and next steps."
-      }));
-    }
-
-    document.getElementById("descOverlay")?.addEventListener("click", (e) => {
-      if(e.target && e.target.id === "descOverlay") closeDescModal();
-    });
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape"){
-        const ov = document.getElementById("descOverlay");
-        if(ov?.classList?.contains("open")) closeDescModal();
-      }
-    });
-
-    window.openDescModal = openDescModal;
-    window.closeDescModal = closeDescModal;
-    window.descModalWhatsApp = descModalWhatsApp;
-
-    // ---- hero slideshow (5s)
+    // ---- hero slideshow
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1457,8 +1422,7 @@
       { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611", icon:"fa-house", label:"Shortlets", sub:"Verified shortlets and premium stays." },
       { img:"https://source.unsplash.com/1600x1000/?real-estate,building,lagos&sig=612", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clear confirmations." },
       { img:"https://source.unsplash.com/1600x1000/?apartment,living-room,modern&sig=613", icon:"fa-house", label:"Rentals", sub:"Quality rentals in high-demand areas." },
-      { img:"https://source.unsplash.com/1600x1000/?villa,luxury,interior&sig=614", icon:"fa-house", label:"Premium", sub:"High-standard options when you need the best." },
-      { img:"https://source.unsplash.com/1600x1000/?condo,interior,design&sig=615", icon:"fa-house", label:"Comfort-first", sub:"Spaces designed for work & rest." }
+      { img:"https://source.unsplash.com/1600x1000/?villa,luxury,interior&sig=614", icon:"fa-house", label:"Premium", sub:"High-standard options when you need the best." }
     ];
     let heroIdx = 0;
 
@@ -1486,8 +1450,11 @@
       setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
     } else setHero(0);
 
-    // ---- Supabase listings + card image rotate + pagination
+    // ---- data + images + pagination
     const __RE = { items: [], imgUrls: {}, imgIdx: {}, timers: {}, page: 1, pageSize: 9 };
+
+    // ---- modal state
+    const __RE_MODAL = { id:null, ref:"", title:"", price:"", location:"", category:"", featured:false, desc:"" };
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
@@ -1506,12 +1473,12 @@
 
     function inferCategory(it){
       const hay = (safeText(it.listing_type) + " " + safeText(it.type) + " " + safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" "))).toLowerCase();
-      if(hay.includes("shortlet") || hay.includes("airbnb")) return "shortlet";
-      if(hay.includes("rent") || hay.includes("year") || hay.includes("annual")) return "rent";
-      if(hay.includes("buy") || hay.includes("sale") || hay.includes("purchase")) return "buy";
-      return "";
+      if(hay.includes("shortlet") || hay.includes("airbnb")) return "Shortlet";
+      if(hay.includes("rent") || hay.includes("year") || hay.includes("annual")) return "Rent";
+      if(hay.includes("buy") || hay.includes("sale") || hay.includes("purchase")) return "Buy";
+      return "Listing";
     }
-    function inferLocation(it){ return safeText(it.location || it.area || it.city || it.state || "").trim(); }
+    function inferLocation(it){ return safeText(it.location || it.area || it.city || it.state || "").trim() || "Nigeria"; }
     function listingRef(id){ return `WEB-RE-${id}`; }
 
     function getImages(it){
@@ -1525,14 +1492,12 @@
       __RE.imgUrls[id] = getImages(it);
       __RE.imgIdx[id] = __RE.imgIdx[id] ?? 0;
     }
-
     function clearAllTimers(){
       for(const k in __RE.timers){
         try{ clearInterval(__RE.timers[k]); } catch {}
       }
       __RE.timers = {};
     }
-
     function setCardImage(id){
       const img = document.getElementById(`re-img-${id}`);
       if(!img) return;
@@ -1570,6 +1535,108 @@
       }, 5000);
     }
 
+    // ---- modal controls
+    function openDescModalById(id){
+      const it = (__RE.items||[]).find(x => String(x.id)===String(id));
+      if(!it) return;
+
+      __RE_MODAL.id = String(it.id);
+      __RE_MODAL.ref = listingRef(it.id);
+      __RE_MODAL.title = safeText(it.title) || "Listing";
+      __RE_MODAL.price = formatPrice(it.price);
+      __RE_MODAL.location = inferLocation(it);
+      __RE_MODAL.category = inferCategory(it);
+      __RE_MODAL.featured = it.featured === true;
+      __RE_MODAL.desc = safeText(it.description) || "No description provided.";
+
+      const titleEl = document.getElementById("descTitle");
+      const metaEl = document.getElementById("descMeta");
+      const bodyEl = document.getElementById("descBody");
+
+      if(titleEl) titleEl.textContent = __RE_MODAL.title;
+      if(bodyEl) bodyEl.textContent = __RE_MODAL.desc;
+
+      if(metaEl){
+        metaEl.innerHTML = `
+          <span class="chip"><i class="fa-solid fa-naira-sign" style="color:var(--gold)"></i> ${esc(__RE_MODAL.price)}</span>
+          <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(__RE_MODAL.location)}</span>
+          <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(__RE_MODAL.category)}</span>
+          <span class="chip"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> ${esc(__RE_MODAL.ref)}</span>
+          ${__RE_MODAL.featured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
+        `;
+      }
+
+      const ov = document.getElementById("descOverlay");
+      ov.classList.add("open");
+      ov.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => ov.querySelector("button.icon-btn")?.focus?.(), 50);
+    }
+    function closeDescModal(){
+      const ov = document.getElementById("descOverlay");
+      ov.classList.remove("open");
+      ov.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+    }
+    function copyDescRef(){
+      const txt = __RE_MODAL.ref || "";
+      if(!txt) return toast("No ref to copy.");
+      navigator.clipboard?.writeText(txt).then(
+        () => toast("Ref copied ✅"),
+        () => toast("Copy failed. Please copy manually.")
+      );
+    }
+    function descModalEnquire(){
+      openWA(buildMsg("Real Estate Enquiry", {
+        Ref: __RE_MODAL.ref,
+        Title: __RE_MODAL.title,
+        Location: __RE_MODAL.location,
+        Category: __RE_MODAL.category,
+        Price: __RE_MODAL.price,
+        Featured: __RE_MODAL.featured ? "Yes" : "No",
+        Message: "Hello Larmah, please confirm availability and next steps."
+      }));
+    }
+    function descModalBook(){
+      // prefill booking
+      const notes = document.getElementById("bk_notes");
+      if(notes){
+        notes.value =
+`Interested in: ${__RE_MODAL.title}
+Ref: ${__RE_MODAL.ref}
+Location: ${__RE_MODAL.location}
+Price: ${__RE_MODAL.price}
+
+`;
+      }
+      const locSel = document.getElementById("bk_location");
+      if(locSel){
+        // try set exact match if exists
+        const opt = [...locSel.options].find(o => o.value.toLowerCase() === (__RE_MODAL.location||"").toLowerCase());
+        if(opt) locSel.value = opt.value;
+      }
+      closeDescModal();
+      document.getElementById("book")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
+      toast("Booking form pre-filled ✅");
+    }
+
+    // overlay click + ESC
+    document.getElementById("descOverlay")?.addEventListener("click", (e) => {
+      if(e.target && e.target.id === "descOverlay") closeDescModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        const ov = document.getElementById("descOverlay");
+        if(ov?.classList?.contains("open")) closeDescModal();
+      }
+    });
+
+    window.openDescModalById = openDescModalById;
+    window.closeDescModal = closeDescModal;
+    window.copyDescRef = copyDescRef;
+    window.descModalEnquire = descModalEnquire;
+    window.descModalBook = descModalBook;
+
     function cardHTML(it){
       const id = String(it.id);
       initImagesFor(it);
@@ -1579,16 +1646,9 @@
       const title = safeText(it.title) || "Listing";
       const desc = safeText(it.description) || "Verified listing.";
       const price = formatPrice(it.price);
-      const locationTxt = inferLocation(it) || "Nigeria";
-      const categoryTxt = inferCategory(it) || "listing";
-      const ref = listingRef(id);
+      const locationTxt = inferLocation(it);
+      const categoryTxt = inferCategory(it);
       const isFeatured = it.featured === true;
-
-      const jsTitle = escJS(title);
-      const jsDesc = escJS(desc);
-      const jsRef = escJS(ref);
-      const jsLoc = escJS(locationTxt);
-      const jsCat = escJS(categoryTxt);
 
       return `
         <article class="card" aria-label="${esc(title)}">
@@ -1619,19 +1679,18 @@
             </div>
 
             <p class="desc">${esc(desc)}</p>
+
             <div class="more-row">
-              <button class="link-btn" type="button"
-                onclick="openDescModal('${jsTitle}', '${jsDesc}', {ref:'${jsRef}', location:'${jsLoc}', category:'${jsCat}'})">
+              <button class="link-btn" type="button" onclick="openDescModalById('${id}')">
                 <i class="fa-regular fa-file-lines"></i> View more
               </button>
             </div>
 
             <div class="price">${esc(price)}</div>
 
-            <div class="meta">
-              <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(locationTxt)}</span>
-              <span class="pill"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(categoryTxt)}</span>
-              <span class="pill"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> <span class="mono">${esc(ref)}</span></span>
+            <div class="meta-row">
+              <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(locationTxt)}</span>
+              <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(categoryTxt)}</span>
             </div>
 
             <div class="actions-row">
@@ -1647,17 +1706,15 @@
       `;
     }
 
-    // ✅ Smart pager buttons
+    // pagination UI
     function pagerButtons(page, totalPages){
       const btns = [];
       const add = (p, label, active=false) => btns.push({ type:"btn", p, label, active });
       const ell = () => btns.push({ type:"ell" });
-
       if(totalPages <= 1) return btns;
 
       const maxBtns = 7;
       const half = Math.floor(maxBtns / 2);
-
       let start = Math.max(1, page - half);
       let end = Math.min(totalPages, page + half);
 
@@ -1669,14 +1726,11 @@
 
       add(1, "1", page===1);
       if(start > 2) ell();
-
       for(let p = Math.max(2, start); p <= Math.min(totalPages-1, end); p++){
         add(p, String(p), p===page);
       }
-
       if(end < totalPages - 1) ell();
       if(totalPages > 1) add(totalPages, String(totalPages), page===totalPages);
-
       return btns;
     }
 
@@ -1690,7 +1744,6 @@
         <div class="pager" role="navigation" aria-label="Listings pagination">
           <div class="pager-left">
             <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>–<b>${to}</b> of <b>${total}</b></span>
-            <span class="pill"><i class="fa-solid fa-file-lines" style="color:var(--gold)"></i> Page <b>${page}</b> / <b>${totalPages}</b></span>
           </div>
 
           <div class="pager-right">
@@ -1733,7 +1786,7 @@
           return hay.includes(q);
         });
       }
-      if(cat !== "all") items = items.filter(it => inferCategory(it) === cat);
+      if(cat !== "all") items = items.filter(it => inferCategory(it).toLowerCase() === cat);
       if(loc !== "all") items = items.filter(it => inferLocation(it).toLowerCase().includes(loc.toLowerCase()));
       if(feat === "featured") items = items.filter(it => it.featured === true);
 
@@ -1766,7 +1819,6 @@
         <div class="grid">${pageItems.map(cardHTML).join("")}</div>
         ${pagerHTML(__RE.page, __RE.pageSize, total)}
       `;
-
       pageItems.forEach(it => autoRotateImages(String(it.id)));
     }
 
@@ -1815,8 +1867,8 @@
       openWA(buildMsg("Real Estate Enquiry", {
         Ref: listingRef(id),
         Title: safeText(it.title),
-        Location: inferLocation(it) || "",
-        Category: inferCategory(it) || "",
+        Location: inferLocation(it),
+        Category: inferCategory(it),
         Price: formatPrice(it.price),
         Featured: it.featured === true ? "Yes" : "No",
         Message: "Hello Larmah, please confirm availability and next steps."
@@ -1827,15 +1879,20 @@
     function reBookFromCard(id){
       const it = (__RE.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
+
       document.getElementById("bk_notes").value =
-        `Interested in: ${safeText(it.title)}\nRef: ${listingRef(id)}\nLocation: ${inferLocation(it) || ""}\nPrice: ${formatPrice(it.price)}\n\n`;
-      document.getElementById("bk_location").value = inferLocation(it) || "Any";
-      document.getElementById("bk_cat").value = safeText(it.type) || "Any";
+`Interested in: ${safeText(it.title)}
+Ref: ${listingRef(id)}
+Location: ${inferLocation(it)}
+Price: ${formatPrice(it.price)}
+
+`;
       document.getElementById("book").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
       toast("Booking form pre-filled ✅");
     }
     window.reBookFromCard = reBookFromCard;
 
+    // Booking Request -> WhatsApp
     function submitBookingRequest(){
       const checkin = (document.getElementById("bk_checkin").value || "Not set");
       const checkout = (document.getElementById("bk_checkout").value || "Not set");
@@ -1858,6 +1915,7 @@
     }
     window.submitBookingRequest = submitBookingRequest;
 
+    // Booking Request -> DB + WA fallback
     async function submitBookingToDB(){
       const fields = {
         Checkin: (document.getElementById("bk_checkin").value || ""),
@@ -1906,6 +1964,7 @@
     }
     window.submitBookingToDB = submitBookingToDB;
 
+    // Date mins
     function toISODate(d){
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth()+1).padStart(2,"0");
@@ -1981,10 +2040,5 @@
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
   </script>
-
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
-    crossorigin="anonymous"></script>
 </body>
 </html>
