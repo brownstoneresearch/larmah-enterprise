@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no" />
 
   <title>Larmah Enterprise — Real Estate & Logistics</title>
   <meta name="description" content="Trust-first real estate and logistics across Nigeria — verified listings, WhatsApp-first support, and fast coordination for stays and movement." />
@@ -35,9 +36,10 @@
 
   <!-- Performance -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link rel="preconnect" href="https://source.unsplash.com" crossorigin />
-  <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://mskbumvopqnrhddfycfd.supabase.co" crossorigin />
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
+  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -45,6 +47,7 @@
   <script>
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
     window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+    window.__LARMAH_PAGE = "index";
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
@@ -82,6 +85,7 @@
       --radius2: 22px;
       --max: 1120px;
       --ease: cubic-bezier(.2,.8,.2,1);
+
       --shadow: 0 18px 50px rgba(0,0,0,.42);
       --shadow2: 0 12px 34px rgba(0,0,0,.30);
 
@@ -94,15 +98,15 @@
     html[data-theme="dark"]{
       --bg:#070A12;
       --bg2:#050810;
-      --panel: rgba(255,255,255,.03);
+      --panel: rgba(255,255,255,.035);
       --panel2: rgba(255,255,255,.02);
-      --line: rgba(255,255,255,.10);
+      --line: rgba(255,255,255,.11);
       --line2: rgba(255,255,255,.08);
       --text:#E9EDF7;
-      --muted: rgba(233,237,247,.72);
+      --muted: rgba(233,237,247,.74);
       --muted2: rgba(233,237,247,.60);
       --headerBg: rgba(7,10,18,.72);
-      --overlayBg: rgba(0,0,0,.55);
+      --overlayBg: rgba(0,0,0,.58);
       --ctaBg: rgba(0,0,0,.28);
       --ctaLine: rgba(255,255,255,.12);
       --iconBg: rgba(212,175,55,.10);
@@ -127,9 +131,9 @@
       --text:#0E1526;
       --muted: rgba(14,21,38,.68);
       --muted2: rgba(14,21,38,.56);
-      --headerBg: rgba(255,255,255,.78);
+      --headerBg: rgba(255,255,255,.82);
       --overlayBg: rgba(0,0,0,.40);
-      --ctaBg: rgba(255,255,255,.78);
+      --ctaBg: rgba(255,255,255,.80);
       --ctaLine: rgba(10,14,26,.10);
       --iconBg: rgba(212,175,55,.16);
       --iconLine: rgba(212,175,55,.35);
@@ -156,9 +160,9 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
       background:
-        radial-gradient(900px 420px at 18% 6%, rgba(212,175,55,.10), transparent 60%),
-        radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.06), transparent 62%),
-        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.06), transparent 58%),
+        radial-gradient(900px 420px at 16% 6%, rgba(212,175,55,.09), transparent 60%),
+        radial-gradient(900px 420px at 86% 10%, rgba(0,217,129,.05), transparent 62%),
+        radial-gradient(900px 520px at 50% 112%, rgba(0,122,255,.05), transparent 58%),
         linear-gradient(180deg, var(--bg2), var(--bg));
       color: var(--text);
       overflow-x:hidden;
@@ -166,6 +170,21 @@
       -moz-osx-font-smoothing: grayscale;
       padding-bottom: 0;
     }
+
+    /* subtle film grain for “reality” */
+    body::before{
+      content:"";
+      position:fixed; inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,.03), transparent 35%),
+        radial-gradient(circle at 80% 15%, rgba(255,255,255,.02), transparent 35%),
+        radial-gradient(circle at 50% 80%, rgba(255,255,255,.02), transparent 45%);
+      mix-blend-mode: overlay;
+      opacity:.55;
+      z-index:0;
+    }
+    body > *{ position:relative; z-index:1; }
 
     a{ color: var(--text); text-decoration:none; }
     a:hover{ color: var(--gold); }
@@ -204,20 +223,24 @@
       top:0;
       z-index:50;
       background: var(--headerBg);
-      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line2);
     }
+    @supports (backdrop-filter: blur(10px)){
+      header{ backdrop-filter: blur(12px); }
+    }
+
     .header-inner{
       display:flex;
       align-items:center;
       gap:12px;
       padding: 12px 0;
     }
+
     .brand{
       display:flex;
       align-items:center;
       gap:10px;
-      min-width: 220px;
+      min-width: 240px;
     }
 
     .logo-wrap{
@@ -227,8 +250,8 @@
       border-radius: 14px;
       padding: 2px;
       background:
-        radial-gradient(18px 18px at 25% 20%, rgba(245,213,122,.35), transparent 70%),
-        radial-gradient(20px 20px at 85% 80%, rgba(212,175,55,.22), transparent 70%),
+        radial-gradient(18px 18px at 25% 20%, rgba(245,213,122,.32), transparent 70%),
+        radial-gradient(20px 20px at 85% 80%, rgba(212,175,55,.20), transparent 70%),
         linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
       box-shadow: var(--logoGlow);
       border: 1px solid var(--logoRing);
@@ -254,6 +277,7 @@
       border: 1px solid var(--line2);
       background: var(--logoBg);
     }
+
     .brand .btxt{
       display:flex;
       flex-direction:column;
@@ -342,8 +366,7 @@
       nav{ display:none; }
       .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
       .header-actions{ margin-left: auto; }
-      /* leave space for WA button so it never covers content */
-      body{ padding-bottom: calc(88px + var(--safeB)); }
+      body{ padding-bottom: calc(92px + var(--safeB)); }
     }
 
     /* Mobile sheet */
@@ -452,6 +475,29 @@
     }
     .chip i{ color: var(--gold); }
 
+    /* Micro proof bar */
+    .proofbar{
+      margin-top: 12px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+    .proof{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .92rem;
+    }
+    .proof b{ color: var(--text); font-weight: 950; }
+    .proof i{ color: var(--gold); }
+
     /* Hero/Home */
     .hero{ padding: 18px 0 0; }
     .hero-box{
@@ -467,12 +513,13 @@
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.20), transparent 60%),
-        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
-        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.10), transparent 62%);
+        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.18), transparent 60%),
+        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.10), transparent 65%),
+        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.08), transparent 62%);
       pointer-events:none;
       z-index:-1;
     }
+
     .hero-row{
       display:grid;
       gap: 14px;
@@ -494,6 +541,7 @@
       margin-bottom: 10px;
     }
     .kicker .dot{ opacity:.65; }
+
     h1{
       margin: 6px 0 10px;
       font-size: clamp(2.0rem, 4vw, 3.05rem);
@@ -651,7 +699,7 @@
       padding: 12px;
     }
     .logistics-strip.invert{
-      background: linear-gradient(135deg, rgba(212,175,55,.95), rgba(245,213,122,.86));
+      background: linear-gradient(135deg, rgba(212,175,55,.94), rgba(245,213,122,.84));
       border-color: rgba(212,175,55,.45);
       box-shadow: var(--shadow2);
     }
@@ -690,14 +738,22 @@
       min-height: 320px;
       isolation:isolate;
     }
+    .hero-media::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.00), rgba(0,0,0,.25));
+      pointer-events:none;
+      z-index:1;
+    }
     .hero-media img{
       width:100%;
       height: 320px;
       object-fit: cover;
       display:block;
-      opacity:.94;
+      opacity:.95;
       transform: scale(1.01);
       transition: opacity .55s var(--ease), transform .9s var(--ease);
+      filter: contrast(1.03) saturate(1.02);
     }
     .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
     .hero-media .cap{
@@ -707,11 +763,14 @@
       border-radius: 12px;
       border: 1px solid var(--ctaLine);
       background: var(--ctaBg);
-      backdrop-filter: blur(10px);
+      z-index:2;
+    }
+    @supports (backdrop-filter: blur(10px)){
+      .hero-media .cap{ backdrop-filter: blur(10px); }
     }
     .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
     .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
-    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
+    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; z-index:2; }
     .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
     .hero-bar.run{ width: 100%; }
 
@@ -728,7 +787,7 @@
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
-    /* ✅ Responsive grids (better tablet -> mobile) */
+    /* ✅ Responsive grids */
     .grid{
       display:grid;
       gap: 14px;
@@ -747,7 +806,16 @@
     }
     .card:hover{ transform: translateY(-2px); filter: brightness(1.02); }
     .card.is-fading{ opacity:.22; transform: translateY(2px); filter:none; }
-    .card img{ width:100%; height: 180px; object-fit: cover; display:block; opacity:.92; }
+
+    .card img{
+      width:100%;
+      aspect-ratio: 16 / 10;
+      height: auto;
+      object-fit: cover;
+      display:block;
+      opacity:.93;
+      filter: contrast(1.02) saturate(1.01);
+    }
     .card-body{ padding: 12px; }
     .card-title{ font-weight: 950; margin: 0 0 8px; letter-spacing:-0.15px; }
     .meta{ display:flex; gap:10px; flex-wrap:wrap; color: var(--muted); font-size: .9rem; }
@@ -785,8 +853,8 @@
       content:"";
       position:absolute; inset:-2px;
       background:
-        radial-gradient(260px 120px at 30% 0%, rgba(212,175,55,.12), transparent 60%),
-        radial-gradient(260px 120px at 90% 25%, rgba(0,217,129,.07), transparent 60%);
+        radial-gradient(260px 120px at 30% 0%, rgba(212,175,55,.11), transparent 60%),
+        radial-gradient(260px 120px at 90% 25%, rgba(0,217,129,.06), transparent 60%);
       pointer-events:none;
       opacity:.9;
     }
@@ -867,7 +935,14 @@
       overflow:hidden;
       box-shadow: var(--shadow2);
     }
-    .about-card img{ width:100%; height: 200px; object-fit: cover; display:block; opacity:.92; }
+    .about-card img{
+      width:100%;
+      aspect-ratio: 16 / 10;
+      height:auto;
+      object-fit: cover;
+      display:block;
+      opacity:.93;
+    }
     .about-card .card-body{ padding: 12px; }
     .about-points{ margin-top: 12px; display:grid; gap: 10px; }
     .ap{
@@ -901,8 +976,8 @@
       border-radius: 20px;
       border: 1px solid var(--line);
       background:
-        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
-        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
+        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.14), transparent 55%),
+        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.08), transparent 60%),
         var(--panel2);
       box-shadow: var(--shadow);
       padding: 14px;
@@ -997,12 +1072,14 @@
       color: var(--text);
       font-weight: 950;
       box-shadow: var(--shadow2);
-      backdrop-filter: blur(10px);
       cursor:pointer;
     }
+    @supports (backdrop-filter: blur(10px)){
+      .wa-pill{ backdrop-filter: blur(10px); }
+    }
     .wa-btn{
-      width: 52px;
-      height: 52px;
+      width: 54px;
+      height: 54px;
       border-radius: 18px;
       border: 1px solid color-mix(in oklab, var(--gold) 40%, var(--line) 60%);
       background: linear-gradient(180deg, var(--gold2), var(--gold));
@@ -1019,6 +1096,10 @@
     @media (min-width: 980px){
       .wa-pill{ display:inline-flex; }
     }
+
+    /* Reveal animation */
+    .reveal{ opacity:0; transform: translateY(8px); }
+    .reveal.show{ opacity:1; transform: translateY(0); transition: opacity .55s var(--ease), transform .55s var(--ease); }
 
     /* ===== Mobile polish extras ===== */
     @media (max-width: 620px){
@@ -1071,13 +1152,21 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
 
+  <noscript>
+    <div class="container" style="padding:12px 0;">
+      <div class="notice" style="border-color: rgba(255,187,0,.35);">
+        <b style="color:var(--text)">JavaScript is disabled.</b> Some features (featured listings + quick WhatsApp forms) may not work properly.
+      </div>
+    </div>
+  </noscript>
+
   <!-- Mobile nav -->
   <div class="overlay" id="overlay" aria-hidden="true">
-    <div class="sheet" role="dialog" aria-label="Menu">
+    <div class="sheet" role="dialog" aria-label="Menu" aria-modal="true">
       <div class="sheet-head">
         <div class="sheet-brandline">
           <div class="logo-wrap" aria-hidden="true">
-            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" onerror="this.src='assets/images/larmah-header.jpeg';" />
           </div>
           <div style="min-width:0">
             <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
@@ -1090,12 +1179,16 @@
         </button>
       </div>
 
+      <a href="#home"><span><i class="fa-solid fa-house" style="color:var(--gold)"></i> Home</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="logistics.html"><span><i class="fa-solid fa-truck" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
+        <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </button>
         <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
         </button>
@@ -1107,7 +1200,7 @@
     <div class="container header-inner">
       <a class="brand" href="#home" aria-label="Larmah Home">
         <div class="logo-wrap" aria-hidden="true">
-          <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+          <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" onerror="this.src='assets/images/larmah-header.jpeg';" />
         </div>
         <div class="btxt">
           <div class="bname">Larmah Enterprise</div>
@@ -1117,8 +1210,9 @@
 
       <nav aria-label="Primary navigation">
         <ul>
+          <li><a class="nav-link" data-nav="home" href="#home">Home</a></li>
           <li><a class="nav-link" data-nav="about" href="#about">About</a></li>
-         <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
+          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
         </ul>
@@ -1129,7 +1223,7 @@
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
 
-        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
+        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu" aria-controls="overlay" aria-expanded="false">
           <i class="fa-solid fa-bars"></i>
         </button>
       </div>
@@ -1137,12 +1231,15 @@
   </header>
 
   <main id="main" class="container" tabindex="-1">
+    <!-- anchor for #home -->
+    <div id="home"></div>
+
     <!-- ======================
          HOME PAGE (DEFAULT)
          ====================== -->
     <div class="page is-active" id="page-home" data-page="home">
       <section class="hero" aria-label="Hero">
-        <div class="hero-box">
+        <div class="hero-box reveal">
           <div class="hero-row">
             <div>
               <div class="kicker" aria-label="Trust badges">
@@ -1182,6 +1279,13 @@
                 <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage support</div>
               </div>
 
+              <!-- more “real” proof -->
+              <div class="proofbar" aria-label="Operational proof">
+                <div class="proof"><i class="fa-solid fa-clock"></i> Response: <b>fast</b> on WhatsApp</div>
+                <div class="proof"><i class="fa-solid fa-location-dot"></i> Focus: <b>Lagos</b> + nationwide support</div>
+                <div class="proof"><i class="fa-solid fa-file-signature"></i> Confirmations: <b>clean</b> references</div>
+              </div>
+
               <!-- Mode switch -->
               <div class="switcher" id="quick" aria-label="Quick request switcher">
                 <div class="seg" role="tablist" aria-label="Choose quick request">
@@ -1212,12 +1316,12 @@
                   <div class="form-grid" style="margin-top:12px;">
                     <div class="field" style="grid-column: span 2;">
                       <label for="checkin">Check-in</label>
-                      <input id="checkin" type="date" />
+                      <input id="checkin" type="date" autocomplete="off" />
                     </div>
 
                     <div class="field" style="grid-column: span 2;">
                       <label for="checkout">Check-out</label>
-                      <input id="checkout" type="date" />
+                      <input id="checkout" type="date" autocomplete="off" />
                     </div>
 
                     <div class="field" style="grid-column: span 1;">
@@ -1301,22 +1405,22 @@
                   <div class="form-grid" style="margin-top:12px;">
                     <div class="field" style="grid-column: span 4;">
                       <label for="pickup">Pickup location</label>
-                      <input id="pickup" type="text" placeholder="e.g., Lekki Phase 1" />
+                      <input id="pickup" type="text" placeholder="e.g., Lekki Phase 1" autocomplete="address-level2" />
                     </div>
 
                     <div class="field" style="grid-column: span 4;">
                       <label for="dropoff">Drop-off location</label>
-                      <input id="dropoff" type="text" placeholder="e.g., Victoria Island" />
+                      <input id="dropoff" type="text" placeholder="e.g., Victoria Island" autocomplete="address-level2" />
                     </div>
 
                     <div class="field" style="grid-column: span 2;">
                       <label for="pickDate">Date</label>
-                      <input id="pickDate" type="date" />
+                      <input id="pickDate" type="date" autocomplete="off" />
                     </div>
 
                     <div class="field" style="grid-column: span 2;">
                       <label for="pickTime">Time (optional)</label>
-                      <input id="pickTime" type="time" />
+                      <input id="pickTime" type="time" autocomplete="off" />
                     </div>
 
                     <div class="field" style="grid-column: span 2;">
@@ -1380,7 +1484,12 @@
             </div>
 
             <aside class="hero-media" id="heroMedia" aria-label="Real estate and logistics carousel">
-              <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=11" alt="Luxury apartment interior" decoding="async" fetchpriority="high">
+              <img id="heroImg"
+                   src="assets/images/larmah-header.jpeg"
+                   alt="Larmah Enterprise"
+                   decoding="async"
+                   fetchpriority="high"
+                   onerror="this.src='assets/images/larmah-favicon.jpeg';">
               <div class="cap">
                 <div class="hero-tag" id="heroTag">
                   <i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate
@@ -1393,7 +1502,7 @@
         </div>
       </section>
 
-      <section class="section" id="services" aria-label="Services">
+      <section class="section reveal" id="services" aria-label="Services">
         <div class="section-head">
           <div>
             <h2>Two pillars. One trust-first workflow.</h2>
@@ -1463,7 +1572,7 @@
         </div>
       </section>
 
-      <section class="section" id="browse" aria-label="Browse featured">
+      <section class="section reveal" id="browse" aria-label="Browse featured">
         <div class="section-head">
           <div>
             <h2>Featured Listings</h2>
@@ -1479,7 +1588,7 @@
         </div>
       </section>
 
-      <section class="section" aria-label="How it works">
+      <section class="section reveal" aria-label="How it works">
         <div class="section-head">
           <div>
             <h2>How it works</h2>
@@ -1512,7 +1621,7 @@
         </div>
       </section>
 
-      <section class="section" aria-label="WhatsApp request CTA">
+      <section class="section reveal" aria-label="WhatsApp request CTA">
         <div class="card" style="padding:14px;">
           <div style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
             <div>
@@ -1536,7 +1645,7 @@
          ====================== -->
     <div class="page" id="page-about" data-page="about">
       <section class="section" aria-label="About Larmah Enterprise">
-        <div class="about-wrap">
+        <div class="about-wrap reveal">
           <div class="about-hero">
             <div>
               <div class="kicker">
@@ -1654,7 +1763,8 @@
             </div>
 
             <div class="about-card">
-              <img src="https://source.unsplash.com/1200x800/?lagos,real-estate&sig=777" alt="Lagos real estate" loading="lazy" decoding="async">
+              <img src="assets/images/larmah-header.jpeg" alt="Lagos real estate" loading="lazy" decoding="async"
+                   onerror="this.src='https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766726716955-9ot7tl3d.jpeg';" />
               <div class="card-body">
                 <div class="card-title">What we do</div>
                 <div class="meta">
@@ -1678,7 +1788,7 @@
 
   <footer>
     <div class="container">
-      <div class="footer-cta">
+      <div class="footer-cta reveal">
         <div>
           <h3>Verified stays + trusted movement — in one WhatsApp thread.</h3>
           <p>Confirm availability, request a quote, and coordinate logistics — fast.</p>
@@ -1694,10 +1804,10 @@
       </div>
 
       <div class="footer-grid">
-        <div>
+        <div class="reveal">
           <div class="brandline">
             <div class="logo-wrap" aria-hidden="true">
-              <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+              <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" onerror="this.src='assets/images/larmah-header.jpeg';" />
             </div>
             <div class="brandtext">
               <div class="brandname">Larmah Enterprise</div>
@@ -1717,7 +1827,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="reveal">
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
             <a href="index.html#home">Home</a>
@@ -1728,7 +1838,7 @@
           </div>
         </div>
 
-        <div>
+        <div class="reveal">
           <div class="footer-col-title">Contact</div>
 
           <div class="contact-stack">
@@ -1782,6 +1892,10 @@
     <button class="wa-pill" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
       WhatsApp Support
     </button>
+    <button class="wa-btn" type="button" aria-label="Open WhatsApp support"
+      onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+      <i class="fa-brands fa-whatsapp"></i>
+    </button>
   </div>
 
   <script>
@@ -1790,12 +1904,20 @@
 
     // Mobile menu
     const overlay = document.getElementById("overlay");
+    const menuBtn = document.querySelector(".menu-btn");
     function toggleMenu(open){
       overlay.classList.toggle("open", !!open);
       overlay.setAttribute("aria-hidden", open ? "false" : "true");
+      if(menuBtn) menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      if(!open){
+        try{ menuBtn && menuBtn.focus(); }catch{}
+      }
     }
     overlay.addEventListener("click", (e) => {
       if(e.target === overlay) toggleMenu(false);
+    });
+    window.addEventListener("keydown", (e) => {
+      if(e.key === "Escape" && overlay.classList.contains("open")) toggleMenu(false);
     });
 
     // Helpers (globals used by app.js featured renderer)
@@ -1821,7 +1943,7 @@
     }
 
     // Theme
-    const THEME_KEY = "larmah_theme_v6";
+    const THEME_KEY = "larmah_theme_v7";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
       try{ localStorage.setItem(THEME_KEY, theme); }catch{}
@@ -1948,7 +2070,7 @@
     }
     window.submitLogistics = submitLogistics;
 
-    // HERO carousel
+    // HERO carousel (use real assets first; keep a safe fallback)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1959,7 +2081,7 @@
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766726716955-9ot7tl3d.jpeg", icon:"fa-house", label:"Real Estate", sub:"Verified listings and premium stays." },
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792878193-vc0a7pto.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clean confirmations." },
       { img:"https://mskbumvopqnrhddfycfd.supabase.co/storage/v1/object/public/larmah-media/listings/1766792082908-wa7yd8n5.jpeg", icon:"fa-truck-fast", label:"Logistics", sub:"Trusted movement with clear coordination." },
-      { img:"https://source.unsplash.com/1600x1000/?logistics,delivery,truck&sig=515", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
+      { img:"assets/images/larmah-header.jpeg", icon:"fa-boxes-stacked", label:"Freight Support", sub:"Movement support for larger loads." }
     ];
 
     let heroIdx = 0;
@@ -1974,13 +2096,17 @@
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
       heroMedia.classList.add("is-fading");
       runHeroProgress();
-      setTimeout(() => {
+
+      const apply = () => {
         heroImg.src = s.img;
         heroImg.alt = s.label;
+        heroImg.onerror = () => { heroImg.src = "assets/images/larmah-header.jpeg"; };
         heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
         heroSub.textContent = s.sub;
         setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
-      }, 220);
+      };
+
+      setTimeout(apply, 220);
     }
 
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1995,13 +2121,14 @@
       setHero(0);
     }
 
-    // ===== Featured placeholders + globals expected by your app.js featured loader
+    // Featured placeholders + globals expected by your app.js featured loader
     const featEls = [document.getElementById("feat0"), document.getElementById("feat1"), document.getElementById("feat2")];
     let featStart = 0;
 
     function renderFeaturedPlaceholder(){
-      const ph = (i) => `
-        <img src="assets/images/larmah-header.jpeg" alt="Featured listing" loading="lazy" decoding="async">
+      const ph = () => `
+        <img src="assets/images/larmah-header.jpeg" alt="Featured listing" loading="lazy" decoding="async"
+             onerror="this.src='assets/images/larmah-favicon.jpeg';">
         <div class="card-body">
           <div class="card-title">Loading featured…</div>
           <div class="meta">
@@ -2014,15 +2141,14 @@
           </div>
         </div>
       `;
-      featEls.forEach((el, i) => { if(el) el.innerHTML = ph(i); });
+      featEls.forEach((el) => { if(el) el.innerHTML = ph(); });
     }
     renderFeaturedPlaceholder();
 
     // Boot DB featured safely after app.js loads
     async function bootFeaturedDB(){
-      // wait for app.js to create supabase + featured loader
       for(let i=0;i<30;i++){
-        if(typeof window.loadFeaturedFromDB === "function" || (window.LARMAH?.supabase?.ensure && window.supabaseClient)) break;
+        if(typeof window.loadFeaturedFromDB === "function") break;
         await new Promise(r => setTimeout(r, 150));
       }
       if(typeof window.loadFeaturedFromDB === "function"){
@@ -2032,6 +2158,25 @@
     document.addEventListener("DOMContentLoaded", () => {
       if(getRoute() === "home") bootFeaturedDB();
     });
+
+    // Reveal on scroll
+    function bootReveal(){
+      const els = Array.from(document.querySelectorAll(".reveal"));
+      if(!("IntersectionObserver" in window)){
+        els.forEach(el => el.classList.add("show"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if(en.isIntersecting){
+            en.target.classList.add("show");
+            io.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      els.forEach(el => io.observe(el));
+    }
+    document.addEventListener("DOMContentLoaded", bootReveal);
 
     // Expose globals used by app.js-rendered featured cards
     window.toggleMenu = toggleMenu;
