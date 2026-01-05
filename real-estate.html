@@ -1199,20 +1199,20 @@
   </main>
 
   <!-- Footer (kept) -->
-   <!-- Footer (synced current footer) -->
   <footer>
     <div class="container">
       <div class="footer-cta">
         <div>
-          <h3>Verified stays + trusted movement — in one WhatsApp thread.</h3>
-          <p>Confirm availability, request a quote, and coordinate logistics — fast.</p>
+          <h3>Verified stays. Clear confirmation. WhatsApp-first.</h3>
+          <p>Confirm availability and coordinate logistics — in one chat.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+          <button class="btn solid" type="button"
+            onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </button>
-          <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
           <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
+          <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
         </div>
       </div>
 
@@ -1222,14 +1222,14 @@
             <div class="logo-wrap" aria-hidden="true">
               <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
             </div>
-            <div class="brandtext">
+            <div style="min-width:0;">
               <div class="brandname">Larmah Enterprise</div>
-              <div class="tagline">RC: 9127113</div>
+              <div class="tagline">Connecting People, Business & Possibilities • RC: 9127113</div>
             </div>
           </div>
 
           <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
-            Verified real estate and logistics support.
+            Verified real estate, shortlets, and logistics support — with clean references and WhatsApp-first coordination.
           </div>
 
           <div class="social" aria-label="Social links">
@@ -1243,7 +1243,6 @@
         <div>
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
-            <a href="index.html#home">Home</a>
             <a href="index.html#about">About</a>
             <a href="real-estate.html">Real Estate</a>
             <a href="logistics.html">Logistics</a>
@@ -1281,9 +1280,11 @@
           </div>
 
           <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
+            <button class="btn small solid" type="button"
+              onclick="openWA(buildMsg('Real Estate Enquiry', { Message:'Hello Larmah, I need a verified listing.' }))">
               <i class="fa-brands fa-whatsapp"></i> Chat Now
             </button>
+
             <a class="btn small primary" href="premium.html">
               <i class="fa-solid fa-crown"></i> Go Premium
             </a>
@@ -1292,7 +1293,7 @@
       </div>
 
       <div class="footer-bottom">
-        <div>© <span id="year2"></span> 2026 Larmah Enterprise. All rights reserved.</div>
+        <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
         <div class="footer-badges">
           <span class="badge"><i class="fa-solid fa-shield-halved"></i> Trust-first</span>
           <span class="badge"><i class="fa-solid fa-hashtag"></i> Traceable refs</span>
@@ -1301,18 +1302,6 @@
       </div>
     </div>
   </footer>
-
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <!-- Floating WhatsApp -->
-  <div class="wa-float" aria-label="Floating WhatsApp support">
-    <button class="wa-pill" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-      WhatsApp Support
-    </button>
-    <button class="wa-btn" type="button" aria-label="Chat on WhatsApp" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-      <i class="fa-brands fa-whatsapp"></i>
-    </button>
-  </div>
 
   <!-- Floating WhatsApp -->
   <div class="wa-float" aria-label="Floating WhatsApp support">
