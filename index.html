@@ -1,13 +1,3 @@
-<!-- =========================
-  index.html (FULL — UPDATED)
-  ✅ Featured cards: NO “View more” + NO Modal
-  ✅ Each Featured item has a “View” button:
-      - Real Estate → real-estate.html?item=<id>
-      - Logistics  → logistics.html?item=<id>
-  ✅ Fixes common runtime error: openFeatModalById is not defined (removed)
-  ✅ Keeps: filters + pagination + image carousel + WhatsApp enquire
-  ✅ Includes: current synced footer + floating WhatsApp
-========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
 <head>
@@ -1195,15 +1185,10 @@
                 <button class="btn primary" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
                   <i class="fa-solid fa-truck-fast"></i> Book Logistics
                 </button>
-                <button class="btn ghost" type="button" onclick="openWA(buildMsg('General Enquiry', { Topic:'Real Estate / Logistics', Message:'Hello Larmah, I need assistance.' }))">
-                  <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-                </button>
               </div>
 
               <div class="live-row" aria-live="polite">
                 <div class="live-dot"><i class="fa-solid fa-circle"></i> Fast responses available</div>
-                <div class="trust-mini"><i class="fa-solid fa-receipt"></i> Clear pricing & references</div>
-                <div class="trust-mini"><i class="fa-solid fa-user-shield"></i> Scam-resistant flow</div>
               </div>
 
               <div class="chips" aria-label="Highlights">
