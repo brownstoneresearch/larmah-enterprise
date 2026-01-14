@@ -1,16 +1,15 @@
 <!-- =========================
   index.html (FULL — COMPLETE UPDATED)
-  ✅ Highlight images ALWAYS visible + preloaded + safe fallback
-  ✅ All .jpg changed to .jpeg (no .jpg anywhere)
+  ✅ FEATURE HIGHLIGHT (HERO) DISPLAY FIXED:
+     - Preloads highlight images
+     - Cross-fade ONLY after next image is preloaded (no “dark/blank” state)
+     - Strong background placeholder + guaranteed onerror fallback
+  ✅ All .jpg changed to .jpeg
   ✅ Featured cards: NO “View more” + NO Modal
   ✅ Each Featured item has a “View” button:
       - Real Estate → real-estate.html?item=<id>
       - Logistics  → logistics.html?item=<id>
-  ✅ Hero highlight images (lowercase filenames recommended):
-      - assets/images/verified-listing.jpeg
-      - assets/images/featured-listings.jpeg
-      - assets/images/seamless-logistics-support.jpeg
-  ✅ Includes: current synced footer + floating WhatsApp
+  ✅ Footer + Floating WhatsApp included
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -50,9 +49,8 @@
   <!-- Performance -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
-  <!-- ✅ Preload highlight images (prevents blank/flicker) -->
+  <!-- ✅ Preload highlight images -->
   <link rel="preload" href="assets/images/verified-listing.jpeg" as="image" />
   <link rel="preload" href="assets/images/featured-listings.jpeg" as="image" />
   <link rel="preload" href="assets/images/seamless-logistics-support.jpeg" as="image" />
@@ -77,7 +75,6 @@
       --ease: cubic-bezier(.2,.8,.2,1);
       --shadow: 0 18px 50px rgba(0,0,0,.42);
       --shadow2: 0 12px 34px rgba(0,0,0,.30);
-
       --safeB: env(safe-area-inset-bottom, 0px);
       --safeT: env(safe-area-inset-top, 0px);
       --safeL: env(safe-area-inset-left, 0px);
@@ -100,11 +97,9 @@
       --ctaLine: rgba(255,255,255,.12);
       --good: rgba(0,217,129,.95);
       --bad: rgba(255,90,103,.95);
-
       --logoGlow: 0 0 22px rgba(212,175,55,.14);
       --logoRing: rgba(255,255,255,.12);
       --logoBg: rgba(255,255,255,.03);
-
       --focus: rgba(245,213,122,.28);
     }
 
@@ -124,14 +119,11 @@
       --ctaLine: rgba(10,14,26,.10);
       --good: rgba(0,140,90,.92);
       --bad: rgba(200,34,60,.90);
-
       --shadow: 0 16px 46px rgba(0,0,0,.12);
       --shadow2: 0 10px 26px rgba(0,0,0,.10);
-
       --logoGlow: 0 0 0 rgba(0,0,0,0);
       --logoRing: rgba(10,14,26,.10);
       --logoBg: rgba(255,255,255,.65);
-
       --focus: rgba(212,175,55,.26);
     }
 
@@ -178,14 +170,7 @@
     }
     .skip:focus{ left: 12px; outline: none; }
 
-    :focus-visible{
-      outline: 2px solid var(--focus);
-      outline-offset: 3px;
-      border-radius: 12px;
-    }
-
-    .page{ display:none; }
-    .page.is-active{ display:block; }
+    :focus-visible{ outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 12px; }
 
     header{
       position:sticky;
@@ -195,23 +180,11 @@
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line2);
     }
-    .header-inner{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      padding: 12px 0;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width: 220px;
-    }
-
+    .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
+    .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
     .logo-wrap{
       position:relative;
-      width:44px;
-      height:44px;
+      width:44px; height:44px;
       border-radius: 14px;
       padding: 2px;
       background:
@@ -223,70 +196,24 @@
       flex: 0 0 auto;
       isolation:isolate;
     }
-    .logo-wrap::after{
-      content:"";
-      position:absolute;
-      inset:-10px;
-      background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
-      filter: blur(12px);
-      opacity: .8;
-      pointer-events:none;
-      z-index:-1;
-    }
     .logo-wrap img{
-      width:100%;
-      height:100%;
+      width:100%; height:100%;
       object-fit: cover;
       display:block;
       border-radius: 12px;
       border: 1px solid var(--line2);
       background: var(--logoBg);
     }
-    .brand .btxt{
-      display:flex;
-      flex-direction:column;
-      line-height:1.05;
-      gap:4px;
-      min-width:0;
-    }
-    .brand .bname{
-      font-weight: 950;
-      letter-spacing:-0.2px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .brand .bsub{
-      font-size:.86rem;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
+    .btxt{ display:flex; flex-direction:column; line-height:1.05; gap:4px; min-width:0; }
+    .bname{ font-weight: 950; letter-spacing:-0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .bsub{ font-size:.86rem; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
     nav{ margin-left:auto; }
-    nav ul{
-      display:flex;
-      list-style:none;
-      gap:18px;
-      padding:0; margin:0;
-      align-items:center;
-    }
-    .nav-link{
-      color: var(--text);
-      opacity:.9;
-      font-weight: 850;
-      font-size: .95rem;
-    }
+    nav ul{ display:flex; list-style:none; gap:18px; padding:0; margin:0; align-items:center; }
+    .nav-link{ color: var(--text); opacity:.9; font-weight: 850; font-size: .95rem; }
     .nav-link:hover{ color: var(--gold); opacity:1; }
 
-    .header-actions{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      margin-left: 10px;
-    }
-
+    .header-actions{ display:flex; gap:10px; align-items:center; margin-left: 10px; }
     .menu-btn{
       display:none;
       border: 1px solid var(--line);
@@ -297,8 +224,7 @@
       cursor:pointer;
     }
     .icon-btn{
-      width: 42px;
-      height: 42px;
+      width: 42px; height: 42px;
       border-radius: 12px;
       border: 1px solid var(--line);
       background: var(--panel);
@@ -317,7 +243,7 @@
       .header-actions{ margin-left: auto; }
       body{ padding-bottom: calc(88px + var(--safeB)); }
       .brand{ min-width: 0; }
-      .brand .bsub{ display:none; }
+      .bsub{ display:none; }
       .logo-wrap{ width:40px; height:40px; }
       .icon-btn{ width:40px; height:40px; }
     }
@@ -348,7 +274,6 @@
       margin-bottom: 10px;
       gap: 10px;
     }
-    .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
     .sheet a{
       display:flex;
       align-items:center;
@@ -362,12 +287,7 @@
       margin-bottom: 10px;
       font-weight: 900;
     }
-    .sheet-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 8px;
-    }
+    .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 8px; }
     .sheet-actions .btn{ flex:1; min-width: 0; }
 
     .btn{
@@ -383,7 +303,7 @@
       color: var(--text);
       cursor:pointer;
       font-weight: 950;
-      transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
+      transition: transform .16s var(--ease), filter .16s var(--ease);
       text-decoration:none;
       white-space: nowrap;
       user-select:none;
@@ -398,21 +318,6 @@
     .btn.ghost{ background: transparent; border-color: var(--line2); }
     .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
 
-    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 88%, transparent);
-      font-weight: 900;
-      font-size: .92rem;
-    }
-    .chip i{ color: var(--gold); }
-
     .hero{ padding: 18px 0 0; }
     .hero-box{
       border-radius: var(--radius2);
@@ -423,82 +328,73 @@
       position:relative;
       isolation:isolate;
     }
-    .hero-box::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.20), transparent 60%),
-        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
-        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.10), transparent 62%);
-      pointer-events:none;
-      z-index:-1;
-    }
     .hero-row{
       display:grid;
       gap: 14px;
       padding: 16px;
       align-items:start;
     }
-    @media (min-width: 980px){
-      .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; }
-    }
+    @media (min-width: 980px){ .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; } }
 
-    .kicker{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      color: var(--muted);
-      font-weight: 850;
-      letter-spacing: .1px;
-      margin-bottom: 10px;
-    }
+    .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; margin-bottom: 10px; }
     .kicker .dot{ opacity:.65; }
-    h1{
-      margin: 6px 0 10px;
-      font-size: clamp(2.0rem, 4vw, 3.05rem);
-      line-height: 1.02;
-      letter-spacing: -0.6px;
-    }
-    .gold{
-      background: linear-gradient(180deg, var(--gold2), var(--gold));
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .lead{
-      margin: 0;
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.55;
-    }
-    .hero-actions{
-      display:flex; gap:12px; flex-wrap:wrap;
-      margin-top: 12px;
-    }
+    h1{ margin: 6px 0 10px; font-size: clamp(2.0rem, 4vw, 3.05rem); line-height: 1.02; letter-spacing: -0.6px; }
+    .gold{ background: linear-gradient(180deg, var(--gold2), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lead{ margin: 0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
+    .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
 
-    .live-row{
-      display:flex; gap:12px; flex-wrap:wrap; align-items:center;
-      margin-top: 12px;
+    /* ✅ PERFECT highlight display: strong placeholder + stable transitions */
+    .hero-media{
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(700px 300px at 20% 20%, rgba(212,175,55,.18), transparent 60%),
+        radial-gradient(700px 300px at 80% 30%, rgba(0,217,129,.12), transparent 62%),
+        color-mix(in oklab, var(--bg2) 72%, #000 28%);
+      position:relative;
+      min-height: 340px;
+      isolation:isolate;
     }
-    .live-dot{
-      display:inline-flex; align-items:center; gap:8px;
-      font-weight: 950;
-      font-size: .86rem;
-      color: var(--good);
+    .hero-media img{
+      width:100%;
+      height: clamp(260px, 42vw, 360px);
+      object-fit: cover;
+      display:block;
+      opacity:1;
+      transform: scale(1.01);
+      transition: opacity .22s var(--ease), transform .55s var(--ease);
     }
-    .live-dot i{ font-size: 9px; }
-    .trust-mini{
-      display:inline-flex; align-items:center; gap:8px;
-      font-weight: 900;
-      font-size: .86rem;
-      color: var(--muted2);
-      padding: 8px 10px;
+    /* Only a subtle dim, never “blank” */
+    .hero-media.is-fading img{ opacity:.70; transform: scale(1.02); }
+
+    .hero-media .cap{
+      position:absolute;
+      left: 12px; right: 12px; bottom: 10px;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--ctaLine);
+      background: var(--ctaBg);
+      backdrop-filter: blur(10px);
+    }
+    .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
+    .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
+    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
+    .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.80); transition: width 5s linear; }
+    .hero-bar.run{ width: 100%; }
+
+    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
+    .chip{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 10px 12px;
       border-radius: 999px;
       border: 1px solid var(--line2);
       background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 88%, transparent);
+      font-weight: 900;
+      font-size: .92rem;
     }
-    .trust-mini i{ color: var(--gold); }
+    .chip i{ color: var(--gold); }
 
     .switcher{
       margin-top: 14px;
@@ -541,12 +437,7 @@
     }
     .seg button i{ color: var(--gold); }
 
-    .switch-right{
-      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
-      color: var(--muted);
-      font-weight: 850;
-      font-size: .92rem;
-    }
+    .switch-right{ color: var(--muted); font-weight: 850; font-size: .92rem; }
     .switch-right b{ color: var(--text); }
 
     .form-wrap{ margin-top: 10px; }
@@ -559,7 +450,6 @@
       padding: 12px;
     }
     .form.is-active{ display:block; }
-
     .form-grid{
       display:grid;
       gap: 10px;
@@ -569,12 +459,7 @@
     @media (max-width: 520px){ .form-grid{ grid-template-columns: 1fr; } }
 
     .field{ display:flex; flex-direction:column; gap:6px; }
-    label{
-      font-size: .78rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--muted2);
-    }
+    label{ font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
     input, select{
       border-radius: 14px;
       border: 1px solid var(--line);
@@ -587,44 +472,6 @@
     }
     input::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
     .form-actions{ margin-top: 12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-
-    /* ✅ HERO highlight container: strong fallback background */
-    .hero-media{
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(700px 300px at 20% 20%, rgba(212,175,55,.14), transparent 60%),
-        radial-gradient(700px 300px at 80% 30%, rgba(0,217,129,.10), transparent 62%),
-        color-mix(in oklab, var(--bg2) 72%, #000 28%);
-      position:relative;
-      min-height: 320px;
-      isolation:isolate;
-    }
-    .hero-media img{
-      width:100%;
-      height: clamp(240px, 42vw, 340px);
-      object-fit: cover;
-      display:block;
-      opacity:1;
-      transform: scale(1.01);
-      transition: opacity .55s var(--ease), transform .9s var(--ease);
-    }
-    .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
-    .hero-media .cap{
-      position:absolute;
-      left: 12px; right: 12px; bottom: 10px;
-      padding: 10px 10px;
-      border-radius: 12px;
-      border: 1px solid var(--ctaLine);
-      background: var(--ctaBg);
-      backdrop-filter: blur(10px);
-    }
-    .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
-    .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
-    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
-    .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
-    .hero-bar.run{ width: 100%; }
 
     .section{ padding: 18px 0; }
     .section-head{
@@ -648,11 +495,7 @@
       box-shadow: var(--shadow2);
     }
 
-    .grid{
-      display:grid;
-      gap: 14px;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+    .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
     @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
 
@@ -664,12 +507,7 @@
       box-shadow: var(--shadow2);
       transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease), filter .18s var(--ease);
     }
-    .card:hover{
-      transform: translateY(-2px);
-      border-color: color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
-      background: color-mix(in oklab, var(--panel) 94%, white 6%);
-      filter: brightness(1.02);
-    }
+    .card:hover{ transform: translateY(-2px); border-color: color-mix(in oklab, var(--gold) 30%, var(--line) 70%); filter: brightness(1.02); }
 
     .media{
       width: calc(100% - 24px);
@@ -684,15 +522,14 @@
       user-select:none;
     }
     .media img{
-      width:100%;
-      height:100%;
+      width:100%; height:100%;
       object-fit:cover;
       display:block;
-      transform: scale(1.01);
       opacity:.95;
-      transition: opacity .45s var(--ease), transform .7s var(--ease);
+      transition: opacity .25s var(--ease), transform .45s var(--ease);
+      transform: scale(1.01);
     }
-    .media.is-fading img{ opacity:.18; transform: scale(1.03); }
+    .media.is-fading img{ opacity:.60; transform: scale(1.02); }
     .media::after{
       content:"";
       position:absolute; inset:0;
@@ -700,13 +537,8 @@
       pointer-events:none;
       z-index:1;
     }
-    .media-nav{
-      position:absolute; inset:0;
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 0 10px;
-      pointer-events:none;
-      z-index:2;
-    }
+
+    .media-nav{ position:absolute; inset:0; display:flex; align-items:center; justify-content:space-between; padding: 0 10px; pointer-events:none; z-index:2; }
     .media-btn{
       width:34px; height:34px; border-radius:12px;
       background: rgba(0,0,0,0.35);
@@ -718,72 +550,21 @@
       backdrop-filter: blur(6px);
       transition: transform .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease);
     }
-    .media-btn:hover{
-      background: rgba(0,0,0,0.55);
-      border-color: rgba(212,175,55,.30);
-      transform: translateY(-1px);
-    }
-    .media-dots{
-      position:absolute; left:0; right:0; bottom:10px;
-      display:flex; justify-content:center; gap:6px;
-      pointer-events:none;
-      z-index:2;
-    }
-    .media-dot{
-      width:7px; height:7px; border-radius:999px;
-      background: rgba(255,255,255,0.35);
-      border: 1px solid rgba(255,255,255,0.25);
-    }
+    .media-btn:hover{ background: rgba(0,0,0,0.55); border-color: rgba(212,175,55,.30); transform: translateY(-1px); }
+    .media-dots{ position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:6px; pointer-events:none; z-index:2; }
+    .media-dot{ width:7px; height:7px; border-radius:999px; background: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.25); }
     .media-dot.active{ background: rgba(255,255,255,0.92); }
 
     .card-body{ padding: 12px; }
-    .title{
-      font-weight: 950;
-      margin: 2px 0 8px;
-      letter-spacing:-0.2px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .desc{
-      margin:0;
-      color: var(--muted);
-      line-height:1.55;
-      font-size: .96rem;
-      display:-webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow:hidden;
-    }
+    .title{ font-weight: 950; margin: 2px 0 8px; letter-spacing:-0.2px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .desc{ margin:0; color: var(--muted); line-height:1.55; font-size: .96rem; display:-webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow:hidden; }
     .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
     .meta-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top: 10px; }
-    .chip2{
-      display:inline-flex; gap:8px; align-items:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 82%, transparent);
-      font-weight: 850;
-      font-size: .84rem;
-    }
+    .chip2{ display:inline-flex; gap:8px; align-items:center; padding: 7px 10px; border-radius: 999px; border: 1px solid var(--line2); background: var(--panel2); font-weight: 850; font-size: .84rem; }
     .actions-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
     .actions-row .btn{ flex: 1; }
-    @media (max-width:520px){
-      .actions-row .btn{ width:100%; flex:unset; }
-    }
-    .star{
-      display:inline-flex; gap:6px; align-items:center;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(212,175,55,.28);
-      background: rgba(212,175,55,.10);
-      color: var(--gold2);
-      font-weight: 900;
-      font-size: .78rem;
-      letter-spacing: .02em;
-    }
+    @media (max-width:520px){ .actions-row .btn{ width:100%; flex:unset; } }
+    .star{ display:inline-flex; gap:6px; align-items:center; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(212,175,55,.28); background: rgba(212,175,55,.10); color: var(--gold2); font-weight: 900; font-size: .78rem; }
 
     .feat-controls{
       border-radius: var(--radius2);
@@ -798,39 +579,10 @@
       justify-content:space-between;
       margin-bottom: 12px;
     }
-    .feat-left{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:flex-end;
-      min-width: 0;
-      flex: 1 1 auto;
-    }
-    .feat-right{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-      flex: 0 0 auto;
-    }
+    .feat-left{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; min-width: 0; flex: 1 1 auto; }
+    .feat-right{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; flex: 0 0 auto; }
     .feat-field{ display:flex; flex-direction:column; gap:6px; min-width: 190px; }
     .feat-field label{ font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color: var(--muted2); }
-    .feat-field input, .feat-field select{
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--text);
-      padding: 12px;
-      min-height: 46px;
-      outline:none;
-      font-size:16px;
-    }
-    @media (max-width:520px){
-      .feat-field{ min-width: 100%; }
-      .feat-right{ width:100%; }
-      .feat-right .btn{ width:100%; }
-    }
 
     .pager{
       margin-top: 14px;
@@ -845,22 +597,8 @@
       align-items:center;
       justify-content:space-between;
     }
-    .pager-left{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      color: var(--muted);
-      font-weight: 850;
-      font-size: .92rem;
-    }
-    .pager-right{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-    }
+    .pager-left{ color: var(--muted); font-weight: 850; font-size: .92rem; }
+    .pager-right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
     .pager-btn{
       min-height: 40px;
       padding: 10px 12px;
@@ -870,15 +608,9 @@
       color: var(--text);
       font-weight: 950;
       cursor:pointer;
-      transition: transform .16s var(--ease), filter .16s var(--ease);
     }
-    .pager-btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
-    .pager-btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; }
-    .pager-btn.active{
-      background: rgba(212,175,55,.16);
-      border-color: rgba(212,175,55,.35);
-      color: var(--gold2);
-    }
+    .pager-btn[disabled]{ opacity:.45; cursor:not-allowed; }
+    .pager-btn.active{ background: rgba(212,175,55,.16); border-color: rgba(212,175,55,.35); color: var(--gold2); }
     .pager-ellipsis{ padding: 8px 6px; color: var(--muted2); font-weight: 950; user-select:none; }
 
     footer{
@@ -916,14 +648,8 @@
     .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
     .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
     .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
-
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
-    .footer-links a{
-      display:block;
-      padding: 6px 0;
-      color: color-mix(in oklab, var(--text) 84%, transparent);
-      font-weight: 600;
-    }
+    .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
     .footer-links a:hover{ color: var(--gold); }
 
     .contact-stack{ display:grid; gap: 10px; }
@@ -937,7 +663,7 @@
       background: var(--panel2);
     }
     .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
-    .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
+    .contact-chip .txt{ font-weight: 900; }
     .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
 
     .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
@@ -949,11 +675,7 @@
       background: var(--panel2);
       color: var(--text);
     }
-    .social a:hover{
-      color: #111;
-      background: var(--gold);
-      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-    }
+    .social a:hover{ color: #111; background: var(--gold); border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
 
     .footer-bottom{
       border-top: 1px solid var(--line2);
@@ -967,18 +689,7 @@
       font-size: .9rem;
     }
     .footer-badges{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
-    .badge{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 80%, transparent);
-      font-weight: 850;
-      font-size: .84rem;
-    }
+    .badge{ display:inline-flex; gap:8px; align-items:center; padding: 7px 10px; border-radius: 999px; border: 1px solid var(--line2); background: var(--panel2); font-weight: 850; font-size: .84rem; }
     .badge i{ color: var(--gold); }
 
     .toast{
@@ -1039,8 +750,6 @@
     @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
 
     @media (max-width: 620px){
-      .chips{ flex-wrap: nowrap; overflow-x:auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; margin-right: -10px; }
-      .chip{ flex: 0 0 auto; }
       .footer-cta > div:last-child{ width:100%; }
       .footer-cta > div:last-child .btn{ width:100%; }
     }
@@ -1063,19 +772,19 @@
             <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
           </div>
         </div>
-
         <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <a href="#about" onclick="toggleMenu(false)"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="#home" onclick="toggleMenu(false)"><span><i class="fa-solid fa-house" style="color:var(--gold)"></i> Home</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="#browse" onclick="toggleMenu(false)"><span><i class="fa-solid fa-star" style="color:var(--gold)"></i> Featured</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
-        <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
+        <button class="btn primary" type="button" onclick="toggleTheme()">
           <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
         </button>
         <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
@@ -1100,7 +809,7 @@
       <nav aria-label="Primary navigation">
         <ul>
           <li><a class="nav-link" href="#home">Home</a></li>
-          <li><a class="nav-link" href="#about">About</a></li>
+          <li><a class="nav-link" href="#browse">Featured</a></li>
           <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link" href="premium.html">Premium</a></li>
@@ -1111,7 +820,6 @@
         <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
           <i class="fa-solid fa-circle-half-stroke"></i>
         </button>
-
         <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -1120,256 +828,235 @@
   </header>
 
   <main id="main" class="container" tabindex="-1">
-    <div class="page is-active" id="page-home" data-page="home">
-      <section class="hero" id="home" aria-label="Hero">
-        <div class="hero-box">
-          <div class="hero-row">
-            <div>
-              <div class="kicker" aria-label="Trust badges">
-                <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span><span class="dot">•</span>
-                <span><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span><span class="dot">•</span>
-                <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
-              </div>
-
-              <h1>Verified <span class="gold">stays</span> and trusted <span class="gold">movement</span> across Nigeria.</h1>
-
-              <p class="lead">
-                From premium shortlets and verified listings to dispatch, pickups, and freight coordination — Larmah runs a scam-resistant,
-                fast-confirmation workflow that keeps your bookings and deliveries clean, clear, and coordinated.
-              </p>
-
-              <div class="hero-actions">
-                <button class="btn solid" type="button" onclick="scrollToEl('#browse')"><i class="fa-solid fa-sparkles"></i> Browse Featured</button>
-                <button class="btn primary" type="button" onclick="setMode('logistics'); scrollToEl('#quick')">
-                  <i class="fa-solid fa-truck-fast"></i> Book Logistics
-                </button>
-                <button class="btn ghost" type="button" onclick="openWA(buildMsg('General Enquiry', { Topic:'Real Estate / Logistics', Message:'Hello Larmah, I need assistance.' }))">
-                  <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-                </button>
-              </div>
-
-              <div class="live-row" aria-live="polite">
-                <div class="live-dot"><i class="fa-solid fa-circle"></i> Fast responses available</div>
-                <div class="trust-mini"><i class="fa-solid fa-receipt"></i> Clear pricing & references</div>
-                <div class="trust-mini"><i class="fa-solid fa-user-shield"></i> Scam-resistant flow</div>
-              </div>
-
-              <div class="chips" aria-label="Highlights">
-                <div class="chip"><i class="fa-solid fa-house"></i> Shortlets • Rentals • Sales</div>
-                <div class="chip"><i class="fa-solid fa-motorcycle"></i> Dispatch • Same-day</div>
-                <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage support</div>
-              </div>
-
-              <div class="switcher" id="quick" aria-label="Quick request switcher">
-                <div class="seg" role="tablist" aria-label="Choose quick request">
-                  <button type="button" class="is-active" id="tabRealEstate" role="tab" aria-selected="true" onclick="setMode('realestate')">
-                    <i class="fa-solid fa-house"></i> Real Estate
-                  </button>
-                  <button type="button" id="tabLogistics" role="tab" aria-selected="false" onclick="setMode('logistics')">
-                    <i class="fa-solid fa-truck-fast"></i> Logistics
-                  </button>
-                </div>
-                <div class="switch-right"><span>Tip: <b>budget + location</b> = faster matching.</span></div>
-              </div>
-
-              <div class="form-wrap" aria-label="Quick forms">
-                <!-- REAL ESTATE FORM -->
-                <div class="form is-active" id="formRealEstate" role="tabpanel" aria-labelledby="tabRealEstate">
-                  <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-                    <div style="font-weight:950; letter-spacing:-0.2px;">
-                      Shortlet / Stay Request
-                      <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Check availability, confirm price, reserve via WhatsApp.</div>
-                    </div>
-                    <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> View All</a>
-                  </div>
-
-                  <div class="form-grid" style="margin-top:12px;">
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="checkin">Check-in</label>
-                      <input id="checkin" type="date" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="checkout">Check-out</label>
-                      <input id="checkout" type="date" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="location">Location</label>
-                      <select id="location">
-                        <option value="Any" selected>Any</option>
-                        <option value="Ikoyi">Ikoyi</option>
-                        <option value="Lekki">Lekki</option>
-                        <option value="Victoria Island">Victoria Island</option>
-                        <option value="Yaba">Yaba</option>
-                        <option value="Mainland">Mainland</option>
-                        <option value="Abuja">Abuja</option>
-                      </select>
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="budget">Budget</label>
-                      <input id="budget" type="text" placeholder="e.g., ₦120k/night" />
-                    </div>
-                  </div>
-
-                  <div class="form-actions">
-                    <button class="btn solid" type="button" onclick="submitRealEstate()">
-                      <i class="fa-brands fa-whatsapp"></i> Request Availability
-                    </button>
-                    <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
-                      <i class="fa-brands fa-whatsapp"></i> Chat Support
-                    </button>
-                  </div>
-                </div>
-
-                <!-- LOGISTICS FORM -->
-                <div class="form" id="formLogistics" role="tabpanel" aria-labelledby="tabLogistics">
-                  <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-                    <div style="font-weight:950; letter-spacing:-0.2px;">
-                      Logistics / Dispatch Request
-                      <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Get a quote, assign rider/vehicle, track updates via WhatsApp.</div>
-                    </div>
-                    <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck"></i> Logistics Page</a>
-                  </div>
-
-                  <div class="form-grid" style="margin-top:12px;">
-                    <div class="field" style="grid-column: span 4;">
-                      <label for="pickup">Pickup location</label>
-                      <input id="pickup" type="text" placeholder="e.g., Lekki Phase 1" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 4;">
-                      <label for="dropoff">Drop-off location</label>
-                      <input id="dropoff" type="text" placeholder="e.g., Victoria Island" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="pickDate">Date</label>
-                      <input id="pickDate" type="date" />
-                    </div>
-
-                    <div class="field" style="grid-column: span 2;">
-                      <label for="vehicle">Vehicle</label>
-                      <select id="vehicle">
-                        <option value="Dispatch Bike" selected>Dispatch Bike</option>
-                        <option value="Car">Car</option>
-                        <option value="Van">Van</option>
-                        <option value="Mini Truck">Mini Truck</option>
-                        <option value="Truck / Haulage">Truck / Haulage</option>
-                      </select>
-                    </div>
-
-                    <div class="field" style="grid-column: span 4;">
-                      <label for="logNotes">Notes</label>
-                      <input id="logNotes" type="text" placeholder="Size/weight, urgency, landmarks..." />
-                    </div>
-                  </div>
-
-                  <div class="form-actions">
-                    <button class="btn solid" type="button" onclick="submitLogistics()">
-                      <i class="fa-brands fa-whatsapp"></i> Request Quote
-                    </button>
-                    <button class="btn primary" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
-                      <i class="fa-brands fa-whatsapp"></i> Chat Support
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div style="margin-top:10px; color:var(--muted); font-size:.92rem;">
-                Pro tip: If you’re in a rush, send “URGENT” + your details on WhatsApp for priority routing.
-              </div>
-            </div>
-
-            <!-- ✅ Highlight images (visible, preloaded, with guaranteed fallback) -->
-            <aside class="hero-media" id="heroMedia" aria-label="Highlights carousel">
-              <img
-                id="heroImg"
-                src="assets/images/verified-listing.jpeg"
-                alt="Verified Listings"
-                decoding="async"
-                fetchpriority="high"
-                loading="eager"
-                onerror="this.src='assets/images/larmah-header.jpeg'; this.onerror=null;"
-              />
-              <div class="cap">
-                <div class="hero-tag" id="heroTag">
-                  <i class="fa-solid fa-building" style="color:var(--gold)"></i> Verified Listings
-                </div>
-                <div class="hero-sub" id="heroSub">Clean confirmations, trusted sourcing.</div>
-              </div>
-              <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
-            </aside>
-          </div>
-        </div>
-      </section>
-
-      <!-- Featured -->
-      <section class="section" id="browse" aria-label="Browse featured">
-        <div class="section-head">
+    <!-- HERO -->
+    <section class="hero" id="home" aria-label="Hero">
+      <div class="hero-box">
+        <div class="hero-row">
           <div>
-            <h2>Featured Listings</h2>
-            <p class="subhead">All featured items across <b>Real Estate</b> and <b>Logistics</b>.</p>
+            <div class="kicker" aria-label="Trust badges">
+              <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Trust-first</span><span class="dot">•</span>
+              <span><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Verified</span><span class="dot">•</span>
+              <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
+            </div>
+
+            <h1>Verified <span class="gold">stays</span> and trusted <span class="gold">movement</span> across Nigeria.</h1>
+
+            <p class="lead">
+              From premium shortlets and verified listings to dispatch, pickups, and freight coordination — Larmah runs a scam-resistant,
+              fast-confirmation workflow that keeps your bookings and deliveries clean, clear, and coordinated.
+            </p>
+
+            <div class="hero-actions">
+              <button class="btn solid" type="button" onclick="scrollToEl('#browse')"><i class="fa-solid fa-sparkles"></i> Browse Featured</button>
+              <button class="btn primary" type="button" onclick="setMode('logistics'); scrollToEl('#quick')"><i class="fa-solid fa-truck-fast"></i> Book Logistics</button>
+              <button class="btn ghost" type="button" onclick="openWA(buildMsg('General Enquiry', { Topic:'Real Estate / Logistics', Message:'Hello Larmah, I need assistance.' }))"><i class="fa-brands fa-whatsapp"></i> WhatsApp Support</button>
+            </div>
+
+            <div class="chips" aria-label="Highlights">
+              <div class="chip"><i class="fa-solid fa-house"></i> Shortlets • Rentals • Sales</div>
+              <div class="chip"><i class="fa-solid fa-motorcycle"></i> Dispatch • Same-day</div>
+              <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage</div>
+            </div>
+
+            <div class="switcher" id="quick" aria-label="Quick request switcher">
+              <div class="seg" role="tablist" aria-label="Choose quick request">
+                <button type="button" class="is-active" id="tabRealEstate" role="tab" aria-selected="true" onclick="setMode('realestate')">
+                  <i class="fa-solid fa-house"></i> Real Estate
+                </button>
+                <button type="button" id="tabLogistics" role="tab" aria-selected="false" onclick="setMode('logistics')">
+                  <i class="fa-solid fa-truck-fast"></i> Logistics
+                </button>
+              </div>
+              <div class="switch-right">Tip: <b>budget + location</b> = faster matching.</div>
+            </div>
+
+            <!-- Forms -->
+            <div class="form-wrap" aria-label="Quick forms">
+              <!-- REAL ESTATE FORM -->
+              <div class="form is-active" id="formRealEstate" role="tabpanel" aria-labelledby="tabRealEstate">
+                <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+                  <div style="font-weight:950; letter-spacing:-0.2px;">
+                    Shortlet / Stay Request
+                    <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Confirm availability and pricing via WhatsApp.</div>
+                  </div>
+                  <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> View All</a>
+                </div>
+
+                <div class="form-grid" style="margin-top:12px;">
+                  <div class="field" style="grid-column: span 2;">
+                    <label for="checkin">Check-in</label>
+                    <input id="checkin" type="date" />
+                  </div>
+                  <div class="field" style="grid-column: span 2;">
+                    <label for="checkout">Check-out</label>
+                    <input id="checkout" type="date" />
+                  </div>
+                  <div class="field" style="grid-column: span 2;">
+                    <label for="location">Location</label>
+                    <select id="location">
+                      <option value="Any" selected>Any</option>
+                      <option value="Ikoyi">Ikoyi</option>
+                      <option value="Lekki">Lekki</option>
+                      <option value="Victoria Island">Victoria Island</option>
+                      <option value="Yaba">Yaba</option>
+                      <option value="Mainland">Mainland</option>
+                      <option value="Abuja">Abuja</option>
+                    </select>
+                  </div>
+                  <div class="field" style="grid-column: span 2;">
+                    <label for="budget">Budget</label>
+                    <input id="budget" type="text" placeholder="e.g., ₦120k/night" />
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn solid" type="button" onclick="submitRealEstate()">
+                    <i class="fa-brands fa-whatsapp"></i> Request Availability
+                  </button>
+                  <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+                    <i class="fa-brands fa-whatsapp"></i> Chat Support
+                  </button>
+                </div>
+              </div>
+
+              <!-- LOGISTICS FORM -->
+              <div class="form" id="formLogistics" role="tabpanel" aria-labelledby="tabLogistics">
+                <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+                  <div style="font-weight:950; letter-spacing:-0.2px;">
+                    Logistics / Dispatch Request
+                    <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Request quote + ETA via WhatsApp.</div>
+                  </div>
+                  <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck"></i> Logistics Page</a>
+                </div>
+
+                <div class="form-grid" style="margin-top:12px;">
+                  <div class="field" style="grid-column: span 4;">
+                    <label for="pickup">Pickup location</label>
+                    <input id="pickup" type="text" placeholder="e.g., Lekki Phase 1" />
+                  </div>
+                  <div class="field" style="grid-column: span 4;">
+                    <label for="dropoff">Drop-off location</label>
+                    <input id="dropoff" type="text" placeholder="e.g., Victoria Island" />
+                  </div>
+                  <div class="field" style="grid-column: span 2;">
+                    <label for="pickDate">Date</label>
+                    <input id="pickDate" type="date" />
+                  </div>
+                  <div class="field" style="grid-column: span 2;">
+                    <label for="vehicle">Vehicle</label>
+                    <select id="vehicle">
+                      <option value="Dispatch Bike" selected>Dispatch Bike</option>
+                      <option value="Car">Car</option>
+                      <option value="Van">Van</option>
+                      <option value="Mini Truck">Mini Truck</option>
+                      <option value="Truck / Haulage">Truck / Haulage</option>
+                    </select>
+                  </div>
+                  <div class="field" style="grid-column: span 4;">
+                    <label for="logNotes">Notes</label>
+                    <input id="logNotes" type="text" placeholder="Size/weight, urgency, landmarks..." />
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button class="btn solid" type="button" onclick="submitLogistics()">
+                    <i class="fa-brands fa-whatsapp"></i> Request Quote
+                  </button>
+                  <button class="btn primary" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
+                    <i class="fa-brands fa-whatsapp"></i> Chat Support
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
+
+          <!-- ✅ HERO HIGHLIGHT DISPLAY -->
+          <aside class="hero-media" id="heroMedia" aria-label="Highlights carousel">
+            <img
+              id="heroImg"
+              src="assets/images/verified-listing.jpeg"
+              alt="Verified Listings"
+              decoding="async"
+              fetchpriority="high"
+              loading="eager"
+              onerror="this.src='assets/images/larmah-header.jpeg'; this.onerror=null;"
+            />
+            <div class="cap">
+              <div class="hero-tag" id="heroTag">
+                <i class="fa-solid fa-building" style="color:var(--gold)"></i> Verified Listings
+              </div>
+              <div class="hero-sub" id="heroSub">Clean confirmations, trusted sourcing.</div>
+            </div>
+            <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED -->
+    <section class="section" id="browse" aria-label="Browse featured">
+      <div class="section-head">
+        <div>
+          <h2>Featured Listings</h2>
+          <p class="subhead">All featured items across <b>Real Estate</b> and <b>Logistics</b>.</p>
+        </div>
+        <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
+      </div>
+
+      <div class="feat-controls" aria-label="Featured filters">
+        <div class="feat-left">
+          <div class="feat-field" style="min-width:min(320px, 100%);">
+            <label for="feat_q">Search</label>
+            <input id="feat_q" placeholder="Title, features, area..." autocomplete="off" />
+          </div>
+
+          <div class="feat-field">
+            <label for="feat_cat">Category</label>
+            <select id="feat_cat">
+              <option value="all" selected>All</option>
+              <option value="real-estate">Real Estate</option>
+              <option value="logistics">Logistics</option>
+            </select>
+          </div>
+
+          <div class="feat-field">
+            <label for="feat_sort">Sort</label>
+            <select id="feat_sort">
+              <option value="new" selected>Newest</option>
+              <option value="az">Title A–Z</option>
+              <option value="za">Title Z–A</option>
+            </select>
+          </div>
+
+          <div class="feat-field">
+            <label for="feat_pageSize">Per page</label>
+            <select id="feat_pageSize">
+              <option value="6">6</option>
+              <option value="9" selected>9</option>
+              <option value="12">12</option>
+              <option value="18">18</option>
+              <option value="24">24</option>
+            </select>
+          </div>
         </div>
 
-        <div class="feat-controls" aria-label="Featured filters">
-          <div class="feat-left">
-            <div class="feat-field" style="min-width:min(320px, 100%);">
-              <label for="feat_q">Search</label>
-              <input id="feat_q" placeholder="Title, features, area..." autocomplete="off" />
-            </div>
-
-            <div class="feat-field">
-              <label for="feat_cat">Category</label>
-              <select id="feat_cat">
-                <option value="all" selected>All</option>
-                <option value="real-estate">Real Estate</option>
-                <option value="logistics">Logistics</option>
-              </select>
-            </div>
-
-            <div class="feat-field">
-              <label for="feat_sort">Sort</label>
-              <select id="feat_sort">
-                <option value="new" selected>Newest</option>
-                <option value="az">Title A–Z</option>
-                <option value="za">Title Z–A</option>
-              </select>
-            </div>
-
-            <div class="feat-field">
-              <label for="feat_pageSize">Per page</label>
-              <select id="feat_pageSize">
-                <option value="6">6</option>
-                <option value="9" selected>9</option>
-                <option value="12">12</option>
-                <option value="18">18</option>
-                <option value="24">24</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="feat-right">
-            <button class="btn small" type="button" onclick="featReset()" style="color:var(--bad); border-color: color-mix(in oklab, var(--bad) 30%, var(--line) 70%);">
-              <i class="fa-solid fa-rotate-left"></i> Reset
-            </button>
-            <button class="btn small solid" type="button" onclick="openWA(buildMsg('Featured Enquiry', { Message:'Hello Larmah, please share your current featured options.' }))">
-              <i class="fa-brands fa-whatsapp"></i> Ask on WhatsApp
-            </button>
-          </div>
+        <div class="feat-right">
+          <button class="btn small" type="button" onclick="featReset()" style="color:var(--bad); border-color: color-mix(in oklab, var(--bad) 30%, var(--line) 70%);">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+          </button>
+          <button class="btn small solid" type="button" onclick="openWA(buildMsg('Featured Enquiry', { Message:'Hello Larmah, please share your current featured options.' }))">
+            <i class="fa-brands fa-whatsapp"></i> Ask on WhatsApp
+          </button>
         </div>
+      </div>
 
-        <div id="feat_mount">
-          <div class="notice">Loading featured items…</div>
-        </div>
-      </section>
-    </div>
+      <div id="feat_mount">
+        <div class="notice">Loading featured items…</div>
+      </div>
+    </section>
   </main>
 
-  <!-- Footer (current synced footer) -->
+  <!-- Footer -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -1414,7 +1101,7 @@
           <div class="footer-col-title">Quick Links</div>
           <div class="footer-links">
             <a href="index.html#home">Home</a>
-            <a href="index.html#about">About</a>
+            <a href="index.html#browse">Featured</a>
             <a href="real-estate.html">Real Estate</a>
             <a href="logistics.html">Logistics</a>
             <a href="premium.html">Premium</a>
@@ -1513,7 +1200,6 @@
 
     // WhatsApp
     function buildMsg(title, data){
-      if(window.LARMAH?.buildMessage) return window.LARMAH.buildMessage(title, data);
       const lines = [title, ""];
       for(const [k,v] of Object.entries(data || {})){
         const val = (v ?? "").toString().trim();
@@ -1522,7 +1208,6 @@
       return lines.join("\n");
     }
     function openWA(text){
-      if(window.LARMAH?.openWhatsApp) return window.LARMAH.openWhatsApp(text);
       const phone = "2347063080605";
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
@@ -1558,6 +1243,7 @@
     const tabLogistics = document.getElementById("tabLogistics");
     const formRealEstate = document.getElementById("formRealEstate");
     const formLogistics = document.getElementById("formLogistics");
+
     function setMode(mode){
       const isLog = mode === "logistics";
       tabRealEstate.classList.toggle("is-active", !isLog);
@@ -1601,10 +1287,8 @@
         Message: "Hello Larmah, please share pricing, ETA, and next steps."
       }));
     }
-    window.submitRealEstate = submitRealEstate;
-    window.submitLogistics = submitLogistics;
 
-    // ✅ HERO slideshow: preload before swap (prevents blank)
+    // ✅ PERFECT highlight slideshow (preload THEN fade/swap)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1635,20 +1319,27 @@
     let heroIdx = 0;
     async function setHero(i){
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
-      heroMedia.classList.add("is-fading");
-      runHeroProgress();
 
+      // 1) Preload next image first (prevents blank)
       const ok = await preloadImage(s.img);
       const finalSrc = ok ? s.img : "assets/images/larmah-header.jpeg";
 
-      heroImg.src = finalSrc;
-      heroImg.alt = s.label;
-      heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
-      heroSub.textContent = s.sub;
+      // 2) Quick fade, then swap
+      heroMedia.classList.add("is-fading");
+      runHeroProgress();
 
-      setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
+      setTimeout(() => {
+        heroImg.src = finalSrc;
+        heroImg.alt = s.label;
+        heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
+        heroSub.textContent = s.sub;
+
+        // 3) Restore visibility
+        setTimeout(() => heroMedia.classList.remove("is-fading"), 140);
+      }, 120);
     }
 
+    // initial
     setHero(0);
     if(!reduceMotion){
       setInterval(() => {
@@ -1657,8 +1348,9 @@
       }, 5000);
     }
 
-    // Featured store
+    // Featured store (cards + view button)
     const __FEAT = { items: [], imgUrls: {}, imgIdx: {}, timers: {}, page: 1, pageSize: 9, q: "", cat: "all", sort: "new" };
+
     function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
     function formatPrice(raw){ const s = safeText(raw).trim(); return s ? s : "Contact for quote"; }
     function inferPillar(it){ return safeText(it.category).toLowerCase().includes("logistics") ? "logistics" : "real-estate"; }
@@ -1691,6 +1383,7 @@
       const base = inferPillar(it)==="logistics" ? "logistics.html" : "real-estate.html";
       return `${base}?item=${encodeURIComponent(String(it.id))}`;
     }
+
     function getImages(it){
       const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
       if(arr.length) return arr.slice(0, 6);
@@ -1855,12 +1548,10 @@
       const btns = [];
       const add = (p, label, active=false) => btns.push({ type:"btn", p, label, active });
       const ell = () => btns.push({ type:"ell" });
-
       if(totalPages <= 1) return btns;
 
       const maxBtns = 7;
       const half = Math.floor(maxBtns / 2);
-
       let start = Math.max(1, page - half);
       let end = Math.min(totalPages, page + half);
 
@@ -1872,13 +1563,11 @@
 
       add(1, "1", page===1);
       if(start > 2) ell();
-
       for(let p = Math.max(2, start); p <= Math.min(totalPages-1, end); p++){
         add(p, String(p), p===page);
       }
-
       if(end < totalPages - 1) ell();
-      if(totalPages > 1) add(totalPages, String(totalPages), page===totalPages);
+      add(totalPages, String(totalPages), page===totalPages);
 
       return btns;
     }
@@ -1894,17 +1583,14 @@
           <div class="pager-left">
             <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>–<b>${to}</b> of <b>${total}</b></span>
           </div>
-
           <div class="pager-right">
             <button class="pager-btn" type="button" onclick="featGoPage(${page-1})" ${page<=1?'disabled':''} aria-label="Previous page">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
-
-            ${btns.map(b => {
-              if(b.type === "ell") return `<span class="pager-ellipsis" aria-hidden="true">…</span>`;
-              return `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="featGoPage(${b.p})" aria-label="Go to page ${b.label}">${b.label}</button>`;
-            }).join("")}
-
+            ${btns.map(b => b.type === "ell"
+              ? `<span class="pager-ellipsis" aria-hidden="true">…</span>`
+              : `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="featGoPage(${b.p})">${b.label}</button>`
+            ).join("")}
             <button class="pager-btn" type="button" onclick="featGoPage(${page+1})" ${page>=totalPages?'disabled':''} aria-label="Next page">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
@@ -1964,14 +1650,13 @@
     }
     window.featReset = featReset;
 
-    // ✅ Supabase client fallback
+    // Supabase client fallback
     function ensureSupabaseClient(){
       if(window.supabaseClient) return window.supabaseClient;
       const url = window.__SUPABASE_URL;
       const key = window.__SUPABASE_ANON_KEY;
       if(!url || !key) return null;
       if(!window.supabase || !window.supabase.createClient) return null;
-
       window.supabaseClient = window.supabase.createClient(url, key, {
         auth: { persistSession: true, autoRefreshToken: true }
       });
@@ -1980,9 +1665,7 @@
     window.ensureSupabaseClient = window.ensureSupabaseClient || ensureSupabaseClient;
 
     function sbClient(){
-      return window.supabaseClient
-        || (window.ensureSupabaseClient && window.ensureSupabaseClient())
-        || null;
+      return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
     }
 
     async function loadFeaturedAll(){
@@ -2003,9 +1686,7 @@
       }
 
       const normalize = (rows, source) => (rows || []).map(r => {
-        if(source === "catalog_items"){
-          return { ...r, price: r.price_text ?? r.price ?? null };
-        }
+        if(source === "catalog_items") return { ...r, price: r.price_text ?? r.price ?? null };
         return r;
       });
 
@@ -2033,7 +1714,6 @@
               .eq("featured", true)
               .order("created_at", { ascending:false })
               .limit(1000);
-
             if(resp.error) throw resp.error;
             __FEAT.items = normalize(resp.data, "catalog_items");
           } else {
@@ -2075,13 +1755,6 @@
 
       loadFeaturedAll();
     });
-
-    // expose
-    window.toggleMenu = toggleMenu;
-    window.toggleTheme = toggleTheme;
-    window.openWA = openWA;
-    window.buildMsg = buildMsg;
-    window.scrollToEl = scrollToEl;
   </script>
 </body>
 </html>
