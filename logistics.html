@@ -1,11 +1,15 @@
 <!-- =========================
-     logistics.html (FULL)
-     ✅ Cleaner layout (less repetition)
-     ✅ Description preview + View more modal popup
-     ✅ Modal includes price, ref + Enquire + Email + Request Quote actions
-     ✅ Pagination added (smart controls + per-page)
-     ✅ Only rotates images for visible page items
-     ✅ Supabase: public.listings (category='logistics', status='active')
+     logistics.html (FULL) — UPDATED
+     ✅ Domain-originated item links (absolute URLs)
+     ✅ Deep-link open: logistics.html?item=<id>
+        - auto page-jump (pagination aware)
+        - scroll + highlight
+        - opens “View more” modal
+     ✅ Best-effort link preview support via query params:
+        ?item=<id>&img=<url>&title=<t>&desc=<d>
+        (JS updates OG/Twitter tags early; crawler support varies)
+     ✅ Cards include "Copy Link" action
+     ✅ All WhatsApp/Email messages include absolute item links
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -22,35 +26,78 @@
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://heylarmah.tech/logistics.html" />
 
-  <meta property="og:type" content="website" />
+  <!-- Open Graph -->
   <meta property="og:locale" content="en_NG" />
+  <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heylarmah.tech/logistics.html" />
   <meta property="og:title" content="Larmah Logistics | Trusted Movement" />
   <meta property="og:description" content="Dispatch, pickups, haulage and coordination across Nigeria — WhatsApp-first support." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
   <meta property="og:image:alt" content="Larmah Logistics — Trusted Movement" />
 
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Larmah Logistics" />
   <meta name="twitter:description" content="Dispatch, pickups, haulage and coordination — trust-first." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
+  <!-- Icons -->
   <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
   <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
 
+  <!-- Perf -->
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
+  <!-- ✅ Supabase -->
   <script>
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
     window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
   </script>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
+
+  <!-- ✅ Best-effort OG/Twitter meta override for shared item links -->
+  <script>
+    (function applyShareMetaFromQuery(){
+      try{
+        const qs = new URLSearchParams(location.search);
+        const img = qs.get("img");
+        const t = qs.get("title");
+        const d = qs.get("desc");
+        const item = qs.get("item");
+
+        // Only override if an item link is being shared
+        if(!item) return;
+
+        const set = (sel, attr, val) => {
+          const el = document.querySelector(sel);
+          if(el && val) el.setAttribute(attr, val);
+        };
+
+        if(t){
+          document.title = `${t} | Larmah Logistics`;
+          set('meta[property="og:title"]','content', t);
+          set('meta[name="twitter:title"]','content', t);
+        }
+        if(d){
+          set('meta[name="description"]','content', d);
+          set('meta[property="og:description"]','content', d);
+          set('meta[name="twitter:description"]','content', d);
+        }
+        if(img){
+          set('meta[property="og:image"]','content', img);
+          set('meta[name="twitter:image"]','content', img);
+          set('meta[property="og:image:alt"]','content', (t || "Larmah Logistics"));
+        }
+
+        // Keep og:url accurate (some crawlers use it)
+        set('meta[property="og:url"]','content', location.href);
+      }catch{}
+    })();
+  </script>
 
   <script type="application/ld+json">
   {
@@ -424,12 +471,25 @@
       overflow:hidden;
       box-shadow: var(--shadow2);
       transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease), filter .18s var(--ease);
+      position: relative;
     }
     .card:hover{
       transform: translateY(-2px);
       border-color: color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
       background: color-mix(in oklab, var(--panel) 94%, white 6%);
       filter: brightness(1.02);
+    }
+
+    /* ✅ Deep-link highlight pulse */
+    .card.pulse{
+      border-color: color-mix(in oklab, var(--gold) 55%, var(--line) 45%);
+      box-shadow: 0 0 0 2px rgba(212,175,55,.22), var(--shadow2);
+      animation: pulseGlow 1.3s var(--ease) 0s 2;
+    }
+    @keyframes pulseGlow{
+      0%{ transform: translateY(0); box-shadow: 0 0 0 0 rgba(212,175,55,.0), var(--shadow2); }
+      40%{ transform: translateY(-2px); box-shadow: 0 0 0 6px rgba(212,175,55,.16), var(--shadow2); }
+      100%{ transform: translateY(0); box-shadow: 0 0 0 0 rgba(212,175,55,.0), var(--shadow2); }
     }
 
     .media{
@@ -460,6 +520,7 @@
       pointer-events:none;
       z-index:1;
     }
+
     .media-nav{
       position:absolute; inset:0;
       display:flex; align-items:center; justify-content:space-between;
@@ -501,6 +562,11 @@
       font-weight: 950; margin: 2px 0 8px; letter-spacing:-0.2px;
       display:flex; gap:8px; align-items:center; flex-wrap:wrap;
     }
+    .title a{
+      color: inherit;
+      text-decoration:none;
+    }
+    .title a:hover{ color: var(--gold2); }
 
     .desc{
       margin:0;
@@ -797,6 +863,14 @@
     .wa-btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
     .wa-btn i{ font-size: 20px; }
     @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
+
+    /* tiny helper for copy link button inside actions */
+    .mini{
+      flex: 0 0 auto !important;
+      width: auto !important;
+      padding-left: 12px;
+      padding-right: 12px;
+    }
   </style>
 </head>
 
@@ -882,7 +956,7 @@
           </div>
 
           <h1>Trusted <span class="gold">Logistics</span> across Nigeria.</h1>
-          <p class="lead">Browse services, view details, then request a quote in one flow.</p>
+          <p class="lead">Browse services, open details, and share a link that jumps straight to the exact item.</p>
 
           <div class="hero-actions">
             <a class="btn solid" href="#services"><i class="fa-solid fa-list-check"></i> Browse Services</a>
@@ -1188,6 +1262,9 @@
           <button class="copy-btn" type="button" onclick="copyDescRef()">
             <i class="fa-regular fa-copy"></i> Copy Ref
           </button>
+          <button class="copy-btn" type="button" onclick="copyDescLink()">
+            <i class="fa-solid fa-link"></i> Copy Link
+          </button>
         </div>
         <div class="right">
           <button class="btn primary" type="button" onclick="closeDescModal()">
@@ -1221,6 +1298,16 @@
       t.classList.add("show");
       clearTimeout(window.__toastT);
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
+    }
+
+    // ✅ Absolute URL helper
+    function absUrl(pathOrUrl){
+      try{
+        if(!pathOrUrl) return "";
+        const s = String(pathOrUrl);
+        if(/^https?:\/\//i.test(s)) return s;
+        return new URL(s.replace(/^\.\//,''), location.origin + "/").toString();
+      }catch{ return String(pathOrUrl||""); }
     }
 
     const THEME_KEY = "larmah_theme_v6";
@@ -1304,7 +1391,7 @@
 
     // data
     const __LG = { items: [], imgUrls: {}, imgIdx: {}, timers: {}, page: 1, pageSize: 9 };
-    const __LG_MODAL = { id:null, ref:"", title:"", price:"", coverage:"", type:"", featured:false, desc:"" };
+    const __LG_MODAL = { id:null, ref:"", title:"", price:"", coverage:"", type:"", featured:false, desc:"", img:"" };
 
     function sbClient(){
       return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
@@ -1338,10 +1425,26 @@
 
     function getImages(it){
       const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
-      if(arr.length) return arr.slice(0, 6);
-      if(it.image_url) return [it.image_url];
-      return ["assets/images/larmah-header.jpeg"];
+      if(arr.length) return arr.slice(0, 6).map(absUrl);
+      if(it.image_url) return [absUrl(it.image_url)];
+      return [absUrl("assets/images/larmah-header.jpeg")];
     }
+
+    // ✅ Build a domain-originated share link (with best-effort preview params)
+    function itemShareLink(it){
+      const id = String(it.id);
+      const urls = __LG.imgUrls[id] || getImages(it);
+      const img = urls[0] || absUrl("assets/images/larmah-header.jpeg");
+      const title = safeText(it.title) || "Logistics Service";
+      const desc = (safeText(it.description) || "Trusted logistics support.").slice(0, 140);
+      const u = new URL(absUrl("logistics.html"), location.origin);
+      u.searchParams.set("item", id);
+      u.searchParams.set("img", img);
+      u.searchParams.set("title", title);
+      u.searchParams.set("desc", desc);
+      return u.toString();
+    }
+
     function initImagesFor(it){
       const id = String(it.id);
       __LG.imgUrls[id] = getImages(it);
@@ -1356,9 +1459,9 @@
     function setCardImage(id){
       const img = document.getElementById(`lg-img-${id}`);
       if(!img) return;
-      const urls = __LG.imgUrls[id] || ["assets/images/larmah-header.jpeg"];
+      const urls = __LG.imgUrls[id] || [absUrl("assets/images/larmah-header.jpeg")];
       const idx = __LG.imgIdx[id] || 0;
-      img.src = urls[idx] || urls[0] || "assets/images/larmah-header.jpeg";
+      img.src = urls[idx] || urls[0] || absUrl("assets/images/larmah-header.jpeg");
       const dots = document.getElementById(`lg-dots-${id}`);
       if(dots) dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
     }
@@ -1392,6 +1495,10 @@
       const it = (__LG.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
 
+      initImagesFor(it);
+      const share = itemShareLink(it);
+      const firstImg = (__LG.imgUrls[String(it.id)] || [])[0] || absUrl("assets/images/larmah-header.jpeg");
+
       __LG_MODAL.id = String(it.id);
       __LG_MODAL.ref = listingRef(it.id);
       __LG_MODAL.title = safeText(it.title) || "Service";
@@ -1400,6 +1507,8 @@
       __LG_MODAL.type = inferType(it);
       __LG_MODAL.featured = it.featured === true;
       __LG_MODAL.desc = safeText(it.description) || "No description provided.";
+      __LG_MODAL.img = firstImg;
+      __LG_MODAL.link = share;
 
       const titleEl = document.getElementById("descTitle");
       const metaEl = document.getElementById("descMeta");
@@ -1414,6 +1523,7 @@
           <span class="chip"><i class="fa-solid fa-route" style="color:var(--gold)"></i> ${esc(__LG_MODAL.coverage)}</span>
           <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(__LG_MODAL.type)}</span>
           <span class="chip"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> ${esc(__LG_MODAL.ref)}</span>
+          <span class="chip"><i class="fa-solid fa-link" style="color:var(--gold)"></i> <a href="${esc(__LG_MODAL.link)}" target="_blank" rel="noopener">Open link</a></span>
           ${__LG_MODAL.featured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
         `;
       }
@@ -1438,6 +1548,15 @@
         () => toast("Copy failed. Please copy manually.")
       );
     }
+    function copyDescLink(){
+      const txt = __LG_MODAL.link || "";
+      if(!txt) return toast("No link to copy.");
+      navigator.clipboard?.writeText(txt).then(
+        () => toast("Link copied ✅"),
+        () => toast("Copy failed. Please copy manually.")
+      );
+    }
+
     function descModalEnquire(){
       openWA(buildMsg("Logistics Enquiry", {
         Ref: __LG_MODAL.ref,
@@ -1445,6 +1564,7 @@
         Coverage: __LG_MODAL.coverage,
         Type: __LG_MODAL.type,
         Quote: __LG_MODAL.price,
+        Link: __LG_MODAL.link,
         Featured: __LG_MODAL.featured ? "Yes" : "No",
         Message: "Hello Larmah, please confirm availability and cost."
       }));
@@ -1462,6 +1582,7 @@ Service: ${__LG_MODAL.title}
 Coverage: ${__LG_MODAL.coverage}
 Type: ${__LG_MODAL.type}
 Quote: ${__LG_MODAL.price}
+Link: ${__LG_MODAL.link}
 Featured: ${__LG_MODAL.featured ? "Yes" : "No"}
 
 My Name:
@@ -1475,11 +1596,9 @@ Thank you.`;
       window.location.href = `mailto:${encodeURIComponent(BUSINESS_EMAIL)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     }
     function descModalQuote(){
-      // Prefill quote fields minimally
       const svc = document.getElementById("q_service");
       const notes = document.getElementById("q_notes");
       if(svc){
-        // try match select option
         const opt = [...svc.options].find(o => o.value.toLowerCase().includes((__LG_MODAL.type||"").toLowerCase()));
         if(opt) svc.value = opt.value;
       }
@@ -1490,6 +1609,7 @@ Ref: ${__LG_MODAL.ref}
 Coverage: ${__LG_MODAL.coverage}
 Type: ${__LG_MODAL.type}
 Quote: ${__LG_MODAL.price}
+Link: ${__LG_MODAL.link}
 
 `;
       }
@@ -1511,9 +1631,24 @@ Quote: ${__LG_MODAL.price}
     window.openDescModalById = openDescModalById;
     window.closeDescModal = closeDescModal;
     window.copyDescRef = copyDescRef;
+    window.copyDescLink = copyDescLink;
     window.descModalEnquire = descModalEnquire;
     window.descModalEmail = descModalEmail;
     window.descModalQuote = descModalQuote;
+
+    async function copyItemLinkById(id){
+      const it = (__LG.items||[]).find(x => String(x.id)===String(id));
+      if(!it) return toast("Item not found.");
+      initImagesFor(it);
+      const link = itemShareLink(it);
+      try{
+        await navigator.clipboard.writeText(link);
+        toast("Item link copied ✅");
+      }catch{
+        toast("Copy failed. Please copy manually.");
+      }
+    }
+    window.copyItemLinkById = copyItemLinkById;
 
     function cardHTML(it){
       const id = String(it.id);
@@ -1528,19 +1663,24 @@ Quote: ${__LG_MODAL.price}
       const stype = inferType(it);
       const isFeatured = it.featured === true;
 
+      const link = itemShareLink(it);
+
       return `
-        <article class="card" aria-label="${esc(title)}">
+        <article class="card" id="item-${id}" data-item-id="${id}" aria-label="${esc(title)}">
+          <a href="${esc(link)}" aria-label="Open ${esc(title)} link" style="position:absolute; inset:0; opacity:0; pointer-events:none;"></a>
+
           <div class="media" id="lg-media-${id}">
-            <img id="lg-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
+            <a href="${esc(link)}" aria-label="Open ${esc(title)}" style="position:absolute; inset:0; z-index:2; opacity:0;"></a>
+            <img id="lg-img-${id}" src="${esc(urls[0] || absUrl('assets/images/larmah-header.jpeg'))}"
                  alt="${esc(title)}" loading="lazy" decoding="async"
                  onerror="this.src='assets/images/larmah-header.jpeg'">
 
             ${hasMany ? `
               <div class="media-nav">
-                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleLgImage('${id}', -1)">
+                <button class="media-btn" type="button" aria-label="Previous image" onclick="event.stopPropagation();cycleLgImage('${id}', -1)">
                   <i class="fa-solid fa-chevron-left"></i>
                 </button>
-                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleLgImage('${id}', 1)">
+                <button class="media-btn" type="button" aria-label="Next image" onclick="event.stopPropagation();cycleLgImage('${id}', 1)">
                   <i class="fa-solid fa-chevron-right"></i>
                 </button>
               </div>
@@ -1552,7 +1692,7 @@ Quote: ${__LG_MODAL.price}
 
           <div class="card-body">
             <div class="title">
-              ${esc(title)}
+              <a href="${esc(link)}" title="Open item link">${esc(title)}</a>
               ${isFeatured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
             </div>
 
@@ -1577,6 +1717,9 @@ Quote: ${__LG_MODAL.price}
               </button>
               <button class="btn small primary" type="button" onclick="lgEmail('${id}')">
                 <i class="fa-regular fa-envelope"></i> Email
+              </button>
+              <button class="btn small mini" type="button" onclick="copyItemLinkById('${id}')" title="Copy item link">
+                <i class="fa-solid fa-link"></i>
               </button>
             </div>
           </div>
@@ -1706,12 +1849,15 @@ Quote: ${__LG_MODAL.price}
       __LG.page = Math.max(1, next);
       renderLogistics();
       document.getElementById("services")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
+      // if a deep-link item is pending, re-run after render
+      if(window.__DEEPLINK_LG_ID) setTimeout(() => openItemFromQuery(true), 50);
     }
     function lgSetPageSize(n){
       const v = Math.max(3, Math.min(60, Number(n) || 9));
       __LG.pageSize = v;
       __LG.page = 1;
       renderLogistics();
+      if(window.__DEEPLINK_LG_ID) setTimeout(() => openItemFromQuery(true), 50);
     }
     window.lgGoPage = lgGoPage;
     window.lgSetPageSize = lgSetPageSize;
@@ -1733,6 +1879,7 @@ Quote: ${__LG_MODAL.price}
       document.getElementById("lg_feat").value = "all";
       __LG.page = 1;
       renderLogistics();
+      if(window.__DEEPLINK_LG_ID) setTimeout(() => openItemFromQuery(true), 50);
     }
     window.lgQuick = lgQuick;
     window.lgSetType = lgSetType;
@@ -1743,6 +1890,8 @@ Quote: ${__LG_MODAL.price}
     function lgEnquire(id){
       const it = (__LG.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
+      initImagesFor(it);
+      const link = itemShareLink(it);
 
       openWA(buildMsg("Logistics Enquiry", {
         Ref: listingRef(id),
@@ -1750,6 +1899,7 @@ Quote: ${__LG_MODAL.price}
         Coverage: inferCoverage(it),
         Type: inferType(it),
         Quote: formatPrice(it.price),
+        Link: link,
         Featured: it.featured === true ? "Yes" : "No",
         Message: "Hello Larmah, please confirm availability and cost."
       }));
@@ -1757,6 +1907,8 @@ Quote: ${__LG_MODAL.price}
     function lgEmail(id){
       const it = (__LG.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
+      initImagesFor(it);
+      const link = itemShareLink(it);
 
       const BUSINESS_EMAIL = "business@heylarmah.tech";
       const subject = `Logistics Enquiry — ${listingRef(id)} — ${safeText(it.title) || "Service"}`;
@@ -1770,6 +1922,7 @@ Service: ${safeText(it.title)}
 Coverage: ${inferCoverage(it)}
 Type: ${inferType(it)}
 Quote: ${formatPrice(it.price)}
+Link: ${link}
 Featured: ${it.featured === true ? "Yes" : "No"}
 
 My Name:
@@ -1803,7 +1956,11 @@ Thank you.`;
 
         if(error) throw error;
 
-        __LG.items = data || [];
+        __LG.items = (data || []).map(r => ({
+          ...r,
+          image_url: r.image_url ? absUrl(r.image_url) : r.image_url,
+          image_urls: Array.isArray(r.image_urls) ? r.image_urls.map(absUrl) : r.image_urls
+        }));
         __LG.page = 1;
 
         if(!__LG.items.length){
@@ -1813,6 +1970,9 @@ Thank you.`;
         }
 
         renderLogistics();
+
+        // ✅ Deep link open if ?item=
+        setTimeout(() => openItemFromQuery(false), 50);
 
         if(window.LARMAH?.realtime?.subscribe){
           LARMAH.realtime.subscribe("listings", () => loadLogistics(), "lg-page", { debounceMs: 800 });
@@ -1858,6 +2018,72 @@ Thank you.`;
       openWA(buildMsg("Logistics Quote Request", fields));
     }
     window.sendLogisticsQuote = sendLogisticsQuote;
+
+    // ✅ Deep-link logic
+    function openItemFromQuery(isRerun){
+      try{
+        const qs = new URLSearchParams(location.search);
+        const id = qs.get("item");
+        if(!id) return;
+
+        window.__DEEPLINK_LG_ID = String(id);
+
+        // If modal already open and matches, stop
+        if(__LG_MODAL?.id && String(__LG_MODAL.id) === String(id)) return;
+
+        // We must locate the item in the FULL dataset (not filtered)
+        const idx = (__LG.items || []).findIndex(x => String(x.id) === String(id));
+        if(idx < 0){
+          if(!isRerun) toast("Item not found (may be inactive).");
+          return;
+        }
+
+        // Reset filters to ensure visibility (only if first run)
+        if(!isRerun){
+          document.getElementById("lg_q").value = "";
+          document.getElementById("lg_type").value = "all";
+          document.getElementById("lg_cov").value = "all";
+          document.getElementById("lg_sort").value = "new";
+          document.getElementById("lg_feat").value = "all";
+        }
+
+        // The render uses filtered list; ensure the item is inside current filtered list
+        const filtered = getLgFiltered();
+        const fIdx = filtered.findIndex(x => String(x.id) === String(id));
+        if(fIdx < 0){
+          // If filters hide it, force reset and rerender once
+          if(!isRerun){
+            __LG.page = 1;
+            renderLogistics();
+            setTimeout(() => openItemFromQuery(true), 60);
+          }
+          return;
+        }
+
+        // Jump to correct page
+        const page = Math.floor(fIdx / __LG.pageSize) + 1;
+        if(__LG.page !== page){
+          __LG.page = page;
+          renderLogistics();
+        }
+
+        // Scroll + highlight + open modal
+        setTimeout(() => {
+          document.getElementById("services")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
+
+          const card = document.getElementById(`item-${id}`);
+          if(card){
+            card.classList.remove("pulse");
+            void card.offsetWidth;
+            card.classList.add("pulse");
+            card.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"center" });
+          }
+
+          setTimeout(() => openDescModalById(id), 160);
+        }, 80);
+
+      }catch{}
+    }
 
     document.addEventListener("DOMContentLoaded", () => {
       const resetPage = () => { __LG.page = 1; renderLogistics(); };
