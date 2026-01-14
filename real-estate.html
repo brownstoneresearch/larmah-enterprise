@@ -1,4 +1,2184 @@
 <!-- =========================
+     real-estate.html (FULL) — UPDATED
+     ✅ Deep-link open: real-estate.html?item=<id>
+        - resets filters (if needed)
+        - jumps to correct page
+        - scroll + highlight
+        - opens modal
+     ✅ Domain-originated share links (absolute URLs)
+     ✅ Best-effort OG/Twitter meta override from ?img=&title=&desc=
+     ✅ Modal includes Copy Link + Open link
+========================= -->
+<!DOCTYPE html>
+<html lang="en-NG" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="index,follow" />
+
+  <title>Real Estate | Larmah Enterprise</title>
+  <meta name="description" content="Verified shortlets, rentals, and property sales across Nigeria — trust-first sourcing with WhatsApp-first support and clean reference tracking." />
+  <meta name="keywords" content="Real Estate Nigeria, Shortlets Lagos, Apartments Lekki, Ikoyi Rentals, Verified Property, Larmah Enterprise" />
+  <meta name="author" content="Larmah Enterprise" />
+  <meta name="theme-color" content="#070A12" />
+  <meta name="color-scheme" content="dark light" />
+  <link rel="canonical" href="https://heylarmah.tech/real-estate.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="en_NG" />
+  <meta property="og:url" content="https://heylarmah.tech/real-estate.html" />
+  <meta property="og:title" content="Larmah Real Estate | Verified Listings" />
+  <meta property="og:description" content="Shortlets, rentals, and sales — verified sourcing with WhatsApp-first support." />
+  <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
+  <meta property="og:image:alt" content="Larmah Real Estate — Verified Listings" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Larmah Real Estate" />
+  <meta name="twitter:description" content="Find your next space with verified peace of mind." />
+  <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
+
+  <!-- Icons -->
+  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
+  <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
+
+  <!-- Performance -->
+  <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- ✅ Configure BEFORE app.js loads -->
+  <script>
+    window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
+    window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="assets/js/app.js"></script>
+
+  <!-- ✅ Best-effort OG/Twitter meta override for shared item links -->
+  <script>
+    (function applyShareMetaFromQuery(){
+      try{
+        const qs = new URLSearchParams(location.search);
+        const item = qs.get("item");
+        if(!item) return;
+        const img = qs.get("img");
+        const t = qs.get("title");
+        const d = qs.get("desc");
+
+        const set = (sel, attr, val) => {
+          const el = document.querySelector(sel);
+          if(el && val) el.setAttribute(attr, val);
+        };
+
+        if(t){
+          document.title = `${t} | Larmah Real Estate`;
+          set('meta[property="og:title"]','content', t);
+          set('meta[name="twitter:title"]','content', t);
+        }
+        if(d){
+          set('meta[name="description"]','content', d);
+          set('meta[property="og:description"]','content', d);
+          set('meta[name="twitter:description"]','content', d);
+        }
+        if(img){
+          set('meta[property="og:image"]','content', img);
+          set('meta[name="twitter:image"]','content', img);
+          set('meta[property="og:image:alt"]','content', (t || "Larmah Real Estate"));
+        }
+        set('meta[property="og:url"]','content', location.href);
+      }catch{}
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"CollectionPage",
+    "name":"Larmah Real Estate",
+    "url":"https://heylarmah.tech/real-estate.html",
+    "isPartOf":{"@type":"WebSite","name":"Larmah Enterprise","url":"https://heylarmah.tech/"},
+    "about":{"@type":"Service","name":"Real Estate (Verified Listings)","areaServed":"NG"}
+  }
+  </script>
+
+  <style>
+    :root{
+      --gold:#D4AF37;
+      --gold2:#F5D57A;
+      --radius: 18px;
+      --radius2: 22px;
+      --max: 1120px;
+      --ease: cubic-bezier(.2,.8,.2,1);
+      --shadow: 0 18px 50px rgba(0,0,0,.42);
+      --shadow2: 0 12px 34px rgba(0,0,0,.30);
+    }
+
+    html[data-theme="dark"]{
+      --bg:#070A12;
+      --bg2:#050810;
+      --panel: rgba(255,255,255,.03);
+      --panel2: rgba(255,255,255,.02);
+      --line: rgba(255,255,255,.10);
+      --line2: rgba(255,255,255,.08);
+      --text:#E9EDF7;
+      --muted: rgba(233,237,247,.72);
+      --muted2: rgba(233,237,247,.60);
+      --headerBg: rgba(7,10,18,.72);
+      --overlayBg: rgba(0,0,0,.55);
+      --ctaBg: rgba(0,0,0,.28);
+      --ctaLine: rgba(255,255,255,.12);
+      --good: rgba(0,217,129,.95);
+      --bad: rgba(255,90,103,.95);
+      --warn: rgba(255,187,0,.95);
+
+      --logoGlow: 0 0 22px rgba(212,175,55,.14);
+      --logoRing: rgba(255,255,255,.12);
+      --logoBg: rgba(255,255,255,.03);
+
+      --focus: rgba(245,213,122,.28);
+    }
+
+    html[data-theme="light"]{
+      --bg:#F7F7FB;
+      --bg2:#FFFFFF;
+      --panel: rgba(10,14,26,.04);
+      --panel2: rgba(10,14,26,.03);
+      --line: rgba(10,14,26,.12);
+      --line2: rgba(10,14,26,.08);
+      --text:#0E1526;
+      --muted: rgba(14,21,38,.68);
+      --muted2: rgba(14,21,38,.56);
+      --headerBg: rgba(255,255,255,.78);
+      --overlayBg: rgba(0,0,0,.40);
+      --ctaBg: rgba(255,255,255,.78);
+      --ctaLine: rgba(10,14,26,.10);
+      --good: rgba(0,140,90,.92);
+      --bad: rgba(200,34,60,.90);
+      --warn: rgba(180,110,0,.92);
+
+      --shadow: 0 16px 46px rgba(0,0,0,.12);
+      --shadow2: 0 10px 26px rgba(0,0,0,.10);
+
+      --logoGlow: 0 0 0 rgba(0,0,0,0);
+      --logoRing: rgba(10,14,26,.10);
+      --logoBg: rgba(255,255,255,.65);
+
+      --focus: rgba(212,175,55,.26);
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    @media (prefers-reduced-motion: reduce){
+      html{ scroll-behavior:auto; }
+      *{ animation:none !important; transition:none !important; }
+    }
+
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(900px 420px at 18% 6%, rgba(212,175,55,.10), transparent 60%),
+        radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.06), transparent 62%),
+        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.06), transparent 58%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+      color: var(--text);
+      overflow-x:hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    a{ color: var(--text); text-decoration:none; }
+    a:hover{ color: var(--gold); }
+    .container{ max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+
+    .skip{
+      position:absolute; left:-999px; top:10px;
+      padding:10px 12px; border-radius: 12px;
+      background: var(--gold); color:#111; font-weight: 950;
+      z-index: 999;
+    }
+    .skip:focus{ left: 12px; outline: none; }
+
+    :focus-visible{
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
+
+    header{
+      position:sticky; top:0; z-index:50;
+      background: var(--headerBg);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line2);
+    }
+    .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
+    .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
+
+    .logo-wrap{
+      position:relative;
+      width:44px; height:44px;
+      border-radius: 14px;
+      padding: 2px;
+      background:
+        radial-gradient(18px 18px at 25% 20%, rgba(245,213,122,.35), transparent 70%),
+        radial-gradient(20px 20px at 85% 80%, rgba(212,175,55,.22), transparent 70%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02));
+      box-shadow: var(--logoGlow);
+      border: 1px solid var(--logoRing);
+      flex: 0 0 auto;
+      isolation:isolate;
+    }
+    .logo-wrap::after{
+      content:"";
+      position:absolute; inset:-10px;
+      background: radial-gradient(16px 16px at 50% 50%, rgba(212,175,55,.10), transparent 70%);
+      filter: blur(12px);
+      opacity:.8;
+      pointer-events:none;
+      z-index:-1;
+    }
+    .logo-wrap img{
+      width:100%; height:100%;
+      object-fit: cover;
+      display:block;
+      border-radius: 12px;
+      border: 1px solid var(--line2);
+      background: var(--logoBg);
+    }
+    .brand .btxt{ display:flex; flex-direction:column; line-height:1.05; gap:4px; min-width:0; }
+    .brand .bname{ font-weight: 950; letter-spacing:-0.2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .brand .bsub{ font-size:.86rem; color: var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    nav{ margin-left:auto; }
+    nav ul{ display:flex; list-style:none; gap:18px; padding:0; margin:0; align-items:center; }
+    .nav-link{ color: var(--text); opacity:.9; font-weight: 850; font-size: .95rem; position:relative; }
+    .nav-link:hover{ color: var(--gold); opacity:1; }
+    .nav-link.active{ color: var(--gold); opacity:1; }
+    .nav-link.active::after{
+      content:""; position:absolute; left:0; right:0; bottom:-12px; height:2px;
+      background: rgba(212,175,55,.65); border-radius: 999px;
+    }
+
+    .header-actions{ display:flex; gap:10px; align-items:center; margin-left: 10px; }
+    .icon-btn{
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
+    }
+    .icon-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .menu-btn{
+      display:none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor:pointer;
+    }
+    @media (max-width: 980px){
+      nav{ display:none; }
+      .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
+      .header-actions{ margin-left:auto; }
+    }
+
+    .overlay{
+      position:fixed; inset:0;
+      background: var(--overlayBg);
+      display:none;
+      align-items:flex-end;
+      z-index:80;
+    }
+    .overlay.open{ display:flex; }
+    .sheet{
+      width:100%;
+      border-radius: 18px 18px 0 0;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 82%, #000 18%);
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .sheet-head{
+      display:flex; align-items:center; justify-content:space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--line2);
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    .sheet-brandline{ display:flex; align-items:center; gap:10px; min-width:0; }
+    .sheet a{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: var(--text);
+      margin-bottom: 10px;
+      font-weight: 900;
+    }
+    .sheet-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 8px; }
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      border-radius: 14px; padding: 12px 16px; min-height: 46px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      cursor:pointer;
+      font-weight: 950;
+      transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
+      white-space: nowrap;
+      user-select:none;
+      text-decoration:none;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .btn:active{ transform: translateY(0); }
+    .btn.solid{
+      background: var(--gold);
+      color: #111;
+      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
+    }
+    .btn.primary{ background: var(--panel2); border-color: var(--line); }
+    .btn.ghost{ background: transparent; border-color: var(--line2); }
+    .btn.small{
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 900;
+    }
+
+    .page-wrap{ padding: 18px 0 0; }
+
+    .hero{
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      padding: 16px;
+      position:relative;
+      isolation:isolate;
+    }
+    .hero::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.20), transparent 60%),
+        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
+        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.10), transparent 62%);
+      pointer-events:none;
+      z-index:-1;
+    }
+    .hero-grid{
+      display:grid;
+      gap: 14px;
+      grid-template-columns: 1.1fr .9fr;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
+
+    .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; }
+    .kicker .dot{ opacity:.65; }
+    h1{
+      margin: 6px 0 10px;
+      font-size: clamp(2.0rem, 4vw, 2.8rem);
+      line-height: 1.06;
+      letter-spacing:-0.6px;
+    }
+    .gold{
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lead{ margin:0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
+    .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
+    @media (max-width: 520px){
+      .hero-actions{ flex-direction:column; }
+      .hero-actions .btn{ width:100%; }
+    }
+
+    .hero-media{
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      position:relative;
+      min-height: 320px;
+      isolation:isolate;
+    }
+    .hero-media img{
+      width:100%;
+      height: 320px;
+      object-fit: cover;
+      display:block;
+      opacity:.94;
+      transform: scale(1.01);
+      transition: opacity .55s var(--ease), transform .9s var(--ease);
+    }
+    .hero-media.is-fading img{ opacity:.18; transform: scale(1.03); }
+    .hero-media .cap{
+      position:absolute; left:16px; right:16px; bottom:12px;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid var(--ctaLine);
+      background: var(--ctaBg);
+      backdrop-filter: blur(10px);
+    }
+    .hero-tag{ display:flex; gap:8px; align-items:center; font-weight: 950; margin-bottom: 6px; }
+    .hero-sub{ color: color-mix(in oklab, var(--text) 86%, transparent); font-size: .92rem; line-height: 1.35; }
+    .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
+    .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
+    .hero-bar.run{ width: 100%; }
+
+    .section{ padding: 18px 0; }
+    .section-head{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:12px; margin-bottom: 12px; flex-wrap:wrap;
+    }
+    h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
+    .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
+
+    .filters{
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: var(--shadow2);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .filters-grid{ display:grid; gap: 10px; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; }
+    @media (max-width: 980px){ .filters-grid{ grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 520px){ .filters-grid{ grid-template-columns: 1fr; } }
+
+    .field{ display:flex; flex-direction:column; gap:6px; }
+    label{ font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); }
+    input, select, textarea{
+      border-radius: 14px; border: 1px solid var(--line);
+      background: var(--panel2); color: var(--text);
+      padding: 12px; min-height: 46px; outline:none; font-family: inherit;
+    }
+    textarea{ min-height: 96px; resize: vertical; }
+    input::placeholder, textarea::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
+
+    .pillbar{
+      display:flex; gap:8px; flex-wrap:wrap;
+      padding-top: 12px; margin-top: 10px;
+      border-top: 1px solid var(--line2);
+    }
+
+    .grid{ display:grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (max-width: 1024px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 640px){ .grid{ grid-template-columns: 1fr; } }
+
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      overflow:hidden;
+      box-shadow: var(--shadow2);
+      transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease), filter .18s var(--ease);
+      position:relative;
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
+      background: color-mix(in oklab, var(--panel) 94%, white 6%);
+      filter: brightness(1.02);
+    }
+
+    /* ✅ Deep-link highlight */
+    .card.pulse{
+      border-color: color-mix(in oklab, var(--gold) 55%, var(--line) 45%);
+      box-shadow: 0 0 0 2px rgba(212,175,55,.22), var(--shadow2);
+      animation: pulseGlow 1.3s var(--ease) 0s 2;
+    }
+    @keyframes pulseGlow{
+      0%{ transform: translateY(0); box-shadow: 0 0 0 0 rgba(212,175,55,.0), var(--shadow2); }
+      40%{ transform: translateY(-2px); box-shadow: 0 0 0 6px rgba(212,175,55,.16), var(--shadow2); }
+      100%{ transform: translateY(0); box-shadow: 0 0 0 0 rgba(212,175,55,.0), var(--shadow2); }
+    }
+
+    .media{
+      width: calc(100% - 24px);
+      height: 190px;
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid var(--line2);
+      background: color-mix(in oklab, var(--bg2) 60%, #000 40%);
+      margin: 12px 12px 0;
+      position:relative;
+      isolation:isolate;
+      user-select:none;
+    }
+    .media img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+      transform: scale(1.01);
+      opacity:.95;
+      transition: opacity .45s var(--ease), transform .7s var(--ease);
+    }
+    .media.is-fading img{ opacity:.18; transform: scale(1.03); }
+    .media::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,.32), rgba(0,0,0,0) 55%);
+      pointer-events:none;
+      z-index:1;
+    }
+
+    .media-nav{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 0 10px;
+      pointer-events:none;
+      z-index:2;
+    }
+    .media-btn{
+      width:34px; height:34px; border-radius:12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.14);
+      display:grid; place-items:center;
+      color:#fff;
+      pointer-events:auto;
+      cursor:pointer;
+      backdrop-filter: blur(6px);
+      transition: transform .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease);
+    }
+    .media-btn:hover{
+      background: rgba(0,0,0,0.55);
+      border-color: rgba(212,175,55,.30);
+      transform: translateY(-1px);
+    }
+    .media-dots{
+      position:absolute; left:0; right:0; bottom:10px;
+      display:flex; justify-content:center; gap:6px;
+      pointer-events:none;
+      z-index:2;
+    }
+    .media-dot{
+      width:7px; height:7px; border-radius:999px;
+      background: rgba(255,255,255,0.35);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .media-dot.active{ background: rgba(255,255,255,0.92); }
+
+    .card-body{ padding: 12px; }
+    .title{
+      font-weight: 950; margin: 2px 0 8px; letter-spacing:-0.2px;
+      display:flex; gap:8px; align-items:center; flex-wrap:wrap;
+    }
+
+    .desc{
+      margin:0;
+      color: var(--muted);
+      line-height:1.55;
+      font-size: .96rem;
+      display:-webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+
+    .meta-row{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .9rem;
+    }
+    .chip{
+      display:inline-flex; gap:8px; align-items:center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 82%, transparent);
+      font-weight: 850;
+      font-size: .84rem;
+    }
+
+    .price{ margin-top:10px; font-weight: 950; color: var(--gold2); letter-spacing: .1px; }
+
+    .more-row{
+      display:flex;
+      justify-content:flex-end;
+      margin-top: 8px;
+    }
+    .link-btn{
+      border: 1px solid var(--line2);
+      background: transparent;
+      color: color-mix(in oklab, var(--text) 90%, transparent);
+      font-weight: 950;
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease), border-color .16s var(--ease);
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+    }
+    .link-btn:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+      border-color: color-mix(in oklab, var(--gold) 30%, var(--line2) 70%);
+      color: var(--gold2);
+    }
+
+    .actions-row{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; }
+    .actions-row .btn{ flex: 1; }
+    @media (max-width: 520px){ .actions-row .btn{ width:100%; flex:unset; } }
+
+    .star{
+      display:inline-flex; gap:6px; align-items:center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(212,175,55,.28);
+      background: rgba(212,175,55,.10);
+      color: var(--gold2);
+      font-weight: 900;
+      font-size: .78rem;
+      letter-spacing: .02em;
+    }
+
+    .notice{
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--muted);
+    }
+    .notice strong{ color: var(--text); }
+
+    .request-card{
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      padding: 14px;
+      margin-top: 14px;
+    }
+
+    .pager{
+      margin-top: 14px;
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: var(--shadow2);
+      padding: 12px;
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .pager-left{
+      display:flex; gap:10px; flex-wrap:wrap;
+      align-items:center;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .92rem;
+    }
+    .pager-right{
+      display:flex; gap:8px; flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+    }
+    .pager-select{
+      display:flex; gap:8px; align-items:center;
+      padding: 8px 10px;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 900;
+    }
+    .pager-select select{ min-height: 38px; padding: 8px 10px; border-radius: 12px; }
+    .pager-btn{
+      min-height: 40px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 950;
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
+    }
+    .pager-btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .pager-btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; }
+    .pager-btn.active{
+      background: rgba(212,175,55,.16);
+      border-color: rgba(212,175,55,.35);
+      color: var(--gold2);
+    }
+    .pager-ellipsis{ padding: 8px 6px; color: var(--muted2); font-weight: 950; user-select:none; }
+
+    .modalOverlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.56);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      z-index: 140;
+      padding: 14px;
+    }
+    .modalOverlay.open{ display:flex; }
+    .modal{
+      width: min(860px, 100%);
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 86%, #000 14%);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .modalHead{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+      padding: 12px 12px;
+      border-bottom: 1px solid var(--line2);
+      background: color-mix(in oklab, var(--panel2) 65%, transparent);
+    }
+    .modalTitle{
+      font-weight: 950;
+      letter-spacing:-0.2px;
+      line-height:1.15;
+      margin:0;
+      font-size: 1.08rem;
+    }
+    .modalMeta{
+      margin-top: 8px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .modalBody{
+      padding: 12px;
+      max-height: min(65vh, 520px);
+      overflow:auto;
+    }
+    .modalDesc{
+      white-space: pre-wrap;
+      line-height: 1.65;
+      color: color-mix(in oklab, var(--text) 92%, transparent);
+      font-size: 1.0rem;
+      border-radius: 14px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      padding: 12px;
+      margin:0;
+    }
+    .modalFoot{
+      padding: 12px;
+      border-top: 1px solid var(--line2);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      background: color-mix(in oklab, var(--panel2) 65%, transparent);
+    }
+    .modalFoot .left, .modalFoot .right{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    }
+    .copy-btn{
+      border: 1px dashed var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-weight: 950;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor:pointer;
+    }
+    .copy-btn:hover{ color: var(--gold2); border-color: rgba(212,175,55,.35); }
+
+    footer{
+      margin-top: 18px;
+      border-top: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
+    }
+    .footer-cta{
+      margin-top: 14px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(900px 420px at 15% 0%, rgba(212,175,55,.16), transparent 55%),
+        radial-gradient(900px 420px at 85% 20%, rgba(0,217,129,.10), transparent 60%),
+        var(--panel2);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display:flex; gap: 12px;
+      align-items:center; justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
+    .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
+
+    .footer-grid{
+      display:grid;
+      gap: 16px;
+      padding: 16px 0;
+      grid-template-columns: 1.35fr 1fr 1fr;
+    }
+    @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
+
+    .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
+    .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
+    .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
+
+    .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
+    .footer-links a{
+      display:block;
+      padding: 6px 0;
+      color: color-mix(in oklab, var(--text) 84%, transparent);
+      font-weight: 600;
+    }
+    .footer-links a:hover{ color: var(--gold); }
+
+    .contact-stack{ display:grid; gap: 10px; }
+    .contact-chip{
+      display:flex; gap:10px; align-items:flex-start;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+    }
+    .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
+    .contact-chip .txt{ color: color-mix(in oklab, var(--text) 92%, transparent); font-weight: 900; }
+    .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
+
+    .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    .social a{
+      width: 42px; height: 42px;
+      display:inline-flex; align-items:center; justify-content:center;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--text);
+    }
+    .social a:hover{
+      color:#111;
+      background: var(--gold);
+      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
+    }
+
+    .footer-bottom{
+      border-top: 1px solid var(--line2);
+      padding: 12px 0 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      color: var(--muted2);
+      font-size: .9rem;
+    }
+    .footer-badges{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 80%, transparent);
+      font-weight: 850;
+      font-size: .84rem;
+    }
+    .badge i{ color: var(--gold); }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      min-width: 220px;
+      max-width: min(560px, calc(100vw - 28px));
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: color-mix(in oklab, var(--bg2) 88%, #000 12%);
+      box-shadow: var(--shadow2);
+      color: var(--text);
+      display:none;
+      z-index: 120;
+    }
+    .toast.show{ display:block; }
+
+    .wa-float{
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 90;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .wa-pill{
+      display:none;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 950;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(10px);
+      cursor:pointer;
+    }
+    .wa-btn{
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      border: 1px solid color-mix(in oklab, var(--gold) 40%, var(--line) 60%);
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      color: #111;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: var(--shadow2);
+      cursor:pointer;
+      transition: transform .16s var(--ease), filter .16s var(--ease);
+    }
+    .wa-btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
+    .wa-btn i{ font-size: 20px; }
+    @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
+  </style>
+</head>
+
+<body data-page="real-estate">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <!-- Mobile nav -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-label="Menu">
+      <div class="sheet-head">
+        <div class="sheet-brandline">
+          <div class="logo-wrap" aria-hidden="true">
+            <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+          </div>
+          <div style="min-width:0">
+            <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
+            <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
+          </div>
+        </div>
+
+        <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <a href="index.html#about"><span><i class="fa-solid fa-circle-info" style="color:var(--gold)"></i> About</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="real-estate.html"><span><i class="fa-solid fa-building" style="color:var(--gold)"></i> Real Estate</span><i class="fa-solid fa-check" style="opacity:.9"></i></a>
+      <a href="logistics.html"><span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Logistics</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+      <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
+
+      <div class="sheet-actions">
+        <button class="btn primary" type="button" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
+          <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
+        </button>
+        <button class="btn solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+          <i class="fa-brands fa-whatsapp"></i> WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="container header-inner">
+      <a class="brand" href="index.html#home" aria-label="Back to Index">
+        <div class="logo-wrap" aria-hidden="true">
+          <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+        </div>
+        <div class="btxt">
+          <div class="bname">Larmah Enterprise</div>
+          <div class="bsub">Real Estate • Logistics</div>
+        </div>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul>
+          <li><a class="nav-link" href="index.html#about">About</a></li>
+          <li><a class="nav-link active" href="real-estate.html">Real Estate</a></li>
+          <li><a class="nav-link" href="logistics.html">Logistics</a></li>
+          <li><a class="nav-link" href="premium.html">Premium</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
+          <i class="fa-solid fa-circle-half-stroke"></i>
+        </button>
+
+        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="container page-wrap" tabindex="-1">
+    <section class="hero" aria-label="Real Estate hero">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker">
+            <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Verified & scam-resistant</span>
+            <span class="dot">•</span>
+            <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
+          </div>
+
+          <h1>Verified <span class="gold">Real Estate</span> Catalog.</h1>
+          <p class="lead">Browse stays, rentals, and sales. Use filters + pagination to find what you need fast.</p>
+
+          <div class="hero-actions">
+            <a class="btn solid" href="#catalog"><i class="fa-solid fa-magnifying-glass"></i> Browse Listings</a>
+            <a class="btn primary" href="#book"><i class="fa-solid fa-calendar-check"></i> Booking Request</a>
+            <a class="btn ghost" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Add Logistics</a>
+          </div>
+        </div>
+
+        <aside class="hero-media" id="heroMedia" aria-label="Real estate showcase">
+          <img id="heroImg" src="https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611" alt="Real estate showcase" decoding="async" fetchpriority="high">
+          <div class="cap">
+            <div class="hero-tag" id="heroTag"><i class="fa-solid fa-house" style="color:var(--gold)"></i> Real Estate</div>
+            <div class="hero-sub" id="heroSub">Verified shortlets, rentals, and sales.</div>
+          </div>
+          <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Booking request -->
+    <section class="section" id="book" aria-label="Booking request">
+      <div class="section-head">
+        <div>
+          <h2>Booking Request</h2>
+          <p class="subhead">Send dates + location + budget. We confirm options fast on WhatsApp.</p>
+        </div>
+        <button class="btn small solid" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with a booking.' }))">
+          <i class="fa-brands fa-whatsapp"></i> Chat Support
+        </button>
+      </div>
+
+      <div class="request-card">
+        <div class="filters-grid" style="grid-template-columns: repeat(8, minmax(0, 1fr));">
+          <div class="field" style="grid-column: span 2;">
+            <label for="bk_checkin">Check-in</label>
+            <input id="bk_checkin" type="date" />
+          </div>
+
+          <div class="field" style="grid-column: span 2;">
+            <label for="bk_checkout">Check-out</label>
+            <input id="bk_checkout" type="date" />
+          </div>
+
+          <div class="field" style="grid-column: span 1;">
+            <label for="bk_guests">Guests</label>
+            <select id="bk_guests">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5+">5+</option>
+            </select>
+          </div>
+
+          <div class="field" style="grid-column: span 1;">
+            <label for="bk_cat">Category</label>
+            <select id="bk_cat">
+              <option value="Any" selected>Any</option>
+              <option value="Studio">Studio</option>
+              <option value="1 Bedroom">1 Bedroom</option>
+              <option value="2 Bedroom">2 Bedroom</option>
+              <option value="3 Bedroom">3 Bedroom</option>
+              <option value="Family">Family</option>
+              <option value="Business">Business</option>
+              <option value="Premium">Premium</option>
+            </select>
+          </div>
+
+          <div class="field" style="grid-column: span 2;">
+            <label for="bk_location">Location</label>
+            <select id="bk_location">
+              <option value="Any" selected>Any</option>
+              <option value="Ikoyi">Ikoyi</option>
+              <option value="Lekki">Lekki</option>
+              <option value="Victoria Island">Victoria Island</option>
+              <option value="Yaba">Yaba</option>
+              <option value="Mainland">Mainland</option>
+              <option value="Abuja">Abuja</option>
+            </select>
+          </div>
+
+          <div class="field" style="grid-column: span 8;">
+            <label for="bk_budget">Budget</label>
+            <input id="bk_budget" type="text" placeholder="e.g., ₦120,000 per night / ₦500k total" />
+          </div>
+
+          <div class="field" style="grid-column: span 8;">
+            <label for="bk_notes">Notes</label>
+            <textarea id="bk_notes" placeholder="Any preference? (pool, balcony, generator, proximity, etc.)"></textarea>
+          </div>
+        </div>
+
+        <div class="pillbar" style="border-top:0; margin-top:12px; padding-top:0;">
+          <button class="btn solid" type="button" onclick="submitBookingRequest()">
+            <i class="fa-brands fa-whatsapp"></i> Send Booking Request
+          </button>
+          <button class="btn primary" type="button" onclick="submitBookingToDB()">
+            <i class="fa-solid fa-inbox"></i> Save Request (DB)
+          </button>
+          <a class="btn ghost" href="premium.html#pay"><i class="fa-solid fa-crown"></i> Go Premium</a>
+        </div>
+
+        <div class="notice" style="margin-top:12px;">
+          <strong>Tip:</strong> To show on homepage Featured, set <strong>featured=true</strong> in Admin.
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="catalog" aria-label="Real Estate Catalog">
+      <div class="section-head">
+        <div>
+          <h2>Listings</h2>
+          <p class="subhead">Search + filter. Tap <b>View more</b> for full details, ref, and actions.</p>
+        </div>
+        <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Priority Sourcing</a>
+      </div>
+
+      <div class="filters" aria-label="Filters">
+        <div class="filters-grid">
+          <div class="field" style="grid-column: span 1;">
+            <label for="re_q">Search</label>
+            <input id="re_q" placeholder="Title, features, area..." autocomplete="off" />
+          </div>
+
+          <div class="field">
+            <label for="re_cat">Category</label>
+            <select id="re_cat">
+              <option value="all" selected>All</option>
+              <option value="shortlet">Shortlet</option>
+              <option value="rent">Rent</option>
+              <option value="buy">Buy</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="re_loc">Location</label>
+            <select id="re_loc">
+              <option value="all" selected>Any</option>
+              <option value="Ikoyi">Ikoyi</option>
+              <option value="Lekki">Lekki</option>
+              <option value="Victoria Island">Victoria Island</option>
+              <option value="Yaba">Yaba</option>
+              <option value="Mainland">Mainland</option>
+              <option value="Abuja">Abuja</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="re_sort">Sort</label>
+            <select id="re_sort">
+              <option value="new" selected>Newest</option>
+              <option value="az">Title A–Z</option>
+              <option value="za">Title Z–A</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="re_feat">Featured</label>
+            <select id="re_feat">
+              <option value="all" selected>All</option>
+              <option value="featured">Featured only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pillbar" aria-label="Quick filters">
+          <button class="btn small" type="button" onclick="reQuick('Lekki')">Lekki</button>
+          <button class="btn small" type="button" onclick="reQuick('Victoria Island')">VI</button>
+          <button class="btn small" type="button" onclick="reQuick('Ikoyi')">Ikoyi</button>
+          <button class="btn small" type="button" onclick="reSetCat('shortlet')">Shortlet</button>
+          <button class="btn small" type="button" onclick="reSetCat('rent')">Rent</button>
+          <button class="btn small" type="button" onclick="reSetCat('buy')">Buy</button>
+
+          <button class="btn small" type="button" onclick="reSetFeatured(true)">
+            <i class="fa-solid fa-star" style="color:var(--gold)"></i> Featured
+          </button>
+
+          <button class="btn small" type="button" onclick="reReset()"
+            style="color:var(--bad);border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+          </button>
+        </div>
+      </div>
+
+      <div id="re_mount">
+        <div class="notice">Loading verified listings…</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-cta">
+        <div>
+          <h3>Verified stays. Clear confirmation. WhatsApp-first.</h3>
+          <p>Confirm availability and coordinate logistics — in one chat.</p>
+        </div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn solid" type="button"
+            onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </button>
+          <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
+          <a class="btn primary" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
+        </div>
+      </div>
+
+      <div class="footer-grid">
+        <div>
+          <div class="brandline">
+            <div class="logo-wrap" aria-hidden="true">
+              <img src="assets/images/larmah-favicon.jpeg" alt="Larmah Enterprise" />
+            </div>
+            <div class="brandtext">
+              <div class="brandname">Larmah Enterprise</div>
+              <div class="tagline">RC: 9127113</div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px; color:var(--muted); line-height:1.55;">
+            Verified real estate and logistics support.
+          </div>
+
+          <div class="social" aria-label="Social links">
+            <a href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://x.com/heylarmah_tech" aria-label="X" title="X"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
+            <a href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Quick Links</div>
+          <div class="footer-links">
+            <a href="index.html#about">About</a>
+            <a href="real-estate.html">Real Estate</a>
+            <a href="logistics.html">Logistics</a>
+            <a href="premium.html">Premium</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">Contact</div>
+
+          <div class="contact-stack">
+            <div class="contact-chip">
+              <i class="fa-brands fa-whatsapp"></i>
+              <div>
+                <div class="txt">+234 706 308 0605</div>
+                <div class="sub">WhatsApp-first support</div>
+              </div>
+            </div>
+
+            <div class="contact-chip">
+              <i class="fa-regular fa-envelope"></i>
+              <div>
+                <div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div>
+                <div class="sub">Business enquiries</div>
+              </div>
+            </div>
+
+            <div class="contact-chip">
+              <i class="fa-solid fa-location-dot"></i>
+              <div>
+                <div class="txt">Lagos, Nigeria</div>
+                <div class="sub">Serving Nigeria nationwide</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn small solid" type="button"
+              onclick="openWA(buildMsg('Real Estate Enquiry', { Message:'Hello Larmah, I need a verified listing.' }))">
+              <i class="fa-brands fa-whatsapp"></i> Chat Now
+            </button>
+
+            <a class="btn small primary" href="premium.html">
+              <i class="fa-solid fa-crown"></i> Go Premium
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+        <div class="footer-badges">
+          <span class="badge"><i class="fa-solid fa-shield-halved"></i> Trust-first</span>
+          <span class="badge"><i class="fa-solid fa-hashtag"></i> Traceable refs</span>
+          <span class="badge"><i class="fa-solid fa-headset"></i> Support</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp -->
+  <div class="wa-float" aria-label="Floating WhatsApp support">
+    <button class="wa-pill" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+      WhatsApp Support
+    </button>
+    <button class="wa-btn" type="button" aria-label="Chat on WhatsApp" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+      <i class="fa-brands fa-whatsapp"></i>
+    </button>
+  </div>
+
+  <!-- ✅ View More Modal -->
+  <div class="modalOverlay" id="descOverlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Listing details">
+      <div class="modalHead">
+        <div style="min-width:0;">
+          <h3 class="modalTitle" id="descTitle">Listing</h3>
+          <div class="modalMeta" id="descMeta"></div>
+        </div>
+        <button class="icon-btn" type="button" onclick="closeDescModal()" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modalBody">
+        <p class="modalDesc" id="descBody"></p>
+      </div>
+
+      <div class="modalFoot">
+        <div class="left">
+          <button class="copy-btn" type="button" onclick="copyDescRef()">
+            <i class="fa-regular fa-copy"></i> Copy Ref
+          </button>
+          <button class="copy-btn" type="button" onclick="copyDescLink()">
+            <i class="fa-solid fa-link"></i> Copy Link
+          </button>
+        </div>
+        <div class="right">
+          <button class="btn primary" type="button" onclick="closeDescModal()">
+            <i class="fa-solid fa-check"></i> Done
+          </button>
+          <button class="btn solid" type="button" onclick="descModalEnquire()">
+            <i class="fa-brands fa-whatsapp"></i> Enquire
+          </button>
+          <button class="btn primary" type="button" onclick="descModalBook()">
+            <i class="fa-solid fa-calendar-check"></i> Book this
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+
+    // ✅ Absolute URL helper
+    function absUrl(pathOrUrl){
+      try{
+        if(!pathOrUrl) return "";
+        const s = String(pathOrUrl);
+        if(/^https?:\/\//i.test(s)) return s;
+        return new URL(s.replace(/^\.\//,''), location.origin + "/").toString();
+      }catch{ return String(pathOrUrl||""); }
+    }
+
+    function toast(msg){
+      const t = document.getElementById("toast");
+      if(!t) return;
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(window.__toastT);
+      window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
+    }
+
+    const THEME_KEY = "larmah_theme_v6";
+    function setTheme(theme){
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem(THEME_KEY, theme);
+      const metaTheme = document.querySelector('meta[name="theme-color"]');
+      if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
+    }
+    function toggleTheme(){
+      const cur = document.documentElement.getAttribute("data-theme") || "dark";
+      setTheme(cur === "dark" ? "light" : "dark");
+    }
+    (function initTheme(){
+      const saved = localStorage.getItem(THEME_KEY);
+      if(saved === "light" || saved === "dark"){ setTheme(saved); return; }
+      const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
+      setTheme(prefersLight ? "light" : "dark");
+    })();
+
+    const overlay = document.getElementById("overlay");
+    function toggleMenu(open){
+      overlay.classList.toggle("open", !!open);
+      overlay.setAttribute("aria-hidden", open ? "false" : "true");
+    }
+    overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
+
+    function buildMsg(title, data){
+      if(window.LARMAH?.buildMessage) return LARMAH.buildMessage(title, data);
+      const lines = [title, ""];
+      for(const [k,v] of Object.entries(data || {})){
+        const val = (v ?? "").toString().trim();
+        if(val) lines.push(`${k}: ${val}`);
+      }
+      return lines.join("\n");
+    }
+    function openWA(text){
+      if(window.LARMAH?.openWhatsApp) return LARMAH.openWhatsApp(text);
+      const phone = "2347063080605";
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
+    }
+
+    // hero slideshow
+    const heroMedia = document.getElementById("heroMedia");
+    const heroImg = document.getElementById("heroImg");
+    const heroTag = document.getElementById("heroTag");
+    const heroSub = document.getElementById("heroSub");
+    const heroBar = document.getElementById("heroBar");
+
+    const HERO_SLIDES = [
+      { img:"https://source.unsplash.com/1600x1000/?luxury,apartment,interior&sig=611", icon:"fa-house", label:"Shortlets", sub:"Verified shortlets and premium stays." },
+      { img:"https://source.unsplash.com/1600x1000/?real-estate,building,lagos&sig=612", icon:"fa-building", label:"Verified Listings", sub:"Trust-first sourcing with clear confirmations." },
+      { img:"https://source.unsplash.com/1600x1000/?apartment,living-room,modern&sig=613", icon:"fa-house", label:"Rentals", sub:"Quality rentals in high-demand areas." },
+      { img:"https://source.unsplash.com/1600x1000/?villa,luxury,interior&sig=614", icon:"fa-house", label:"Premium", sub:"High-standard options when you need the best." }
+    ];
+    let heroIdx = 0;
+
+    function runHeroProgress(){
+      if(!heroBar) return;
+      heroBar.classList.remove("run");
+      void heroBar.offsetWidth;
+      heroBar.classList.add("run");
+    }
+    function setHero(i){
+      const s = HERO_SLIDES[i % HERO_SLIDES.length];
+      if(!heroMedia || !heroImg || !heroTag || !heroSub) return;
+      heroMedia.classList.add("is-fading");
+      runHeroProgress();
+      setTimeout(() => {
+        heroImg.src = s.img;
+        heroImg.alt = s.label;
+        heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
+        heroSub.textContent = s.sub;
+        setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
+      }, 220);
+    }
+    if(!reduceMotion){
+      setHero(0);
+      setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
+    } else setHero(0);
+
+    // data + images + pagination
+    const __RE = { items: [], imgUrls: {}, imgIdx: {}, timers: {}, page: 1, pageSize: 9 };
+    const __RE_MODAL = { id:null, ref:"", title:"", price:"", location:"", category:"", featured:false, desc:"", link:"" };
+
+    function sbClient(){
+      return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
+    }
+    async function waitForSB({tries=14, delay=250}={}){
+      for(let i=0;i<tries;i++){
+        const sb = sbClient();
+        if(sb) return sb;
+        await new Promise(r=>setTimeout(r, delay));
+      }
+      return null;
+    }
+
+    function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
+    function formatPrice(raw){ const s = safeText(raw).trim(); return s ? s : "Contact for quote"; }
+
+    function inferCategory(it){
+      const hay = (safeText(it.listing_type) + " " + safeText(it.type) + " " + safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" "))).toLowerCase();
+      if(hay.includes("shortlet") || hay.includes("airbnb")) return "Shortlet";
+      if(hay.includes("rent") || hay.includes("year") || hay.includes("annual")) return "Rent";
+      if(hay.includes("buy") || hay.includes("sale") || hay.includes("purchase")) return "Buy";
+      return "Listing";
+    }
+    function inferLocation(it){ return safeText(it.location || it.area || it.city || it.state || "").trim() || "Nigeria"; }
+    function listingRef(id){ return `WEB-RE-${id}`; }
+
+    function getImages(it){
+      const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
+      if(arr.length) return arr.slice(0, 6).map(absUrl);
+      if(it.image_url) return [absUrl(it.image_url)];
+      return [absUrl("assets/images/larmah-header.jpeg")];
+    }
+
+    // ✅ Domain-originated share link for item
+    function reShareLink(it){
+      const id = String(it.id);
+      const urls = __RE.imgUrls[id] || getImages(it);
+      const img = urls[0] || absUrl("assets/images/larmah-header.jpeg");
+      const title = safeText(it.title) || "Listing";
+      const desc = (safeText(it.description) || "").slice(0,140);
+      const u = new URL(absUrl("real-estate.html"), location.origin);
+      u.searchParams.set("item", id);
+      u.searchParams.set("img", img);
+      u.searchParams.set("title", title);
+      u.searchParams.set("desc", desc);
+      return u.toString();
+    }
+
+    function initImagesFor(it){
+      const id = String(it.id);
+      __RE.imgUrls[id] = getImages(it);
+      __RE.imgIdx[id] = __RE.imgIdx[id] ?? 0;
+    }
+    function clearAllTimers(){
+      for(const k in __RE.timers){
+        try{ clearInterval(__RE.timers[k]); } catch {}
+      }
+      __RE.timers = {};
+    }
+    function setCardImage(id){
+      const img = document.getElementById(`re-img-${id}`);
+      if(!img) return;
+      const urls = __RE.imgUrls[id] || [absUrl("assets/images/larmah-header.jpeg")];
+      const idx = __RE.imgIdx[id] || 0;
+      img.src = urls[idx] || urls[0] || absUrl("assets/images/larmah-header.jpeg");
+
+      const dots = document.getElementById(`re-dots-${id}`);
+      if(dots){
+        dots.querySelectorAll(".media-dot").forEach((d,i)=> d.classList.toggle("active", i===idx));
+      }
+    }
+    function cycleReImage(id, dir){
+      const urls = __RE.imgUrls[id] || [];
+      if(urls.length <= 1) return;
+      const max = urls.length;
+      const cur = __RE.imgIdx[id] || 0;
+      __RE.imgIdx[id] = (cur + dir + max) % max;
+      setCardImage(id);
+    }
+    window.cycleReImage = cycleReImage;
+
+    function autoRotateImages(id){
+      if(reduceMotion) return;
+      const urls = __RE.imgUrls[id] || [];
+      if(urls.length <= 1) return;
+
+      __RE.timers[id] = setInterval(() => {
+        __RE.imgIdx[id] = ((__RE.imgIdx[id]||0) + 1) % urls.length;
+        const media = document.getElementById(`re-media-${id}`);
+        if(media){
+          media.classList.add("is-fading");
+          setTimeout(() => { setCardImage(id); media.classList.remove("is-fading"); }, 180);
+        } else setCardImage(id);
+      }, 5000);
+    }
+
+    function openDescModalById(id){
+      const it = (__RE.items||[]).find(x => String(x.id)===String(id));
+      if(!it) return;
+
+      initImagesFor(it);
+      const link = reShareLink(it);
+
+      __RE_MODAL.id = String(it.id);
+      __RE_MODAL.ref = listingRef(it.id);
+      __RE_MODAL.title = safeText(it.title) || "Listing";
+      __RE_MODAL.price = formatPrice(it.price);
+      __RE_MODAL.location = inferLocation(it);
+      __RE_MODAL.category = inferCategory(it);
+      __RE_MODAL.featured = it.featured === true;
+      __RE_MODAL.desc = safeText(it.description) || "No description provided.";
+      __RE_MODAL.link = link;
+
+      const titleEl = document.getElementById("descTitle");
+      const metaEl = document.getElementById("descMeta");
+      const bodyEl = document.getElementById("descBody");
+
+      if(titleEl) titleEl.textContent = __RE_MODAL.title;
+      if(bodyEl) bodyEl.textContent = __RE_MODAL.desc;
+
+      if(metaEl){
+        metaEl.innerHTML = `
+          <span class="chip"><i class="fa-solid fa-naira-sign" style="color:var(--gold)"></i> ${esc(__RE_MODAL.price)}</span>
+          <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(__RE_MODAL.location)}</span>
+          <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(__RE_MODAL.category)}</span>
+          <span class="chip"><i class="fa-solid fa-hashtag" style="color:var(--gold)"></i> ${esc(__RE_MODAL.ref)}</span>
+          <span class="chip"><i class="fa-solid fa-link" style="color:var(--gold)"></i> <a href="${esc(__RE_MODAL.link)}" target="_blank" rel="noopener">Open link</a></span>
+          ${__RE_MODAL.featured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
+        `;
+      }
+
+      const ov = document.getElementById("descOverlay");
+      ov.classList.add("open");
+      ov.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => ov.querySelector("button.icon-btn")?.focus?.(), 50);
+    }
+    function closeDescModal(){
+      const ov = document.getElementById("descOverlay");
+      ov.classList.remove("open");
+      ov.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "";
+    }
+    function copyDescRef(){
+      const txt = __RE_MODAL.ref || "";
+      if(!txt) return toast("No ref to copy.");
+      navigator.clipboard?.writeText(txt).then(
+        () => toast("Ref copied ✅"),
+        () => toast("Copy failed. Please copy manually.")
+      );
+    }
+    function copyDescLink(){
+      const txt = __RE_MODAL.link || "";
+      if(!txt) return toast("No link to copy.");
+      navigator.clipboard?.writeText(txt).then(
+        () => toast("Link copied ✅"),
+        () => toast("Copy failed. Please copy manually.")
+      );
+    }
+    function descModalEnquire(){
+      openWA(buildMsg("Real Estate Enquiry", {
+        Ref: __RE_MODAL.ref,
+        Title: __RE_MODAL.title,
+        Location: __RE_MODAL.location,
+        Category: __RE_MODAL.category,
+        Price: __RE_MODAL.price,
+        Link: __RE_MODAL.link,
+        Featured: __RE_MODAL.featured ? "Yes" : "No",
+        Message: "Hello Larmah, please confirm availability and next steps."
+      }));
+    }
+    function descModalBook(){
+      const notes = document.getElementById("bk_notes");
+      if(notes){
+        notes.value =
+`Interested in: ${__RE_MODAL.title}
+Ref: ${__RE_MODAL.ref}
+Location: ${__RE_MODAL.location}
+Price: ${__RE_MODAL.price}
+Link: ${__RE_MODAL.link}
+
+`;
+      }
+      const locSel = document.getElementById("bk_location");
+      if(locSel){
+        const opt = [...locSel.options].find(o => o.value.toLowerCase() === (__RE_MODAL.location||"").toLowerCase());
+        if(opt) locSel.value = opt.value;
+      }
+      closeDescModal();
+      document.getElementById("book")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
+      toast("Booking form pre-filled ✅");
+    }
+
+    document.getElementById("descOverlay")?.addEventListener("click", (e) => {
+      if(e.target && e.target.id === "descOverlay") closeDescModal();
+    });
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        const ov = document.getElementById("descOverlay");
+        if(ov?.classList?.contains("open")) closeDescModal();
+      }
+    });
+
+    window.openDescModalById = openDescModalById;
+    window.closeDescModal = closeDescModal;
+    window.copyDescRef = copyDescRef;
+    window.copyDescLink = copyDescLink;
+    window.descModalEnquire = descModalEnquire;
+    window.descModalBook = descModalBook;
+
+    function cardHTML(it){
+      const id = String(it.id);
+      initImagesFor(it);
+      const urls = __RE.imgUrls[id] || [];
+      const hasMany = urls.length > 1;
+
+      const title = safeText(it.title) || "Listing";
+      const desc = safeText(it.description) || "Verified listing.";
+      const price = formatPrice(it.price);
+      const locationTxt = inferLocation(it);
+      const categoryTxt = inferCategory(it);
+      const isFeatured = it.featured === true;
+
+      return `
+        <article class="card" id="item-${id}" data-item-id="${id}" aria-label="${esc(title)}">
+          <div class="media" id="re-media-${id}">
+            <img id="re-img-${id}" src="${esc(urls[0] || absUrl('assets/images/larmah-header.jpeg'))}"
+                 alt="${esc(title)}" loading="lazy" decoding="async"
+                 onerror="this.src='assets/images/larmah-header.jpeg'; this.onerror=null;">
+
+            ${hasMany ? `
+              <div class="media-nav">
+                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleReImage('${id}', -1)">
+                  <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleReImage('${id}', 1)">
+                  <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="media-dots" id="re-dots-${id}" aria-hidden="true">
+                ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
+              </div>
+            ` : ``}
+          </div>
+
+          <div class="card-body">
+            <div class="title">
+              ${esc(title)}
+              ${isFeatured ? `<span class="star"><i class="fa-solid fa-star"></i> Featured</span>` : ``}
+            </div>
+
+            <p class="desc">${esc(desc)}</p>
+
+            <div class="more-row">
+              <button class="link-btn" type="button" onclick="openDescModalById('${id}')">
+                <i class="fa-regular fa-file-lines"></i> View more
+              </button>
+            </div>
+
+            <div class="price">${esc(price)}</div>
+
+            <div class="meta-row">
+              <span class="chip"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${esc(locationTxt)}</span>
+              <span class="chip"><i class="fa-solid fa-tag" style="color:var(--gold)"></i> ${esc(categoryTxt)}</span>
+            </div>
+
+            <div class="actions-row">
+              <button class="btn small solid" type="button" onclick="reEnquire('${id}')">
+                <i class="fa-brands fa-whatsapp"></i> Enquire
+              </button>
+              <button class="btn small primary" type="button" onclick="reBookFromCard('${id}')">
+                <i class="fa-solid fa-calendar-check"></i> Book
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function pagerButtons(page, totalPages){
+      const btns = [];
+      const add = (p, label, active=false) => btns.push({ type:"btn", p, label, active });
+      const ell = () => btns.push({ type:"ell" });
+      if(totalPages <= 1) return btns;
+
+      const maxBtns = 7;
+      const half = Math.floor(maxBtns / 2);
+      let start = Math.max(1, page - half);
+      let end = Math.min(totalPages, page + half);
+
+      if(end - start + 1 < maxBtns){
+        const missing = maxBtns - (end - start + 1);
+        start = Math.max(1, start - missing);
+        end = Math.min(totalPages, end + missing);
+      }
+
+      add(1, "1", page===1);
+      if(start > 2) ell();
+      for(let p = Math.max(2, start); p <= Math.min(totalPages-1, end); p++){
+        add(p, String(p), p===page);
+      }
+      if(end < totalPages - 1) ell();
+      if(totalPages > 1) add(totalPages, String(totalPages), page===totalPages);
+      return btns;
+    }
+
+    function pagerHTML(page, pageSize, total){
+      const totalPages = Math.max(1, Math.ceil(total / pageSize));
+      const from = total ? ((page - 1) * pageSize) + 1 : 0;
+      const to = Math.min(total, page * pageSize);
+      const btns = pagerButtons(page, totalPages);
+
+      return `
+        <div class="pager" role="navigation" aria-label="Listings pagination">
+          <div class="pager-left">
+            <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>–<b>${to}</b> of <b>${total}</b></span>
+          </div>
+
+          <div class="pager-right">
+            <button class="pager-btn" type="button" onclick="reGoPage(${page-1})" ${page<=1?'disabled':''} aria-label="Previous page">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            ${btns.map(b => {
+              if(b.type === "ell") return `<span class="pager-ellipsis" aria-hidden="true">…</span>`;
+              return `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="reGoPage(${b.p})" aria-label="Go to page ${b.label}">${b.label}</button>`;
+            }).join("")}
+
+            <button class="pager-btn" type="button" onclick="reGoPage(${page+1})" ${page>=totalPages?'disabled':''} aria-label="Next page">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <div class="pager-select" aria-label="Items per page">
+              <span style="color:var(--muted2); font-weight:950;">Per page</span>
+              <select id="re_pageSize" onchange="reSetPageSize(this.value)">
+                ${[6,9,12,18,24].map(n => `<option value="${n}" ${Number(pageSize)===n?'selected':''}>${n}</option>`).join("")}
+              </select>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function getReFiltered(){
+      const q = safeText(document.getElementById("re_q").value).toLowerCase().trim();
+      const cat = document.getElementById("re_cat").value;
+      const loc = document.getElementById("re_loc").value;
+      const sort = document.getElementById("re_sort").value;
+      const feat = document.getElementById("re_feat").value;
+
+      let items = (__RE.items || []).slice();
+
+      if(q){
+        items = items.filter(it => {
+          const hay = (safeText(it.title) + " " + safeText(it.description) + " " + safeText((it.tags||[]).join(" ")) + " " + inferLocation(it)).toLowerCase();
+          return hay.includes(q);
+        });
+      }
+      if(cat !== "all") items = items.filter(it => inferCategory(it).toLowerCase() === cat);
+      if(loc !== "all") items = items.filter(it => inferLocation(it).toLowerCase().includes(loc.toLowerCase()));
+      if(feat === "featured") items = items.filter(it => it.featured === true);
+
+      if(sort === "az") items.sort((a,b)=> safeText(a.title).localeCompare(safeText(b.title)));
+      else if(sort === "za") items.sort((a,b)=> safeText(b.title).localeCompare(safeText(a.title)));
+      else items.sort((a,b)=> new Date(b.created_at||0) - new Date(a.created_at||0));
+
+      return items;
+    }
+
+    function renderRealEstate(){
+      const mount = document.getElementById("re_mount");
+      const itemsAll = getReFiltered();
+      const total = itemsAll.length;
+
+      if(!total){
+        clearAllTimers();
+        mount.innerHTML = `<div class="notice"><strong>No matches found.</strong> Try adjusting filters.</div>`;
+        return;
+      }
+
+      const totalPages = Math.max(1, Math.ceil(total / __RE.pageSize));
+      __RE.page = Math.min(Math.max(1, __RE.page), totalPages);
+
+      const start = (__RE.page - 1) * __RE.pageSize;
+      const pageItems = itemsAll.slice(start, start + __RE.pageSize);
+
+      clearAllTimers();
+      mount.innerHTML = `
+        <div class="grid">${pageItems.map(cardHTML).join("")}</div>
+        ${pagerHTML(__RE.page, __RE.pageSize, total)}
+      `;
+      pageItems.forEach(it => autoRotateImages(String(it.id)));
+    }
+
+    function reGoPage(p){
+      const next = Number(p);
+      if(!Number.isFinite(next)) return;
+      __RE.page = Math.max(1, next);
+      renderRealEstate();
+      document.getElementById("catalog")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
+      if(window.__DEEPLINK_RE_ID) setTimeout(() => openItemFromQuery(true), 50);
+    }
+    function reSetPageSize(n){
+      const v = Math.max(3, Math.min(60, Number(n) || 9));
+      __RE.pageSize = v;
+      __RE.page = 1;
+      renderRealEstate();
+      if(window.__DEEPLINK_RE_ID) setTimeout(() => openItemFromQuery(true), 50);
+    }
+    window.reGoPage = reGoPage;
+    window.reSetPageSize = reSetPageSize;
+
+    function reQuick(word){
+      const el = document.getElementById("re_q");
+      el.value = (el.value ? el.value + " " : "") + word;
+      __RE.page = 1;
+      renderRealEstate();
+    }
+    function reSetCat(v){ document.getElementById("re_cat").value = v; __RE.page = 1; renderRealEstate(); }
+    function reSetFeatured(on){ document.getElementById("re_feat").value = on ? "featured" : "all"; __RE.page = 1; renderRealEstate(); }
+    function reReset(){
+      document.getElementById("re_q").value = "";
+      document.getElementById("re_cat").value = "all";
+      document.getElementById("re_loc").value = "all";
+      document.getElementById("re_sort").value = "new";
+      document.getElementById("re_feat").value = "all";
+      __RE.page = 1;
+      renderRealEstate();
+      if(window.__DEEPLINK_RE_ID) setTimeout(() => openItemFromQuery(true), 50);
+    }
+    window.reQuick = reQuick;
+    window.reSetCat = reSetCat;
+    window.reSetFeatured = reSetFeatured;
+    window.reReset = reReset;
+
+    function reEnquire(id){
+      const it = (__RE.items||[]).find(x => String(x.id)===String(id));
+      if(!it) return;
+      initImagesFor(it);
+      const link = reShareLink(it);
+
+      openWA(buildMsg("Real Estate Enquiry", {
+        Ref: listingRef(id),
+        Title: safeText(it.title),
+        Location: inferLocation(it),
+        Category: inferCategory(it),
+        Price: formatPrice(it.price),
+        Link: link,
+        Featured: it.featured === true ? "Yes" : "No",
+        Message: "Hello Larmah, please confirm availability and next steps."
+      }));
+    }
+    window.reEnquire = reEnquire;
+
+    function reBookFromCard(id){
+      const it = (__RE.items||[]).find(x => String(x.id)===String(id));
+      if(!it) return;
+      initImagesFor(it);
+      const link = reShareLink(it);
+
+      document.getElementById("bk_notes").value =
+`Interested in: ${safeText(it.title)}
+Ref: ${listingRef(id)}
+Location: ${inferLocation(it)}
+Price: ${formatPrice(it.price)}
+Link: ${link}
+
+`;
+      document.getElementById("book").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
+      toast("Booking form pre-filled ✅");
+    }
+    window.reBookFromCard = reBookFromCard;
+
+    function submitBookingRequest(){
+      const checkin = (document.getElementById("bk_checkin").value || "Not set");
+      const checkout = (document.getElementById("bk_checkout").value || "Not set");
+      const guests = (document.getElementById("bk_guests").value || "2");
+      const category = (document.getElementById("bk_cat").value || "Any");
+      const locationVal = (document.getElementById("bk_location").value || "Any");
+      const budget = (document.getElementById("bk_budget").value || "");
+      const notes = (document.getElementById("bk_notes").value || "");
+
+      openWA(buildMsg("Real Estate — Booking Request", {
+        Checkin: checkin,
+        Checkout: checkout,
+        Guests: guests,
+        Category: category,
+        Location: locationVal,
+        Budget: budget,
+        Notes: notes,
+        Message: "Hello Larmah, please confirm available verified options and total cost."
+      }));
+    }
+    window.submitBookingRequest = submitBookingRequest;
+
+    async function submitBookingToDB(){
+      const fields = {
+        Checkin: (document.getElementById("bk_checkin").value || ""),
+        Checkout: (document.getElementById("bk_checkout").value || ""),
+        Guests: (document.getElementById("bk_guests").value || ""),
+        Category: (document.getElementById("bk_cat").value || ""),
+        Location: (document.getElementById("bk_location").value || ""),
+        Budget: (document.getElementById("bk_budget").value || ""),
+        Notes: (document.getElementById("bk_notes").value || "")
+      };
+
+      if(!fields.Location || fields.Location === "Any"){
+        toast("Please select a location.");
+        return;
+      }
+
+      try{
+        const sb = await waitForSB();
+        if(!sb) throw new Error("Supabase not ready.");
+
+        if(window.LARMAH?.submitRequest){
+          await LARMAH.submitRequest({
+            header: "New Real Estate Booking Request",
+            category: "real-estate",
+            fields,
+            refPrefix: "RE"
+          });
+          toast("Submitted. We’ll respond on WhatsApp ✅");
+          return;
+        }
+
+        const { error } = await sb.from("requests").insert([{
+          category: "real-estate",
+          payload: fields,
+          status: "new"
+        }]);
+        if(error) throw error;
+
+        toast("Saved ✅ (We’ll respond on WhatsApp)");
+        submitBookingRequest();
+      }catch(e){
+        console.warn(e);
+        toast(e?.message || "Could not save. Sending via WhatsApp…");
+        submitBookingRequest();
+      }
+    }
+    window.submitBookingToDB = submitBookingToDB;
+
+    // Date mins
+    function toISODate(d){
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    const todayISO = toISODate(new Date());
+    const bkIn = document.getElementById("bk_checkin");
+    const bkOut = document.getElementById("bk_checkout");
+    if(bkIn) bkIn.min = todayISO;
+    if(bkOut) bkOut.min = todayISO;
+    if(bkIn && bkOut){
+      bkIn.addEventListener("change", () => {
+        if(!bkIn.value) return;
+        bkOut.min = bkIn.value;
+        if(bkOut.value && bkOut.value < bkIn.value) bkOut.value = bkIn.value;
+      });
+    }
+
+    // ✅ Deep-link open: ?item=<id>
+    function openItemFromQuery(isRerun){
+      try{
+        const qs = new URLSearchParams(location.search);
+        const id = qs.get("item");
+        if(!id) return;
+
+        window.__DEEPLINK_RE_ID = String(id);
+
+        if(__RE_MODAL?.id && String(__RE_MODAL.id) === String(id)) return;
+
+        // First run: reset filters so item is visible
+        if(!isRerun){
+          document.getElementById("re_q").value = "";
+          document.getElementById("re_cat").value = "all";
+          document.getElementById("re_loc").value = "all";
+          document.getElementById("re_sort").value = "new";
+          document.getElementById("re_feat").value = "all";
+        }
+
+        const filtered = getReFiltered();
+        const fIdx = filtered.findIndex(x => String(x.id) === String(id));
+        if(fIdx < 0){
+          if(!isRerun){
+            __RE.page = 1;
+            renderRealEstate();
+            setTimeout(() => openItemFromQuery(true), 80);
+          }
+          return;
+        }
+
+        const page = Math.floor(fIdx / __RE.pageSize) + 1;
+        if(__RE.page !== page){
+          __RE.page = page;
+          renderRealEstate();
+        }
+
+        setTimeout(() => {
+          document.getElementById("catalog")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
+          const card = document.getElementById(`item-${id}`);
+          if(card){
+            card.classList.remove("pulse");
+            void card.offsetWidth;
+            card.classList.add("pulse");
+            card.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"center" });
+          }
+          setTimeout(() => openDescModalById(id), 160);
+        }, 80);
+
+      }catch{}
+    }
+
+    async function loadRealEstate(){
+      const mount = document.getElementById("re_mount");
+      mount.innerHTML = `<div class="notice">Loading verified listings…</div>`;
+
+      try{
+        const sb = await waitForSB();
+        if(!sb) throw new Error("Supabase not ready. Ensure assets/js/app.js has your SUPABASE_URL + SUPABASE_ANON_KEY.");
+
+        const { data, error } = await sb
+          .from("listings")
+          .select("id,title,description,price,image_url,image_urls,location,area,city,state,listing_type,type,tags,category,status,featured,sort_rank,created_at")
+          .eq("category", "real-estate")
+          .eq("status", "active")
+          .order("created_at", { ascending: false })
+          .limit(500);
+
+        if(error) throw error;
+
+        __RE.items = (data || []).map(r => ({
+          ...r,
+          image_url: r.image_url ? absUrl(r.image_url) : r.image_url,
+          image_urls: Array.isArray(r.image_urls) ? r.image_urls.map(absUrl) : r.image_urls
+        }));
+        __RE.page = 1;
+
+        if(!__RE.items.length){
+          clearAllTimers();
+          mount.innerHTML = `<div class="notice"><strong>No active listings currently.</strong> Please check back soon.</div>`;
+          return;
+        }
+
+        renderRealEstate();
+
+        // ✅ Run deep-link open after render
+        setTimeout(() => openItemFromQuery(false), 80);
+
+        if(window.LARMAH?.realtime?.subscribe){
+          LARMAH.realtime.subscribe("listings", () => loadRealEstate(), "re-page", { debounceMs: 800 });
+        }
+      } catch(err){
+        console.error(err);
+        clearAllTimers();
+        mount.innerHTML = `<div class="notice" style="border-color:color-mix(in oklab, var(--bad) 30%, var(--line) 70%)">
+          <strong>Could not load listings.</strong> Please refresh or try again later.
+        </div>`;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const resetPage = () => { __RE.page = 1; renderRealEstate(); };
+
+      document.getElementById("re_q")?.addEventListener("input", resetPage);
+      document.getElementById("re_cat")?.addEventListener("change", resetPage);
+      document.getElementById("re_loc")?.addEventListener("change", resetPage);
+      document.getElementById("re_sort")?.addEventListener("change", resetPage);
+      document.getElementById("re_feat")?.addEventListener("change", resetPage);
+
+      loadRealEstate();
+    });
+
+    window.toggleMenu = toggleMenu;
+    window.toggleTheme = toggleTheme;
+  </script>
+</body>
+</html>
+<!-- =========================
   index.html (FULL — COMPLETE UPDATED)
   ✅ HERO highlight display fixed perfectly:
      - Preloads highlight images
