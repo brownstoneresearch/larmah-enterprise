@@ -1,15 +1,15 @@
 <!-- =========================
   index.html (FULL — COMPLETE UPDATED)
+  ✅ Highlight images ALWAYS visible + preloaded + safe fallback
+  ✅ All .jpg changed to .jpeg (no .jpg anywhere)
   ✅ Featured cards: NO “View more” + NO Modal
   ✅ Each Featured item has a “View” button:
       - Real Estate → real-estate.html?item=<id>
       - Logistics  → logistics.html?item=<id>
-  ✅ Hero highlight photos replaced (ALL .jpeg):
+  ✅ Hero highlight images (lowercase filenames recommended):
       - assets/images/verified-listing.jpeg
       - assets/images/featured-listings.jpeg
-      - assets/images/Seamless-logistics-support.jpeg
-  ✅ All .jpg references changed to .jpeg
-  ✅ Keeps: filters + pagination + image carousel + WhatsApp enquire
+      - assets/images/seamless-logistics-support.jpeg
   ✅ Includes: current synced footer + floating WhatsApp
 ========================= -->
 <!DOCTYPE html>
@@ -50,7 +50,12 @@
   <!-- Performance -->
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
+  <!-- ✅ Preload highlight images (prevents blank/flicker) -->
+  <link rel="preload" href="assets/images/verified-listing.jpeg" as="image" />
+  <link rel="preload" href="assets/images/featured-listings.jpeg" as="image" />
+  <link rel="preload" href="assets/images/seamless-logistics-support.jpeg" as="image" />
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -179,11 +184,9 @@
       border-radius: 12px;
     }
 
-    /* Pages router */
     .page{ display:none; }
     .page.is-active{ display:block; }
 
-    /* Header */
     header{
       position:sticky;
       top:0;
@@ -319,7 +322,6 @@
       .icon-btn{ width:40px; height:40px; }
     }
 
-    /* Mobile sheet */
     .overlay{
       position:fixed; inset:0;
       background: var(--overlayBg);
@@ -368,7 +370,6 @@
     }
     .sheet-actions .btn{ flex:1; min-width: 0; }
 
-    /* Buttons */
     .btn{
       display:inline-flex;
       align-items:center;
@@ -393,22 +394,10 @@
       color: #111;
       border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
     }
-    .btn.primary{
-      background: var(--panel2);
-      border-color: var(--line);
-    }
-    .btn.ghost{
-      background: transparent;
-      border-color: var(--line2);
-    }
-    .btn.small{
-      min-height: 40px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-weight: 900;
-    }
+    .btn.primary{ background: var(--panel2); border-color: var(--line); }
+    .btn.ghost{ background: transparent; border-color: var(--line2); }
+    .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
 
-    /* Chips */
     .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
     .chip{
       display:inline-flex;
@@ -424,7 +413,6 @@
     }
     .chip i{ color: var(--gold); }
 
-    /* Hero */
     .hero{ padding: 18px 0 0; }
     .hero-box{
       border-radius: var(--radius2);
@@ -512,7 +500,6 @@
     }
     .trust-mini i{ color: var(--gold); }
 
-    /* Switch tabs */
     .switcher{
       margin-top: 14px;
       border-top: 1px solid var(--line2);
@@ -562,7 +549,6 @@
     }
     .switch-right b{ color: var(--text); }
 
-    /* Forms */
     .form-wrap{ margin-top: 10px; }
     .form{
       margin-top: 12px;
@@ -600,31 +586,27 @@
       font-size:16px;
     }
     input::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
+    .form-actions{ margin-top: 12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 
-    .form-actions{
-      margin-top: 12px;
-      display:flex;
-      gap:12px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-
-    /* Hero media */
+    /* ✅ HERO highlight container: strong fallback background */
     .hero-media{
       border-radius: 14px;
       overflow:hidden;
       border: 1px solid var(--line);
-      background: var(--panel);
+      background:
+        radial-gradient(700px 300px at 20% 20%, rgba(212,175,55,.14), transparent 60%),
+        radial-gradient(700px 300px at 80% 30%, rgba(0,217,129,.10), transparent 62%),
+        color-mix(in oklab, var(--bg2) 72%, #000 28%);
       position:relative;
       min-height: 320px;
       isolation:isolate;
     }
     .hero-media img{
       width:100%;
-      height: clamp(220px, 42vw, 320px);
+      height: clamp(240px, 42vw, 340px);
       object-fit: cover;
       display:block;
-      opacity:.94;
+      opacity:1;
       transform: scale(1.01);
       transition: opacity .55s var(--ease), transform .9s var(--ease);
     }
@@ -644,7 +626,6 @@
     .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.75); transition: width 5s linear; }
     .hero-bar.run{ width: 100%; }
 
-    /* Sections */
     .section{ padding: 18px 0; }
     .section-head{
       display:flex;
@@ -657,7 +638,16 @@
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
-    /* Grid */
+    .notice{
+      border-radius: var(--radius2);
+      border: 1px dashed var(--line);
+      background: var(--panel2);
+      padding: 14px;
+      color: var(--muted);
+      font-weight: 850;
+      box-shadow: var(--shadow2);
+    }
+
     .grid{
       display:grid;
       gap: 14px;
@@ -666,7 +656,6 @@
     @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
 
-    /* Cards */
     .card{
       border-radius: 18px;
       border: 1px solid var(--line);
@@ -796,7 +785,6 @@
       letter-spacing: .02em;
     }
 
-    /* Featured controls */
     .feat-controls{
       border-radius: var(--radius2);
       border: 1px solid var(--line);
@@ -844,7 +832,6 @@
       .feat-right .btn{ width:100%; }
     }
 
-    /* Pagination */
     .pager{
       margin-top: 14px;
       border-radius: var(--radius2);
@@ -894,18 +881,6 @@
     }
     .pager-ellipsis{ padding: 8px 6px; color: var(--muted2); font-weight: 950; user-select:none; }
 
-    /* Notice */
-    .notice{
-      border-radius: var(--radius2);
-      border: 1px dashed var(--line);
-      background: var(--panel2);
-      padding: 14px;
-      color: var(--muted);
-      font-weight: 850;
-      box-shadow: var(--shadow2);
-    }
-
-    /* Footer (current synced footer) */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
@@ -1006,7 +981,6 @@
     }
     .badge i{ color: var(--gold); }
 
-    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
@@ -1025,7 +999,6 @@
     }
     .toast.show{ display:block; }
 
-    /* Floating WhatsApp */
     .wa-float{
       position: fixed;
       right: calc(16px + var(--safeR));
@@ -1309,10 +1282,17 @@
               </div>
             </div>
 
-            <!-- HERO highlight images (all .jpeg) -->
+            <!-- ✅ Highlight images (visible, preloaded, with guaranteed fallback) -->
             <aside class="hero-media" id="heroMedia" aria-label="Highlights carousel">
-              <img id="heroImg" src="assets/images/verified-listing.jpeg" alt="Verified Listings" decoding="async" fetchpriority="high"
-                   onerror="this.src='assets/images/larmah-header.jpeg'">
+              <img
+                id="heroImg"
+                src="assets/images/verified-listing.jpeg"
+                alt="Verified Listings"
+                decoding="async"
+                fetchpriority="high"
+                loading="eager"
+                onerror="this.src='assets/images/larmah-header.jpeg'; this.onerror=null;"
+              />
               <div class="cap">
                 <div class="hero-tag" id="heroTag">
                   <i class="fa-solid fa-building" style="color:var(--gold)"></i> Verified Listings
@@ -1384,27 +1364,6 @@
 
         <div id="feat_mount">
           <div class="notice">Loading featured items…</div>
-        </div>
-      </section>
-    </div>
-
-    <!-- About -->
-    <div class="page" id="page-about" data-page="about">
-      <section class="section" id="about" aria-label="About page">
-        <div class="section-head">
-          <div>
-            <h2>About Larmah Enterprise</h2>
-            <p class="subhead">Trust-first real estate + dependable logistics — coordinated in one WhatsApp thread.</p>
-          </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
-            <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
-          </div>
-        </div>
-
-        <div class="notice" style="border-style: solid;">
-          <strong>Larmah Enterprise</strong> combines verified real estate and trusted logistics with a WhatsApp-first workflow:
-          request → confirm → coordinate → updates. Fast decisions, fewer mix-ups, cleaner execution.
         </div>
       </section>
     </div>
@@ -1645,7 +1604,7 @@
     window.submitRealEstate = submitRealEstate;
     window.submitLogistics = submitLogistics;
 
-    // HERO slideshow (all .jpeg)
+    // ✅ HERO slideshow: preload before swap (prevents blank)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1655,30 +1614,47 @@
     const HERO_SLIDES = [
       { img:"assets/images/verified-listing.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Clean confirmations, trusted sourcing." },
       { img:"assets/images/featured-listings.jpeg", icon:"fa-star", label:"Featured Listings", sub:"Premium options across Real Estate & Logistics." },
-      { img:"assets/images/Seamless-logistics-support.jpeg", icon:"fa-truck-fast", label:"Seamless Logistics Support", sub:"Dispatch, pickups, haulage — coordinated end-to-end." }
+      { img:"assets/images/seamless-logistics-support.jpeg", icon:"fa-truck-fast", label:"Seamless Logistics Support", sub:"Dispatch, pickups, haulage — coordinated end-to-end." }
     ];
 
-    let heroIdx = 0;
     function runHeroProgress(){
       heroBar.classList.remove("run");
       void heroBar.offsetWidth;
       heroBar.classList.add("run");
     }
-    function setHero(i){
+
+    function preloadImage(src){
+      return new Promise((resolve) => {
+        const im = new Image();
+        im.onload = () => resolve(true);
+        im.onerror = () => resolve(false);
+        im.src = src;
+      });
+    }
+
+    let heroIdx = 0;
+    async function setHero(i){
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
       heroMedia.classList.add("is-fading");
       runHeroProgress();
-      setTimeout(() => {
-        heroImg.src = s.img;
-        heroImg.alt = s.label;
-        heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
-        heroSub.textContent = s.sub;
-        setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
-      }, 220);
+
+      const ok = await preloadImage(s.img);
+      const finalSrc = ok ? s.img : "assets/images/larmah-header.jpeg";
+
+      heroImg.src = finalSrc;
+      heroImg.alt = s.label;
+      heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
+      heroSub.textContent = s.sub;
+
+      setTimeout(() => heroMedia.classList.remove("is-fading"), 120);
     }
+
     setHero(0);
     if(!reduceMotion){
-      setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
+      setInterval(() => {
+        heroIdx = (heroIdx + 1) % HERO_SLIDES.length;
+        setHero(heroIdx);
+      }, 5000);
     }
 
     // Featured store
@@ -1798,7 +1774,7 @@
           <div class="media" id="ft-media-${id}">
             <img id="ft-img-${id}" src="${esc(urls[0] || 'assets/images/larmah-header.jpeg')}"
                  alt="${esc(title)}" loading="lazy" decoding="async"
-                 onerror="this.src='assets/images/larmah-header.jpeg'">
+                 onerror="this.src='assets/images/larmah-header.jpeg'; this.onerror=null;">
 
             ${hasMany ? `
               <div class="media-nav">
