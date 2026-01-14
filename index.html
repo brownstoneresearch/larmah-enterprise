@@ -1,14 +1,15 @@
 <!-- =========================
   index.html (FULL — COMPLETE UPDATED)
-  ✅ FEATURE HIGHLIGHT (HERO) DISPLAY FIXED:
+  ✅ HERO highlight display fixed perfectly:
      - Preloads highlight images
-     - Cross-fade ONLY after next image is preloaded (no “dark/blank” state)
-     - Strong background placeholder + guaranteed onerror fallback
+     - Preload next slide before swap (no blank)
+     - Subtle fade only (never dark)
+     - Strong placeholder background + onerror fallback
   ✅ All .jpg changed to .jpeg
   ✅ Featured cards: NO “View more” + NO Modal
-  ✅ Each Featured item has a “View” button:
-      - Real Estate → real-estate.html?item=<id>
-      - Logistics  → logistics.html?item=<id>
+  ✅ Each Featured item has a “View” button with domain link + img param:
+      - Real Estate → real-estate.html?item=<id>&img=<firstImageUrl>
+      - Logistics  → logistics.html?item=<id>&img=<firstImageUrl>
   ✅ Footer + Floating WhatsApp included
 ========================= -->
 <!DOCTYPE html>
@@ -50,6 +51,7 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="preload" href="assets/images/larmah-favicon.jpeg" as="image" fetchpriority="high" />
+
   <!-- ✅ Preload highlight images -->
   <link rel="preload" href="assets/images/verified-listing.jpeg" as="image" />
   <link rel="preload" href="assets/images/featured-listings.jpeg" as="image" />
@@ -170,7 +172,11 @@
     }
     .skip:focus{ left: 12px; outline: none; }
 
-    :focus-visible{ outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 12px; }
+    :focus-visible{
+      outline: 2px solid var(--focus);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
 
     header{
       position:sticky;
@@ -180,11 +186,22 @@
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--line2);
     }
-    .header-inner{ display:flex; align-items:center; gap:12px; padding: 12px 0; }
-    .brand{ display:flex; align-items:center; gap:10px; min-width: 220px; }
+    .header-inner{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding: 12px 0;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width: 220px;
+    }
     .logo-wrap{
       position:relative;
-      width:44px; height:44px;
+      width:44px;
+      height:44px;
       border-radius: 14px;
       padding: 2px;
       background:
@@ -197,7 +214,8 @@
       isolation:isolate;
     }
     .logo-wrap img{
-      width:100%; height:100%;
+      width:100%;
+      height:100%;
       object-fit: cover;
       display:block;
       border-radius: 12px;
@@ -224,7 +242,8 @@
       cursor:pointer;
     }
     .icon-btn{
-      width: 42px; height: 42px;
+      width: 42px;
+      height: 42px;
       border-radius: 12px;
       border: 1px solid var(--line);
       background: var(--panel);
@@ -248,6 +267,7 @@
       .icon-btn{ width:40px; height:40px; }
     }
 
+    /* Mobile sheet */
     .overlay{
       position:fixed; inset:0;
       background: var(--overlayBg);
@@ -303,20 +323,32 @@
       color: var(--text);
       cursor:pointer;
       font-weight: 950;
-      transition: transform .16s var(--ease), filter .16s var(--ease);
+      transition: transform .16s var(--ease), filter .16s var(--ease), background .16s var(--ease);
       text-decoration:none;
       white-space: nowrap;
       user-select:none;
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
-    .btn.solid{
-      background: var(--gold);
-      color: #111;
-      border-color: color-mix(in oklab, var(--gold) 55%, #000 45%);
-    }
+    .btn:active{ transform: translateY(0); }
+    .btn.solid{ background: var(--gold); color:#111; border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
     .btn.primary{ background: var(--panel2); border-color: var(--line); }
     .btn.ghost{ background: transparent; border-color: var(--line2); }
     .btn.small{ min-height: 40px; padding: 10px 12px; border-radius: 12px; font-weight: 900; }
+
+    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 88%, transparent);
+      font-weight: 900;
+      font-size: .92rem;
+    }
+    .chip i{ color: var(--gold); }
 
     .hero{ padding: 18px 0 0; }
     .hero-box{
@@ -334,16 +366,41 @@
       padding: 16px;
       align-items:start;
     }
-    @media (min-width: 980px){ .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; } }
+    @media (min-width: 980px){
+      .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; }
+    }
 
-    .kicker{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; color: var(--muted); font-weight: 850; margin-bottom: 10px; }
+    .kicker{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: var(--muted);
+      font-weight: 850;
+      margin-bottom: 10px;
+    }
     .kicker .dot{ opacity:.65; }
-    h1{ margin: 6px 0 10px; font-size: clamp(2.0rem, 4vw, 3.05rem); line-height: 1.02; letter-spacing: -0.6px; }
-    .gold{ background: linear-gradient(180deg, var(--gold2), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .lead{ margin: 0; color: var(--muted); font-size: 1.02rem; line-height: 1.55; }
+    h1{
+      margin: 6px 0 10px;
+      font-size: clamp(2.0rem, 4vw, 3.05rem);
+      line-height: 1.02;
+      letter-spacing: -0.6px;
+    }
+    .gold{
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lead{
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
     .hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
 
-    /* ✅ PERFECT highlight display: strong placeholder + stable transitions */
+    /* ✅ PERFECT HERO HIGHLIGHT DISPLAY */
     .hero-media{
       border-radius: 14px;
       overflow:hidden;
@@ -361,11 +418,10 @@
       height: clamp(260px, 42vw, 360px);
       object-fit: cover;
       display:block;
-      opacity:1;
+      opacity: 1;
       transform: scale(1.01);
       transition: opacity .22s var(--ease), transform .55s var(--ease);
     }
-    /* Only a subtle dim, never “blank” */
     .hero-media.is-fading img{ opacity:.70; transform: scale(1.02); }
 
     .hero-media .cap{
@@ -382,19 +438,6 @@
     .hero-progress{ position:absolute; left:0; right:0; bottom:0; height: 3px; background: color-mix(in oklab, var(--text) 10%, transparent); overflow:hidden; }
     .hero-bar{ height:100%; width: 0%; background: rgba(212,175,55,.80); transition: width 5s linear; }
     .hero-bar.run{ width: 100%; }
-
-    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
-    .chip{
-      display:inline-flex; align-items:center; gap:10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line2);
-      background: var(--panel2);
-      color: color-mix(in oklab, var(--text) 88%, transparent);
-      font-weight: 900;
-      font-size: .92rem;
-    }
-    .chip i{ color: var(--gold); }
 
     .switcher{
       margin-top: 14px;
@@ -426,17 +469,14 @@
       display:flex;
       gap:10px;
       align-items:center;
-      transition: background .16s var(--ease), color .16s var(--ease), transform .16s var(--ease);
       white-space:nowrap;
     }
-    .seg button:hover{ transform: translateY(-1px); color: var(--text); }
     .seg button.is-active{
       background: color-mix(in oklab, var(--gold) 18%, transparent);
       color: var(--text);
       border: 1px solid color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
     }
     .seg button i{ color: var(--gold); }
-
     .switch-right{ color: var(--muted); font-weight: 850; font-size: .92rem; }
     .switch-right b{ color: var(--text); }
 
@@ -470,18 +510,11 @@
       outline:none;
       font-size:16px;
     }
-    input::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
+
     .form-actions{ margin-top: 12px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
 
     .section{ padding: 18px 0; }
-    .section-head{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 12px;
-      flex-wrap:wrap;
-    }
+    .section-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom: 12px; flex-wrap:wrap; }
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
@@ -505,9 +538,7 @@
       background: var(--panel);
       overflow:hidden;
       box-shadow: var(--shadow2);
-      transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease), filter .18s var(--ease);
     }
-    .card:hover{ transform: translateY(-2px); border-color: color-mix(in oklab, var(--gold) 30%, var(--line) 70%); filter: brightness(1.02); }
 
     .media{
       width: calc(100% - 24px);
@@ -522,12 +553,13 @@
       user-select:none;
     }
     .media img{
-      width:100%; height:100%;
+      width:100%;
+      height:100%;
       object-fit:cover;
       display:block;
       opacity:.95;
-      transition: opacity .25s var(--ease), transform .45s var(--ease);
       transform: scale(1.01);
+      transition: opacity .25s var(--ease), transform .45s var(--ease);
     }
     .media.is-fading img{ opacity:.60; transform: scale(1.02); }
     .media::after{
@@ -537,7 +569,6 @@
       pointer-events:none;
       z-index:1;
     }
-
     .media-nav{ position:absolute; inset:0; display:flex; align-items:center; justify-content:space-between; padding: 0 10px; pointer-events:none; z-index:2; }
     .media-btn{
       width:34px; height:34px; border-radius:12px;
@@ -548,9 +579,7 @@
       pointer-events:auto;
       cursor:pointer;
       backdrop-filter: blur(6px);
-      transition: transform .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease);
     }
-    .media-btn:hover{ background: rgba(0,0,0,0.55); border-color: rgba(212,175,55,.30); transform: translateY(-1px); }
     .media-dots{ position:absolute; left:0; right:0; bottom:10px; display:flex; justify-content:center; gap:6px; pointer-events:none; z-index:2; }
     .media-dot{ width:7px; height:7px; border-radius:999px; background: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.25); }
     .media-dot.active{ background: rgba(255,255,255,0.92); }
@@ -582,7 +611,6 @@
     .feat-left{ display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end; min-width: 0; flex: 1 1 auto; }
     .feat-right{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; flex: 0 0 auto; }
     .feat-field{ display:flex; flex-direction:column; gap:6px; min-width: 190px; }
-    .feat-field label{ font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color: var(--muted2); }
 
     .pager{
       margin-top: 14px;
@@ -599,25 +627,12 @@
     }
     .pager-left{ color: var(--muted); font-weight: 850; font-size: .92rem; }
     .pager-right{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
-    .pager-btn{
-      min-height: 40px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--text);
-      font-weight: 950;
-      cursor:pointer;
-    }
+    .pager-btn{ min-height: 40px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); color: var(--text); font-weight: 950; cursor:pointer; }
     .pager-btn[disabled]{ opacity:.45; cursor:not-allowed; }
     .pager-btn.active{ background: rgba(212,175,55,.16); border-color: rgba(212,175,55,.35); color: var(--gold2); }
     .pager-ellipsis{ padding: 8px 6px; color: var(--muted2); font-weight: 950; user-select:none; }
 
-    footer{
-      margin-top: 18px;
-      border-top: 1px solid var(--line);
-      background: color-mix(in oklab, var(--bg2) 80%, #000 20%);
-    }
+    footer{ margin-top: 18px; border-top: 1px solid var(--line); background: color-mix(in oklab, var(--bg2) 80%, #000 20%); }
     .footer-cta{
       margin-top: 14px;
       border-radius: 20px;
@@ -628,67 +643,20 @@
         var(--panel2);
       box-shadow: var(--shadow);
       padding: 14px;
-      display:flex;
-      gap: 12px;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; gap: 12px;
+      align-items:center; justify-content:space-between;
       flex-wrap:wrap;
     }
-    .footer-cta h3{ margin:0; font-size: 1.12rem; letter-spacing:-0.2px; }
-    .footer-cta p{ margin: 6px 0 0; color: var(--muted); line-height: 1.4; }
-
-    .footer-grid{
-      display:grid;
-      gap: 16px;
-      padding: 16px 0;
-      grid-template-columns: 1.35fr 1fr 1fr;
-    }
+    .footer-grid{ display:grid; gap: 16px; padding: 16px 0; grid-template-columns: 1.35fr 1fr 1fr; }
     @media (max-width: 980px){ .footer-grid{ grid-template-columns: 1fr; } }
-
-    .brandline{ display:flex; align-items:center; gap:12px; min-width:0; }
-    .brandname{ font-weight: 950; letter-spacing:-0.2px; line-height: 1.1; }
-    .tagline{ color: var(--muted2); font-weight: 850; font-size: .92rem; margin-top: 4px; }
     .footer-col-title{ font-weight: 950; margin: 0 0 10px; letter-spacing: -0.2px; }
     .footer-links a{ display:block; padding: 6px 0; color: color-mix(in oklab, var(--text) 84%, transparent); font-weight: 600; }
-    .footer-links a:hover{ color: var(--gold); }
-
     .contact-stack{ display:grid; gap: 10px; }
-    .contact-chip{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-    }
+    .contact-chip{ display:flex; gap:10px; align-items:flex-start; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel2); }
     .contact-chip i{ width: 18px; margin-top: 2px; color: var(--gold); opacity:.95; }
-    .contact-chip .txt{ font-weight: 900; }
-    .contact-chip .sub{ color: var(--muted); font-size: .9rem; margin-top: 2px; }
-
     .social{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
-    .social a{
-      width: 42px; height: 42px;
-      display:inline-flex; align-items:center; justify-content:center;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background: var(--panel2);
-      color: var(--text);
-    }
-    .social a:hover{ color: #111; background: var(--gold); border-color: color-mix(in oklab, var(--gold) 55%, #000 45%); }
-
-    .footer-bottom{
-      border-top: 1px solid var(--line2);
-      padding: 12px 0 16px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      color: var(--muted2);
-      font-size: .9rem;
-    }
-    .footer-badges{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end; }
+    .social a{ width: 42px; height: 42px; display:inline-flex; align-items:center; justify-content:center; border-radius: 12px; border: 1px solid var(--line); background: var(--panel2); color: var(--text); }
+    .footer-bottom{ border-top: 1px solid var(--line2); padding: 12px 0 16px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; color: var(--muted2); font-size: .9rem; }
     .badge{ display:inline-flex; gap:8px; align-items:center; padding: 7px 10px; border-radius: 999px; border: 1px solid var(--line2); background: var(--panel2); font-weight: 850; font-size: .84rem; }
     .badge i{ color: var(--gold); }
 
@@ -748,11 +716,6 @@
     .wa-btn:hover{ transform: translateY(-2px); filter: brightness(1.02); }
     .wa-btn i{ font-size: 20px; }
     @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
-
-    @media (max-width: 620px){
-      .footer-cta > div:last-child{ width:100%; }
-      .footer-cta > div:last-child .btn{ width:100%; }
-    }
   </style>
 </head>
 
@@ -772,6 +735,7 @@
             <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
           </div>
         </div>
+
         <button class="icon-btn" type="button" onclick="toggleMenu(false)" aria-label="Close menu">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -784,12 +748,8 @@
       <a href="premium.html"><span><i class="fa-solid fa-crown" style="color:var(--gold)"></i> Premium</span><i class="fa-solid fa-chevron-right" style="opacity:.6"></i></a>
 
       <div class="sheet-actions">
-        <button class="btn primary" type="button" onclick="toggleTheme()">
-          <i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme
-        </button>
-        <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-          <i class="fa-brands fa-whatsapp"></i> WhatsApp
-        </button>
+        <button class="btn primary" type="button" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme</button>
+        <button class="btn solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
       </div>
     </div>
   </div>
@@ -817,18 +777,13 @@
       </nav>
 
       <div class="header-actions">
-        <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
-          <i class="fa-solid fa-circle-half-stroke"></i>
-        </button>
-        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu">
-          <i class="fa-solid fa-bars"></i>
-        </button>
+        <button class="icon-btn" type="button" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        <button class="menu-btn" type="button" onclick="toggleMenu(true)" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
       </div>
     </div>
   </header>
 
   <main id="main" class="container" tabindex="-1">
-    <!-- HERO -->
     <section class="hero" id="home" aria-label="Hero">
       <div class="hero-box">
         <div class="hero-row">
@@ -855,29 +810,23 @@
             <div class="chips" aria-label="Highlights">
               <div class="chip"><i class="fa-solid fa-house"></i> Shortlets • Rentals • Sales</div>
               <div class="chip"><i class="fa-solid fa-motorcycle"></i> Dispatch • Same-day</div>
-              <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage</div>
+              <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage support</div>
             </div>
 
             <div class="switcher" id="quick" aria-label="Quick request switcher">
               <div class="seg" role="tablist" aria-label="Choose quick request">
-                <button type="button" class="is-active" id="tabRealEstate" role="tab" aria-selected="true" onclick="setMode('realestate')">
-                  <i class="fa-solid fa-house"></i> Real Estate
-                </button>
-                <button type="button" id="tabLogistics" role="tab" aria-selected="false" onclick="setMode('logistics')">
-                  <i class="fa-solid fa-truck-fast"></i> Logistics
-                </button>
+                <button type="button" class="is-active" id="tabRealEstate" role="tab" aria-selected="true" onclick="setMode('realestate')"><i class="fa-solid fa-house"></i> Real Estate</button>
+                <button type="button" id="tabLogistics" role="tab" aria-selected="false" onclick="setMode('logistics')"><i class="fa-solid fa-truck-fast"></i> Logistics</button>
               </div>
               <div class="switch-right">Tip: <b>budget + location</b> = faster matching.</div>
             </div>
 
-            <!-- Forms -->
             <div class="form-wrap" aria-label="Quick forms">
-              <!-- REAL ESTATE FORM -->
               <div class="form is-active" id="formRealEstate" role="tabpanel" aria-labelledby="tabRealEstate">
                 <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
                   <div style="font-weight:950; letter-spacing:-0.2px;">
                     Shortlet / Stay Request
-                    <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Confirm availability and pricing via WhatsApp.</div>
+                    <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Check availability, confirm price, reserve via WhatsApp.</div>
                   </div>
                   <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> View All</a>
                 </div>
@@ -910,21 +859,16 @@
                 </div>
 
                 <div class="form-actions">
-                  <button class="btn solid" type="button" onclick="submitRealEstate()">
-                    <i class="fa-brands fa-whatsapp"></i> Request Availability
-                  </button>
-                  <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
-                    <i class="fa-brands fa-whatsapp"></i> Chat Support
-                  </button>
+                  <button class="btn solid" type="button" onclick="submitRealEstate()"><i class="fa-brands fa-whatsapp"></i> Request Availability</button>
+                  <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))"><i class="fa-brands fa-whatsapp"></i> Chat Support</button>
                 </div>
               </div>
 
-              <!-- LOGISTICS FORM -->
               <div class="form" id="formLogistics" role="tabpanel" aria-labelledby="tabLogistics">
                 <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
                   <div style="font-weight:950; letter-spacing:-0.2px;">
                     Logistics / Dispatch Request
-                    <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Request quote + ETA via WhatsApp.</div>
+                    <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Get a quote, assign rider/vehicle, track updates via WhatsApp.</div>
                   </div>
                   <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck"></i> Logistics Page</a>
                 </div>
@@ -959,18 +903,16 @@
                 </div>
 
                 <div class="form-actions">
-                  <button class="btn solid" type="button" onclick="submitLogistics()">
-                    <i class="fa-brands fa-whatsapp"></i> Request Quote
-                  </button>
-                  <button class="btn primary" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
-                    <i class="fa-brands fa-whatsapp"></i> Chat Support
-                  </button>
+                  <button class="btn solid" type="button" onclick="submitLogistics()"><i class="fa-brands fa-whatsapp"></i> Request Quote</button>
+                  <button class="btn primary" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))"><i class="fa-brands fa-whatsapp"></i> Chat Support</button>
                 </div>
               </div>
             </div>
+
+            <div style="margin-top:10px; color:var(--muted); font-size:.92rem;">Pro tip: If you’re in a rush, send “URGENT” + your details on WhatsApp for priority routing.</div>
           </div>
 
-          <!-- ✅ HERO HIGHLIGHT DISPLAY -->
+          <!-- ✅ HERO HIGHLIGHT -->
           <aside class="hero-media" id="heroMedia" aria-label="Highlights carousel">
             <img
               id="heroImg"
@@ -982,9 +924,7 @@
               onerror="this.src='assets/images/larmah-header.jpeg'; this.onerror=null;"
             />
             <div class="cap">
-              <div class="hero-tag" id="heroTag">
-                <i class="fa-solid fa-building" style="color:var(--gold)"></i> Verified Listings
-              </div>
+              <div class="hero-tag" id="heroTag"><i class="fa-solid fa-building" style="color:var(--gold)"></i> Verified Listings</div>
               <div class="hero-sub" id="heroSub">Clean confirmations, trusted sourcing.</div>
             </div>
             <div class="hero-progress" aria-hidden="true"><div class="hero-bar" id="heroBar"></div></div>
@@ -993,7 +933,6 @@
       </div>
     </section>
 
-    <!-- FEATURED -->
     <section class="section" id="browse" aria-label="Browse featured">
       <div class="section-head">
         <div>
@@ -1141,9 +1080,7 @@
             <button class="btn small solid" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
               <i class="fa-brands fa-whatsapp"></i> Chat Now
             </button>
-            <a class="btn small primary" href="premium.html">
-              <i class="fa-solid fa-crown"></i> Go Premium
-            </a>
+            <a class="btn small primary" href="premium.html"><i class="fa-solid fa-crown"></i> Go Premium</a>
           </div>
         </div>
       </div>
@@ -1161,23 +1098,17 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-  <!-- Floating WhatsApp -->
   <div class="wa-float" aria-label="Floating WhatsApp support">
-    <button class="wa-pill" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
-      WhatsApp Support
-    </button>
+    <button class="wa-pill" type="button" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">WhatsApp Support</button>
     <button class="wa-btn" type="button" aria-label="Chat on WhatsApp" onclick="openWA(buildMsg('Support', { Message:'Hello Larmah, I need help.' }))">
       <i class="fa-brands fa-whatsapp"></i>
     </button>
   </div>
 
   <script>
-    // year
     document.getElementById("year2").textContent = new Date().getFullYear();
-
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // Toast
     function toast(msg){
       const t = document.getElementById("toast");
       if(!t) return;
@@ -1187,7 +1118,6 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // Menu
     const overlay = document.getElementById("overlay");
     function toggleMenu(open){
       overlay.classList.toggle("open", !!open);
@@ -1195,11 +1125,10 @@
     }
     overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
 
-    // esc
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
-    // WhatsApp
     function buildMsg(title, data){
+      if(window.LARMAH?.buildMessage) return window.LARMAH.buildMessage(title, data);
       const lines = [title, ""];
       for(const [k,v] of Object.entries(data || {})){
         const val = (v ?? "").toString().trim();
@@ -1208,6 +1137,7 @@
       return lines.join("\n");
     }
     function openWA(text){
+      if(window.LARMAH?.openWhatsApp) return window.LARMAH.openWhatsApp(text);
       const phone = "2347063080605";
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
     }
@@ -1217,7 +1147,6 @@
       el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
     }
 
-    // Theme
     const THEME_KEY = "larmah_theme_v6";
     function setTheme(theme){
       document.documentElement.setAttribute("data-theme", theme);
@@ -1243,7 +1172,6 @@
     const tabLogistics = document.getElementById("tabLogistics");
     const formRealEstate = document.getElementById("formRealEstate");
     const formLogistics = document.getElementById("formLogistics");
-
     function setMode(mode){
       const isLog = mode === "logistics";
       tabRealEstate.classList.toggle("is-active", !isLog);
@@ -1267,7 +1195,6 @@
     document.getElementById("checkout")?.setAttribute("min", todayISO);
     document.getElementById("pickDate")?.setAttribute("min", todayISO);
 
-    // Quick submits
     function submitRealEstate(){
       openWA(buildMsg("Real Estate — Availability Request", {
         Checkin: document.getElementById("checkin")?.value || "Not set",
@@ -1287,8 +1214,10 @@
         Message: "Hello Larmah, please share pricing, ETA, and next steps."
       }));
     }
+    window.submitRealEstate = submitRealEstate;
+    window.submitLogistics = submitLogistics;
 
-    // ✅ PERFECT highlight slideshow (preload THEN fade/swap)
+    // ✅ PERFECT HERO highlight slideshow (preload then swap)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1306,7 +1235,6 @@
       void heroBar.offsetWidth;
       heroBar.classList.add("run");
     }
-
     function preloadImage(src){
       return new Promise((resolve) => {
         const im = new Image();
@@ -1319,12 +1247,9 @@
     let heroIdx = 0;
     async function setHero(i){
       const s = HERO_SLIDES[i % HERO_SLIDES.length];
-
-      // 1) Preload next image first (prevents blank)
       const ok = await preloadImage(s.img);
       const finalSrc = ok ? s.img : "assets/images/larmah-header.jpeg";
 
-      // 2) Quick fade, then swap
       heroMedia.classList.add("is-fading");
       runHeroProgress();
 
@@ -1333,13 +1258,10 @@
         heroImg.alt = s.label;
         heroTag.innerHTML = `<i class="fa-solid ${s.icon}" style="color:var(--gold)"></i> ${esc(s.label)}`;
         heroSub.textContent = s.sub;
-
-        // 3) Restore visibility
         setTimeout(() => heroMedia.classList.remove("is-fading"), 140);
       }, 120);
     }
 
-    // initial
     setHero(0);
     if(!reduceMotion){
       setInterval(() => {
@@ -1348,7 +1270,7 @@
       }, 5000);
     }
 
-    // Featured store (cards + view button)
+    // Featured store
     const __FEAT = { items: [], imgUrls: {}, imgIdx: {}, timers: {}, page: 1, pageSize: 9, q: "", cat: "all", sort: "new" };
 
     function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
@@ -1356,7 +1278,7 @@
     function inferPillar(it){ return safeText(it.category).toLowerCase().includes("logistics") ? "logistics" : "real-estate"; }
     function inferTypeLabel(it){
       const pillar = inferPillar(it);
-      const hay = (safeText(it.service_type)+" "+safeText(it.listing_type)+" "+safeText(it.type)+" "+safeText(it.title)+" "+safeText(it.description)).toLowerCase();
+      const hay = (safeText(it.service_type) + " " + safeText(it.listing_type) + " " + safeText(it.type) + " " + safeText(it.title) + " " + safeText(it.description)).toLowerCase();
       if(pillar === "logistics"){
         if(hay.includes("haul")) return "Haulage";
         if(hay.includes("airport")) return "Airport";
@@ -1378,11 +1300,6 @@
         : safeText(it.location || it.area || it.city || it.state || "Nigeria")
       ).trim() || "Nigeria";
     }
-    function featRef(it){ return `WEB-${inferPillar(it)==="logistics" ? "LG" : "RE"}-${it.id}`; }
-    function itemPageHref(it){
-      const base = inferPillar(it)==="logistics" ? "logistics.html" : "real-estate.html";
-      return `${base}?item=${encodeURIComponent(String(it.id))}`;
-    }
 
     function getImages(it){
       const arr = Array.isArray(it.image_urls) ? it.image_urls.filter(Boolean) : [];
@@ -1390,6 +1307,17 @@
       if(it.image_url) return [it.image_url];
       return ["assets/images/larmah-header.jpeg"];
     }
+
+    // ✅ Domain link with preview image param
+    function itemPageHref(it){
+      const pillar = inferPillar(it);
+      const base = pillar === "logistics" ? "logistics.html" : "real-estate.html";
+      const firstImg = getImages(it)[0] || "assets/images/larmah-header.jpeg";
+      const id = encodeURIComponent(String(it.id));
+      const img = encodeURIComponent(firstImg);
+      return `${base}?item=${id}&img=${img}`;
+    }
+
     function initImagesFor(it){
       const id = String(it.id);
       __FEAT.imgUrls[id] = getImages(it);
@@ -1436,13 +1364,13 @@
       const it = (__FEAT.items||[]).find(x => String(x.id)===String(id));
       if(!it) return;
       openWA(buildMsg("Featured Enquiry", {
-        Ref: featRef(it),
+        Ref: `WEB-${inferPillar(it)==="logistics" ? "LG" : "RE"}-${it.id}`,
         Title: safeText(it.title),
         Pillar: inferPillar(it) === "logistics" ? "Logistics" : "Real Estate",
         Type: inferTypeLabel(it),
         Location: inferLocation(it),
         Price: formatPrice(it.price),
-        Link: itemPageHref(it),
+        Link: location.origin + "/" + itemPageHref(it),
         Message: "Hello Larmah, please confirm availability and next steps."
       }));
     }
@@ -1471,12 +1399,8 @@
 
             ${hasMany ? `
               <div class="media-nav">
-                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleFeatImage('${id}', -1)">
-                  <i class="fa-solid fa-chevron-left"></i>
-                </button>
-                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleFeatImage('${id}', 1)">
-                  <i class="fa-solid fa-chevron-right"></i>
-                </button>
+                <button class="media-btn" type="button" aria-label="Previous image" onclick="cycleFeatImage('${id}', -1)"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="media-btn" type="button" aria-label="Next image" onclick="cycleFeatImage('${id}', 1)"><i class="fa-solid fa-chevron-right"></i></button>
               </div>
               <div class="media-dots" id="ft-dots-${id}" aria-hidden="true">
                 ${urls.map((_,i)=> `<span class="media-dot ${i===0?'active':''}"></span>`).join("")}
@@ -1485,11 +1409,7 @@
           </div>
 
           <div class="card-body">
-            <div class="title">
-              ${esc(title)}
-              <span class="star"><i class="fa-solid fa-star"></i> Featured</span>
-            </div>
-
+            <div class="title">${esc(title)} <span class="star"><i class="fa-solid fa-star"></i> Featured</span></div>
             <p class="desc">${esc(desc)}</p>
 
             <div class="price">${esc(price)}</div>
@@ -1501,12 +1421,8 @@
             </div>
 
             <div class="actions-row">
-              <button class="btn small solid" type="button" onclick="descQuickEnquire('${id}')">
-                <i class="fa-brands fa-whatsapp"></i> Enquire
-              </button>
-              <a class="btn small primary" href="${esc(href)}" aria-label="View ${esc(title)}">
-                <i class="fa-solid fa-eye"></i> View
-              </a>
+              <button class="btn small solid" type="button" onclick="descQuickEnquire('${id}')"><i class="fa-brands fa-whatsapp"></i> Enquire</button>
+              <a class="btn small primary" href="${esc(href)}" aria-label="View ${esc(title)}"><i class="fa-solid fa-eye"></i> View</a>
             </div>
           </div>
         </article>
@@ -1520,9 +1436,7 @@
 
       let items = (__FEAT.items || []).slice();
 
-      if(cat !== "all"){
-        items = items.filter(it => safeText(it.category).toLowerCase() === cat);
-      }
+      if(cat !== "all") items = items.filter(it => safeText(it.category).toLowerCase() === cat);
 
       if(q){
         items = items.filter(it => {
@@ -1550,25 +1464,20 @@
       const ell = () => btns.push({ type:"ell" });
       if(totalPages <= 1) return btns;
 
-      const maxBtns = 7;
-      const half = Math.floor(maxBtns / 2);
-      let start = Math.max(1, page - half);
-      let end = Math.min(totalPages, page + half);
+      const maxBtns = 7, half = Math.floor(maxBtns/2);
+      let start = Math.max(1, page-half), end = Math.min(totalPages, page+half);
 
-      if(end - start + 1 < maxBtns){
-        const missing = maxBtns - (end - start + 1);
-        start = Math.max(1, start - missing);
-        end = Math.min(totalPages, end + missing);
+      if(end-start+1 < maxBtns){
+        const missing = maxBtns - (end-start+1);
+        start = Math.max(1, start-missing);
+        end = Math.min(totalPages, end+missing);
       }
 
       add(1, "1", page===1);
       if(start > 2) ell();
-      for(let p = Math.max(2, start); p <= Math.min(totalPages-1, end); p++){
-        add(p, String(p), p===page);
-      }
-      if(end < totalPages - 1) ell();
-      add(totalPages, String(totalPages), page===totalPages);
-
+      for(let p=Math.max(2,start); p<=Math.min(totalPages-1,end); p++) add(p, String(p), p===page);
+      if(end < totalPages-1) ell();
+      if(totalPages>1) add(totalPages, String(totalPages), page===totalPages);
       return btns;
     }
 
@@ -1584,16 +1493,12 @@
             <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>–<b>${to}</b> of <b>${total}</b></span>
           </div>
           <div class="pager-right">
-            <button class="pager-btn" type="button" onclick="featGoPage(${page-1})" ${page<=1?'disabled':''} aria-label="Previous page">
-              <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            ${btns.map(b => b.type === "ell"
+            <button class="pager-btn" type="button" onclick="featGoPage(${page-1})" ${page<=1?'disabled':''} aria-label="Previous page"><i class="fa-solid fa-chevron-left"></i></button>
+            ${btns.map(b => b.type==="ell"
               ? `<span class="pager-ellipsis" aria-hidden="true">…</span>`
               : `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="featGoPage(${b.p})">${b.label}</button>`
             ).join("")}
-            <button class="pager-btn" type="button" onclick="featGoPage(${page+1})" ${page>=totalPages?'disabled':''} aria-label="Next page">
-              <i class="fa-solid fa-chevron-right"></i>
-            </button>
+            <button class="pager-btn" type="button" onclick="featGoPage(${page+1})" ${page>=totalPages?'disabled':''} aria-label="Next page"><i class="fa-solid fa-chevron-right"></i></button>
           </div>
         </div>
       `;
@@ -1621,7 +1526,6 @@
         <div class="grid">${pageItems.map(featCardHTML).join("")}</div>
         ${pagerHTML(__FEAT.page, __FEAT.pageSize, total)}
       `;
-
       pageItems.forEach(it => autoRotateFeat(String(it.id)));
     }
 
@@ -1640,33 +1544,25 @@
       __FEAT.sort = "new";
       __FEAT.page = 1;
       __FEAT.pageSize = 9;
-
       document.getElementById("feat_q").value = "";
       document.getElementById("feat_cat").value = "all";
       document.getElementById("feat_sort").value = "new";
       document.getElementById("feat_pageSize").value = "9";
-
       renderFeaturedAll();
     }
     window.featReset = featReset;
 
-    // Supabase client fallback
     function ensureSupabaseClient(){
       if(window.supabaseClient) return window.supabaseClient;
       const url = window.__SUPABASE_URL;
       const key = window.__SUPABASE_ANON_KEY;
       if(!url || !key) return null;
       if(!window.supabase || !window.supabase.createClient) return null;
-      window.supabaseClient = window.supabase.createClient(url, key, {
-        auth: { persistSession: true, autoRefreshToken: true }
-      });
+      window.supabaseClient = window.supabase.createClient(url, key, { auth: { persistSession: true, autoRefreshToken: true } });
       return window.supabaseClient;
     }
     window.ensureSupabaseClient = window.ensureSupabaseClient || ensureSupabaseClient;
-
-    function sbClient(){
-      return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
-    }
+    function sbClient(){ return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null; }
 
     async function loadFeaturedAll(){
       const mount = document.getElementById("feat_mount");
@@ -1686,7 +1582,9 @@
       }
 
       const normalize = (rows, source) => (rows || []).map(r => {
-        if(source === "catalog_items") return { ...r, price: r.price_text ?? r.price ?? null };
+        if(source === "catalog_items"){
+          return { ...r, price: r.price_text ?? r.price ?? null };
+        }
         return r;
       });
 
@@ -1704,7 +1602,6 @@
           const msg = (resp.error.message || "").toLowerCase();
           const code = resp.error.code || "";
           const looksMissing = code === "42P01" || msg.includes("does not exist") || msg.includes("relation");
-
           if(looksMissing){
             resp = await sb
               .from("catalog_items")
@@ -1732,29 +1629,18 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("feat_q")?.addEventListener("input", () => {
-        __FEAT.q = document.getElementById("feat_q").value || "";
-        __FEAT.page = 1;
-        renderFeaturedAll();
-      });
-      document.getElementById("feat_cat")?.addEventListener("change", () => {
-        __FEAT.cat = document.getElementById("feat_cat").value;
-        __FEAT.page = 1;
-        renderFeaturedAll();
-      });
-      document.getElementById("feat_sort")?.addEventListener("change", () => {
-        __FEAT.sort = document.getElementById("feat_sort").value;
-        __FEAT.page = 1;
-        renderFeaturedAll();
-      });
-      document.getElementById("feat_pageSize")?.addEventListener("change", () => {
-        __FEAT.pageSize = Number(document.getElementById("feat_pageSize").value || 9);
-        __FEAT.page = 1;
-        renderFeaturedAll();
-      });
-
+      document.getElementById("feat_q")?.addEventListener("input", () => { __FEAT.q = document.getElementById("feat_q").value || ""; __FEAT.page = 1; renderFeaturedAll(); });
+      document.getElementById("feat_cat")?.addEventListener("change", () => { __FEAT.cat = document.getElementById("feat_cat").value; __FEAT.page = 1; renderFeaturedAll(); });
+      document.getElementById("feat_sort")?.addEventListener("change", () => { __FEAT.sort = document.getElementById("feat_sort").value; __FEAT.page = 1; renderFeaturedAll(); });
+      document.getElementById("feat_pageSize")?.addEventListener("change", () => { __FEAT.pageSize = Number(document.getElementById("feat_pageSize").value || 9); __FEAT.page = 1; renderFeaturedAll(); });
       loadFeaturedAll();
     });
+
+    window.toggleMenu = toggleMenu;
+    window.toggleTheme = toggleTheme;
+    window.openWA = openWA;
+    window.buildMsg = buildMsg;
+    window.scrollToEl = scrollToEl;
   </script>
 </body>
 </html>
