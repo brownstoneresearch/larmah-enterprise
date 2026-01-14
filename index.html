@@ -1,13 +1,14 @@
 <!-- =========================
-  index.html (FULL — UPDATED)
+  index.html (FULL — COMPLETE UPDATED)
   ✅ Featured cards: NO “View more” + NO Modal
   ✅ Each Featured item has a “View” button:
       - Real Estate → real-estate.html?item=<id>
       - Logistics  → logistics.html?item=<id>
-  ✅ Hero highlight photos replaced with:
-      - assets/images/verified-listing.jpg
-      - assets/images/featured-listings.jpg
-      - assets/images/Seamless-logistics-support.jpg
+  ✅ Hero highlight photos replaced (ALL .jpeg):
+      - assets/images/verified-listing.jpeg
+      - assets/images/featured-listings.jpeg
+      - assets/images/Seamless-logistics-support.jpeg
+  ✅ All .jpg references changed to .jpeg
   ✅ Keeps: filters + pagination + image carousel + WhatsApp enquire
   ✅ Includes: current synced footer + floating WhatsApp
 ========================= -->
@@ -92,8 +93,6 @@
       --overlayBg: rgba(0,0,0,.55);
       --ctaBg: rgba(0,0,0,.28);
       --ctaLine: rgba(255,255,255,.12);
-      --iconBg: rgba(212,175,55,.10);
-      --iconLine: rgba(212,175,55,.25);
       --good: rgba(0,217,129,.95);
       --bad: rgba(255,90,103,.95);
 
@@ -118,8 +117,6 @@
       --overlayBg: rgba(0,0,0,.40);
       --ctaBg: rgba(255,255,255,.78);
       --ctaLine: rgba(10,14,26,.10);
-      --iconBg: rgba(212,175,55,.16);
-      --iconLine: rgba(212,175,55,.35);
       --good: rgba(0,140,90,.92);
       --bad: rgba(200,34,60,.90);
 
@@ -411,7 +408,208 @@
       font-weight: 900;
     }
 
-    /* Hero carousel */
+    /* Chips */
+    .chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top: 14px; }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: color-mix(in oklab, var(--text) 88%, transparent);
+      font-weight: 900;
+      font-size: .92rem;
+    }
+    .chip i{ color: var(--gold); }
+
+    /* Hero */
+    .hero{ padding: 18px 0 0; }
+    .hero-box{
+      border-radius: var(--radius2);
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+    .hero-box::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(380px 180px at 18% 0%, rgba(212,175,55,.20), transparent 60%),
+        radial-gradient(420px 220px at 86% 12%, rgba(0,217,129,.12), transparent 65%),
+        radial-gradient(520px 260px at 40% 105%, rgba(0,122,255,.10), transparent 62%);
+      pointer-events:none;
+      z-index:-1;
+    }
+    .hero-row{
+      display:grid;
+      gap: 14px;
+      padding: 16px;
+      align-items:start;
+    }
+    @media (min-width: 980px){
+      .hero-row{ grid-template-columns: 1.05fr .95fr; padding: 18px; }
+    }
+
+    .kicker{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color: var(--muted);
+      font-weight: 850;
+      letter-spacing: .1px;
+      margin-bottom: 10px;
+    }
+    .kicker .dot{ opacity:.65; }
+    h1{
+      margin: 6px 0 10px;
+      font-size: clamp(2.0rem, 4vw, 3.05rem);
+      line-height: 1.02;
+      letter-spacing: -0.6px;
+    }
+    .gold{
+      background: linear-gradient(180deg, var(--gold2), var(--gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lead{
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
+    .hero-actions{
+      display:flex; gap:12px; flex-wrap:wrap;
+      margin-top: 12px;
+    }
+
+    .live-row{
+      display:flex; gap:12px; flex-wrap:wrap; align-items:center;
+      margin-top: 12px;
+    }
+    .live-dot{
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight: 950;
+      font-size: .86rem;
+      color: var(--good);
+    }
+    .live-dot i{ font-size: 9px; }
+    .trust-mini{
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight: 900;
+      font-size: .86rem;
+      color: var(--muted2);
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+    }
+    .trust-mini i{ color: var(--gold); }
+
+    /* Switch tabs */
+    .switcher{
+      margin-top: 14px;
+      border-top: 1px solid var(--line2);
+      padding-top: 14px;
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .seg{
+      display:flex;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      width: fit-content;
+    }
+    .seg button{
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 950;
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      transition: background .16s var(--ease), color .16s var(--ease), transform .16s var(--ease);
+      white-space:nowrap;
+    }
+    .seg button:hover{ transform: translateY(-1px); color: var(--text); }
+    .seg button.is-active{
+      background: color-mix(in oklab, var(--gold) 18%, transparent);
+      color: var(--text);
+      border: 1px solid color-mix(in oklab, var(--gold) 30%, var(--line) 70%);
+    }
+    .seg button i{ color: var(--gold); }
+
+    .switch-right{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      color: var(--muted);
+      font-weight: 850;
+      font-size: .92rem;
+    }
+    .switch-right b{ color: var(--text); }
+
+    /* Forms */
+    .form-wrap{ margin-top: 10px; }
+    .form{
+      margin-top: 12px;
+      display:none;
+      border-radius: 16px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      padding: 12px;
+    }
+    .form.is-active{ display:block; }
+
+    .form-grid{
+      display:grid;
+      gap: 10px;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+    @media (max-width: 980px){ .form-grid{ grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 520px){ .form-grid{ grid-template-columns: 1fr; } }
+
+    .field{ display:flex; flex-direction:column; gap:6px; }
+    label{
+      font-size: .78rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted2);
+    }
+    input, select{
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      color: var(--text);
+      padding: 12px 12px;
+      min-height: 46px;
+      outline:none;
+      font-size:16px;
+    }
+    input::placeholder{ color: color-mix(in oklab, var(--muted2) 88%, transparent); }
+
+    .form-actions{
+      margin-top: 12px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    /* Hero media */
     .hero-media{
       border-radius: 14px;
       overflow:hidden;
@@ -459,18 +657,7 @@
     h2{ margin:0; font-size: 1.35rem; letter-spacing:-0.3px; }
     .subhead{ color: var(--muted); margin: 4px 0 0; font-size: .98rem; line-height: 1.4; }
 
-    /* Notice */
-    .notice{
-      border-radius: var(--radius2);
-      border: 1px dashed var(--line);
-      background: var(--panel2);
-      padding: 14px;
-      color: var(--muted);
-      font-weight: 850;
-      box-shadow: var(--shadow2);
-    }
-
-    /* Grid & Cards (trimmed: keep exactly what's needed for featured cards) */
+    /* Grid */
     .grid{
       display:grid;
       gap: 14px;
@@ -479,8 +666,9 @@
     @media (max-width: 980px){ .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 620px){ .grid{ grid-template-columns: 1fr; } }
 
+    /* Cards */
     .card{
-      border-radius: var(--radius);
+      border-radius: 18px;
       border: 1px solid var(--line);
       background: var(--panel);
       overflow:hidden;
@@ -706,7 +894,18 @@
     }
     .pager-ellipsis{ padding: 8px 6px; color: var(--muted2); font-weight: 950; user-select:none; }
 
-    /* Footer */
+    /* Notice */
+    .notice{
+      border-radius: var(--radius2);
+      border: 1px dashed var(--line);
+      background: var(--panel2);
+      padding: 14px;
+      color: var(--muted);
+      font-weight: 850;
+      box-shadow: var(--shadow2);
+    }
+
+    /* Footer (current synced footer) */
     footer{
       margin-top: 18px;
       border-top: 1px solid var(--line);
@@ -867,6 +1066,8 @@
     @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
 
     @media (max-width: 620px){
+      .chips{ flex-wrap: nowrap; overflow-x:auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; margin-right: -10px; }
+      .chip{ flex: 0 0 auto; }
       .footer-cta > div:last-child{ width:100%; }
       .footer-cta > div:last-child .btn{ width:100%; }
     }
@@ -957,9 +1158,7 @@
                 <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
               </div>
 
-              <h1>
-                Verified <span class="gold">stays</span> and trusted <span class="gold">movement</span> across Nigeria.
-              </h1>
+              <h1>Verified <span class="gold">stays</span> and trusted <span class="gold">movement</span> across Nigeria.</h1>
 
               <p class="lead">
                 From premium shortlets and verified listings to dispatch, pickups, and freight coordination — Larmah runs a scam-resistant,
@@ -976,15 +1175,144 @@
                 </button>
               </div>
 
-              <div class="form-wrap" aria-label="Quick forms" id="quick">
-                <!-- Keep your existing forms in your version.
-                     This full script focuses on the request: highlight photo replacement + full page integrity. -->
+              <div class="live-row" aria-live="polite">
+                <div class="live-dot"><i class="fa-solid fa-circle"></i> Fast responses available</div>
+                <div class="trust-mini"><i class="fa-solid fa-receipt"></i> Clear pricing & references</div>
+                <div class="trust-mini"><i class="fa-solid fa-user-shield"></i> Scam-resistant flow</div>
+              </div>
+
+              <div class="chips" aria-label="Highlights">
+                <div class="chip"><i class="fa-solid fa-house"></i> Shortlets • Rentals • Sales</div>
+                <div class="chip"><i class="fa-solid fa-motorcycle"></i> Dispatch • Same-day</div>
+                <div class="chip"><i class="fa-solid fa-boxes-stacked"></i> Freight • Haulage support</div>
+              </div>
+
+              <div class="switcher" id="quick" aria-label="Quick request switcher">
+                <div class="seg" role="tablist" aria-label="Choose quick request">
+                  <button type="button" class="is-active" id="tabRealEstate" role="tab" aria-selected="true" onclick="setMode('realestate')">
+                    <i class="fa-solid fa-house"></i> Real Estate
+                  </button>
+                  <button type="button" id="tabLogistics" role="tab" aria-selected="false" onclick="setMode('logistics')">
+                    <i class="fa-solid fa-truck-fast"></i> Logistics
+                  </button>
+                </div>
+                <div class="switch-right"><span>Tip: <b>budget + location</b> = faster matching.</span></div>
+              </div>
+
+              <div class="form-wrap" aria-label="Quick forms">
+                <!-- REAL ESTATE FORM -->
+                <div class="form is-active" id="formRealEstate" role="tabpanel" aria-labelledby="tabRealEstate">
+                  <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+                    <div style="font-weight:950; letter-spacing:-0.2px;">
+                      Shortlet / Stay Request
+                      <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Check availability, confirm price, reserve via WhatsApp.</div>
+                    </div>
+                    <a class="btn small primary" href="real-estate.html"><i class="fa-solid fa-building"></i> View All</a>
+                  </div>
+
+                  <div class="form-grid" style="margin-top:12px;">
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="checkin">Check-in</label>
+                      <input id="checkin" type="date" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="checkout">Check-out</label>
+                      <input id="checkout" type="date" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="location">Location</label>
+                      <select id="location">
+                        <option value="Any" selected>Any</option>
+                        <option value="Ikoyi">Ikoyi</option>
+                        <option value="Lekki">Lekki</option>
+                        <option value="Victoria Island">Victoria Island</option>
+                        <option value="Yaba">Yaba</option>
+                        <option value="Mainland">Mainland</option>
+                        <option value="Abuja">Abuja</option>
+                      </select>
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="budget">Budget</label>
+                      <input id="budget" type="text" placeholder="e.g., ₦120k/night" />
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button class="btn solid" type="button" onclick="submitRealEstate()">
+                      <i class="fa-brands fa-whatsapp"></i> Request Availability
+                    </button>
+                    <button class="btn primary" type="button" onclick="openWA(buildMsg('Real Estate Support', { Message:'Hello Larmah, I need help with real estate.' }))">
+                      <i class="fa-brands fa-whatsapp"></i> Chat Support
+                    </button>
+                  </div>
+                </div>
+
+                <!-- LOGISTICS FORM -->
+                <div class="form" id="formLogistics" role="tabpanel" aria-labelledby="tabLogistics">
+                  <div style="display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+                    <div style="font-weight:950; letter-spacing:-0.2px;">
+                      Logistics / Dispatch Request
+                      <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Get a quote, assign rider/vehicle, track updates via WhatsApp.</div>
+                    </div>
+                    <a class="btn small primary" href="logistics.html"><i class="fa-solid fa-truck"></i> Logistics Page</a>
+                  </div>
+
+                  <div class="form-grid" style="margin-top:12px;">
+                    <div class="field" style="grid-column: span 4;">
+                      <label for="pickup">Pickup location</label>
+                      <input id="pickup" type="text" placeholder="e.g., Lekki Phase 1" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 4;">
+                      <label for="dropoff">Drop-off location</label>
+                      <input id="dropoff" type="text" placeholder="e.g., Victoria Island" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="pickDate">Date</label>
+                      <input id="pickDate" type="date" />
+                    </div>
+
+                    <div class="field" style="grid-column: span 2;">
+                      <label for="vehicle">Vehicle</label>
+                      <select id="vehicle">
+                        <option value="Dispatch Bike" selected>Dispatch Bike</option>
+                        <option value="Car">Car</option>
+                        <option value="Van">Van</option>
+                        <option value="Mini Truck">Mini Truck</option>
+                        <option value="Truck / Haulage">Truck / Haulage</option>
+                      </select>
+                    </div>
+
+                    <div class="field" style="grid-column: span 4;">
+                      <label for="logNotes">Notes</label>
+                      <input id="logNotes" type="text" placeholder="Size/weight, urgency, landmarks..." />
+                    </div>
+                  </div>
+
+                  <div class="form-actions">
+                    <button class="btn solid" type="button" onclick="submitLogistics()">
+                      <i class="fa-brands fa-whatsapp"></i> Request Quote
+                    </button>
+                    <button class="btn primary" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
+                      <i class="fa-brands fa-whatsapp"></i> Chat Support
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:10px; color:var(--muted); font-size:.92rem;">
+                Pro tip: If you’re in a rush, send “URGENT” + your details on WhatsApp for priority routing.
               </div>
             </div>
 
-            <!-- ✅ HERO Highlight images replaced -->
+            <!-- HERO highlight images (all .jpeg) -->
             <aside class="hero-media" id="heroMedia" aria-label="Highlights carousel">
-              <img id="heroImg" src="assets/images/verified-listing.jpg" alt="Verified listings" decoding="async" fetchpriority="high">
+              <img id="heroImg" src="assets/images/verified-listing.jpeg" alt="Verified Listings" decoding="async" fetchpriority="high"
+                   onerror="this.src='assets/images/larmah-header.jpeg'">
               <div class="cap">
                 <div class="hero-tag" id="heroTag">
                   <i class="fa-solid fa-building" style="color:var(--gold)"></i> Verified Listings
@@ -997,6 +1325,7 @@
         </div>
       </section>
 
+      <!-- Featured -->
       <section class="section" id="browse" aria-label="Browse featured">
         <div class="section-head">
           <div>
@@ -1059,6 +1388,7 @@
       </section>
     </div>
 
+    <!-- About -->
     <div class="page" id="page-about" data-page="about">
       <section class="section" id="about" aria-label="About page">
         <div class="section-head">
@@ -1080,7 +1410,7 @@
     </div>
   </main>
 
-  <!-- Footer (synced current footer) -->
+  <!-- Footer (current synced footer) -->
   <footer>
     <div class="container">
       <div class="footer-cta">
@@ -1252,7 +1582,6 @@
       if(metaTheme) metaTheme.setAttribute("content", theme === "light" ? "#F7F7FB" : "#070A12");
     }
     function toggleTheme(){
-      if(window.LARMAH?.toggleTheme) return window.LARMAH.toggleTheme();
       const cur = document.documentElement.getAttribute("data-theme") || "dark";
       setTheme(cur === "dark" ? "light" : "dark");
     }
@@ -1265,7 +1594,58 @@
       setTheme(prefersLight ? "light" : "dark");
     })();
 
-    // HERO slideshow (✅ updated images)
+    // Mode switch
+    const tabRealEstate = document.getElementById("tabRealEstate");
+    const tabLogistics = document.getElementById("tabLogistics");
+    const formRealEstate = document.getElementById("formRealEstate");
+    const formLogistics = document.getElementById("formLogistics");
+    function setMode(mode){
+      const isLog = mode === "logistics";
+      tabRealEstate.classList.toggle("is-active", !isLog);
+      tabLogistics.classList.toggle("is-active", isLog);
+      tabRealEstate.setAttribute("aria-selected", !isLog ? "true" : "false");
+      tabLogistics.setAttribute("aria-selected", isLog ? "true" : "false");
+      formRealEstate.classList.toggle("is-active", !isLog);
+      formLogistics.classList.toggle("is-active", isLog);
+    }
+    window.setMode = setMode;
+
+    // Date mins
+    function toISODate(d){
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+    const todayISO = toISODate(new Date());
+    document.getElementById("checkin")?.setAttribute("min", todayISO);
+    document.getElementById("checkout")?.setAttribute("min", todayISO);
+    document.getElementById("pickDate")?.setAttribute("min", todayISO);
+
+    // Quick submits
+    function submitRealEstate(){
+      openWA(buildMsg("Real Estate — Availability Request", {
+        Checkin: document.getElementById("checkin")?.value || "Not set",
+        Checkout: document.getElementById("checkout")?.value || "Not set",
+        Location: document.getElementById("location")?.value || "Any",
+        Budget: document.getElementById("budget")?.value || "",
+        Message: "Hello Larmah, please confirm available verified options and total cost."
+      }));
+    }
+    function submitLogistics(){
+      openWA(buildMsg("Logistics — Quote Request", {
+        Pickup: document.getElementById("pickup")?.value || "Not set",
+        Dropoff: document.getElementById("dropoff")?.value || "Not set",
+        Date: document.getElementById("pickDate")?.value || "Not set",
+        Vehicle: document.getElementById("vehicle")?.value || "Dispatch Bike",
+        Notes: document.getElementById("logNotes")?.value || "",
+        Message: "Hello Larmah, please share pricing, ETA, and next steps."
+      }));
+    }
+    window.submitRealEstate = submitRealEstate;
+    window.submitLogistics = submitLogistics;
+
+    // HERO slideshow (all .jpeg)
     const heroMedia = document.getElementById("heroMedia");
     const heroImg = document.getElementById("heroImg");
     const heroTag = document.getElementById("heroTag");
@@ -1273,13 +1653,12 @@
     const heroBar = document.getElementById("heroBar");
 
     const HERO_SLIDES = [
-      { img:"assets/images/verified-listing.jpg", icon:"fa-building", label:"Verified Listings", sub:"Clean confirmations, trusted sourcing." },
-      { img:"assets/images/featured-listings.jpg", icon:"fa-star", label:"Featured Listings", sub:"Premium options across Real Estate & Logistics." },
-      { img:"assets/images/Seamless-logistics-support.jpg", icon:"fa-truck-fast", label:"Seamless Logistics Support", sub:"Dispatch, pickups, haulage — coordinated end-to-end." }
+      { img:"assets/images/verified-listing.jpeg", icon:"fa-building", label:"Verified Listings", sub:"Clean confirmations, trusted sourcing." },
+      { img:"assets/images/featured-listings.jpeg", icon:"fa-star", label:"Featured Listings", sub:"Premium options across Real Estate & Logistics." },
+      { img:"assets/images/Seamless-logistics-support.jpeg", icon:"fa-truck-fast", label:"Seamless Logistics Support", sub:"Dispatch, pickups, haulage — coordinated end-to-end." }
     ];
 
     let heroIdx = 0;
-
     function runHeroProgress(){
       heroBar.classList.remove("run");
       void heroBar.offsetWidth;
@@ -1299,13 +1678,10 @@
     }
     setHero(0);
     if(!reduceMotion){
-      setInterval(() => {
-        heroIdx = (heroIdx + 1) % HERO_SLIDES.length;
-        setHero(heroIdx);
-      }, 5000);
+      setInterval(() => { heroIdx = (heroIdx + 1) % HERO_SLIDES.length; setHero(heroIdx); }, 5000);
     }
 
-    // Featured store (minimal)
+    // Featured store
     const __FEAT = { items: [], imgUrls: {}, imgIdx: {}, timers: {}, page: 1, pageSize: 9, q: "", cat: "all", sort: "new" };
     function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
     function formatPrice(raw){ const s = safeText(raw).trim(); return s ? s : "Contact for quote"; }
@@ -1724,7 +2100,7 @@
       loadFeaturedAll();
     });
 
-    // expose globals
+    // expose
     window.toggleMenu = toggleMenu;
     window.toggleTheme = toggleTheme;
     window.openWA = openWA;
