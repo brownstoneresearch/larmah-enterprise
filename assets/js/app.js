@@ -1,5 +1,5 @@
 /* =========================
-   Larmah Enterprise - app.js (FULL)
+   Hey Larmah - app.js (FULL)
    Premium gating + helpers + DB admin check + UI helpers
    + Featured loader (DB -> homepage cards feat0/1/2)
 ========================= */
@@ -444,7 +444,7 @@
           Ref: ref,
           Type: type,
           Area: area,
-          Message: "Hello Larmah, please share available featured options."
+          Message: "Hello Hey Larmah, please share available featured options."
         }));
       });
 

@@ -1,4 +1,4 @@
--- schema.sql (FULL UPDATED - Larmah Enterprise)
+-- schema.sql (FULL UPDATED - Hey Larmah)
 -- Supports: Real Estate, Logistics, Insights
 -- Includes: Admin gate (profiles), RLS policies, catalog, requests, insights (pinned),
 -- and safe seeds.
