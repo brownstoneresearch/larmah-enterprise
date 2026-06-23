@@ -263,7 +263,34 @@
   };
 
   async function submitRequest(payload) {
-    openWhatsApp(buildMessage(payload?.header || "New Request", payload?.fields || payload || {}));
+    const sb = await waitForSupabase();
+    const fields = payload?.fields || payload || {};
+    const category = payload?.category || fields.Category || fields.Service || "general";
+    const message = buildMessage(payload?.header || "New Request", fields);
+
+    if (!sb) {
+      toast("Supabase is not ready. Please refresh and try again.", "error");
+      return { ok: false, error: "Supabase not ready" };
+    }
+
+    const { user } = await getSession();
+    const { error } = await sb.from("requests").insert([{
+      user_id: user?.id || null,
+      category,
+      name: fields.Name || fields.FullName || fields.Full_Name || "",
+      phone: fields.Phone || fields.WhatsApp || fields.Contact || "",
+      details: fields,
+      created_at: new Date().toISOString()
+    }]);
+
+    if (error) {
+      console.warn("request insert error:", error);
+      toast("Could not save request. Please try again.", "error");
+      return { ok: false, error: error.message };
+    }
+
+    openWhatsApp(message);
+    return { ok: true };
   }
 
   /* =========================

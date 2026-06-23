@@ -1,4 +1,4 @@
-# Larmah Supabase Website — Setup
+# Larmah Supabase Website - Setup
 
 ## 1) Create Supabase project
 - Create project in Supabase

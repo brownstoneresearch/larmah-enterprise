@@ -1,13 +1,13 @@
 <!-- =========================
-     real-estate.html (FULL) — UPDATED
-     ✅ Deep-link open: real-estate.html?item=<id>
+     real-estate.html (FULL) - UPDATED
+      Deep-link open: real-estate.html?item=<id>
         - resets filters (if needed)
         - jumps to correct page
         - scroll + highlight
         - opens modal
-     ✅ Domain-originated share links (absolute URLs)
-     ✅ Best-effort OG/Twitter meta override from ?img=&title=&desc=
-     ✅ Modal includes Copy Link + Open link
+      Domain-originated share links (absolute URLs)
+      Best-effort OG/Twitter meta override from ?img=&title=&desc=
+      Modal includes Copy Link + Open link
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -17,7 +17,7 @@
   <meta name="robots" content="index,follow" />
 
   <title>Real Estate | Larmah Enterprise</title>
-  <meta name="description" content="Verified shortlets, rentals, and property sales across Nigeria — trust-first sourcing with WhatsApp-first support and clean reference tracking." />
+  <meta name="description" content="Verified shortlets, rentals, and property sales across Nigeria - trust-first sourcing with WhatsApp-first support and clean reference tracking." />
   <meta name="keywords" content="Real Estate Nigeria, Shortlets Lagos, Apartments Lekki, Ikoyi Rentals, Verified Property, Larmah Enterprise" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
@@ -29,9 +29,9 @@
   <meta property="og:locale" content="en_NG" />
   <meta property="og:url" content="https://heylarmah.tech/real-estate.html" />
   <meta property="og:title" content="Larmah Real Estate | Verified Listings" />
-  <meta property="og:description" content="Shortlets, rentals, and sales — verified sourcing with WhatsApp-first support." />
+  <meta property="og:description" content="Shortlets, rentals, and sales - verified sourcing with WhatsApp-first support." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:alt" content="Larmah Real Estate — Verified Listings" />
+  <meta property="og:image:alt" content="Larmah Real Estate - Verified Listings" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -49,7 +49,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- ✅ Configure BEFORE app.js loads -->
+  <!--  Configure BEFORE app.js loads -->
   <script>
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
     window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
@@ -57,7 +57,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
-  <!-- ✅ Best-effort OG/Twitter meta override for shared item links -->
+  <!--  Best-effort OG/Twitter meta override for shared item links -->
   <script>
     (function applyShareMetaFromQuery(){
       try{
@@ -496,7 +496,7 @@
       filter: brightness(1.02);
     }
 
-    /* ✅ Deep-link highlight */
+    /*  Deep-link highlight */
     .card.pulse{
       border-color: color-mix(in oklab, var(--gold) 55%, var(--line) 45%);
       box-shadow: 0 0 0 2px rgba(212,175,55,.22), var(--shadow2);
@@ -959,6 +959,28 @@
     .wa-btn i{ font-size: 20px; }
     @media (min-width: 980px){ .wa-pill{ display:inline-flex; } }
   </style>
+
+  <style id="larmah-professional-refresh">
+    :root{--gold:#B88A2A !important;--gold2:#D9B75B !important;--radius:10px !important;--radius2:14px !important;--max:1180px !important;--shadow:0 18px 48px rgba(0,0,0,.22) !important;--shadow2:0 10px 28px rgba(0,0,0,.16) !important;}
+    html[data-theme="dark"]{--bg:#0A0D12 !important;--bg2:#10151D !important;--panel:rgba(255,255,255,.055) !important;--panel2:rgba(255,255,255,.035) !important;--line:rgba(255,255,255,.12) !important;--line2:rgba(255,255,255,.08) !important;--text:#F4F6FA !important;--muted:rgba(244,246,250,.72) !important;--muted2:rgba(244,246,250,.56) !important;--headerBg:rgba(10,13,18,.86) !important;--ctaBg:rgba(255,255,255,.05) !important;}
+    html[data-theme="light"]{--bg:#F5F6F8 !important;--bg2:#FFFFFF !important;--panel:rgba(10,13,18,.045) !important;--panel2:rgba(10,13,18,.025) !important;--line:rgba(10,13,18,.12) !important;--line2:rgba(10,13,18,.08) !important;--text:#111827 !important;--muted:rgba(17,24,39,.68) !important;--muted2:rgba(17,24,39,.52) !important;--headerBg:rgba(255,255,255,.88) !important;--ctaBg:rgba(255,255,255,.82) !important;}
+    body{background:linear-gradient(180deg,var(--bg2),var(--bg)) !important;letter-spacing:0 !important;}
+    header{border-bottom:1px solid var(--line) !important;box-shadow:0 10px 30px rgba(0,0,0,.14) !important;}
+    .container{max-width:var(--max) !important;}
+    .hero,.section{border-radius:0 !important;}
+    .hero-shell,.hero-card,.card,.feature-card,.service-card,.listing-card,.logistics-card,.glass,.panel,.stat,.admin-card,.auth-card{border-radius:var(--radius2) !important;border:1px solid var(--line) !important;background:var(--panel) !important;box-shadow:var(--shadow2) !important;}
+    .hero-shell:before,.hero:before,.section:before,.cta:before{display:none !important;}
+    .btn,.pill,.input,textarea,select,.kicker-pill,.chip,.badge,.tabbar button{border-radius:10px !important;letter-spacing:0 !important;}
+    .btn.solid,.btn.primary,.pill.primary{background:#B88A2A !important;border-color:#B88A2A !important;color:#0A0D12 !important;}
+    .btn:not(.solid):not(.primary),.pill:not(.primary){background:var(--panel2) !important;}
+    h1,h2,h3,.card-title{letter-spacing:0 !important;}
+    h1{font-size:clamp(2.15rem,4.4vw,4.25rem) !important;line-height:1.02 !important;}
+    h2{font-size:clamp(1.35rem,2vw,2rem) !important;}
+    .lead,p{max-width:72ch;}
+    img{background:#121821;}
+    footer{background:var(--bg2) !important;border-top:1px solid var(--line) !important;}
+  </style>
+
 </head>
 
 <body data-page="real-estate">
@@ -974,7 +996,7 @@
           </div>
           <div style="min-width:0">
             <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
-            <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
+            <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate | Logistics</div>
           </div>
         </div>
 
@@ -1007,7 +1029,7 @@
         </div>
         <div class="btxt">
           <div class="bname">Larmah Enterprise</div>
-          <div class="bsub">Real Estate • Logistics</div>
+          <div class="bsub">Real Estate | Logistics</div>
         </div>
       </a>
 
@@ -1038,7 +1060,7 @@
         <div>
           <div class="kicker">
             <span><i class="fa-solid fa-shield-halved" style="color:var(--gold)"></i> Verified & scam-resistant</span>
-            <span class="dot">•</span>
+            <span class="dot">|</span>
             <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
           </div>
 
@@ -1127,7 +1149,7 @@
 
           <div class="field" style="grid-column: span 8;">
             <label for="bk_budget">Budget</label>
-            <input id="bk_budget" type="text" placeholder="e.g., ₦120,000 per night / ₦500k total" />
+            <input id="bk_budget" type="text" placeholder="e.g., NGN 120,000 per night / NGN 500k total" />
           </div>
 
           <div class="field" style="grid-column: span 8;">
@@ -1195,8 +1217,8 @@
             <label for="re_sort">Sort</label>
             <select id="re_sort">
               <option value="new" selected>Newest</option>
-              <option value="az">Title A–Z</option>
-              <option value="za">Title Z–A</option>
+              <option value="az">Title A-Z</option>
+              <option value="za">Title Z-A</option>
             </select>
           </div>
 
@@ -1229,7 +1251,7 @@
       </div>
 
       <div id="re_mount">
-        <div class="notice">Loading verified listings…</div>
+        <div class="notice">Loading verified listings...</div>
       </div>
     </section>
   </main>
@@ -1240,7 +1262,7 @@
       <div class="footer-cta">
         <div>
           <h3>Verified stays. Clear confirmation. WhatsApp-first.</h3>
-          <p>Confirm availability and coordinate logistics — in one chat.</p>
+          <p>Confirm availability and coordinate logistics - in one chat.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <button class="btn solid" type="button"
@@ -1349,7 +1371,7 @@
     </button>
   </div>
 
-  <!-- ✅ View More Modal -->
+  <!--  View More Modal -->
   <div class="modalOverlay" id="descOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-label="Listing details">
       <div class="modalHead">
@@ -1397,7 +1419,7 @@
     const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
-    // ✅ Absolute URL helper
+    //  Absolute URL helper
     function absUrl(pathOrUrl){
       try{
         if(!pathOrUrl) return "";
@@ -1531,7 +1553,7 @@
       return [absUrl("assets/images/larmah-header.jpeg")];
     }
 
-    // ✅ Domain-originated share link for item
+    //  Domain-originated share link for item
     function reShareLink(it){
       const id = String(it.id);
       const urls = __RE.imgUrls[id] || getImages(it);
@@ -1645,7 +1667,7 @@
       const txt = __RE_MODAL.ref || "";
       if(!txt) return toast("No ref to copy.");
       navigator.clipboard?.writeText(txt).then(
-        () => toast("Ref copied ✅"),
+        () => toast("Ref copied "),
         () => toast("Copy failed. Please copy manually.")
       );
     }
@@ -1653,7 +1675,7 @@
       const txt = __RE_MODAL.link || "";
       if(!txt) return toast("No link to copy.");
       navigator.clipboard?.writeText(txt).then(
-        () => toast("Link copied ✅"),
+        () => toast("Link copied "),
         () => toast("Copy failed. Please copy manually.")
       );
     }
@@ -1688,7 +1710,7 @@ Link: ${__RE_MODAL.link}
       }
       closeDescModal();
       document.getElementById("book")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
-      toast("Booking form pre-filled ✅");
+      toast("Booking form pre-filled ");
     }
 
     document.getElementById("descOverlay")?.addEventListener("click", (e) => {
@@ -1813,7 +1835,7 @@ Link: ${__RE_MODAL.link}
       return `
         <div class="pager" role="navigation" aria-label="Listings pagination">
           <div class="pager-left">
-            <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>–<b>${to}</b> of <b>${total}</b></span>
+            <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>-<b>${to}</b> of <b>${total}</b></span>
           </div>
 
           <div class="pager-right">
@@ -1822,7 +1844,7 @@ Link: ${__RE_MODAL.link}
             </button>
 
             ${btns.map(b => {
-              if(b.type === "ell") return `<span class="pager-ellipsis" aria-hidden="true">…</span>`;
+              if(b.type === "ell") return `<span class="pager-ellipsis" aria-hidden="true">...</span>`;
               return `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="reGoPage(${b.p})" aria-label="Go to page ${b.label}">${b.label}</button>`;
             }).join("")}
 
@@ -1967,7 +1989,7 @@ Link: ${link}
 
 `;
       document.getElementById("book").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
-      toast("Booking form pre-filled ✅");
+      toast("Booking form pre-filled ");
     }
     window.reBookFromCard = reBookFromCard;
 
@@ -1980,7 +2002,7 @@ Link: ${link}
       const budget = (document.getElementById("bk_budget").value || "");
       const notes = (document.getElementById("bk_notes").value || "");
 
-      openWA(buildMsg("Real Estate — Booking Request", {
+      openWA(buildMsg("Real Estate - Booking Request", {
         Checkin: checkin,
         Checkout: checkout,
         Guests: guests,
@@ -2020,7 +2042,7 @@ Link: ${link}
             fields,
             refPrefix: "RE"
           });
-          toast("Submitted. We’ll respond on WhatsApp ✅");
+          toast("Submitted. We'll respond on WhatsApp ");
           return;
         }
 
@@ -2031,11 +2053,11 @@ Link: ${link}
         }]);
         if(error) throw error;
 
-        toast("Saved ✅ (We’ll respond on WhatsApp)");
+        toast("Saved  (We'll respond on WhatsApp)");
         submitBookingRequest();
       }catch(e){
         console.warn(e);
-        toast(e?.message || "Could not save. Sending via WhatsApp…");
+        toast(e?.message || "Could not save. Sending via WhatsApp...");
         submitBookingRequest();
       }
     }
@@ -2061,7 +2083,7 @@ Link: ${link}
       });
     }
 
-    // ✅ Deep-link open: ?item=<id>
+    //  Deep-link open: ?item=<id>
     function openItemFromQuery(isRerun){
       try{
         const qs = new URLSearchParams(location.search);
@@ -2115,7 +2137,7 @@ Link: ${link}
 
     async function loadRealEstate(){
       const mount = document.getElementById("re_mount");
-      mount.innerHTML = `<div class="notice">Loading verified listings…</div>`;
+      mount.innerHTML = `<div class="notice">Loading verified listings...</div>`;
 
       try{
         const sb = await waitForSB();
@@ -2146,7 +2168,7 @@ Link: ${link}
 
         renderRealEstate();
 
-        // ✅ Run deep-link open after render
+        //  Run deep-link open after render
         setTimeout(() => openItemFromQuery(false), 80);
 
         if(window.LARMAH?.realtime?.subscribe){

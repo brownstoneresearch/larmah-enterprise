@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>Insights | Larmah Enterprise</title>
-  <meta name="description" content="Live market intelligence, FX and crypto pairs, real-estate trends, and logistics updates for the Nigerian market — curated from verified sources." />
-  <meta name="keywords" content="Nigeria FX Rates, Lagos Real Estate News, Logistics Trends Nigeria, Crypto Rates Nigeria, Larmah Insights" />
+  <meta name="description" content="Live market intelligence, real estate and logistics pairs, real-estate trends, and logistics updates for the Nigerian market - curated from verified sources." />
+  <meta name="keywords" content="Lagos Real Estate News, Logistics Trends Nigeria, Verified Listings, Larmah Insights" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
   <meta name="color-scheme" content="dark" />
@@ -17,9 +17,9 @@
   <meta property="og:locale" content="en_NG" />
   <meta property="og:url" content="https://heylarmah.tech/insights.html" />
   <meta property="og:title" content="Larmah Insights | Market Intelligence" />
-  <meta property="og:description" content="Desk rates + verified headlines — updated in real-time from Admin + RSS." />
+  <meta property="og:description" content="Verified real estate and logistics updates from Larmah." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:alt" content="Larmah Insights — Market Intelligence" />
+  <meta property="og:image:alt" content="Larmah Insights - Market Intelligence" />
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Larmah Insights" />
@@ -54,10 +54,6 @@
       .hero .actions{ flex-direction:column; }
       .hero .actions .btn{ width:100%; }
     }
-
-    /* ===== Rates (desk style, not ticker) ===== */
-    .rates-grid{ display:grid; grid-template-columns: 1.2fr .8fr; gap: 14px; align-items:start; }
-    @media(max-width: 900px){ .rates-grid{ grid-template-columns: 1fr; } }
 
     .rate-board{
       background: rgba(0,0,0,0.30);
@@ -184,6 +180,28 @@
     .sk-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px; }
     .sk-card{ height:210px; border-radius:16px; background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); opacity:.6; }
   </style>
+
+  <style id="larmah-professional-refresh">
+    :root{--gold:#B88A2A !important;--gold2:#D9B75B !important;--radius:10px !important;--radius2:14px !important;--max:1180px !important;--shadow:0 18px 48px rgba(0,0,0,.22) !important;--shadow2:0 10px 28px rgba(0,0,0,.16) !important;}
+    html[data-theme="dark"]{--bg:#0A0D12 !important;--bg2:#10151D !important;--panel:rgba(255,255,255,.055) !important;--panel2:rgba(255,255,255,.035) !important;--line:rgba(255,255,255,.12) !important;--line2:rgba(255,255,255,.08) !important;--text:#F4F6FA !important;--muted:rgba(244,246,250,.72) !important;--muted2:rgba(244,246,250,.56) !important;--headerBg:rgba(10,13,18,.86) !important;--ctaBg:rgba(255,255,255,.05) !important;}
+    html[data-theme="light"]{--bg:#F5F6F8 !important;--bg2:#FFFFFF !important;--panel:rgba(10,13,18,.045) !important;--panel2:rgba(10,13,18,.025) !important;--line:rgba(10,13,18,.12) !important;--line2:rgba(10,13,18,.08) !important;--text:#111827 !important;--muted:rgba(17,24,39,.68) !important;--muted2:rgba(17,24,39,.52) !important;--headerBg:rgba(255,255,255,.88) !important;--ctaBg:rgba(255,255,255,.82) !important;}
+    body{background:linear-gradient(180deg,var(--bg2),var(--bg)) !important;letter-spacing:0 !important;}
+    header{border-bottom:1px solid var(--line) !important;box-shadow:0 10px 30px rgba(0,0,0,.14) !important;}
+    .container{max-width:var(--max) !important;}
+    .hero,.section{border-radius:0 !important;}
+    .hero-shell,.hero-card,.card,.feature-card,.service-card,.listing-card,.logistics-card,.glass,.panel,.stat,.admin-card,.auth-card{border-radius:var(--radius2) !important;border:1px solid var(--line) !important;background:var(--panel) !important;box-shadow:var(--shadow2) !important;}
+    .hero-shell:before,.hero:before,.section:before,.cta:before{display:none !important;}
+    .btn,.pill,.input,textarea,select,.kicker-pill,.chip,.badge,.tabbar button{border-radius:10px !important;letter-spacing:0 !important;}
+    .btn.solid,.btn.primary,.pill.primary{background:#B88A2A !important;border-color:#B88A2A !important;color:#0A0D12 !important;}
+    .btn:not(.solid):not(.primary),.pill:not(.primary){background:var(--panel2) !important;}
+    h1,h2,h3,.card-title{letter-spacing:0 !important;}
+    h1{font-size:clamp(2.15rem,4.4vw,4.25rem) !important;line-height:1.02 !important;}
+    h2{font-size:clamp(1.35rem,2vw,2rem) !important;}
+    .lead,p{max-width:72ch;}
+    img{background:#121821;}
+    footer{background:var(--bg2) !important;border-top:1px solid var(--line) !important;}
+  </style>
+
 </head>
 
 <body data-page="insights">
@@ -210,11 +228,7 @@
             <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
             <i class="fa-solid fa-check" style="font-size:12px;"></i>
           </a>
-          <a href="exchange.html" class="msheet-link">
-            <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-        </div>
+          </div>
         <div class="msheet-footer">
           <div class="msheet-hint">Menu</div>
           <a href="premium.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
@@ -238,8 +252,7 @@
           <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
           <li><a class="nav-link" href="logistics.html">Logistics</a></li>
           <li><a class="nav-link active" href="insights.html">Insights</a></li>
-          <li><a class="nav-link" href="exchange.html">Exchange</a></li>
-        </ul>
+          </ul>
       </nav>
 
       <div class="header-actions" style="margin-left:auto; display:none;">
@@ -260,15 +273,14 @@
           <div>
             <div class="hero-kicker">
               <span class="kicker-pill"><i class="fa-solid fa-chart-column"></i> Market Intelligence</span>
-              <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Admin + RSS • Live</span>
+              <span class="kicker-dot">|</span>
+              <span class="kicker-sub">Admin + RSS | Live</span>
             </div>
 
-            <h1>Signals. Rates. Verified Headlines.</h1>
-            <p class="lead">Desk rates and a curated feed for Nigeria real estate, logistics, FX and crypto — updated instantly.</p>
+            <h1>Market Notes. Verified Updates.</h1>
+            <p class="lead">Curated updates for Nigeria real estate and logistics - verified listings, route notes, and service announcements.</p>
 
             <div class="actions">
-              <a class="btn solid" href="#rates"><i class="fa-solid fa-scale-balanced"></i> Desk Rates</a>
               <a class="btn primary" href="#news"><i class="fa-regular fa-newspaper"></i> Latest Insights</a>
             </div>
 
@@ -284,14 +296,9 @@
           </div>
 
           <div class="hero-badges" style="align-content:center">
-            <div class="hero-card" style="background:rgba(0,0,0,0.4)">
-              <div style="font-size:.8rem;color:var(--muted)">USDT/NGN Sell</div>
-              <div style="font-size:1.5rem;font-weight:950;margin:4px 0" id="heroRateMain">—</div>
-              <div style="font-size:.85rem;color:var(--ok)" id="heroRateUpdated">Waiting…</div>
-            </div>
-            <div class="hero-card" style="background:rgba(0,0,0,0.4)">
+<div class="hero-card" style="background:rgba(0,0,0,0.4)">
               <div style="font-size:.8rem;color:var(--muted)">Active Insights</div>
-              <div style="font-size:1.5rem;font-weight:950;margin:4px 0" id="heroInsightCount">—</div>
+              <div style="font-size:1.5rem;font-weight:950;margin:4px 0" id="heroInsightCount">-</div>
               <div style="font-size:.85rem;color:var(--ok)">Live feed</div>
             </div>
           </div>
@@ -299,46 +306,7 @@
         </div>
       </div>
     </section>
-
-    <!-- ===== Rates ===== -->
-    <section class="section" id="rates">
-      <div class="section-head-split">
-        <div>
-          <h2>Desk Rates</h2>
-          <p class="lead">Active pairs from <code>rates</code> — structured for quick decisions.</p>
-        </div>
-        <a class="btn small" href="exchange.html"><i class="fa-solid fa-money-bill-transfer"></i> Trade</a>
-      </div>
-
-      <div class="rates-grid">
-        <div>
-          <div class="rate-board" id="rateBoardMain"></div>
-          <div class="rate-meta">
-            <span class="pill"><i class="fa-solid fa-circle-check"></i> Public active pairs</span>
-            <span class="pill"><i class="fa-solid fa-clock"></i> <span id="ratesUpdated">—</span></span>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3 style="margin-top:0">How to use this feed</h3>
-          <div class="small" style="opacity:.9;line-height:1.9;margin-top:8px">
-            1) Watch USDT/NGN and your primary pairs<br/>
-            2) Open Exchange to lock a quote<br/>
-            3) News cards below update from Admin + RSS
-          </div>
-
-          <div class="actions" style="margin-top:12px">
-            <a class="btn solid" href="exchange.html"><i class="fa-solid fa-arrow-right"></i> Go to Exchange</a>
-          </div>
-
-          <div class="notice" style="margin-top:12px">
-            <strong>Note:</strong> Rates are indicative until confirmed on WhatsApp.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===== News ===== -->
+<!-- ===== News ===== -->
     <section class="section" id="news">
       <div class="section-head-split">
         <div>
@@ -346,7 +314,7 @@
           <p class="lead">From <code>insights</code> (Admin + RSS). Live updates enabled.</p>
 
           <div class="filters-row">
-            <input id="qFilter" class="input" placeholder="Search headlines…" />
+            <input id="qFilter" class="input" placeholder="Search headlines..." />
             <select id="sourceFilter" class="input" aria-label="Filter by source">
               <option value="all">All sources</option>
             </select>
@@ -357,7 +325,6 @@
           <button class="btn small is-active" type="button" onclick="setInsightFilter('all', this)">All</button>
           <button class="btn small" type="button" onclick="setInsightFilter('real-estate', this)">Property</button>
           <button class="btn small" type="button" onclick="setInsightFilter('logistics', this)">Logistics</button>
-          <button class="btn small" type="button" onclick="setInsightFilter('exchange', this)">Exchange</button>
           <button class="btn small" type="button" onclick="setInsightFilter('general', this)">General</button>
         </div>
       </div>
@@ -391,11 +358,11 @@
             <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
             <div>
               <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Real Estate • Logistics • Insights • Exchange</div>
+              <div class="small">Real Estate | Logistics | Insights</div>
             </div>
           </div>
           <div class="small" style="margin-top:8px">
-            Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
+            Trust-first commerce for Nigeria - verified listings, trackable enquiries, and WhatsApp-first support.
           </div>
         </div>
 
@@ -404,7 +371,6 @@
           <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
           <div class="small"><a href="logistics.html">Logistics</a></div>
           <div class="small"><a href="insights.html">Insights</a></div>
-          <div class="small"><a href="exchange.html">Exchange</a></div>
           <div class="small"><a href="premium.html">Premium</a></div>
         </div>
 
@@ -426,8 +392,6 @@
     document.getElementById("year").textContent = new Date().getFullYear();
 
     // ===== State =====
-    let __rates = [];
-    let __ratesMap = {};
     let __insightsAll = [];
     let __insightsMap = {}; // id -> insight
 
@@ -443,7 +407,7 @@
     // ===== Formatting =====
     function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
     function fmt(n){
-      if(n === null || n === undefined || n === "") return "—";
+      if(n === null || n === undefined || n === "") return "-";
       const num = Number(n);
       if(Number.isNaN(num)) return String(n);
       return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
@@ -463,118 +427,6 @@
       if(hrs < 24) return `${hrs}h ago`;
       if(days < 7) return `${days}d ago`;
       return d.toLocaleDateString(undefined, { month:"short", day:"numeric" });
-    }
-
-    // ===== Rates =====
-    function normalizeRateRow(r){
-      const base = safeText(r.base || r.asset).trim().toUpperCase();
-      const quote = safeText(r.quote || "").trim().toUpperCase();
-      const pair = safeText(r.pair || (base + "/" + quote)).trim().toUpperCase();
-      return { ...r, base, quote, pair };
-    }
-
-    function updateHeroRate(){
-      const heroRateEl = document.getElementById("heroRateMain");
-      const heroUpdEl = document.getElementById("heroRateUpdated");
-
-      const row = __ratesMap["USDT/NGN"];
-      if(row && row.sell){
-        heroRateEl.textContent = `₦${fmt(row.sell)}`;
-        heroUpdEl.textContent = row.updated_at ? `Updated ${formatTimestamp(row.updated_at)}` : "Live";
-      } else {
-        heroRateEl.textContent = "—";
-        heroUpdEl.textContent = "Waiting…";
-      }
-    }
-
-    function renderRatesBoard(){
-      const mount = document.getElementById("rateBoardMain");
-      if(!mount) return;
-
-      const rows = (__rates || []).slice()
-        .filter(r => String(r.status||"").toLowerCase() === "active")
-        .sort((a,b)=> String(a.pair||"").localeCompare(String(b.pair||"")))
-        .slice(0, 12);
-
-      if(!rows.length){
-        mount.innerHTML = `<div class="board-title"><h3>Active Pairs</h3><div class="small">No rates yet</div></div>
-          <div class="notice">Add pairs in Admin → Rates.</div>`;
-        document.getElementById("ratesUpdated").textContent = "—";
-        updateHeroRate();
-        return;
-      }
-
-      const newest = rows.map(r => r.updated_at).filter(Boolean).sort().slice(-1)[0];
-      document.getElementById("ratesUpdated").textContent = newest ? formatTimestamp(newest) : "—";
-
-      mount.innerHTML = `
-        <div class="board-title">
-          <h3>Active Pairs</h3>
-          <div class="small">Buy / Sell (Desk)</div>
-        </div>
-        <div class="rate-row head"><div>PAIR</div><div>WE BUY</div><div>WE SELL</div></div>
-        ${rows.map(r => `
-          <div class="rate-row">
-            <div class="pair">${r.base}<small> / ${r.quote}</small></div>
-            <div class="buy"><div class="label">We Buy</div><div class="val">${fmt(r.buy)}</div></div>
-            <div class="sell"><div class="label">We Sell</div><div class="val">${fmt(r.sell)}</div></div>
-          </div>
-        `).join("")}
-      `;
-      updateHeroRate();
-    }
-
-    async function loadRates(){
-      const sb = sbClient();
-      if(!sb) return;
-
-      const { data, error } = await sb
-        .from("rates")
-        .select("id,asset,base,quote,pair,buy,sell,status,updated_at,created_at")
-        .eq("status","active")
-        .order("updated_at", { ascending:false });
-
-      if(error){ console.error(error); return; }
-
-      __rates = (data||[]).map(normalizeRateRow);
-      __ratesMap = {};
-      __rates.forEach(r => { __ratesMap[r.pair] = r; });
-
-      renderRatesBoard();
-    }
-
-    function upsertRate(row){
-      const pair = String(row.pair||"").toUpperCase();
-      if(!pair) return;
-      __rates = (__rates||[]).filter(r => String(r.pair||"").toUpperCase() !== pair);
-      __rates.push(row);
-      __ratesMap[pair] = row;
-    }
-    function removeRate(pair){
-      const p = String(pair||"").toUpperCase();
-      __rates = (__rates||[]).filter(r => String(r.pair||"").toUpperCase() !== p);
-      delete __ratesMap[p];
-    }
-    function applyRatesRealtime(payload){
-      const ev = payload?.eventType;
-      const raw = payload?.new || payload?.old;
-      if(!raw) return;
-
-      const row = normalizeRateRow(raw);
-      const status = String(row.status||"").toLowerCase();
-
-      if(ev === "DELETE"){
-        removeRate(row.pair);
-        renderRatesBoard();
-        return;
-      }
-      if(status !== "active"){
-        removeRate(row.pair);
-        renderRatesBoard();
-        return;
-      }
-      upsertRate(row);
-      renderRatesBoard();
     }
 
     // ===== Insights =====
@@ -714,7 +566,7 @@
       const sb = sbClient();
       if(!sb) return;
 
-      // ✅ Corrected ordering:
+      //  Corrected ordering:
       // - published_at DESC (NULLs last)
       // - then created_at DESC
       const { data, error } = await sb
@@ -786,12 +638,10 @@
       });
 
       // initial load
-      loadRates();
       loadInsights();
 
       // realtime (true live upsert/delete)
       if(window.LARMAH && LARMAH.realtime){
-        LARMAH.realtime.subscribe("rates", (p) => applyRatesRealtime(p), "ins-live-rates", { debounceMs: 120, statusElId: "liveStateIN" });
         LARMAH.realtime.subscribe("insights", (p) => applyInsightsRealtime(p), "ins-live-feed", { debounceMs: 220 });
       }
     });

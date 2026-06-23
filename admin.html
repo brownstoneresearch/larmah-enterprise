@@ -4,8 +4,8 @@
        * must be logged in
        * must be Premium (premium_members)
        * must be Admin allowlist (window.__LARMAH_ADMIN_EMAILS OR DB is_admin() in app.js)
-     - ✅ Only manages: public.listings
-     - ✅ Includes: featured toggle + sort_rank
+     -  Only manages: public.listings
+     -  Includes: featured toggle + sort_rank
      - ❌ Removes: RSS, Insights, Rates, Users, Requests
 ========================= -->
 <!DOCTYPE html>
@@ -22,7 +22,7 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- ✅ Configure BEFORE app.js loads -->
+  <!--  Configure BEFORE app.js loads -->
   <script>
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
     window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
@@ -112,6 +112,28 @@
     .toggle input{ width:18px; height:18px; }
     .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;}
   </style>
+
+  <style id="larmah-professional-refresh">
+    :root{--gold:#B88A2A !important;--gold2:#D9B75B !important;--radius:10px !important;--radius2:14px !important;--max:1180px !important;--shadow:0 18px 48px rgba(0,0,0,.22) !important;--shadow2:0 10px 28px rgba(0,0,0,.16) !important;}
+    html[data-theme="dark"]{--bg:#0A0D12 !important;--bg2:#10151D !important;--panel:rgba(255,255,255,.055) !important;--panel2:rgba(255,255,255,.035) !important;--line:rgba(255,255,255,.12) !important;--line2:rgba(255,255,255,.08) !important;--text:#F4F6FA !important;--muted:rgba(244,246,250,.72) !important;--muted2:rgba(244,246,250,.56) !important;--headerBg:rgba(10,13,18,.86) !important;--ctaBg:rgba(255,255,255,.05) !important;}
+    html[data-theme="light"]{--bg:#F5F6F8 !important;--bg2:#FFFFFF !important;--panel:rgba(10,13,18,.045) !important;--panel2:rgba(10,13,18,.025) !important;--line:rgba(10,13,18,.12) !important;--line2:rgba(10,13,18,.08) !important;--text:#111827 !important;--muted:rgba(17,24,39,.68) !important;--muted2:rgba(17,24,39,.52) !important;--headerBg:rgba(255,255,255,.88) !important;--ctaBg:rgba(255,255,255,.82) !important;}
+    body{background:linear-gradient(180deg,var(--bg2),var(--bg)) !important;letter-spacing:0 !important;}
+    header{border-bottom:1px solid var(--line) !important;box-shadow:0 10px 30px rgba(0,0,0,.14) !important;}
+    .container{max-width:var(--max) !important;}
+    .hero,.section{border-radius:0 !important;}
+    .hero-shell,.hero-card,.card,.feature-card,.service-card,.listing-card,.logistics-card,.glass,.panel,.stat,.admin-card,.auth-card{border-radius:var(--radius2) !important;border:1px solid var(--line) !important;background:var(--panel) !important;box-shadow:var(--shadow2) !important;}
+    .hero-shell:before,.hero:before,.section:before,.cta:before{display:none !important;}
+    .btn,.pill,.input,textarea,select,.kicker-pill,.chip,.badge,.tabbar button{border-radius:10px !important;letter-spacing:0 !important;}
+    .btn.solid,.btn.primary,.pill.primary{background:#B88A2A !important;border-color:#B88A2A !important;color:#0A0D12 !important;}
+    .btn:not(.solid):not(.primary),.pill:not(.primary){background:var(--panel2) !important;}
+    h1,h2,h3,.card-title{letter-spacing:0 !important;}
+    h1{font-size:clamp(2.15rem,4.4vw,4.25rem) !important;line-height:1.02 !important;}
+    h2{font-size:clamp(1.35rem,2vw,2rem) !important;}
+    .lead,p{max-width:72ch;}
+    img{background:#121821;}
+    footer{background:var(--bg2) !important;border-top:1px solid var(--line) !important;}
+  </style>
+
 </head>
 
 <body data-page="admin">
@@ -129,7 +151,7 @@
         </div>
         <div style="margin-bottom:20px;text-align:left">
           <label class="form-label">Password</label>
-          <input type="password" id="admin_pass" class="input" placeholder="••••••••" required>
+          <input type="password" id="admin_pass" class="input" placeholder="||||||||" required>
         </div>
         <button type="submit" class="btn solid" style="width:100%" id="loginBtn">Authenticate</button>
       </form>
@@ -174,7 +196,7 @@
           <div class="admin-header">
             <div>
               <h1 style="margin:0">Catalogue Overview</h1>
-              <div class="small" style="margin-top:6px;color:var(--muted)">Listings + Featured • Premium Admin-only access</div>
+              <div class="small" style="margin-top:6px;color:var(--muted)">Listings + Featured | Premium Admin-only access</div>
             </div>
             <div class="quick-actions">
               <span class="chip"><i class="fa-solid fa-shield-halved"></i> Admin</span>
@@ -186,15 +208,15 @@
           <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom:22px">
             <div class="card">
               <div class="small" style="color:var(--muted)">Total Listings</div>
-              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_listings">—</div>
+              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_listings">-</div>
             </div>
             <div class="card">
               <div class="small" style="color:var(--muted)">Active Listings</div>
-              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_active">—</div>
+              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_active">-</div>
             </div>
             <div class="card">
               <div class="small" style="color:var(--muted)">Featured (Active)</div>
-              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_featured">—</div>
+              <div style="font-size:2rem;font-weight:950;margin-top:5px" id="stat_featured">-</div>
             </div>
           </div>
 
@@ -373,7 +395,7 @@
           <div class="row2">
             <div class="form-group">
               <label class="form-label">Price / Rate</label>
-              <input type="text" id="listing_price" class="input" placeholder="₦120,000/night or Contact for quote">
+              <input type="text" id="listing_price" class="input" placeholder="NGN 120,000/night or Contact for quote">
             </div>
 
             <div class="form-group">
@@ -405,7 +427,7 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Images (1–3)</label>
+            <label class="form-label">Images (1-3)</label>
             <div class="tiny">Upload or paste URLs. First image becomes main.</div>
 
             <div class="img-grid" style="margin-top:10px">
@@ -431,7 +453,7 @@
           </div>
 
           <div class="tiny" style="margin-top:10px">
-            ID: <span class="mono" id="listing_id_hint">—</span>
+            ID: <span class="mono" id="listing_id_hint">-</span>
           </div>
         </div>
 
@@ -564,7 +586,7 @@
         if(!file) return;
 
         try{
-          toast("Uploading image…");
+          toast("Uploading image...");
           const up = await uploadToStorage(file, "listings");
 
           const current = CACHE.listings.get(String(id)) || {};
@@ -575,7 +597,7 @@
           const res = await sb.from("listings").update(payload).eq("id", id).select().single();
           if(res.error) throw res.error;
 
-          toast("Image updated ✅");
+          toast("Image updated ");
           await fetchListings("all");
           if(category) await fetchListings(category);
           await fetchFeatured();
@@ -589,7 +611,7 @@
     }
 
     /* ===========================
-       ✅ ADMIN GATE (Premium + allowlist)
+        ADMIN GATE (Premium + allowlist)
        =========================== */
     async function initAdminGate(){
       sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
@@ -625,7 +647,7 @@
         const ok = await initAdminGate();
         if(!ok) throw new Error("Access denied.");
 
-        toast("Admin authenticated ✅");
+        toast("Admin authenticated ");
         await loadStats();
         switchView("overview", document.querySelector(".nav-item"));
       }catch(e){
@@ -671,17 +693,17 @@
       try {
         const { count } = await sb.from("listings").select("*",{count:"exact", head:true});
         document.getElementById("stat_listings").textContent = count ?? 0;
-      } catch { document.getElementById("stat_listings").textContent = "—"; }
+      } catch { document.getElementById("stat_listings").textContent = "-"; }
 
       try {
         const { count } = await sb.from("listings").select("*",{count:"exact", head:true}).eq("status","active");
         document.getElementById("stat_active").textContent = count ?? 0;
-      } catch { document.getElementById("stat_active").textContent = "—"; }
+      } catch { document.getElementById("stat_active").textContent = "-"; }
 
       try {
         const { count } = await sb.from("listings").select("*",{count:"exact", head:true}).eq("status","active").eq("featured", true);
         document.getElementById("stat_featured").textContent = count ?? 0;
-      } catch { document.getElementById("stat_featured").textContent = "—"; }
+      } catch { document.getElementById("stat_featured").textContent = "-"; }
     }
 
     /* ===========================
@@ -845,7 +867,7 @@
       document.getElementById("edit_id").value = "";
       document.getElementById("edit_category").value = "";
       document.getElementById("editorHint").textContent = "";
-      document.getElementById("listing_id_hint").textContent = "—";
+      document.getElementById("listing_id_hint").textContent = "-";
       for(let i=1;i<=3;i++) clearSlot("listing",i);
     }
 
@@ -941,7 +963,7 @@
 
         if(res.error) throw res.error;
 
-        toast("Saved ✅");
+        toast("Saved ");
         closeEditor();
 
         await loadStats();
@@ -967,7 +989,7 @@
       try{
         const { error } = await sb.from("listings").delete().eq("id", id);
         if(error) throw error;
-        toast("Deleted ✅");
+        toast("Deleted ");
         await loadStats();
         await fetchListings("all");
         if(category) await fetchListings(category);

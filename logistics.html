@@ -1,15 +1,15 @@
 <!-- =========================
-     logistics.html (FULL) — UPDATED
-     ✅ Domain-originated item links (absolute URLs)
-     ✅ Deep-link open: logistics.html?item=<id>
+     logistics.html (FULL) - UPDATED
+      Domain-originated item links (absolute URLs)
+      Deep-link open: logistics.html?item=<id>
         - auto page-jump (pagination aware)
         - scroll + highlight
-        - opens “View more” modal
-     ✅ Best-effort link preview support via query params:
+        - opens "View more" modal
+      Best-effort link preview support via query params:
         ?item=<id>&img=<url>&title=<t>&desc=<d>
         (JS updates OG/Twitter tags early; crawler support varies)
-     ✅ Cards include "Copy Link" action
-     ✅ All WhatsApp/Email messages include absolute item links
+      Cards include "Copy Link" action
+      All WhatsApp/Email messages include absolute item links
 ========================= -->
 <!DOCTYPE html>
 <html lang="en-NG" data-theme="dark">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <title>Logistics | Larmah Enterprise</title>
-  <meta name="description" content="Trusted dispatch, pickups, haulage and logistics coordination across Nigeria — WhatsApp-first support with trackable references." />
+  <meta name="description" content="Trusted dispatch, pickups, haulage and logistics coordination across Nigeria - WhatsApp-first support with trackable references." />
   <meta name="keywords" content="Logistics Nigeria, Dispatch Lagos, Haulage Nigeria, Airport Pickup Lagos, Delivery Service Nigeria, Larmah Logistics" />
   <meta name="author" content="Larmah Enterprise" />
   <meta name="theme-color" content="#070A12" />
@@ -31,14 +31,14 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://heylarmah.tech/logistics.html" />
   <meta property="og:title" content="Larmah Logistics | Trusted Movement" />
-  <meta property="og:description" content="Dispatch, pickups, haulage and coordination across Nigeria — WhatsApp-first support." />
+  <meta property="og:description" content="Dispatch, pickups, haulage and coordination across Nigeria - WhatsApp-first support." />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:alt" content="Larmah Logistics — Trusted Movement" />
+  <meta property="og:image:alt" content="Larmah Logistics - Trusted Movement" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Larmah Logistics" />
-  <meta name="twitter:description" content="Dispatch, pickups, haulage and coordination — trust-first." />
+  <meta name="twitter:description" content="Dispatch, pickups, haulage and coordination - trust-first." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
 
   <!-- Icons -->
@@ -51,7 +51,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <!-- ✅ Supabase -->
+  <!--  Supabase -->
   <script>
     window.__SUPABASE_URL = "https://mskbumvopqnrhddfycfd.supabase.co";
     window.__SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
@@ -59,7 +59,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
 
-  <!-- ✅ Best-effort OG/Twitter meta override for shared item links -->
+  <!--  Best-effort OG/Twitter meta override for shared item links -->
   <script>
     (function applyShareMetaFromQuery(){
       try{
@@ -480,7 +480,7 @@
       filter: brightness(1.02);
     }
 
-    /* ✅ Deep-link highlight pulse */
+    /*  Deep-link highlight pulse */
     .card.pulse{
       border-color: color-mix(in oklab, var(--gold) 55%, var(--line) 45%);
       box-shadow: 0 0 0 2px rgba(212,175,55,.22), var(--shadow2);
@@ -872,6 +872,28 @@
       padding-right: 12px;
     }
   </style>
+
+  <style id="larmah-professional-refresh">
+    :root{--gold:#B88A2A !important;--gold2:#D9B75B !important;--radius:10px !important;--radius2:14px !important;--max:1180px !important;--shadow:0 18px 48px rgba(0,0,0,.22) !important;--shadow2:0 10px 28px rgba(0,0,0,.16) !important;}
+    html[data-theme="dark"]{--bg:#0A0D12 !important;--bg2:#10151D !important;--panel:rgba(255,255,255,.055) !important;--panel2:rgba(255,255,255,.035) !important;--line:rgba(255,255,255,.12) !important;--line2:rgba(255,255,255,.08) !important;--text:#F4F6FA !important;--muted:rgba(244,246,250,.72) !important;--muted2:rgba(244,246,250,.56) !important;--headerBg:rgba(10,13,18,.86) !important;--ctaBg:rgba(255,255,255,.05) !important;}
+    html[data-theme="light"]{--bg:#F5F6F8 !important;--bg2:#FFFFFF !important;--panel:rgba(10,13,18,.045) !important;--panel2:rgba(10,13,18,.025) !important;--line:rgba(10,13,18,.12) !important;--line2:rgba(10,13,18,.08) !important;--text:#111827 !important;--muted:rgba(17,24,39,.68) !important;--muted2:rgba(17,24,39,.52) !important;--headerBg:rgba(255,255,255,.88) !important;--ctaBg:rgba(255,255,255,.82) !important;}
+    body{background:linear-gradient(180deg,var(--bg2),var(--bg)) !important;letter-spacing:0 !important;}
+    header{border-bottom:1px solid var(--line) !important;box-shadow:0 10px 30px rgba(0,0,0,.14) !important;}
+    .container{max-width:var(--max) !important;}
+    .hero,.section{border-radius:0 !important;}
+    .hero-shell,.hero-card,.card,.feature-card,.service-card,.listing-card,.logistics-card,.glass,.panel,.stat,.admin-card,.auth-card{border-radius:var(--radius2) !important;border:1px solid var(--line) !important;background:var(--panel) !important;box-shadow:var(--shadow2) !important;}
+    .hero-shell:before,.hero:before,.section:before,.cta:before{display:none !important;}
+    .btn,.pill,.input,textarea,select,.kicker-pill,.chip,.badge,.tabbar button{border-radius:10px !important;letter-spacing:0 !important;}
+    .btn.solid,.btn.primary,.pill.primary{background:#B88A2A !important;border-color:#B88A2A !important;color:#0A0D12 !important;}
+    .btn:not(.solid):not(.primary),.pill:not(.primary){background:var(--panel2) !important;}
+    h1,h2,h3,.card-title{letter-spacing:0 !important;}
+    h1{font-size:clamp(2.15rem,4.4vw,4.25rem) !important;line-height:1.02 !important;}
+    h2{font-size:clamp(1.35rem,2vw,2rem) !important;}
+    .lead,p{max-width:72ch;}
+    img{background:#121821;}
+    footer{background:var(--bg2) !important;border-top:1px solid var(--line) !important;}
+  </style>
+
 </head>
 
 <body data-page="logistics">
@@ -887,7 +909,7 @@
           </div>
           <div style="min-width:0">
             <div style="font-weight:950; line-height:1.1">Larmah Enterprise</div>
-            <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate • Logistics</div>
+            <div style="color:var(--muted); font-weight:850; font-size:.92rem; margin-top:4px;">Real Estate | Logistics</div>
           </div>
         </div>
 
@@ -920,7 +942,7 @@
         </div>
         <div class="btxt">
           <div class="bname">Larmah Enterprise</div>
-          <div class="bsub">Real Estate • Logistics</div>
+          <div class="bsub">Real Estate | Logistics</div>
         </div>
       </a>
 
@@ -951,7 +973,7 @@
         <div>
           <div class="kicker">
             <span><i class="fa-solid fa-truck-fast" style="color:var(--gold)"></i> Fast dispatch & coordination</span>
-            <span class="dot">•</span>
+            <span class="dot">|</span>
             <span><i class="fa-brands fa-whatsapp" style="color:var(--good)"></i> WhatsApp-first</span>
           </div>
 
@@ -1023,8 +1045,8 @@
             <label for="lg_sort">Sort</label>
             <select id="lg_sort">
               <option value="new" selected>Newest</option>
-              <option value="az">Title A–Z</option>
-              <option value="za">Title Z–A</option>
+              <option value="az">Title A-Z</option>
+              <option value="za">Title Z-A</option>
             </select>
           </div>
 
@@ -1056,7 +1078,7 @@
       </div>
 
       <div id="lg_mount">
-        <div class="notice">Loading active logistics services…</div>
+        <div class="notice">Loading active logistics services...</div>
       </div>
     </section>
 
@@ -1139,7 +1161,7 @@
       <div class="footer-cta">
         <div>
           <h3>Fast dispatch. Clear confirmation. WhatsApp-first.</h3>
-          <p>We coordinate movement — you stay in control.</p>
+          <p>We coordinate movement - you stay in control.</p>
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <button class="btn solid" type="button" onclick="openWA(buildMsg('Logistics Support', { Message:'Hello Larmah, I need logistics support.' }))">
@@ -1240,7 +1262,7 @@
     </button>
   </div>
 
-  <!-- ✅ View More Modal -->
+  <!--  View More Modal -->
   <div class="modalOverlay" id="descOverlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-label="Service details">
       <div class="modalHead">
@@ -1300,7 +1322,7 @@
       window.__toastT = setTimeout(() => t.classList.remove("show"), 2200);
     }
 
-    // ✅ Absolute URL helper
+    //  Absolute URL helper
     function absUrl(pathOrUrl){
       try{
         if(!pathOrUrl) return "";
@@ -1430,7 +1452,7 @@
       return [absUrl("assets/images/larmah-header.jpeg")];
     }
 
-    // ✅ Build a domain-originated share link (with best-effort preview params)
+    //  Build a domain-originated share link (with best-effort preview params)
     function itemShareLink(it){
       const id = String(it.id);
       const urls = __LG.imgUrls[id] || getImages(it);
@@ -1544,7 +1566,7 @@
       const txt = __LG_MODAL.ref || "";
       if(!txt) return toast("No ref to copy.");
       navigator.clipboard?.writeText(txt).then(
-        () => toast("Ref copied ✅"),
+        () => toast("Ref copied "),
         () => toast("Copy failed. Please copy manually.")
       );
     }
@@ -1552,7 +1574,7 @@
       const txt = __LG_MODAL.link || "";
       if(!txt) return toast("No link to copy.");
       navigator.clipboard?.writeText(txt).then(
-        () => toast("Link copied ✅"),
+        () => toast("Link copied "),
         () => toast("Copy failed. Please copy manually.")
       );
     }
@@ -1571,11 +1593,11 @@
     }
     function descModalEmail(){
       const BUSINESS_EMAIL = "business@heylarmah.tech";
-      const subject = `Logistics Enquiry — ${__LG_MODAL.ref} — ${__LG_MODAL.title}`;
+      const subject = `Logistics Enquiry - ${__LG_MODAL.ref} - ${__LG_MODAL.title}`;
       const body =
 `Hello Larmah Team,
 
-I’m interested in this logistics service:
+I'm interested in this logistics service:
 
 Ref: ${__LG_MODAL.ref}
 Service: ${__LG_MODAL.title}
@@ -1615,7 +1637,7 @@ Link: ${__LG_MODAL.link}
       }
       closeDescModal();
       document.getElementById("quote")?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block:"start" });
-      toast("Quote form pre-filled ✅");
+      toast("Quote form pre-filled ");
     }
 
     document.getElementById("descOverlay")?.addEventListener("click", (e) => {
@@ -1643,7 +1665,7 @@ Link: ${__LG_MODAL.link}
       const link = itemShareLink(it);
       try{
         await navigator.clipboard.writeText(link);
-        toast("Item link copied ✅");
+        toast("Item link copied ");
       }catch{
         toast("Copy failed. Please copy manually.");
       }
@@ -1764,7 +1786,7 @@ Link: ${__LG_MODAL.link}
       return `
         <div class="pager" role="navigation" aria-label="Services pagination">
           <div class="pager-left">
-            <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>–<b>${to}</b> of <b>${total}</b></span>
+            <span><i class="fa-solid fa-layer-group" style="color:var(--gold)"></i> Showing <b>${from}</b>-<b>${to}</b> of <b>${total}</b></span>
           </div>
 
           <div class="pager-right">
@@ -1773,7 +1795,7 @@ Link: ${__LG_MODAL.link}
             </button>
 
             ${btns.map(b => {
-              if(b.type === "ell") return `<span class="pager-ellipsis" aria-hidden="true">…</span>`;
+              if(b.type === "ell") return `<span class="pager-ellipsis" aria-hidden="true">...</span>`;
               return `<button class="pager-btn ${b.active?'active':''}" type="button" onclick="lgGoPage(${b.p})" aria-label="Go to page ${b.label}">${b.label}</button>`;
             }).join("")}
 
@@ -1911,11 +1933,11 @@ Link: ${__LG_MODAL.link}
       const link = itemShareLink(it);
 
       const BUSINESS_EMAIL = "business@heylarmah.tech";
-      const subject = `Logistics Enquiry — ${listingRef(id)} — ${safeText(it.title) || "Service"}`;
+      const subject = `Logistics Enquiry - ${listingRef(id)} - ${safeText(it.title) || "Service"}`;
       const body =
 `Hello Larmah Team,
 
-I’m interested in this logistics service:
+I'm interested in this logistics service:
 
 Ref: ${listingRef(id)}
 Service: ${safeText(it.title)}
@@ -1940,7 +1962,7 @@ Thank you.`;
 
     async function loadLogistics(){
       const mount = document.getElementById("lg_mount");
-      mount.innerHTML = `<div class="notice">Loading active logistics services…</div>`;
+      mount.innerHTML = `<div class="notice">Loading active logistics services...</div>`;
 
       try{
         const sb = await waitForSB();
@@ -1971,7 +1993,7 @@ Thank you.`;
 
         renderLogistics();
 
-        // ✅ Deep link open if ?item=
+        //  Deep link open if ?item=
         setTimeout(() => openItemFromQuery(false), 50);
 
         if(window.LARMAH?.realtime?.subscribe){
@@ -2011,7 +2033,7 @@ Thank you.`;
           fields,
           refPrefix: "LG"
         });
-        toast("Submitted. We’ll respond on WhatsApp.");
+        toast("Submitted. We'll respond on WhatsApp.");
         return;
       }
 
@@ -2019,7 +2041,7 @@ Thank you.`;
     }
     window.sendLogisticsQuote = sendLogisticsQuote;
 
-    // ✅ Deep-link logic
+    //  Deep-link logic
     function openItemFromQuery(isRerun){
       try{
         const qs = new URLSearchParams(location.search);
