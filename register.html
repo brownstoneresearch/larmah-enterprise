@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script defer src="assets/js/supabase-client.js"></script>
   <script defer src="assets/js/app.js"></script>
 </head>
 <body data-page="contact">
@@ -41,20 +42,12 @@
         <span><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</span>
         <span><i class="fa-solid fa-layer-group"></i> Real Estate • Fintech • Logistics • Shipping</span>
       </div>
-      
-      <div class="topbar-social" aria-label="Official social media links">
-        <a href="#" aria-disabled="true" tabindex="-1" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" aria-disabled="true" tabindex="-1" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="#" aria-disabled="true" tabindex="-1" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20assistance." target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-      </div>
     </div>
   </div>
   <header class="site-header" id="siteHeader">
     <div class="container nav-shell">
-      <a class="brand" href="index.html" aria-label="Hey Larmah Enterprise Limited home">
+      <a class="brand brand-icon-only" href="index.html" aria-label="Hey Larmah Enterprise Limited home">
         <span class="brand-mark"><img src="assets/images/larmah-logo-icon.png" alt="Hey Larmah Enterprise Limited logo icon" /></span>
-        <span class="brand-copy"><strong>Hey Larmah</strong><small>Enterprise Limited</small></span>
       </a>
       <nav class="desktop-nav" aria-label="Main navigation">
 <a class="nav-link " href="real-estate.html">Real Estate</a>
@@ -66,6 +59,12 @@
 <a class="nav-link active" href="contact.html">Contact</a>
       </nav>
       <div class="nav-actions">
+        <div class="header-social social-icons" aria-label="Official social media links">
+          <a href="https://www.instagram.com/heylarmah_ltd/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://x.com/heylarmah_ltd" target="_blank" rel="noopener" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="https://www.tiktok.com/@heylarmah_ltd" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20assistance." target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
         <button class="theme-toggle" type="button" aria-label="Toggle color theme" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
         <a class="btn btn-sm btn-primary" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20would%20like%20to%20make%20an%20enquiry." target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"><span></span><span></span><span></span></button>
@@ -82,9 +81,9 @@
 <a class="mobile-link active" href="contact.html">Contact<span>→</span></a>
         <div class="mobile-social-wrap">
       <div class="social-icons" aria-label="Official social media links">
-        <a href="#" aria-disabled="true" tabindex="-1" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" aria-disabled="true" tabindex="-1" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="#" aria-disabled="true" tabindex="-1" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+        <a href="https://www.instagram.com/heylarmah_ltd/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+        <a href="https://x.com/heylarmah_ltd" target="_blank" rel="noopener" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="https://www.tiktok.com/@heylarmah_ltd" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
         <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20assistance." target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
       </div></div>
         <a class="mobile-link mobile-cta" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20would%20like%20to%20make%20an%20enquiry." target="_blank" rel="noopener">Chat on WhatsApp <span>↗</span></a>
@@ -96,12 +95,12 @@
       <div class="container auth-grid">
         <div class="auth-visual reveal"><img src="assets/images/larmah-logo-icon.png" alt="Hey Larmah Enterprise Limited icon"><h1>Create Client Access</h1><p>RC: 9488632 • Real Estate • Fintech • Logistics • Shipping</p></div>
         <div class="reveal">
-      <form class="auth-card card" data-demo-auth>
+      <form class="auth-card card" data-auth-form data-auth-mode="register">
         <h2>Create Client Access</h2>
-        <p>This front-end demo routes access to the dashboard. Connect your authentication provider when deploying.</p>
-        <label>Email<input type="email" placeholder="name@example.com" required /></label>
-        <label>Password<input type="password" placeholder="••••••••" required /></label>
-        <button class="btn btn-primary btn-wide" type="submit">Continue</button>
+        <p>Create access through Supabase authentication. Email confirmation may be required depending on project settings.</p>
+        <label>Email<input name="email" type="email" placeholder="name@example.com" autocomplete="email" required /></label>
+        <label>Password<input name="password" type="password" placeholder="••••••••" autocomplete="new-password" minlength="6" required /></label>
+        <button class="btn btn-primary btn-wide" type="submit">Create Account</button>
         <p class="form-alt">Need help? <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20help%20with%20client%20access." target="_blank" rel="noopener">Chat on WhatsApp</a></p>
       </form></div>
       </div>
@@ -114,13 +113,6 @@
         <a class="footer-brand" href="index.html"><img src="assets/images/larmah-logo-icon.png" alt="Hey Larmah Enterprise Limited icon" /><span><strong>Hey Larmah</strong><small>Enterprise Limited</small></span></a>
         <p>A matured enterprise brand positioned around property, fintech support, logistics coordination and shipping facilitation.</p>
         <div class="footer-pills"><span>RC: 9488632</span><span>Lagos, Nigeria</span></div>
-        
-      <div class="social-icons footer-social" aria-label="Official social media links">
-        <a href="#" aria-disabled="true" tabindex="-1" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#" aria-disabled="true" tabindex="-1" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="#" aria-disabled="true" tabindex="-1" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20assistance." target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-      </div>
       </div>
       <div>
         <h3>Company</h3>

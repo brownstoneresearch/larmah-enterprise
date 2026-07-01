@@ -1,18 +1,17 @@
--- schema.sql (FULL UPDATED — Hey Larmah Enterprise Limited)
--- Supports: Real Estate, Logistics, Insights, Exchange
--- Includes: Admin gate (profiles), RLS policies, catalog, requests, insights (pinned),
--- exchange rates (dynamic), and safe seeds.
--- Safe to run multiple times.
+-- Hey Larmah Enterprise Limited — Supabase schema
+-- Run this file in the Supabase SQL editor for project: ipohjsdhakjbetyievmv
+-- Brand pillars: Real Estate • Fintech • Logistics • Shipping
+-- Registration: RC: 9488632
 
 create extension if not exists "pgcrypto";
 
 -- =========================================================
--- 1) PROFILES (Admin gate)
+-- 1) Profiles / admin gate
 -- =========================================================
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   email text,
-  role text not null default 'user',
+  role text not null default 'user' check (role in ('user','admin')),
   created_at timestamptz not null default now()
 );
 
@@ -24,7 +23,7 @@ begin
   on conflict (id) do update set email = excluded.email;
   return new;
 end;
-$$ language plpgsql security definer;
+$$ language plpgsql security definer set search_path = public;
 
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
@@ -41,209 +40,132 @@ using (auth.uid() = id);
 drop policy if exists profiles_admin_read_all on public.profiles;
 create policy profiles_admin_read_all
 on public.profiles for select
-using (
-  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-);
+using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
 -- =========================================================
--- 2) CATALOG ITEMS (Real Estate / Logistics / Exchange)
+-- 2) Catalogue items
 -- =========================================================
 create table if not exists public.catalog_items (
   id uuid primary key default gen_random_uuid(),
   category text not null,
   title text not null,
-  price text,
   description text,
+  price text,
   image_url text,
-  tags text[] default '{}',
+  tags text[] not null default '{}'::text[],
   active boolean not null default true,
+  sort_order integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
--- enforce allowed categories
-alter table public.catalog_items
-drop constraint if exists catalog_items_category_check;
-
-alter table public.catalog_items
-add constraint catalog_items_category_check
-check (category in ('real-estate','logistics','exchange'));
+alter table public.catalog_items drop constraint if exists catalog_items_category_check;
+alter table public.catalog_items add constraint catalog_items_category_check
+check (category in ('real-estate','fintech','logistics','shipping','premium','insights'));
 
 alter table public.catalog_items enable row level security;
 
--- public: read only active
 drop policy if exists catalog_public_read_active on public.catalog_items;
 create policy catalog_public_read_active
 on public.catalog_items for select
 using (active = true);
 
--- admin: full CRUD
 drop policy if exists catalog_admin_all on public.catalog_items;
 create policy catalog_admin_all
 on public.catalog_items for all
-using (
-  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-)
-with check (
-  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-);
+using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'))
+with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
 -- =========================================================
--- 3) REQUESTS (Public insert, Admin read)
+-- 3) Website / WhatsApp enquiries
 -- =========================================================
 create table if not exists public.requests (
   id uuid primary key default gen_random_uuid(),
-  user_id uuid references auth.users(id),
+  user_id uuid references auth.users(id) on delete set null,
   category text not null,
   name text,
   phone text,
   details jsonb not null default '{}'::jsonb,
+  status text not null default 'new' check (status in ('new','contacted','in-progress','closed')),
   created_at timestamptz not null default now()
 );
 
+alter table public.requests drop constraint if exists requests_category_check;
+alter table public.requests add constraint requests_category_check
+check (category in ('real-estate','fintech','logistics','shipping','premium','contact','insights','whatsapp','general'));
+
 alter table public.requests enable row level security;
 
--- public: allow inserts
 drop policy if exists requests_public_insert on public.requests;
 create policy requests_public_insert
 on public.requests for insert
 with check (true);
 
--- admin: read all
-drop policy if exists requests_admin_read on public.requests;
-create policy requests_admin_read
+drop policy if exists requests_read_own on public.requests;
+create policy requests_read_own
 on public.requests for select
-using (
-  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-);
+using (user_id = auth.uid());
+
+drop policy if exists requests_admin_read_all on public.requests;
+create policy requests_admin_read_all
+on public.requests for select
+using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
+
+drop policy if exists requests_admin_update on public.requests;
+create policy requests_admin_update
+on public.requests for update
+using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'))
+with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
 -- =========================================================
--- 4) INSIGHTS POSTS (Public read, Admin CRUD, Pinned support)
+-- 4) Insights posts
 -- =========================================================
 create table if not exists public.insights_posts (
   id uuid primary key default gen_random_uuid(),
   title text not null,
   body text not null,
-  created_at timestamptz not null default now()
-);
-
--- migrate pinned column if table existed without it
-alter table public.insights_posts
-add column if not exists pinned boolean not null default false;
-
-alter table public.insights_posts enable row level security;
-
--- public read
-drop policy if exists insights_public_read on public.insights_posts;
-create policy insights_public_read
-on public.insights_posts for select
-using (true);
-
--- admin CRUD
-drop policy if exists insights_admin_all on public.insights_posts;
-create policy insights_admin_all
-on public.insights_posts for all
-using (
-  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-)
-with check (
-  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-);
-
--- seed pinned post if none exists
-insert into public.insights_posts (title, body, pinned)
-select
-  'Pinned: Welcome to Larmah',
-  'Real Estate • Logistics • Insights • Exchange. Every enquiry includes a reference ID for traceability. Use WhatsApp for fast support.',
-  true
-where not exists (select 1 from public.insights_posts where pinned = true);
-
--- =========================================================
--- 5) EXCHANGE RATES (Dynamic rates, Public read, Admin write)
--- =========================================================
--- IMPORTANT:
--- If you previously created exchange_rates with different columns, drop it first:
---   drop table if exists public.exchange_rates cascade;
--- Then run this section.
-
-create table if not exists public.exchange_rates (
-  code text primary key,                   -- USD, GBP, EUR, BTC, ETH, USDT
-  name text not null,
-  buy_ngn numeric not null,                -- NGN you pay out per 1 unit
-  sell_ngn numeric not null,               -- NGN you receive per 1 unit
-  fee_rate numeric not null default 0.005, -- 0.005 = 0.5%
-  min_amount numeric not null default 0,
-  max_amount numeric not null default 0,
+  category text not null default 'insights',
+  pinned boolean not null default false,
+  active boolean not null default true,
+  created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
--- If table existed but missing columns, add them safely:
-alter table public.exchange_rates add column if not exists name text;
-alter table public.exchange_rates add column if not exists buy_ngn numeric;
-alter table public.exchange_rates add column if not exists sell_ngn numeric;
-alter table public.exchange_rates add column if not exists fee_rate numeric not null default 0.005;
-alter table public.exchange_rates add column if not exists min_amount numeric not null default 0;
-alter table public.exchange_rates add column if not exists max_amount numeric not null default 0;
-alter table public.exchange_rates add column if not exists updated_at timestamptz not null default now();
+alter table public.insights_posts enable row level security;
 
-alter table public.exchange_rates enable row level security;
+drop policy if exists insights_public_read_active on public.insights_posts;
+create policy insights_public_read_active
+on public.insights_posts for select
+using (active = true);
 
--- public read
-drop policy if exists exchange_rates_public_read on public.exchange_rates;
-create policy exchange_rates_public_read
-on public.exchange_rates for select
-using (true);
+drop policy if exists insights_admin_all on public.insights_posts;
+create policy insights_admin_all
+on public.insights_posts for all
+using (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'))
+with check (exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin'));
 
--- admin CRUD
-drop policy if exists exchange_rates_admin_all on public.exchange_rates;
-create policy exchange_rates_admin_all
-on public.exchange_rates for all
-using (
-  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-)
-with check (
-  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-);
+-- =========================================================
+-- 5) Helpful indexes
+-- =========================================================
+create index if not exists idx_catalog_items_category_sort on public.catalog_items (category, sort_order, created_at desc);
+create index if not exists idx_requests_category_created on public.requests (category, created_at desc);
+create index if not exists idx_requests_status_created on public.requests (status, created_at desc);
+create index if not exists idx_insights_pinned_created on public.insights_posts (pinned desc, created_at desc);
 
--- seed defaults (upsert)
-insert into public.exchange_rates (code, name, buy_ngn, sell_ngn, fee_rate, min_amount, max_amount, updated_at)
+-- =========================================================
+-- 6) Optional seed catalogue
+-- =========================================================
+insert into public.catalog_items (category, title, description, tags, sort_order)
 values
-  ('USD','US Dollar (USD)',1450,1480,0.005,100,50000, now()),
-  ('GBP','British Pound (GBP)',1820,1850,0.005,100,30000, now()),
-  ('EUR','Euro (EUR)',1580,1610,0.005,100,30000, now()),
-  ('BTC','Bitcoin (BTC)',85000000,87000000,0.010,0.001,5, now()),
-  ('ETH','Ethereum (ETH)',4500000,4700000,0.010,0.01,50, now()),
-  ('USDT','Tether (USDT)',1470,1490,0.003,10,100000, now())
-on conflict (code) do update set
-  name = excluded.name,
-  buy_ngn = excluded.buy_ngn,
-  sell_ngn = excluded.sell_ngn,
-  fee_rate = excluded.fee_rate,
-  min_amount = excluded.min_amount,
-  max_amount = excluded.max_amount,
-  updated_at = now();
+('real-estate','Verified Property Sourcing','Curated property options with inspection and documentation guidance.', array['property','inspection'], 10),
+('fintech','Merchant Payment Setup','Digital payment readiness support for SMEs and trade-focused businesses.', array['payments','sme'], 20),
+('logistics','Corporate Delivery Coordination','Structured local movement and delivery coordination for businesses.', array['delivery','fleet'], 30),
+('shipping','Import & Export Coordination','Trade documentation and freight support for importers and exporters.', array['freight','trade'], 40),
+('logistics','Interstate Movement Planning','Route, timing and movement coordination for business cargo and project needs.', array['route','cargo'], 45),
+('premium','Premium Enterprise Desk','Priority enquiry handling across all four business pillars.', array['priority','enterprise'], 50)
+on conflict do nothing;
 
 -- =========================================================
--- 6) Helpful Indexes
+-- 7) Make a user admin after signup
 -- =========================================================
-create index if not exists idx_catalog_items_category_updated
-on public.catalog_items (category, updated_at desc);
-
-create index if not exists idx_requests_created
-on public.requests (created_at desc);
-
-create index if not exists idx_insights_pinned_created
-on public.insights_posts (pinned desc, created_at desc);
-
--- =========================================================
--- 7) Admin Promotion (run manually after signup)
--- =========================================================
--- update public.profiles set role='admin' where lower(email)=lower('YOUR_ADMIN_EMAIL');
-
--- =========================================================
--- 8) Realtime (enable in Supabase dashboard)
--- =========================================================
--- Enable Realtime replication for:
---   - insights_posts
---   - exchange_rates
--- Supabase Dashboard → Realtime → Replication
+-- update public.profiles set role = 'admin' where lower(email) = lower('your-admin-email@example.com');
