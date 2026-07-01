@@ -1,497 +1,118 @@
-<!-- =========================
-     dashboard.html (UPDATED)
-     - Premium-only gate (redirects non-premium to premium.html)
-     - Uses new app.js (LARMAH.requirePremium / openWhatsApp / buildMessage)
-     - Removes dependencies on missing helpers (LARMAH.toggleMenu / escapeHtml / updateHeaderAuthUI)
-========================= -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en-NG" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
-  <title>Dashboard | Hey Larmah</title>
-  <meta name="description" content="Account dashboard for Hey Larmah requests, premium access, and support activity." />
-  <meta name="keywords" content="Hey Larmah Dashboard, Real Estate Requests, Logistics Requests" />
-  <meta name="author" content="Hey Larmah" />
-  <meta name="application-name" content="Hey Larmah" />
-  <meta name="apple-mobile-web-app-title" content="Hey Larmah" />
-  <meta name="theme-color" content="#0A0D12" />
-  <meta name="color-scheme" content="dark light" />
-  <meta name="robots" content="index,follow,max-image-preview:large" />
-  <meta name="googlebot" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
-  <meta name="google" content="notranslate" />
-  <meta name="format-detection" content="telephone=yes,email=yes,address=yes" />
-  <meta name="mobile-web-app-capable" content="yes" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Client Dashboard | Hey Larmah Enterprise Limited</title>
+  <meta name="description" content="Client Dashboard for Hey Larmah Enterprise Limited." />
+  <meta name="keywords" content="Hey Larmah Enterprise Limited, Real Estate Nigeria, Fintech Nigeria, Logistics Nigeria, Shipping Nigeria, Lagos Business" />
+  <meta name="author" content="Hey Larmah Enterprise Limited" />
+  <meta name="theme-color" content="#06110c" />
+  <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://heylarmah.tech/dashboard.html" />
-
+  <link rel="icon" href="assets/images/favicon-32.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <meta property="og:locale" content="en_NG" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Hey Larmah" />
-  <meta property="og:title" content="Dashboard | Hey Larmah" />
-  <meta property="og:description" content="Account dashboard for Hey Larmah requests, premium access, and support activity." />
+  <meta property="og:title" content="Client Dashboard | Hey Larmah Enterprise Limited" />
+  <meta property="og:description" content="Client Dashboard for Hey Larmah Enterprise Limited." />
   <meta property="og:url" content="https://heylarmah.tech/dashboard.html" />
-  <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:secure_url" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:type" content="image/jpeg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Hey Larmah - Real Estate and Logistics" />
-
+  <meta property="og:site_name" content="Hey Larmah Enterprise Limited" />
+  <meta property="og:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@heylarmah_tech" />
-  <meta name="twitter:creator" content="@heylarmah_tech" />
-  <meta name="twitter:title" content="Dashboard | Hey Larmah" />
-  <meta name="twitter:description" content="Account dashboard for Hey Larmah requests, premium access, and support activity." />
-  <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta name="twitter:image:alt" content="Hey Larmah - Real Estate and Logistics" />
-
-  <meta property="article:publisher" content="https://www.facebook.com/heylarmah" />
-  <meta property="profile:username" content="heylarmah" />
-  <link rel="me" href="https://instagram.com/hey_larmah" />
-  <link rel="me" href="https://x.com/heylarmah_tech" />
-  <link rel="me" href="https://t.me/heylarmah_tech" />
-  <link rel="me" href="https://youtube.com/@heylarmah" />
-  <link rel="me" href="https://www.linkedin.com/company/hey-larmah" />
-  <link rel="me" href="https://www.tiktok.com/@heylarmah" />
-
-  <script type="application/ld+json" id="hey-larmah-organization-schema">
-  {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"Hey Larmah",
-    "url":"https://heylarmah.tech/",
-    "logo":"https://heylarmah.tech/assets/images/larmah-favicon.jpeg",
-    "email":"business@heylarmah.tech",
-    "telephone":"+2347063080605",
-    "areaServed":"NG",
-    "sameAs":[
-      "https://instagram.com/hey_larmah",
-      "https://x.com/heylarmah_tech",
-      "https://t.me/heylarmah_tech",
-      "https://youtube.com/@heylarmah",
-      "https://www.linkedin.com/company/hey-larmah",
-      "https://www.tiktok.com/@heylarmah"
-    ],
-    "knowsAbout":["Real Estate", "Logistics", "Shortlets", "Dispatch", "Haulage"]
-  }
-  </script>
-<link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
-  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" />
-
+  <meta name="twitter:title" content="Client Dashboard | Hey Larmah Enterprise Limited" />
+  <meta name="twitter:description" content="Client Dashboard for Hey Larmah Enterprise Limited." />
+  <meta name="twitter:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
+  <link rel="preload" href="assets/images/brand-icon-512.webp" as="image" />
   <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
-
-  <style>
-    .dash-grid { display:grid; grid-template-columns: 1.2fr .8fr; gap: 16px; margin-top: 14px; }
-    @media(max-width: 900px){ .dash-grid { grid-template-columns: 1fr; } }
-
-    .kv { display:flex; justify-content:space-between; gap:12px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .kv:last-child { border-bottom: none; }
-
-    .req-item { display:flex; justify-content:space-between; gap:12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .req-item:last-child { border-bottom:none; }
-
-    .pill-status { padding: 4px 10px; border-radius: 999px; font-weight: 900; font-size: .75rem; border: 1px solid rgba(255,255,255,0.10); }
-
-    /* Ensure mobile overlay toggles even if style.css changes */
-    #mobileNavOverlay { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.65); backdrop-filter: blur(6px); }
-    #mobileNavOverlay.open { display:block; }
-    #mobileNavOverlay .msheet { position:absolute; left:0; right:0; bottom:0; border-radius: 18px 18px 0 0; }
-  </style>
-
-  <style id="larmah-professional-refresh">
-    :root{--gold:#B98A2C !important;--gold2:#D8B766 !important;--ink:#0A0D12 !important;--radius:8px !important;--radius2:12px !important;--max:1180px !important;--shadow:0 18px 42px rgba(0,0,0,.20) !important;--shadow2:0 8px 24px rgba(0,0,0,.14) !important;}
-    html[data-theme="dark"]{--bg:#0A0D12 !important;--bg2:#111720 !important;--panel:rgba(255,255,255,.055) !important;--panel2:rgba(255,255,255,.035) !important;--line:rgba(255,255,255,.12) !important;--line2:rgba(255,255,255,.08) !important;--text:#F5F7FA !important;--muted:rgba(245,247,250,.72) !important;--muted2:rgba(245,247,250,.56) !important;--headerBg:rgba(10,13,18,.90) !important;--ctaBg:rgba(255,255,255,.05) !important;}
-    html[data-theme="light"]{--bg:#F6F7F9 !important;--bg2:#FFFFFF !important;--panel:rgba(10,13,18,.045) !important;--panel2:rgba(10,13,18,.025) !important;--line:rgba(10,13,18,.12) !important;--line2:rgba(10,13,18,.08) !important;--text:#111827 !important;--muted:rgba(17,24,39,.68) !important;--muted2:rgba(17,24,39,.52) !important;--headerBg:rgba(255,255,255,.92) !important;--ctaBg:rgba(255,255,255,.86) !important;}
-    *{letter-spacing:0 !important;}
-    body{background:linear-gradient(180deg,var(--bg2),var(--bg)) !important;color:var(--text) !important;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
-    header{border-bottom:1px solid var(--line) !important;box-shadow:0 10px 28px rgba(0,0,0,.12) !important;}
-    .container{max-width:var(--max) !important;}
-    .hero,.section{border-radius:0 !important;}
-    .hero-shell,.hero-card,.card,.feature-card,.service-card,.listing-card,.logistics-card,.glass,.panel,.stat,.admin-card,.auth-card,.rate-board{border-radius:var(--radius2) !important;border:1px solid var(--line) !important;background:var(--panel) !important;box-shadow:var(--shadow2) !important;}
-    .hero-shell:before,.hero:before,.section:before,.cta:before{display:none !important;}
-    .btn,.pill,.input,textarea,select,.kicker-pill,.chip,.badge,.tabbar button,.contact-chip{border-radius:8px !important;}
-    .btn.solid,.btn.primary,.pill.primary{background:#B98A2C !important;border-color:#B98A2C !important;color:#0A0D12 !important;}
-    .btn:not(.solid):not(.primary),.pill:not(.primary){background:var(--panel2) !important;}
-    h1,h2,h3,.card-title{letter-spacing:0 !important;}
-    h1{font-size:clamp(2.1rem,4.1vw,4rem) !important;line-height:1.04 !important;}
-    h2{font-size:clamp(1.35rem,2vw,2rem) !important;}
-    .lead,p{max-width:72ch;}
-    img{background:#121821;}
-    .site-footer,footer{background:var(--bg2) !important;border-top:1px solid var(--line) !important;margin-top:42px !important;padding:28px 0 24px !important;}
-    .footer-cta{display:flex !important;align-items:center !important;justify-content:space-between !important;gap:18px !important;border:1px solid var(--line) !important;background:var(--panel) !important;border-radius:var(--radius2) !important;padding:18px !important;margin-bottom:18px !important;box-shadow:var(--shadow2) !important;}
-    .footer-cta h3{margin:0 !important;font-size:1.05rem !important;}
-    .footer-cta p,.footer-copy{margin:6px 0 0 !important;color:var(--muted) !important;line-height:1.55 !important;}
-    .footer-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
-    .footer-grid{display:grid !important;grid-template-columns:1.35fr 1fr 1.1fr !important;gap:14px !important;margin:0 !important;padding:0 !important;}
-    .footer-grid>div{border:1px solid var(--line) !important;background:var(--panel2) !important;border-radius:var(--radius2) !important;padding:16px !important;box-shadow:none !important;}
-    .brandline{display:flex !important;gap:12px !important;align-items:center !important;margin:0 0 10px !important;padding:0 0 10px !important;border-bottom:1px solid var(--line2) !important;}
-    .brandline img{height:44px !important;width:44px !important;object-fit:cover !important;border-radius:10px !important;border:1px solid var(--line) !important;box-shadow:none !important;}
-    .brandname{font-weight:950 !important;font-size:1rem !important;}
-    .tagline{color:var(--muted) !important;font-weight:750 !important;font-size:.86rem !important;margin-top:2px !important;}
-    .footer-col-title{font-weight:950 !important;margin:0 0 10px !important;color:var(--text) !important;}
-    .footer-links a{display:block !important;padding:7px 0 !important;color:var(--muted) !important;font-weight:700 !important;line-height:1.35 !important;}
-    .footer-links a:hover{color:var(--gold2) !important;}
-    .contact-stack{display:grid !important;gap:10px !important;}
-    .contact-chip{display:flex !important;gap:10px !important;align-items:flex-start !important;border:1px solid var(--line2) !important;background:var(--panel) !important;padding:10px !important;}
-    .contact-chip i{width:18px !important;color:var(--gold2) !important;margin-top:2px !important;}
-    .contact-chip .txt{font-weight:850 !important;color:var(--text) !important;}
-    .contact-chip .sub{color:var(--muted) !important;font-size:.86rem !important;margin-top:2px !important;}
-    .social{display:flex !important;gap:8px !important;flex-wrap:wrap !important;margin-top:14px !important;}
-    .social a{width:38px !important;height:38px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important;border:1px solid var(--line) !important;border-radius:8px !important;background:var(--panel) !important;color:var(--text) !important;}
-    .social a:hover{background:var(--gold) !important;border-color:var(--gold) !important;color:#0A0D12 !important;}
-    .footer-bottom{display:flex !important;justify-content:space-between !important;gap:12px !important;align-items:center !important;border-top:1px solid var(--line2) !important;margin-top:16px !important;padding-top:14px !important;color:var(--muted) !important;}
-    .footer-badges{display:flex !important;gap:8px !important;flex-wrap:wrap !important;justify-content:flex-end !important;}
-    .badge{border:1px solid var(--line) !important;background:var(--panel2) !important;color:var(--muted) !important;padding:7px 10px !important;font-weight:800 !important;}
-    .badge i{color:var(--gold2) !important;}
-    @media(max-width:980px){.footer-cta,.footer-bottom{align-items:flex-start !important;flex-direction:column !important}.footer-grid{grid-template-columns:1fr !important}.footer-actions{justify-content:flex-start !important}.footer-actions .btn{width:100% !important}.footer-badges{justify-content:flex-start !important}}
-  </style>
-
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Hey Larmah Enterprise Limited","url":"https://heylarmah.tech/","logo":"https://heylarmah.tech/assets/images/brand-icon-1024.png","identifier":"RC: 9488632","address":{"@type":"PostalAddress","addressLocality":"Lagos","addressCountry":"NG"},"sameAs":["https://instagram.com/heylarmah_ltd","https://x.com/heylarmah_ltd","https://tiktok.com/@heylarmah_ltd"]}</script>
+  
 </head>
+<body data-page="auth">
+<a class="skip" href="#main">Skip to content</a>
 
-<body data-page="dashboard">
-  <!-- Mobile Nav -->
-  <div id="mobileNavOverlay" aria-hidden="true">
-    <div class="msheet" role="dialog" aria-label="Menu">
-      <div class="msheet-head">
-        <div class="msheet-brand">
-          <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
-        </div>
-        <button class="msheet-close" onclick="toggleMenu(false)" aria-label="Close Menu">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="msheet-body">
-        <div class="msheet-links">
-          <a href="real-estate.html" class="msheet-link">
-            <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="logistics.html" class="msheet-link">
-            <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="insights.html" class="msheet-link">
-            <span><i class="fa-solid fa-chart-line" style="width:24px;color:var(--brand)"></i> Insights</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          </div>
-
-        <div class="msheet-footer">
-          <div class="msheet-hint">Menu</div>
-          <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-            <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
-          </a>
-        </div>
-      </div>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Hey Larmah Enterprise Limited home">
+      <img class="brand-logo" src="assets/images/brand-icon-192.png" alt="Hey Larmah logo icon" width="54" height="54" />
+      <span class="brand-copy"><strong>Hey Larmah</strong><span>Enterprise Limited</span></span>
+    </a>
+    <nav class="nav" aria-label="Primary navigation"><a href="index.html">Home</a>
+<a href="real-estate.html">Real Estate</a>
+<a href="fintech.html">Fintech</a>
+<a href="logistics.html">Logistics</a>
+<a href="shipping.html">Shipping</a>
+<a href="premium.html">Premium</a>
+<a href="insights.html">Insights</a></nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">◐</button>
+      <button class="btn small primary" type="button" data-whatsapp="General Enquiry" data-message="I want to make an enquiry.">DM for enquiries</button>
+      <button class="menu-btn" type="button" data-menu-toggle aria-controls="mobileMenu" aria-expanded="false" aria-label="Open menu">☰</button>
     </div>
   </div>
+</header>
+<div class="mobile-panel" id="mobileMenu" aria-label="Mobile navigation"><a href="index.html"><span>Home</span><span>→</span></a>
+<a href="real-estate.html"><span>Real Estate</span><span>→</span></a>
+<a href="fintech.html"><span>Fintech</span><span>→</span></a>
+<a href="logistics.html"><span>Logistics</span><span>→</span></a>
+<a href="shipping.html"><span>Shipping</span><span>→</span></a>
+<a href="premium.html"><span>Premium</span><span>→</span></a>
+<a href="insights.html"><span>Insights</span><span>→</span></a>
+<a href="contact.html"><span>Contact</span><span>→</span></a>
+<a href="dashboard.html"><span>Portal</span><span>→</span></a></div>
 
-  <header>
-    <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Home">
-        <img src="assets/images/larmah-header.jpeg" alt="Hey Larmah" />
-      </a>
+<main id="main">
 
-      <button class="menu-btn" onclick="toggleMenu(true)" aria-label="Open menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+<section class="portal-wrap"><div class="portal-card"><img class="brand-logo" src="assets/images/brand-icon-192.png" alt="Hey Larmah"><h1>Client dashboard</h1><p class="lead">A premium client workspace for request tracking, sector routing and support status.</p><div class="table-like"><div class="row"><span>Brand</span><strong>Hey Larmah Enterprise Limited</strong></div><div class="row"><span>Registration</span><strong>RC: 9488632</strong></div><div class="row"><span>Sectors</span><strong>Real Estate • Fintech • Logistics • Shipping</strong></div><div class="row"><span>Status</span><strong>Ready for integration</strong></div></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button class="btn primary" data-whatsapp="Dashboard Support" data-message="I need dashboard support.">Contact support</button><a class="btn secondary" href="premium.html">Premium</a></div></div></section>
 
-      <nav id="nav" aria-label="Primary navigation">
-        <ul>
-          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
-          <li><a class="nav-link" href="logistics.html">Logistics</a></li>
-          <li><a class="nav-link" href="insights.html">Insights</a></li>
-          </ul>
-      </nav>
+</main>
 
-      <div class="header-actions" style="margin-left:auto;">
-        <a href="dashboard.html" class="pill primary">Dashboard</a>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="assets/images/brand-icon-192.png" alt="Hey Larmah logo" width="64" height="64" />
+          <div><strong>Hey Larmah Enterprise Limited</strong><span>RC: 9488632</span></div>
+        </div>
+        <p><b>Real Estate • Fintech • Logistics • Shipping.</b><br>Building assets. Moving trade. Financing growth. Lagos, Nigeria.</p>
+        <div class="socials" aria-label="Social links">
+          <a href="https://instagram.com/heylarmah_ltd" aria-label="Instagram">IG</a>
+          <a href="https://x.com/heylarmah_ltd" aria-label="X">X</a>
+          <a href="https://tiktok.com/@heylarmah_ltd" aria-label="TikTok">TT</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-title">Explore</div>
+        <div class="footer-links"><a href="index.html">Home</a><a href="real-estate.html">Real Estate</a><a href="fintech.html">Fintech</a><a href="logistics.html">Logistics</a><a href="shipping.html">Shipping</a><a href="premium.html">Premium</a><a href="insights.html">Insights</a><a href="contact.html">Contact</a><a href="auth.html">Premium Login</a></div>
+      </div>
+      <div>
+        <div class="footer-title">Contact</div>
+        <div class="footer-links">
+          <a href="tel:+2347063080605" data-phone>+234 706 308 0605</a>
+          <a href="mailto:business@heylarmah.tech" data-email>business@heylarmah.tech</a>
+          <a href="https://x.com/heylarmah_ltd" data-handle>@heylarmah_ltd</a>
+          <span data-location>Lagos, Nigeria</span>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn primary small" type="button" data-whatsapp="Website Support" data-message="I need help from the website.">WhatsApp Support</button>
+          <button class="btn ghost small" type="button" data-copy="RC: 9488632">Copy RC</button>
+        </div>
       </div>
     </div>
-  </header>
-
-  <main class="container">
-    <section class="hero">
-      <div class="hero-shell">
-        <div class="hero-inner">
-          <div>
-            <div class="hero-kicker">
-              <span class="kicker-pill"><i class="fa-solid fa-user-shield"></i> Secure Dashboard</span>
-              <span class="kicker-dot">|</span>
-              <span class="kicker-sub">Requests | Support | Priority</span>
-            </div>
-
-            <h1>Your Larmah Dashboard.</h1>
-            <p class="lead">Premium-only access - manage activity, track requests, and reach support faster.</p>
-
-            <div class="actions">
-              <a class="btn solid" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
-              <button class="btn" onclick="openSupport()"><i class="fa-brands fa-whatsapp"></i> WhatsApp Support</button>
-              <button class="btn primary" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out</button>
-            </div>
-          </div>
-
-          <div class="hero-badges">
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-house" style="color:var(--brand)"></i> Real Estate</h3>
-              <p>Browse verified listings and enquire instantly.</p>
-              <div class="card-actions"><a class="btn small" href="real-estate.html">Explore</a></div>
-            </div>
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-truck" style="color:var(--brand)"></i> Logistics</h3>
-              <p>Book dispatch, pickups, and haulage.</p>
-              <div class="card-actions"><a class="btn small" href="logistics.html">Book</a></div>
-            </div>
-          </div>
+    <div class="footer-bottom">
+      <div>© <span data-year></span> Hey Larmah Enterprise Limited. All rights reserved.</div>
+      <div>Official handle: <b data-handle>@heylarmah_ltd</b> • <b>RC: 9488632</b></div>
+    </div>
+  </div>
+</footer>
+<div class="wa-float">
+  <button class="wa-label" type="button" data-whatsapp="Quick WhatsApp Enquiry">DM for enquiries</button>
+  <button class="wa-circle" type="button" aria-label="WhatsApp" data-whatsapp="Quick WhatsApp Enquiry">WA</button>
 </div>
-      </div>
-    </section>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <div class="dash-grid">
-      <div class="card">
-        <div class="section-titleline">
-          <h3 style="margin:0"><i class="fa-solid fa-id-card" style="color:var(--brand)"></i> Account</h3>
-          <span class="small" id="authState" style="opacity:.7">Checking session...</span>
-        </div>
-
-        <div id="profileBox" style="margin-top:12px">
-          <div class="latest-skel">
-            <div class="skel-line"></div><div class="skel-line short"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="section-titleline">
-          <h3 style="margin:0"><i class="fa-solid fa-inbox" style="color:var(--brand)"></i> Recent Requests</h3>
-          <button class="btn small" onclick="loadRequests()"><i class="fa-solid fa-rotate"></i> Refresh</button>
-        </div>
-
-        <div id="requestsBox" style="margin-top:12px">
-          <div class="latest-skel">
-            <div class="skel-line"></div><div class="skel-line short"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <section class="section">
-      <div class="cta-strip">
-        <div>
-          <h2 style="margin:0">Need concierge handling?</h2>
-          <p class="lead" style="margin:6px 0 0">Premium members get faster sourcing and structured follow-up.</p>
-        </div>
-        <a class="btn solid" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer" aria-label="Hey Larmah footer">
-    <div class="container">
-      <div class="footer-cta">
-        <div>
-          <h3>Hey Larmah handles verified real estate and logistics coordination.</h3>
-          <p>Use the links below for property enquiries, logistics bookings, account access, and direct support.</p>
-        </div>
-        <div class="footer-actions">
-          <a class="btn solid" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20help%20with%20real%20estate%20or%20logistics." target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp Support</a>
-          <a class="btn primary" href="real-estate.html"><i class="fa-solid fa-building"></i> Real Estate</a>
-          <a class="btn primary" href="logistics.html"><i class="fa-solid fa-truck-fast"></i> Logistics</a>
-        </div>
-      </div>
-
-      <div class="footer-grid">
-        <div>
-          <div class="brandline">
-            <div class="logo-wrap" aria-hidden="true"><img src="assets/images/larmah-favicon.jpeg" alt="Hey Larmah logo" /></div>
-            <div class="brandtext">
-              <div class="brandname">Hey Larmah</div>
-              <div class="tagline">Real Estate & Logistics | RC: 9127113</div>
-            </div>
-          </div>
-          <p class="footer-copy">Hey Larmah is focused on verified property support, shortlets, dispatch, pickups, haulage, and coordinated movement across Nigeria.</p>
-          <div class="social" aria-label="Official Hey Larmah social links">
-            <a href="https://instagram.com/hey_larmah" aria-label="Hey Larmah on Instagram" title="Instagram" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://x.com/heylarmah_tech" aria-label="Hey Larmah on X" title="X" target="_blank" rel="noopener"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="https://t.me/heylarmah_tech" aria-label="Hey Larmah on Telegram" title="Telegram" target="_blank" rel="noopener"><i class="fa-brands fa-telegram"></i></a>
-            <a href="https://youtube.com/@heylarmah" aria-label="Hey Larmah on YouTube" title="YouTube" target="_blank" rel="noopener"><i class="fa-brands fa-youtube"></i></a>
-            <a href="https://www.linkedin.com/company/hey-larmah" aria-label="Hey Larmah on LinkedIn" title="LinkedIn" target="_blank" rel="noopener"><i class="fa-brands fa-linkedin-in"></i></a>
-            <a href="https://www.tiktok.com/@heylarmah" aria-label="Hey Larmah on TikTok" title="TikTok" target="_blank" rel="noopener"><i class="fa-brands fa-tiktok"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Services</div>
-          <div class="footer-links">
-            <a href="real-estate.html">Real Estate: shortlets, rentals, sales enquiries</a>
-            <a href="logistics.html">Logistics: dispatch, pickups, haulage</a>
-            <a href="premium.html">Premium: priority handling</a>
-            <a href="insights.html">Insights: verified updates</a>
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-col-title">Contact & Access</div>
-          <div class="contact-stack">
-            <div class="contact-chip"><i class="fa-brands fa-whatsapp"></i><div><div class="txt"><a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20help%20with%20real%20estate%20or%20logistics." target="_blank" rel="noopener">+234 706 308 0605</a></div><div class="sub">WhatsApp support for enquiries and bookings</div></div></div>
-            <div class="contact-chip"><i class="fa-regular fa-envelope"></i><div><div class="txt"><a href="mailto:business@heylarmah.tech">business@heylarmah.tech</a></div><div class="sub">Business and partnership enquiries</div></div></div>
-            <div class="contact-chip"><i class="fa-solid fa-location-dot"></i><div><div class="txt">Lagos, Nigeria</div><div class="sub">Real estate and logistics support nationwide</div></div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <div>&copy; <span id="year"></span><span id="year2" style="display:none"></span> Hey Larmah. All rights reserved.</div>
-        <div class="footer-badges">
-          <span class="badge"><i class="fa-solid fa-shield-halved"></i> Verified listings</span>
-          <span class="badge"><i class="fa-solid fa-route"></i> Logistics coordination</span>
-          <span class="badge"><i class="fa-solid fa-hashtag"></i> Traceable references</span>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-
-
-  <script>
-    // Year
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    // Local helpers (don't depend on missing app.js helpers)
-    const esc = (s) => (s ?? "").toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-    const fmtDate = (d) => { try { return new Date(d).toLocaleString(); } catch { return ""; } };
-
-    // Mobile menu
-    const overlay = document.getElementById("mobileNavOverlay");
-    function toggleMenu(open){
-      overlay.classList.toggle("open", !!open);
-      overlay.setAttribute("aria-hidden", open ? "false" : "true");
-    }
-    overlay.addEventListener("click", (e) => { if(e.target === overlay) toggleMenu(false); });
-
-    let sb = null;
-    let sessionUser = null;
-
-    async function openSupport(){
-      const fields = { Message: "Hello Hey Larmah, I need help from my dashboard." };
-      if (window.LARMAH && LARMAH.openWhatsApp) {
-        LARMAH.openWhatsApp(LARMAH.buildMessage("Dashboard Support", fields));
-      }
-    }
-
-    async function logout(){
-      if(!sb) sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
-      if(sb) await sb.auth.signOut();
-      location.href = "auth.html";
-    }
-
-    function renderProfile({ email, userId, fullName, tier, payRef }){
-      const box = document.getElementById("profileBox");
-      box.innerHTML = `
-        <div class="kv"><div class="small">Email</div><div style="font-weight:900">${esc(email || "-")}</div></div>
-        <div class="kv"><div class="small">Full Name</div><div style="font-weight:900">${esc(fullName || "-")}</div></div>
-        <div class="kv"><div class="small">Premium Tier</div><div style="font-weight:900">${esc(tier || "-")}</div></div>
-        <div class="kv"><div class="small">Pay Ref</div><div style="font-family:ui-monospace;opacity:.8">${esc(payRef || "-")}</div></div>
-        <div class="kv"><div class="small">User ID</div><div style="font-family:ui-monospace;opacity:.8">${esc(userId || "-")}</div></div>
-      `;
-    }
-
-    function renderRequests(items){
-      const box = document.getElementById("requestsBox");
-      if(!items.length){
-        box.innerHTML = `<div class="notice">No requests yet. Use Real Estate or Logistics to submit one.</div>`;
-        return;
-      }
-      box.innerHTML = items.map(it => `
-        <div class="req-item">
-          <div>
-            <div style="font-weight:900">${esc(it.category || "general")}</div>
-            <div class="small" style="opacity:.7">${it.created_at ? fmtDate(it.created_at) : ""}</div>
-          </div>
-          <div class="pill-status">${esc(it.status || "new")}</div>
-        </div>
-      `).join("");
-    }
-
-    async function loadRequests(){
-      const box = document.getElementById("requestsBox");
-      box.innerHTML = `<div class="latest-skel"><div class="skel-line"></div><div class="skel-line short"></div></div>`;
-
-      try {
-        // NOTE: requests table is optional; if not present, we show fallback message
-        const { data, error } = await sb
-          .from("requests")
-          .select("*")
-          .eq("user_id", sessionUser.id)
-          .order("created_at", { ascending: false })
-          .limit(10);
-
-        if(error) throw error;
-        renderRequests(data || []);
-      } catch(e){
-        box.innerHTML = `<div class="notice">Requests table not available yet.</div>`;
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", async () => {
-      sb = window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient());
-      if(!sb){
-        document.getElementById("authState").textContent = "Supabase not ready";
-        return;
-      }
-
-      // Require premium (this also enforces your "premium-only account" rule)
-      const premiumOk = await LARMAH.requirePremium({
-        redirectTo: "premium.html",
-        onFail: () => { document.getElementById("authState").textContent = "Premium required"; }
-      });
-      if(!premiumOk) return;
-
-      const { data } = await sb.auth.getSession();
-      const session = data?.session || null;
-      if(!session){
-        location.href = "auth.html";
-        return;
-      }
-
-      sessionUser = session.user;
-      document.getElementById("authState").textContent = "Premium Active";
-
-      // Membership info (RLS allows user read own row)
-      let member = null;
-      try{
-        const { data: m } = await sb.from("premium_members").select("*").eq("email", (sessionUser.email||"").toLowerCase()).maybeSingle();
-        member = m || null;
-      }catch{}
-
-      // Profile (optional)
-      let profile = null;
-      try {
-        const res = await sb.from("profiles").select("*").eq("id", sessionUser.id).single();
-        profile = res.data || null;
-      } catch {}
-
-      renderProfile({
-        email: sessionUser.email,
-        userId: sessionUser.id,
-        fullName: profile?.full_name || profile?.name || "",
-        tier: member?.tier || "",
-        payRef: member?.paystack_ref || ""
-      });
-
-      await loadRequests();
-    });
-
-    // expose to inline handlers
-    window.toggleMenu = toggleMenu;
-    window.loadRequests = loadRequests;
-    window.logout = logout;
-    window.openSupport = openSupport;
-  </script>
 </body>
 </html>

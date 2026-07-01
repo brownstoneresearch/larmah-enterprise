@@ -1,996 +1,119 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-NG" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
-  <title>Exchange | Larmah Enterprise</title>
-  <meta name="description" content="Fast, trust-first currency exchange. Transparent quotes, WhatsApp confirmation, and clean reference tracking." />
-  <meta name="keywords" content="Currency Exchange Nigeria, USD to NGN, EUR to NGN, FX Rates Lagos, Larmah Exchange" />
-  <meta name="author" content="Larmah Enterprise" />
-  <meta name="theme-color" content="#070A12" />
-  <meta name="color-scheme" content="dark" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Fintech Exchange Desk | Hey Larmah Enterprise Limited</title>
+  <meta name="description" content="Fintech and exchange enquiry desk for Hey Larmah Enterprise Limited." />
+  <meta name="keywords" content="Hey Larmah Enterprise Limited, Real Estate Nigeria, Fintech Nigeria, Logistics Nigeria, Shipping Nigeria, Lagos Business" />
+  <meta name="author" content="Hey Larmah Enterprise Limited" />
+  <meta name="theme-color" content="#06110c" />
   <meta name="robots" content="index,follow" />
   <link rel="canonical" href="https://heylarmah.tech/exchange.html" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
+  <link rel="icon" href="assets/images/favicon-32.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <meta property="og:locale" content="en_NG" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Fintech Exchange Desk | Hey Larmah Enterprise Limited" />
+  <meta property="og:description" content="Fintech and exchange enquiry desk for Hey Larmah Enterprise Limited." />
   <meta property="og:url" content="https://heylarmah.tech/exchange.html" />
-  <meta property="og:title" content="Larmah Exchange | Trust-First FX" />
-  <meta property="og:description" content="Fast FX with WhatsApp confirmation and transparent quoting." />
-  <meta property="og:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-  <meta property="og:image:alt" content="Larmah Exchange — Trust-First FX" />
-
-  <!-- Twitter -->
+  <meta property="og:site_name" content="Hey Larmah Enterprise Limited" />
+  <meta property="og:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Larmah Exchange" />
-  <meta name="twitter:description" content="Trust-first currency exchange with WhatsApp confirmation." />
-  <meta name="twitter:image" content="https://heylarmah.tech/assets/images/larmah-header.jpeg" />
-
-  <link rel="icon" href="assets/images/larmah-favicon.jpeg" type="image/jpeg" />
-  <link rel="apple-touch-icon" href="assets/images/larmah-favicon.jpeg" />
-
-  <!-- Performance -->
-  <link rel="preload" href="assets/images/larmah-header.jpeg" as="image" fetchpriority="high" />
-  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-
+  <meta name="twitter:title" content="Fintech Exchange Desk | Hey Larmah Enterprise Limited" />
+  <meta name="twitter:description" content="Fintech and exchange enquiry desk for Hey Larmah Enterprise Limited." />
+  <meta name="twitter:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
+  <link rel="preload" href="assets/images/brand-icon-512.webp" as="image" />
   <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/app.js"></script>
-
-  <style>
-    /* ===== Exchange page smart upgrade (safe overrides) ===== */
-    html{ scroll-behavior:smooth; }
-    @media (prefers-reduced-motion: reduce){
-      html{ scroll-behavior:auto; }
-      *{ animation-duration:0.001ms!important; animation-iteration-count:1!important; transition-duration:0.001ms!important; scroll-behavior:auto!important; }
-      .fa-beat{ animation:none!important; }
-    }
-
-    .page-wrap{ max-width:1120px; margin:0 auto; }
-
-    /* subtle ambient background */
-    body{ position:relative; overflow-x:hidden; }
-    body::before{
-      content:"";
-      position:fixed; inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(900px 420px at 18% 6%, rgba(212,175,55,.10), transparent 60%),
-        radial-gradient(900px 420px at 85% 10%, rgba(0,217,129,.08), transparent 62%),
-        radial-gradient(900px 520px at 50% 110%, rgba(0,122,255,.07), transparent 58%);
-      opacity:.85; z-index:-1;
-    }
-
-    :focus-visible{
-      outline:2px solid rgba(212,175,55,.55);
-      outline-offset:3px;
-      border-radius:12px;
-    }
-
-    .hero-shell{
-      position:relative;
-      overflow:hidden;
-      border-radius: var(--radius2, 28px);
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.02);
-      box-shadow:
-        0 22px 60px rgba(0,0,0,.40),
-        0 1px 0 rgba(255,255,255,.04) inset;
-    }
-    .hero-shell::before{
-      content:"";
-      position:absolute; inset:-2px;
-      background:
-        radial-gradient(900px 420px at 10% 0%, rgba(212,175,55,.20), transparent 55%),
-        radial-gradient(700px 360px at 90% 10%, rgba(0,217,129,.12), transparent 60%),
-        radial-gradient(900px 520px at 50% 100%, rgba(0,122,255,.10), transparent 58%);
-      pointer-events:none;
-      filter:saturate(1.06);
-    }
-    .hero-shell::after{
-      content:"";
-      position:absolute; inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.35), transparent 38%),
-        radial-gradient(1200px 600px at 50% 0%, rgba(255,255,255,.06), transparent 62%);
-    }
-    .hero-inner{ position:relative; }
-
-    .hero .actions{
-      display:flex;
-      align-items:stretch;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-    .hero .actions .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      white-space:nowrap;
-      line-height:1;
-      min-height:48px;
-      padding:12px 16px;
-      transform: translateZ(0);
-      transition: transform .18s ease, filter .18s ease;
-    }
-    .hero .actions .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-    .hero .actions .btn:active{ transform: translateY(0px) scale(.99); }
-    @media(min-width: 920px){ .hero .actions .btn{ min-width: 220px; } }
-    @media(max-width: 520px){ .hero .actions{ flex-direction:column; } .hero .actions .btn{ width:100%; } }
-
-    .live-dot { display:inline-flex; align-items:center; gap:8px; font-weight:900; font-size:.86rem; color: var(--ok); }
-    .live-dot i { font-size: 8px; }
-
-    .grid2{
-      display:grid;
-      grid-template-columns: 1.25fr .95fr;
-      gap: 14px;
-    }
-    @media(max-width: 940px){ .grid2{ grid-template-columns: 1fr; } }
-
-    /* rates header controls */
-    .rates-tools{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .rates-tools .left{
-      display:flex; gap:10px; align-items:center; flex-wrap:wrap;
-    }
-    .search{
-      width:min(340px, 100%);
-      position:relative;
-    }
-    .search input{
-      width:100%;
-      padding-left:40px;
-    }
-    .search i{
-      position:absolute; left:14px; top:50%; transform:translateY(-50%);
-      opacity:.7;
-    }
-    .seg{
-      display:inline-flex;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      border-radius: 999px;
-      overflow:hidden;
-    }
-    .seg button{
-      border:0;
-      background:transparent;
-      color:var(--muted);
-      padding:8px 12px;
-      cursor:pointer;
-      font-weight:850;
-      font-size:.82rem;
-    }
-    .seg button.active{
-      color:var(--text);
-      background: rgba(255,255,255,.06);
-    }
-
-    .rates-list{ display:grid; gap:10px; margin-top:12px; }
-
-    .rate-row{
-      display:grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items:center;
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.09);
-      background: rgba(255,255,255,0.03);
-      transition: transform .18s ease, border-color .18s ease, background .18s ease;
-    }
-    .rate-row:hover{
-      transform: translateY(-1px);
-      border-color: rgba(212,175,55,.20);
-      background: rgba(255,255,255,0.045);
-    }
-
-    .rate-left{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
-    .pair{
-      display:flex; gap:10px; align-items:center;
-      font-weight: 950;
-      letter-spacing:.2px;
-    }
-    .pair .icon{
-      width:30px; height:30px;
-      border-radius: 12px;
-      display:grid; place-items:center;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.18);
-    }
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      border-radius: 999px;
-      padding: 6px 10px;
-      color: var(--muted);
-      font-size: .82rem;
-      white-space:nowrap;
-    }
-    .mono{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: .86rem;
-    }
-
-    .rate-right{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
-      text-align:right;
-      min-width: 200px;
-    }
-    .rate-val{ font-weight: 950; color: var(--accent); font-size: 1.02rem; }
-    .rate-sub{ font-size:.82rem; color: var(--muted); opacity:.9; }
-
-    .pill-mini{
-      display:inline-flex; align-items:center; gap:8px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:.8rem;
-      color: var(--muted);
-      white-space:nowrap;
-    }
-
-    .notice{
-      border-radius: 16px;
-      padding: 12px 12px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-    }
-    .notice strong{ color: var(--text); }
-
-    .row2{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
-    @media(max-width: 640px){ .row2{ grid-template-columns: 1fr; } }
-
-    .calc-out{
-      margin-top:10px;
-      padding:12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.03);
-    }
-    .calc-out .big{
-      font-weight: 950;
-      font-size: 1.25rem;
-      color: var(--accent);
-      margin-top:6px;
-    }
-
-    .cta-strip{
-      border: 1px solid rgba(255,255,255,.10) !important;
-      background: rgba(255,255,255,.03) !important;
-      box-shadow:
-        0 18px 50px rgba(0,0,0,.35),
-        0 1px 0 rgba(255,255,255,.04) inset;
-    }
-
-    /* top pairs quick chips */
-    .quick-pairs{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
-    .quick-pairs button{
-      font-weight:850;
-    }
-
-    /* sticky helper for section jump */
-    #rates{ scroll-margin-top: 90px; }
-  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Hey Larmah Enterprise Limited","url":"https://heylarmah.tech/","logo":"https://heylarmah.tech/assets/images/brand-icon-1024.png","identifier":"RC: 9488632","address":{"@type":"PostalAddress","addressLocality":"Lagos","addressCountry":"NG"},"sameAs":["https://instagram.com/heylarmah_ltd","https://x.com/heylarmah_ltd","https://tiktok.com/@heylarmah_ltd"]}</script>
+  
 </head>
+<body data-page="fintech">
+<a class="skip" href="#main">Skip to content</a>
 
-<body data-page="exchange">
-
-  <!-- Mobile nav overlay -->
-  <div id="mobileNavOverlay" aria-hidden="true">
-    <div class="msheet" role="dialog" aria-label="Mobile navigation">
-      <div class="msheet-head">
-        <div class="msheet-brand">
-          <img src="assets/images/larmah-header.jpeg" alt="Larmah Logo">
-        </div>
-        <button class="msheet-close" type="button" onclick="LARMAH.toggleMenu()" aria-label="Close Menu">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="msheet-body">
-        <div class="msheet-links">
-          <a href="real-estate.html" class="msheet-link">
-            <span><i class="fa-solid fa-house" style="width:24px;color:var(--brand)"></i> Real Estate</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="logistics.html" class="msheet-link">
-            <span><i class="fa-solid fa-truck" style="width:24px;color:var(--brand)"></i> Logistics</span>
-            <i class="fa-solid fa-chevron-right" style="font-size:12px;opacity:.5"></i>
-          </a>
-          <a href="exchange.html" class="msheet-link active">
-            <span><i class="fa-solid fa-money-bill-transfer" style="width:24px;color:var(--brand)"></i> Exchange</span>
-            <i class="fa-solid fa-check" style="font-size:12px;"></i>
-          </a>
-        </div>
-
-        <div class="msheet-footer">
-          <div class="msheet-hint">Menu</div>
-          <a href="dashboard.html" class="msheet-link" style="color:var(--accent);border-color:rgba(212,175,55,.2)">
-            <span><i class="fa-solid fa-user-shield" style="width:24px"></i> Dashboard</span>
-          </a>
-        </div>
-      </div>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="index.html" aria-label="Hey Larmah Enterprise Limited home">
+      <img class="brand-logo" src="assets/images/brand-icon-192.png" alt="Hey Larmah logo icon" width="54" height="54" />
+      <span class="brand-copy"><strong>Hey Larmah</strong><span>Enterprise Limited</span></span>
+    </a>
+    <nav class="nav" aria-label="Primary navigation"><a href="index.html">Home</a>
+<a href="real-estate.html">Real Estate</a>
+<a href="fintech.html" aria-current="page">Fintech</a>
+<a href="logistics.html">Logistics</a>
+<a href="shipping.html">Shipping</a>
+<a href="premium.html">Premium</a>
+<a href="insights.html">Insights</a></nav>
+    <div class="header-actions">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle theme">◐</button>
+      <button class="btn small primary" type="button" data-whatsapp="General Enquiry" data-message="I want to make an enquiry.">DM for enquiries</button>
+      <button class="menu-btn" type="button" data-menu-toggle aria-controls="mobileMenu" aria-expanded="false" aria-label="Open menu">☰</button>
     </div>
   </div>
+</header>
+<div class="mobile-panel" id="mobileMenu" aria-label="Mobile navigation"><a href="index.html"><span>Home</span><span>→</span></a>
+<a href="real-estate.html"><span>Real Estate</span><span>→</span></a>
+<a href="fintech.html"><span>Fintech</span><span>→</span></a>
+<a href="logistics.html"><span>Logistics</span><span>→</span></a>
+<a href="shipping.html"><span>Shipping</span><span>→</span></a>
+<a href="premium.html"><span>Premium</span><span>→</span></a>
+<a href="insights.html"><span>Insights</span><span>→</span></a>
+<a href="contact.html"><span>Contact</span><span>→</span></a>
+<a href="dashboard.html"><span>Portal</span><span>→</span></a></div>
 
-  <!-- Header -->
-  <header>
-    <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Larmah Home">
-        <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-      </a>
+<main id="main">
 
-      <button class="menu-btn" type="button" onclick="LARMAH.toggleMenu()" aria-label="Open menu">
-        <i class="fa-solid fa-bars"></i>
-      </button>
+<section class="page-hero"><div class="container page-hero-grid"><div><span class="kicker">Fintech / FX desk</span><h1>Exchange enquiries now sit under Fintech.</h1><p class="lead">This page replaces the old exchange-only positioning with a broader fintech workflow: payment support, settlement follow-up and FX enquiry routing. Rates must be confirmed before any transaction.</p><div class="hero-actions"><button class="btn primary" data-whatsapp="Fintech FX Enquiry" data-message="I want to confirm an FX or payment enquiry.">Confirm on WhatsApp</button><a class="btn secondary" href="fintech.html">Open Fintech page</a></div></div><div class="page-card"><picture><source srcset="assets/images/fintech-cover.webp" type="image/webp"><img src="assets/images/fintech-cover.jpg" alt="Fintech support"></picture><div class="caption"><strong>Fintech first</strong><span>Payment workflows and exchange enquiries handled professionally.</span></div></div></div></section>
+<section class="section tight"><div class="container split"><div class="panel"><h2 class="h2">Indicative calculator</h2><p>This is not a live rate. Use it only for estimate discussions, then confirm final terms with the team.</p><div class="form-grid"><div class="field"><label>Amount</label><input id="fxAmount" value="1000" inputmode="decimal"></div><div class="field"><label>Agreed rate</label><input id="fxRate" value="1500" inputmode="decimal"></div><div class="field full"><div class="panel gold-panel" id="fxResult">Enter amount and agreed rate.</div></div></div></div><form class="panel wa-form" data-topic="Fintech / FX Enquiry"><h3 class="h3">Request confirmation</h3><div class="form-grid"><div class="field"><label>Name</label><input name="Name"></div><div class="field"><label>WhatsApp</label><input name="WhatsApp"></div><div class="field"><label>Currency</label><select name="Currency"><option>USD</option><option>GBP</option><option>EUR</option><option>NGN</option><option>Other</option></select></div><div class="field"><label>Amount</label><input name="Amount"></div><div class="field full"><label>Message</label><textarea name="Message" placeholder="Describe your payment or FX coordination request."></textarea></div></div><div style="margin-top:16px"><button class="btn primary" type="submit">Open WhatsApp</button></div></form></div></section>
 
-      <nav id="nav" aria-label="Primary navigation">
-        <ul>
-          <li><a class="nav-link" href="real-estate.html">Real Estate</a></li>
-          <li><a class="nav-link" href="logistics.html">Logistics</a></li>
-          <li><a class="nav-link active" href="exchange.html">Exchange</a></li>
-        </ul>
-      </nav>
+</main>
 
-      <div class="header-actions" style="margin-left:auto; display:none;">
-        <a href="dashboard.html" class="pill primary">Dashboard</a>
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <img src="assets/images/brand-icon-192.png" alt="Hey Larmah logo" width="64" height="64" />
+          <div><strong>Hey Larmah Enterprise Limited</strong><span>RC: 9488632</span></div>
+        </div>
+        <p><b>Real Estate • Fintech • Logistics • Shipping.</b><br>Building assets. Moving trade. Financing growth. Lagos, Nigeria.</p>
+        <div class="socials" aria-label="Social links">
+          <a href="https://instagram.com/heylarmah_ltd" aria-label="Instagram">IG</a>
+          <a href="https://x.com/heylarmah_ltd" aria-label="X">X</a>
+          <a href="https://tiktok.com/@heylarmah_ltd" aria-label="TikTok">TT</a>
+        </div>
       </div>
-
-      <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          if (window.LARMAH && typeof LARMAH.updateHeaderAuthUI === "function") LARMAH.updateHeaderAuthUI();
-        });
-      </script>
+      <div>
+        <div class="footer-title">Explore</div>
+        <div class="footer-links"><a href="index.html">Home</a><a href="real-estate.html">Real Estate</a><a href="fintech.html">Fintech</a><a href="logistics.html">Logistics</a><a href="shipping.html">Shipping</a><a href="premium.html">Premium</a><a href="insights.html">Insights</a><a href="contact.html">Contact</a><a href="auth.html">Premium Login</a></div>
+      </div>
+      <div>
+        <div class="footer-title">Contact</div>
+        <div class="footer-links">
+          <a href="tel:+2347063080605" data-phone>+234 706 308 0605</a>
+          <a href="mailto:business@heylarmah.tech" data-email>business@heylarmah.tech</a>
+          <a href="https://x.com/heylarmah_ltd" data-handle>@heylarmah_ltd</a>
+          <span data-location>Lagos, Nigeria</span>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn primary small" type="button" data-whatsapp="Website Support" data-message="I need help from the website.">WhatsApp Support</button>
+          <button class="btn ghost small" type="button" data-copy="RC: 9488632">Copy RC</button>
+        </div>
+      </div>
     </div>
-  </header>
-
-  <main class="container page-wrap">
-    <!-- Hero -->
-    <section class="hero" aria-label="Exchange hero">
-      <div class="hero-shell">
-        <div class="hero-inner">
-          <div>
-            <div class="hero-kicker">
-              <span class="kicker-pill"><i class="fa-solid fa-shield-halved"></i> Trust-First Exchange</span>
-              <span class="kicker-dot">•</span>
-              <span class="kicker-sub">Binance P2P Market • WhatsApp Confirmation</span>
-            </div>
-
-            <h1>Exchange Rates,<br/>Built for Confidence.</h1>
-            <p class="lead">
-              View live market rates, estimate conversions, then confirm your final quote via WhatsApp.
-              Every request gets a clean reference ID.
-            </p>
-
-            <div class="actions">
-              <a class="btn solid" href="#rates"><i class="fa-solid fa-chart-simple"></i> View Live Board</a>
-              <button class="btn primary" type="button" onclick="openFXWhatsApp()">
-                <i class="fa-brands fa-whatsapp"></i> Get Quote
-              </button>
-              <button class="btn" type="button" onclick="openFXEmail()">
-                <i class="fa-regular fa-envelope"></i> Email
-              </button>
-            </div>
-
-            <div class="quick-pairs" aria-label="Quick pairs">
-              <button class="btn small" type="button" onclick="quickPair('USD','NGN')">USD/NGN</button>
-              <button class="btn small" type="button" onclick="quickPair('GBP','NGN')">GBP/NGN</button>
-              <button class="btn small" type="button" onclick="quickPair('CAD','NGN')">CAD/NGN</button>
-              <button class="btn small" type="button" onclick="quickPair('USDT','NGN')">USDT/NGN</button>
-              <button class="btn small" type="button" onclick="quickPair('BTC','USDT')">BTC/USDT</button>
-              <button class="btn small" type="button" onclick="quickPair('ETH','USDT')">ETH/USDT</button>
-            </div>
-
-            <div class="trust-row">
-              <div class="trust-badge"><i class="fa-solid fa-circle-check"></i> Transparent board</div>
-              <div class="trust-badge"><i class="fa-solid fa-lock"></i> Safer flow</div>
-              <div class="trust-badge"><i class="fa-solid fa-receipt"></i> Ref tracking</div>
-            </div>
-
-            <div class="small live-dot" id="liveStateFX" style="margin-top:12px;opacity:.9" aria-live="polite">
-              <i class="fa-solid fa-circle fa-beat"></i> Live updates enabled
-            </div>
-          </div>
-
-          <div class="hero-badges" aria-label="Highlights">
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-bolt" style="color:var(--brand)"></i> Fast Confirmation</h3>
-              <p>Send pair + amount. We confirm on WhatsApp.</p>
-            </div>
-            <div class="hero-card">
-              <h3><i class="fa-solid fa-chart-line" style="color:var(--brand)"></i> Market-led</h3>
-              <p>P2P + Spot fallback keeps pricing realistic.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Rates + Converter -->
-    <section class="section" id="rates" aria-label="Rates and converter">
-      <div class="section-head-split">
-        <div>
-          <h2>Live Market Board</h2>
-          <p class="lead">Reference-only display. Final quote confirmed via WhatsApp.</p>
-        </div>
-        <a class="btn small" href="premium.html"><i class="fa-solid fa-crown"></i> Premium</a>
-      </div>
-
-      <div class="grid2">
-        <!-- Rates -->
-        <div class="card">
-          <div class="section-titleline" style="align-items:flex-end">
-            <div>
-              <h3 style="margin:0"><i class="fa-solid fa-coins" style="color:var(--brand)"></i> Rates</h3>
-              <div class="small" id="fxUpdatedAt" style="opacity:.82;margin-top:6px"></div>
-            </div>
-            <div class="pill-mini" title="Source">
-              <i class="fa-solid fa-satellite-dish" style="opacity:.85"></i>
-              <span>DB Live (P2P Sync)</span>
-            </div>
-          </div>
-
-          <div class="rates-tools">
-            <div class="left">
-              <div class="search">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input id="rateSearch" class="input" placeholder="Search pair (e.g., USDT/NGN, BTC/USDT)" autocomplete="off" />
-              </div>
-
-              <div class="seg" role="tablist" aria-label="Rate filter">
-                <button type="button" class="active" id="tabAll" onclick="setRateFilter('all')" role="tab">All</button>
-                <button type="button" id="tabFiat" onclick="setRateFilter('fiat')" role="tab">Fiat</button>
-                <button type="button" id="tabCrypto" onclick="setRateFilter('crypto')" role="tab">Crypto</button>
-              </div>
-            </div>
-
-            <div class="right" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
-              <button class="btn small" type="button" onclick="refreshBoard(true)">
-                <i class="fa-solid fa-rotate-right"></i> Refresh
-              </button>
-              <button class="btn small" type="button" onclick="openFXWhatsApp(true)">
-                <i class="fa-brands fa-whatsapp"></i> Quote
-              </button>
-            </div>
-          </div>
-
-          <div id="ratesMount" style="margin-top:10px">
-            <div class="notice" style="opacity:.85">Loading rates…</div>
-          </div>
-
-          <div class="small" style="margin-top:10px;opacity:.72">
-            Tip: The board is for reference. We confirm the final executable quote via WhatsApp.
-          </div>
-        </div>
-
-        <!-- Converter -->
-        <div class="card">
-          <div class="section-titleline">
-            <h3 style="margin:0"><i class="fa-solid fa-calculator" style="color:var(--brand)"></i> Smart Converter</h3>
-            <span class="small" style="opacity:.8">Estimate</span>
-          </div>
-
-          <div class="row2" style="margin-top:10px">
-            <div>
-              <label class="small" for="fxFrom">From</label>
-              <select id="fxFrom" class="input">
-                <option value="USD">USD</option>
-                <option value="GBP">GBP</option>
-                <option value="CAD">CAD</option>
-                <option value="EUR">EUR</option>
-                <option value="USDT">USDT</option>
-                <option value="BTC">BTC</option>
-                <option value="ETH">ETH</option>
-                <option value="NGN">NGN</option>
-              </select>
-            </div>
-            <div>
-              <label class="small" for="fxTo">To</label>
-              <select id="fxTo" class="input">
-                <option value="NGN">NGN</option>
-                <option value="USD">USD</option>
-                <option value="GBP">GBP</option>
-                <option value="CAD">CAD</option>
-                <option value="EUR">EUR</option>
-                <option value="USDT">USDT</option>
-                <option value="BTC">BTC</option>
-                <option value="ETH">ETH</option>
-              </select>
-            </div>
-          </div>
-
-          <div style="margin-top:12px">
-            <label class="small" for="fxAmount">Amount</label>
-            <input id="fxAmount" class="input" placeholder="e.g., 1000" inputmode="decimal" />
-          </div>
-
-          <div class="calc-out" id="fxOut">
-            <div class="small" style="opacity:.85">Estimated result</div>
-            <div class="big">—</div>
-            <div class="small" style="margin-top:8px;opacity:.75" id="fxHint">Uses available pairs in your live DB.</div>
-          </div>
-
-          <div class="actions" style="margin-top:12px">
-            <button class="btn solid" type="button" style="flex:1" onclick="openFXWhatsApp(true)">
-              <i class="fa-brands fa-whatsapp"></i> Confirm Quote
-            </button>
-            <button class="btn" type="button" onclick="openFXEmail(true)">
-              <i class="fa-regular fa-envelope"></i> Email
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="section" aria-label="Exchange CTA">
-      <div class="cta-strip">
-        <div>
-          <h2 style="margin:0">Need a guaranteed rate?</h2>
-          <p class="lead" style="margin:6px 0 0">Send the pair + amount — we’ll respond with a confirmed quote.</p>
-        </div>
-        <button class="btn solid" type="button" onclick="openFXWhatsApp(true)">
-          <i class="fa-brands fa-whatsapp"></i> Get Quote
-        </button>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="brandline">
-            <img src="assets/images/larmah-header.jpeg" alt="Larmah Enterprise" />
-            <div>
-              <div style="font-weight:950">Larmah Enterprise</div>
-              <div class="small">Real Estate • Logistics • Exchange</div>
-            </div>
-          </div>
-
-          <div class="small" style="margin-top:8px">
-            Trust-first commerce for Nigeria — verified listings, trackable enquiries, and WhatsApp-first support.
-          </div>
-
-          <div class="social-row" aria-label="Social links">
-            <a class="social-btn" href="https://instagram.com/hey_larmah" aria-label="Instagram" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a class="social-btn" href="https://x.com/heylarmah_tech" aria-label="X" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-            <a class="social-btn" href="https://t.me/heylarmah_tech" aria-label="Telegram" title="Telegram"><i class="fa-brands fa-telegram"></i></a>
-            <a class="social-btn" href="https://youtube.com/@heylarmah" aria-label="YouTube" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
-          </div>
-        </div>
-
-        <div>
-          <b>Navigation</b>
-          <div class="small" style="margin-top:10px"><a href="real-estate.html">Real Estate</a></div>
-          <div class="small"><a href="logistics.html">Logistics</a></div>
-          <div class="small"><a href="exchange.html">Exchange</a></div>
-          <div class="small"><a href="premium.html">Premium</a></div>
-        </div>
-
-        <div>
-          <b>Contact</b>
-          <div class="small" style="margin-top:10px"><i class="fa-brands fa-whatsapp"></i> +234 706 308 0605</div>
-          <div class="small"><i class="fa-regular fa-envelope"></i> <span class="mono">business@heylarmah.tech</span></div>
-          <div class="small"><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</div>
-
-          <div class="actions" style="margin-top:12px">
-            <button class="btn small" type="button" onclick="openFXWhatsApp()">
-              <i class="fa-brands fa-whatsapp"></i> WhatsApp Support
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="small">© <span id="year"></span> Larmah Enterprise. All rights reserved.</div>
+    <div class="footer-bottom">
+      <div>© <span data-year></span> Hey Larmah Enterprise Limited. All rights reserved.</div>
+      <div>Official handle: <b data-handle>@heylarmah_ltd</b> • <b>RC: 9488632</b></div>
     </div>
-  </footer>
+  </div>
+</footer>
+<div class="wa-float">
+  <button class="wa-label" type="button" data-whatsapp="Quick WhatsApp Enquiry">DM for enquiries</button>
+  <button class="wa-circle" type="button" aria-label="WhatsApp" data-whatsapp="Quick WhatsApp Enquiry">WA</button>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-  <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
-
-    const BUSINESS_EMAIL_BASE = "business@heylarmah.tech";
-
-    // Local state
-    let __FX = [];
-    let __rateFilter = "all"; // all | fiat | crypto
-
-    function safeText(v){ return (v === null || v === undefined) ? "" : String(v); }
-    function upper(v){ return safeText(v).trim().toUpperCase(); }
-
-    function fmtNum(n){
-      const x = Number(n);
-      if(!isFinite(x)) return "—";
-      return x.toLocaleString(undefined, { maximumFractionDigits: 2 });
-    }
-
-    function sbClient(){
-      return window.supabaseClient || (window.ensureSupabaseClient && window.ensureSupabaseClient()) || null;
-    }
-
-    async function waitForSupabaseClient({ tries = 12, delay = 250 } = {}){
-      for(let i=0;i<tries;i++){
-        const sb = sbClient();
-        if(sb) return sb;
-        await new Promise(r => setTimeout(r, delay));
-      }
-      return null;
-    }
-
-    function refForFX(base, quote){
-      const t = Date.now().toString().slice(-6);
-      return `WEB-FX-${upper(base)}-${upper(quote)}-${t}`;
-    }
-
-    function openEmailCompose({ to, subject, body }){
-      const href = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject||"")}&body=${encodeURIComponent(body||"")}`;
-      window.location.href = href;
-    }
-
-    function quickPair(from, to){
-      const f = document.getElementById("fxFrom");
-      const t = document.getElementById("fxTo");
-      if(f) f.value = from;
-      if(t) t.value = to;
-      calcEstimate();
-      document.getElementById("fxAmount")?.focus();
-      try { document.getElementById("rates")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch {}
-    }
-
-    function openFXWhatsApp(includeCalc=false){
-      const from = document.getElementById("fxFrom")?.value || "USD";
-      const to = document.getElementById("fxTo")?.value || "NGN";
-      const amt = safeText(document.getElementById("fxAmount")?.value).trim();
-      const ref = refForFX(from, to);
-
-      const estimate = includeCalc ? buildEstimateLine(from, to, amt) : "";
-
-      const msg = LARMAH.buildMessage("FX Quote Request", {
-        Pair: `${from}/${to}`,
-        ...(estimate ? { Estimate: estimate } : {}),
-        Ref: ref,
-        Email: BUSINESS_EMAIL_BASE
-      });
-
-      LARMAH.openWhatsApp(msg);
-    }
-
-    function openFXEmail(includeCalc=false){
-      const from = document.getElementById("fxFrom")?.value || "USD";
-      const to = document.getElementById("fxTo")?.value || "NGN";
-      const amt = safeText(document.getElementById("fxAmount")?.value).trim();
-      const ref = refForFX(from, to);
-
-      const estimate = includeCalc ? buildEstimateLine(from, to, amt) : "";
-
-      const subject = `FX Quote Request — ${from}/${to} — ${ref}`;
-      const body =
-`Hello Larmah Team,
-
-Please confirm a quote for:
-
-Pair: ${from}/${to}
-Amount: ${amt || ""}
-${estimate ? `Estimate: ${estimate}` : ""}
-Ref: ${ref}
-
-My Name:
-My Phone:
-Notes:
-
-Thank you.`;
-
-      openEmailCompose({ to: BUSINESS_EMAIL_BASE, subject, body });
-    }
-
-    function isCrypto(code){
-      const c = upper(code);
-      return ["BTC","ETH","USDT","USDC"].includes(c);
-    }
-
-    function iconForPair(base, quote){
-      const b = upper(base), q = upper(quote);
-      if(b === "BTC") return `<i class="fa-brands fa-bitcoin"></i>`;
-      if(b === "ETH") return `<i class="fa-brands fa-ethereum"></i>`;
-      if(b === "USDT" || q === "USDT") return `<i class="fa-solid fa-circle-dollar-to-slot"></i>`;
-      if(q === "NGN") return `<i class="fa-solid fa-naira-sign"></i>`;
-      return `<i class="fa-solid fa-coins"></i>`;
-    }
-
-    function pickShowRate(r){
-      // Prefer sell; else buy
-      const sell = Number(r.sell);
-      const buy = Number(r.buy);
-      if(isFinite(sell)) return sell;
-      if(isFinite(buy)) return buy;
-      return null;
-    }
-
-    function buildEstimateLine(from, to, amt){
-      const a = Number(String(amt||"").replace(/,/g,"").trim());
-      if(!isFinite(a) || a <= 0) return "";
-      const val = convertUsingDb(a, from, to);
-      if(val === null) return "";
-      return `${a.toLocaleString()} ${upper(from)} ≈ ${val.toLocaleString(undefined,{maximumFractionDigits:2})} ${upper(to)}`;
-    }
-
-    function convertUsingDb(amount, from, to){
-      const A = upper(from), B = upper(to);
-      if(A === B) return amount;
-
-      // direct & inverse using show-rate
-      const direct = __FX.find(r => upper(r.base)===A && upper(r.quote)===B);
-      if(direct){
-        const v = pickShowRate(direct);
-        if(v === null) return null;
-        return amount * v;
-      }
-
-      const inv = __FX.find(r => upper(r.base)===B && upper(r.quote)===A);
-      if(inv){
-        const v = pickShowRate(inv);
-        if(v === null || v === 0) return null;
-        return amount / v;
-      }
-
-      // bridge using USDT if possible
-      const bridge = "USDT";
-      if(A !== bridge && B !== bridge){
-        const a2u = __FX.find(r => upper(r.base)===A && upper(r.quote)===bridge) || __FX.find(r => upper(r.base)===bridge && upper(r.quote)===A);
-        const u2b = __FX.find(r => upper(r.base)===bridge && upper(r.quote)===B) || __FX.find(r => upper(r.base)===B && upper(r.quote)===bridge);
-        if(a2u && u2b){
-          // amount -> usdt
-          let usdtAmt = null;
-          if(upper(a2u.base)===A && upper(a2u.quote)===bridge){
-            const v = pickShowRate(a2u); if(v!==null) usdtAmt = amount * v;
-          } else {
-            const v = pickShowRate(a2u); if(v!==null && v!==0) usdtAmt = amount / v;
-          }
-          if(usdtAmt === null) return null;
-
-          // usdt -> target
-          if(upper(u2b.base)===bridge && upper(u2b.quote)===B){
-            const v = pickShowRate(u2b); if(v!==null) return usdtAmt * v;
-          } else {
-            const v = pickShowRate(u2b); if(v!==null && v!==0) return usdtAmt / v;
-          }
-        }
-      }
-
-      return null;
-    }
-
-    function calcEstimate(){
-      const from = document.getElementById("fxFrom")?.value || "USD";
-      const to   = document.getElementById("fxTo")?.value || "NGN";
-      const amtS = safeText(document.getElementById("fxAmount")?.value).replace(/,/g,"").trim();
-      const out = document.getElementById("fxOut");
-      const hint = document.getElementById("fxHint");
-      if(!out) return;
-
-      const big = out.querySelector(".big");
-      if(!amtS || !big){
-        if(big) big.textContent = "—";
-        if(hint) hint.textContent = "Uses available pairs in your live DB.";
-        return;
-      }
-
-      const amt = Number(amtS);
-      if(!isFinite(amt) || amt <= 0){
-        big.textContent = "—";
-        if(hint) hint.textContent = "Enter a valid amount.";
-        return;
-      }
-
-      const res = convertUsingDb(amt, from, to);
-      if(res === null){
-        big.textContent = "Rate not available";
-        if(hint) hint.textContent = "That pair is not in the board yet. Use WhatsApp to request a quote.";
-        return;
-      }
-
-      big.textContent = `${res.toLocaleString(undefined,{maximumFractionDigits:2})} ${upper(to)}`;
-      if(hint) hint.textContent = `Estimate based on ${upper(from)}/${upper(to)} (or USDT bridge). Confirm final quote on WhatsApp.`;
-    }
-
-    function setRateFilter(mode){
-      __rateFilter = mode;
-
-      const a = document.getElementById("tabAll");
-      const f = document.getElementById("tabFiat");
-      const c = document.getElementById("tabCrypto");
-      if(a) a.classList.toggle("active", mode==="all");
-      if(f) f.classList.toggle("active", mode==="fiat");
-      if(c) c.classList.toggle("active", mode==="crypto");
-
-      renderRates();
-    }
-
-    function applyFilterAndSearch(list){
-      const q = upper(document.getElementById("rateSearch")?.value || "");
-      let out = (list||[]).slice();
-
-      if(__rateFilter === "fiat"){
-        out = out.filter(r => !isCrypto(r.base) && !isCrypto(r.quote));
-      } else if(__rateFilter === "crypto"){
-        out = out.filter(r => isCrypto(r.base) || isCrypto(r.quote));
-      }
-
-      if(q){
-        out = out.filter(r => {
-          const key = upper(r.asset || r.pair || `${r.base}/${r.quote}`);
-          return key.includes(q) || upper(r.base).includes(q) || upper(r.quote).includes(q);
-        });
-      }
-
-      return out;
-    }
-
-    function renderRates(){
-      const mount = document.getElementById("ratesMount");
-      if(!mount) return;
-
-      const list = applyFilterAndSearch(__FX);
-
-      if(!list.length){
-        mount.innerHTML = `<div class="notice"><strong>No matches.</strong> Try another search or switch tabs.</div>`;
-        return;
-      }
-
-      mount.innerHTML = `
-        <div class="rates-list">
-          ${list.map(r => {
-            const base = upper(r.base);
-            const quote = upper(r.quote);
-            const pair = upper(r.asset || r.pair || `${base}/${quote}`);
-            const buy = r.buy;
-            const sell = r.sell;
-
-            const show = pickShowRate(r);
-
-            const tag = (pair.includes("NGN") && (base==="USDT"||base==="BTC"||base==="ETH")) ? "P2P" :
-                        (pair.includes("USDT") && (base==="BTC"||base==="ETH")) ? "Spot" :
-                        "Market";
-
-            return `
-              <div class="rate-row">
-                <div class="rate-left">
-                  <div class="pair">
-                    <span class="icon">${iconForPair(base, quote)}</span>
-                    <span>${base}/${quote}</span>
-                  </div>
-                  ${isFinite(Number(buy)) ? `<span class="chip">Buy: <span class="mono">${fmtNum(buy)}</span></span>` : ``}
-                  ${isFinite(Number(sell)) ? `<span class="chip">Sell: <span class="mono">${fmtNum(sell)}</span></span>` : ``}
-                  <span class="pill-mini"><i class="fa-solid fa-tag" style="opacity:.85"></i> ${tag}</span>
-                </div>
-                <div class="rate-right">
-                  <div>
-                    <div class="rate-val">${show === null ? "—" : fmtNum(show)}</div>
-                    <div class="rate-sub">${pair}</div>
-                  </div>
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      `;
-    }
-
-    function setUpdatedAt(){
-      const el = document.getElementById("fxUpdatedAt");
-      if(!el) return;
-      const ts = (__FX||[])
-        .map(r => r.updated_at || r.updatedAt || r.created_at || r.createdAt)
-        .filter(Boolean)
-        .sort()
-        .slice(-1)[0];
-      el.textContent = ts ? `Updated: ${new Date(ts).toLocaleString()}` : "";
-    }
-
-    async function loadRates(){
-      try{
-        if(window.LARMAH && typeof LARMAH.getRates === "function"){
-          const rr = await LARMAH.getRates({ force: true });
-          if(Array.isArray(rr)) __FX = rr.filter(x => String(x.status||"active").toLowerCase() === "active");
-          setUpdatedAt();
-          renderRates();
-          calcEstimate();
-          return;
-        }
-      }catch(e){ console.warn(e); }
-
-      // fallback read
-      try{
-        const sb = await waitForSupabaseClient();
-        if(!sb) throw new Error("supabaseClient not ready");
-        const { data, error } = await sb.from("rates").select("*").order("updated_at", { ascending: false });
-        if(error) throw error;
-        __FX = (data||[]).filter(r => String(r.status||"active").toLowerCase()==="active");
-        setUpdatedAt();
-        renderRates();
-        calcEstimate();
-      }catch(e){
-        console.error(e);
-        const mount = document.getElementById("ratesMount");
-        if(mount){
-          mount.innerHTML = `
-            <div class="notice" style="border-color:rgba(255,90,103,.35)">
-              <strong>Unable to load rates.</strong> Please refresh or request a quote via WhatsApp.
-              <div class="actions" style="margin-top:10px">
-                <button class="btn small" type="button" onclick="loadRates()">
-                  <i class="fa-solid fa-rotate-right"></i> Retry
-                </button>
-              </div>
-            </div>
-          `;
-        }
-      }
-    }
-
-    async function refreshBoard(forceSync){
-      // Optionally call edge function to sync P2P -> DB, then refresh the DB list.
-      // This assumes you deployed an Edge Function named "p2p-sync" (auth required if verify_jwt=true).
-      if(forceSync && window.LARMAH && typeof LARMAH.callFn === "function"){
-        try{
-          await LARMAH.callFn("p2p-sync", {}, { method: "POST" });
-        }catch(e){
-          // If JWT verify is on, browser calls may fail; DB cron will still keep it fresh.
-          console.warn("p2p-sync call failed:", e?.message || e);
-        }
-      }
-      await loadRates();
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("rateSearch")?.addEventListener("input", () => renderRates());
-
-      document.getElementById("fxFrom")?.addEventListener("change", calcEstimate);
-      document.getElementById("fxTo")?.addEventListener("change", calcEstimate);
-      document.getElementById("fxAmount")?.addEventListener("input", calcEstimate);
-
-      // initial load
-      loadRates();
-
-      // realtime updates (if enabled in app.js)
-      if(window.LARMAH && LARMAH.realtime){
-        LARMAH.realtime.subscribe("rates", () => loadRates(), "exchange-rates", { debounceMs: 700, statusElId: "liveStateFX" });
-      }
-
-      // smart auto refresh (DB-only)
-      setInterval(() => loadRates(), 60000); // every 60s refresh UI from DB
-    });
-  </script>
-
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-    integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
-    data-cf-beacon='{"version":"2024.11.0","token":"d59085ad970f4cac8c9e0279fe03c627","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}'
-    crossorigin="anonymous"></script>
 </body>
 </html>

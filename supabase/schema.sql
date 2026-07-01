@@ -1,7 +1,7 @@
--- schema.sql (FULL UPDATED - Hey Larmah)
--- Supports: Real Estate, Logistics, Insights
+-- schema.sql (FULL UPDATED — Hey Larmah Enterprise Limited)
+-- Supports: Real Estate, Fintech, Logistics, Shipping, Insights
 -- Includes: Admin gate (profiles), RLS policies, catalog, requests, insights (pinned),
--- and safe seeds.
+-- fintech request notes (dynamic), and safe seeds.
 -- Safe to run multiple times.
 
 create extension if not exists "pgcrypto";
@@ -46,7 +46,7 @@ using (
 );
 
 -- =========================================================
--- 2) CATALOG ITEMS (Real Estate / Logistics)
+-- 2) CATALOG ITEMS (Real Estate / Fintech / Logistics / Shipping)
 -- =========================================================
 create table if not exists public.catalog_items (
   id uuid primary key default gen_random_uuid(),
@@ -67,7 +67,7 @@ drop constraint if exists catalog_items_category_check;
 
 alter table public.catalog_items
 add constraint catalog_items_category_check
-check (category in ('real-estate','logistics'));
+check (category in ('real-estate','logistics','exchange'));
 
 alter table public.catalog_items enable row level security;
 
@@ -153,11 +153,75 @@ with check (
 -- seed pinned post if none exists
 insert into public.insights_posts (title, body, pinned)
 select
-  'Pinned: Welcome to Larmah',
-  'Real Estate | Logistics | Insights. Every enquiry includes a reference ID for traceability. Use WhatsApp for fast support.',
+  'Pinned: Welcome to Hey Larmah',
+  'Real Estate • Logistics • Insights • Fintech. Every enquiry includes a reference ID for traceability. Use WhatsApp for fast support.',
   true
 where not exists (select 1 from public.insights_posts where pinned = true);
 
+-- =========================================================
+-- 5) EXCHANGE RATES (Dynamic rates, Public read, Admin write)
+-- =========================================================
+-- IMPORTANT:
+-- If you previously created exchange_rates with different columns, drop it first:
+--   drop table if exists public.exchange_rates cascade;
+-- Then run this section.
+
+create table if not exists public.exchange_rates (
+  code text primary key,                   -- USD, GBP, EUR, BTC, ETH, USDT
+  name text not null,
+  buy_ngn numeric not null,                -- NGN you pay out per 1 unit
+  sell_ngn numeric not null,               -- NGN you receive per 1 unit
+  fee_rate numeric not null default 0.005, -- 0.005 = 0.5%
+  min_amount numeric not null default 0,
+  max_amount numeric not null default 0,
+  updated_at timestamptz not null default now()
+);
+
+-- If table existed but missing columns, add them safely:
+alter table public.exchange_rates add column if not exists name text;
+alter table public.exchange_rates add column if not exists buy_ngn numeric;
+alter table public.exchange_rates add column if not exists sell_ngn numeric;
+alter table public.exchange_rates add column if not exists fee_rate numeric not null default 0.005;
+alter table public.exchange_rates add column if not exists min_amount numeric not null default 0;
+alter table public.exchange_rates add column if not exists max_amount numeric not null default 0;
+alter table public.exchange_rates add column if not exists updated_at timestamptz not null default now();
+
+alter table public.exchange_rates enable row level security;
+
+-- public read
+drop policy if exists exchange_rates_public_read on public.exchange_rates;
+create policy exchange_rates_public_read
+on public.exchange_rates for select
+using (true);
+
+-- admin CRUD
+drop policy if exists exchange_rates_admin_all on public.exchange_rates;
+create policy exchange_rates_admin_all
+on public.exchange_rates for all
+using (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+)
+with check (
+  exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
+);
+
+-- seed defaults (upsert)
+insert into public.exchange_rates (code, name, buy_ngn, sell_ngn, fee_rate, min_amount, max_amount, updated_at)
+values
+  ('USD','US Dollar (USD)',1450,1480,0.005,100,50000, now()),
+  ('GBP','British Pound (GBP)',1820,1850,0.005,100,30000, now()),
+  ('EUR','Euro (EUR)',1580,1610,0.005,100,30000, now()),
+  ('BTC','Bitcoin (BTC)',85000000,87000000,0.010,0.001,5, now()),
+  ('ETH','Ethereum (ETH)',4500000,4700000,0.010,0.01,50, now()),
+  ('USDT','Tether (USDT)',1470,1490,0.003,10,100000, now())
+on conflict (code) do update set
+  name = excluded.name,
+  buy_ngn = excluded.buy_ngn,
+  sell_ngn = excluded.sell_ngn,
+  fee_rate = excluded.fee_rate,
+  min_amount = excluded.min_amount,
+  max_amount = excluded.max_amount,
+  updated_at = now();
 
 -- =========================================================
 -- 6) Helpful Indexes
@@ -181,4 +245,5 @@ on public.insights_posts (pinned desc, created_at desc);
 -- =========================================================
 -- Enable Realtime replication for:
 --   - insights_posts
--- Supabase Dashboard -> Realtime -> Replication
+--   - exchange_rates
+-- Supabase Dashboard → Realtime → Replication

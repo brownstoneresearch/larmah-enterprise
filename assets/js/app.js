@@ -1,508 +1,155 @@
-/* =========================
-   Hey Larmah - app.js (FULL)
-   Premium gating + helpers + DB admin check + UI helpers
-   + Featured loader (DB -> homepage cards feat0/1/2)
-========================= */
+/* Hey Larmah Enterprise Limited — client interactions */
+(() => {
+  const BRAND = {
+    name: "Hey Larmah Enterprise Limited",
+    shortName: "Hey Larmah",
+    rc: "RC: 9488632",
+    phone: "2347063080605",
+    phoneDisplay: "+234 706 308 0605",
+    email: "business@heylarmah.tech",
+    location: "Lagos, Nigeria",
+    handle: "@heylarmah_ltd",
+    sectors: "Real Estate • Fintech • Logistics • Shipping",
+    tagline: "Building assets. Moving trade. Financing growth."
+  };
+  window.HEY_LARMAH = BRAND;
 
-(function () {
-  "use strict";
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-  const SUPABASE_URL =
-    window.__SUPABASE_URL || "https://mskbumvopqnrhddfycfd.supabase.co";
+  function setText(selector, text){ $$(selector).forEach(el => { el.textContent = text; }); }
+  function syncBrand(){
+    setText('[data-brand-name]', BRAND.name);
+    setText('[data-brand-short]', BRAND.shortName);
+    setText('[data-rc]', BRAND.rc);
+    setText('[data-phone]', BRAND.phoneDisplay);
+    setText('[data-email]', BRAND.email);
+    setText('[data-location]', BRAND.location);
+    setText('[data-handle]', BRAND.handle);
+    setText('[data-sectors]', BRAND.sectors);
+    setText('[data-tagline]', BRAND.tagline);
+    setText('[data-year]', String(new Date().getFullYear()));
+  }
 
-  const SUPABASE_ANON_KEY =
-    window.__SUPABASE_ANON_KEY ||
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1za2J1bXZvcHFucmhkZGZ5Y2ZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYzMjA3ODYsImV4cCI6MjA4MTg5Njc4Nn0.68529BHKUz50dHP0ARptYC_OBXFLzpsvlK1ctbDOdZ4";
+  function toast(message){
+    const box = $('#toast');
+    if(!box) return;
+    box.textContent = message;
+    box.classList.add('show');
+    clearTimeout(window.__larmah_toast);
+    window.__larmah_toast = setTimeout(() => box.classList.remove('show'), 2600);
+  }
 
-  const WHATSAPP_PHONE = "2347063080605";
-
-  const ADMIN_EMAILS = (window.__LARMAH_ADMIN_EMAILS || [
-    // "luckymomodu60@gmail.com",
-  ]).map((e) => String(e).toLowerCase().trim());
-
-  const THEME_KEY = "larmah_theme_v6";
-  let supabaseClient = null;
-
-  function ensureSupabaseClient() {
-    if (supabaseClient) return supabaseClient;
-    if (!window.supabase || !window.supabase.createClient) {
-      console.warn("Supabase SDK not loaded yet.");
-      return null;
-    }
-    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-      console.warn("Supabase URL/ANON KEY missing.");
-      return null;
-    }
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+  function formatMessage(topic, fields = {}){
+    const lines = [
+      `Hello ${BRAND.shortName} Team,`,
+      ``,
+      `Enquiry: ${topic || 'General Enquiry'}`,
+      `${BRAND.name}`,
+      `${BRAND.rc}`,
+      ``
+    ];
+    Object.entries(fields).forEach(([key, value]) => {
+      const val = String(value || '').trim();
+      if(val) lines.push(`${key}: ${val}`);
     });
-    window.supabaseClient = supabaseClient;
-    return supabaseClient;
+    lines.push(``, `Source: ${document.title}`, `Location: ${BRAND.location}`);
+    return lines.join('\n');
   }
 
-  async function waitForSupabase({ tries = 20, delay = 250 } = {}) {
-    for (let i = 0; i < tries; i++) {
-      const sb = ensureSupabaseClient();
-      if (sb) return sb;
-      await new Promise((r) => setTimeout(r, delay));
-    }
-    return null;
+  function openWhatsApp(message){
+    const text = message || formatMessage('General Enquiry', { Message: 'I need assistance.' });
+    const url = `https://wa.me/${BRAND.phone}?text=${encodeURIComponent(text)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
+  window.openWhatsApp = openWhatsApp;
+  window.buildMessage = formatMessage;
+  window.openWA = openWhatsApp;
 
-  function escapeHtml(s) {
-    return (s ?? "").toString().replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-    }[m]));
-  }
-
-  function buildMessage(title, data) {
-    const lines = [title, ""];
-    for (const [k, v] of Object.entries(data || {})) {
-      const val = (v ?? "").toString().trim();
-      if (val) lines.push(`${k}: ${val}`);
-    }
-    return lines.join("\n");
-  }
-
-  function openWhatsApp(text) {
-    const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(text || "")}`;
-    window.open(url, "_blank", "noopener,noreferrer");
-  }
-
-  function functionsBase() {
-    return `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1`;
-  }
-
-  function lowerEmail(e) {
-    return String(e || "").toLowerCase().trim();
-  }
-
-  // Toast
-  function toast(message, type = "info") {
-    const id = "__larmah_toast";
-    let el = document.getElementById(id);
-    if (!el) {
-      el = document.createElement("div");
-      el.id = id;
-      el.style.position = "fixed";
-      el.style.left = "50%";
-      el.style.bottom = "18px";
-      el.style.transform = "translateX(-50%)";
-      el.style.minWidth = "220px";
-      el.style.maxWidth = "min(560px, calc(100vw - 28px))";
-      el.style.padding = "10px 12px";
-      el.style.borderRadius = "14px";
-      el.style.border = "1px solid rgba(255,255,255,.12)";
-      el.style.background = "rgba(5,8,16,.92)";
-      el.style.color = "#fff";
-      el.style.boxShadow = "0 12px 34px rgba(0,0,0,.30)";
-      el.style.zIndex = "99999";
-      el.style.display = "none";
-      el.style.fontWeight = "850";
-      el.style.backdropFilter = "blur(8px)";
-      document.body.appendChild(el);
-    }
-    const prefix =
-      type === "success" ? "✅ " :
-      type === "error" ? "⛔ " :
-      type === "warn" ? "⚠️ " : "";
-    el.textContent = `${prefix}${message || ""}`;
-    el.style.display = "block";
-    clearTimeout(window.__larmahToastT);
-    window.__larmahToastT = setTimeout(() => (el.style.display = "none"), 2600);
-  }
-
-  // Theme
-  function setTheme(theme) {
-    const t = theme === "light" ? "light" : "dark";
-    document.documentElement.setAttribute("data-theme", t);
-    try { localStorage.setItem(THEME_KEY, t); } catch {}
-    const metaTheme = document.querySelector('meta[name="theme-color"]');
-    if (metaTheme) metaTheme.setAttribute("content", t === "light" ? "#F7F7FB" : "#070A12");
-  }
-  function toggleTheme() {
-    const cur = document.documentElement.getAttribute("data-theme") || "dark";
-    setTheme(cur === "dark" ? "light" : "dark");
-  }
-  function initTheme() {
-    try {
-      const saved = localStorage.getItem(THEME_KEY);
-      if (saved === "light" || saved === "dark") return setTheme(saved);
-    } catch {}
-    const prefersLight = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches;
-    setTheme(prefersLight ? "light" : "dark");
-  }
-
-  // Menu helper
-  function toggleMenu(open) {
-    const ids = ["overlay", "mobileNavOverlay"];
-    for (const id of ids) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-      const isOpen = open === undefined ? !el.classList.contains("open") : !!open;
-      el.classList.toggle("open", isOpen);
-      el.setAttribute("aria-hidden", isOpen ? "false" : "true");
-    }
-  }
-
-  // Session + premium
-  async function getSession() {
-    const sb = await waitForSupabase();
-    if (!sb) return { session: null, user: null };
-    const { data } = await sb.auth.getSession();
-    return { session: data?.session || null, user: data?.session?.user || null };
-  }
-
-  async function signOutSilently() {
-    const sb = await waitForSupabase();
-    if (!sb) return;
-    try { await sb.auth.signOut(); } catch {}
-  }
-
-  async function getMyMembership() {
-    const sb = await waitForSupabase();
-    if (!sb) return { ok: false, error: "Supabase not ready" };
-
-    const { data: sess } = await sb.auth.getSession();
-    const user = sess?.session?.user;
-    const email = lowerEmail(user?.email);
-
-    if (!user || !email) return { ok: false, error: "Not authenticated" };
-
-    const { data, error } = await sb
-      .from("premium_members")
-      .select("email,tier,active,started_at,paystack_ref")
-      .eq("email", email)
-      .maybeSingle();
-
-    if (error) return { ok: false, error: error.message };
-    if (!data) return { ok: true, member: null };
-    return { ok: true, member: data };
-  }
-
-  async function requirePremium({ redirectTo = "premium.html", onFail } = {}) {
-    const m = await getMyMembership();
-    if (!m.ok) {
-      if (typeof onFail === "function") onFail(m);
-      return false;
-    }
-    if (!m.member || m.member.active !== true) {
-      await signOutSilently();
-      if (typeof onFail === "function") onFail({ ok: true, member: null });
-      if (redirectTo) window.location.href = redirectTo;
-      return false;
-    }
-    return true;
-  }
-
-  // DB admin check (matches admin_allowlist / is_admin())
-  async function isAdminDB() {
-    const sb = await waitForSupabase();
-    if (!sb) return false;
-    try {
-      const { data, error } = await sb.rpc("is_admin");
-      if (error) return false;
-      return data === true;
-    } catch {
-      return false;
-    }
-  }
-
-  async function requireAdmin({ redirectTo = "auth.html", onFail } = {}) {
-    const { user } = await getSession();
-    const email = lowerEmail(user?.email);
-
-    if (!email) {
-      if (typeof onFail === "function") onFail({ reason: "no-session" });
-      if (redirectTo) window.location.href = redirectTo;
-      return false;
-    }
-
-    const premiumOk = await requirePremium({ redirectTo: "premium.html" });
-    if (!premiumOk) return false;
-
-    const allowByJs = ADMIN_EMAILS.length ? ADMIN_EMAILS.includes(email) : false;
-    const allowByDb = await isAdminDB();
-
-    if (!allowByJs && !allowByDb) {
-      if (typeof onFail === "function") onFail({ reason: "not-admin" });
-      window.location.href = "index.html";
-      return false;
-    }
-
-    return true;
-  }
-
-  // Realtime helper
-  const realtime = {
-    _subs: {},
-    subscribe(table, callback, key = "default", opts = {}) {
-      const sb = ensureSupabaseClient();
-      if (!sb) return null;
-
-      const debounceMs = opts.debounceMs ?? 500;
-      let t = null;
-
-      const channelKey = `${table}:${key}`;
-      if (this._subs[channelKey]) {
-        try { sb.removeChannel(this._subs[channelKey]); } catch {}
-        delete this._subs[channelKey];
-      }
-
-      const ch = sb
-        .channel(channelKey)
-        .on("postgres_changes", { event: "*", schema: "public", table }, () => {
-          clearTimeout(t);
-          t = setTimeout(() => callback(), debounceMs);
-        })
-        .subscribe();
-
-      this._subs[channelKey] = ch;
-      return ch;
-    }
-  };
-
-  async function submitRequest(payload) {
-    const sb = await waitForSupabase();
-    const fields = payload?.fields || payload || {};
-    const category = payload?.category || fields.Category || fields.Service || "general";
-    const message = buildMessage(payload?.header || "New Request", fields);
-
-    if (!sb) {
-      toast("Supabase is not ready. Please refresh and try again.", "error");
-      return { ok: false, error: "Supabase not ready" };
-    }
-
-    const { user } = await getSession();
-    const { error } = await sb.from("requests").insert([{
-      user_id: user?.id || null,
-      category,
-      name: fields.Name || fields.FullName || fields.Full_Name || "",
-      phone: fields.Phone || fields.WhatsApp || fields.Contact || "",
-      details: fields,
-      created_at: new Date().toISOString()
-    }]);
-
-    if (error) {
-      console.warn("request insert error:", error);
-      toast("Could not save request. Please try again.", "error");
-      return { ok: false, error: error.message };
-    }
-
-    openWhatsApp(message);
-    return { ok: true };
-  }
-
-  /* =========================
-     FEATURED (Homepage)
-     - reads from public.listings
-     - needs cards in index.html: #feat0, #feat1, #feat2 inside #featuredGrid
-  ========================= */
-  const featured = {
-    _items: [],
-    _start: 0,
-    _timer: null,
-    _bound: false,
-
-    _reduceMotion() {
-      return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    },
-
-    _area(it) {
-      return String(it?.location || it?.area || it?.city || it?.state || "Nigeria").trim();
-    },
-
-    _img(it) {
-      const arr = Array.isArray(it?.image_urls) ? it.image_urls.filter(Boolean) : [];
-      if (arr.length) return arr[0];
-      if (it?.image_url) return it.image_url;
-      return "assets/images/larmah-header.jpeg";
-    },
-
-    _els() {
-      return [
-        document.getElementById("feat0"),
-        document.getElementById("feat1"),
-        document.getElementById("feat2"),
-      ];
-    },
-
-    _mount() {
-      return document.getElementById("featuredGrid");
-    },
-
-    async load({ limit = 12 } = {}) {
-      const sb = await waitForSupabase();
-      if (!sb) return;
-
-      const { data, error } = await sb
-        .from("listings")
-        .select("id,title,price,image_url,image_urls,category,type,location,area,city,state,status,featured,sort_rank,created_at")
-        .eq("status", "active")
-        .eq("featured", true)
-        .order("sort_rank", { ascending: false })
-        .order("created_at", { ascending: false })
-        .limit(limit);
-
-      if (error) {
-        console.warn("featured load error:", error);
-        return;
-      }
-
-      this._items = data || [];
-      this._start = 0;
-      this.render();
-    },
-
-    render() {
-      const els = this._els();
-      const list = this._items || [];
-
-      if (!els.some(Boolean)) return; // not on homepage
-      if (!list.length) {
-        els.forEach((el) => {
-          if (!el) return;
-          el.innerHTML = `<div class="card-body">No featured items yet.</div>`;
+  function handleForms(){
+    $$('.wa-form').forEach(form => {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const topic = form.dataset.topic || 'Website Enquiry';
+        const fields = {};
+        $$('input, select, textarea', form).forEach(control => {
+          if(!control.name) return;
+          const label = control.dataset.label || control.getAttribute('aria-label') || control.name.replace(/[-_]/g, ' ').replace(/\b\w/g, m => m.toUpperCase());
+          fields[label] = control.value;
         });
-        return;
-      }
-
-      // fade
-      els.forEach((el) => el && el.classList.add("is-fading"));
-
-      setTimeout(() => {
-        for (let i = 0; i < 3; i++) {
-          const it = list[(this._start + i) % list.length];
-          const area = this._area(it);
-          const img = this._img(it);
-          const title = it?.title || "Listing";
-          const type = it?.type || "Listing";
-          const ref = `WEB-FEAT-${String(it?.id || "").slice(0, 8)}`;
-
-          if (!els[i]) continue;
-
-          els[i].innerHTML = `
-            <img src="${escapeHtml(img)}" alt="${escapeHtml(title)}" loading="lazy" decoding="async">
-            <div class="card-body">
-              <div class="card-title">${escapeHtml(title)}</div>
-              <div class="meta">
-                <span class="pill"><i class="fa-solid fa-location-dot" style="color:var(--gold)"></i> ${escapeHtml(area)}</span>
-                <span class="pill"><i class="fa-solid fa-circle-check" style="color:var(--gold)"></i> Featured</span>
-              </div>
-              <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="btn small solid js-feat-enq"
-                  type="button"
-                  data-id="${escapeHtml(String(it.id))}"
-                  data-ref="${escapeHtml(ref)}"
-                  data-type="${escapeHtml(type)}"
-                  data-area="${escapeHtml(area)}">
-                  <i class="fa-brands fa-whatsapp"></i> Enquire
-                </button>
-                <a class="btn small primary" href="real-estate.html">View</a>
-              </div>
-            </div>
-          `;
-        }
-
-        requestAnimationFrame(() => els.forEach((el) => el && el.classList.remove("is-fading")));
-      }, 220);
-    },
-
-    rotateOnce() {
-      if (!this._items?.length) return;
-      this._start = (this._start + 1) % this._items.length;
-      this.render();
-    },
-
-    startRotation(ms = 5000) {
-      this.stopRotation();
-      if (this._reduceMotion()) return;
-      this._timer = setInterval(() => this.rotateOnce(), ms);
-    },
-
-    stopRotation() {
-      if (this._timer) {
-        try { clearInterval(this._timer); } catch {}
-        this._timer = null;
-      }
-    },
-
-    bindEventsOnce() {
-      if (this._bound) return;
-      const mount = this._mount();
-      if (!mount) return;
-
-      mount.addEventListener("click", (e) => {
-        const btn = e.target.closest(".js-feat-enq");
-        if (!btn) return;
-
-        const ref = btn.getAttribute("data-ref") || "";
-        const type = btn.getAttribute("data-type") || "";
-        const area = btn.getAttribute("data-area") || "";
-
-        openWhatsApp(buildMessage("Shortlet Enquiry", {
-          Ref: ref,
-          Type: type,
-          Area: area,
-          Message: "Hello Hey Larmah, please share available featured options."
-        }));
+        openWhatsApp(formatMessage(topic, fields));
       });
+    });
+  }
 
-      this._bound = true;
-    },
+  function initMenu(){
+    const menu = $('#mobileMenu');
+    const toggle = $('[data-menu-toggle]');
+    if(!menu || !toggle) return;
+    const setOpen = (open) => {
+      menu.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+    toggle.addEventListener('click', () => setOpen(!menu.classList.contains('is-open')));
+    $$('a', menu).forEach(a => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', e => { if(e.key === 'Escape') setOpen(false); });
+  }
 
-    async init() {
-      // only runs on pages where featuredGrid exists
-      if (!this._mount()) return;
+  function initTheme(){
+    const key = 'hey_larmah_theme';
+    const root = document.documentElement;
+    const saved = localStorage.getItem(key);
+    if(saved) root.dataset.theme = saved;
+    $$('[data-theme-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+        root.dataset.theme = next;
+        localStorage.setItem(key, next);
+        toast(`${next === 'light' ? 'Light' : 'Dark'} mode enabled`);
+      });
+    });
+  }
 
-      this.bindEventsOnce();
-      await this.load({ limit: 12 });
-      this.startRotation(5000);
+  function initCopy(){
+    $$('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const value = btn.dataset.copy || btn.textContent.trim();
+        try{
+          await navigator.clipboard.writeText(value);
+          toast('Copied to clipboard');
+        }catch{
+          toast(value);
+        }
+      });
+    });
+  }
 
-      // Optional: auto-refresh when listings change
-      if (window.LARMAH?.realtime?.subscribe) {
-        window.LARMAH.realtime.subscribe("listings", () => this.load({ limit: 12 }), "featured", { debounceMs: 800 });
-      }
-    }
-  };
+  function initCalculator(){
+    const amount = $('#fxAmount');
+    const rate = $('#fxRate');
+    const result = $('#fxResult');
+    const recalc = () => {
+      if(!amount || !rate || !result) return;
+      const a = Number(amount.value || 0);
+      const r = Number(rate.value || 0);
+      if(!a || !r){ result.textContent = 'Enter amount and agreed rate.'; return; }
+      result.textContent = `Indicative value: ₦${(a*r).toLocaleString('en-NG', {maximumFractionDigits:2})}`;
+    };
+    [amount, rate].forEach(el => el && el.addEventListener('input', recalc));
+    recalc();
+  }
 
-  // Expose
-  window.ensureSupabaseClient = ensureSupabaseClient;
-  window.supabaseClient = supabaseClient;
-
-  window.LARMAH = window.LARMAH || {};
-  window.LARMAH.supabase = { ensure: ensureSupabaseClient, wait: waitForSupabase };
-
-  window.LARMAH.openWhatsApp = openWhatsApp;
-  window.LARMAH.buildMessage = buildMessage;
-  window.LARMAH.functionsBase = functionsBase();
-
-  window.LARMAH.realtime = realtime;
-  window.LARMAH.submitRequest = submitRequest;
-
-  window.LARMAH.requirePremium = requirePremium;
-  window.LARMAH.requireAdmin = requireAdmin;
-
-  window.LARMAH.escapeHtml = escapeHtml;
-  window.LARMAH.toast = toast;
-
-  window.LARMAH.toggleTheme = toggleTheme;
-  window.LARMAH.setTheme = setTheme;
-  window.LARMAH.toggleMenu = toggleMenu;
-
-  // ✅ Featured exports
-  window.LARMAH.featured = featured;
-
-  // Init theme + featured (featured only if homepage has featuredGrid)
-  function boot() {
+  document.addEventListener('DOMContentLoaded', () => {
+    syncBrand();
+    initMenu();
     initTheme();
-    // Featured will no-op on pages without #featuredGrid
-    featured.init().catch((e) => console.warn("featured init error:", e));
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+    initCopy();
+    initCalculator();
+    handleForms();
+    $$('[data-whatsapp]').forEach(btn => btn.addEventListener('click', () => {
+      const topic = btn.dataset.whatsapp || 'General Enquiry';
+      openWhatsApp(formatMessage(topic, { Message: btn.dataset.message || 'I need assistance.' }));
+    }));
+  });
 })();
