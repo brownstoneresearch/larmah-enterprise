@@ -1,49 +1,22 @@
-# Hey Larmah Enterprise Limited — Optimal Website Upgrade
+# Setup Guide — Hey Larmah Enterprise Limited
 
-This package contains a remodelled, restructured and rebranded static website for **Hey Larmah Enterprise Limited**.
+## 1. Upload files
+Upload all files in this folder to your web host public directory.
 
-**Official registration:** RC: 9488632  
-**Primary sectors:** Real Estate • Fintech • Logistics • Shipping  
-**Location:** Lagos, Nigeria  
-**Primary handle:** @heylarmah_ltd
+## 2. Confirm brand details
+The site is configured with:
 
-## What changed
+- **Hey Larmah Enterprise Limited**
+- **RC: 9488632**
+- **Real Estate • Fintech • Logistics • Shipping**
+- **Lagos, Nigeria**
 
-- Rebranded the entire site from the old Larmah positioning to **Hey Larmah Enterprise Limited**.
-- Replaced all old registration references with **RC: 9488632**.
-- Removed old registration-number references from the website copy.
-- Replaced old financial-sector positioning with **Fintech**.
-- Added dedicated **Fintech** and **Shipping** pages.
-- Remodelled the design around a premium black, deep green and metallic gold niche identity.
-- Restructured the homepage into a clear four-sector enterprise model.
-- Added a polished contact flow using WhatsApp-first enquiry forms.
-- Added SEO metadata, Open Graph image support, manifest, robots file and sitemap.
-- Added optimized brand assets for favicon, profile icon, hero, social preview and X.com banner.
-- Removed `.env.secrets` from the final package for safety.
+## 3. WhatsApp contact
+The WhatsApp number is set in `assets/js/app.js` as `2347063080605`. Edit it if required.
 
-## Main pages
+## 4. Optional backend credentials
+Do not commit private keys. Put production credentials in your host environment settings.
+Use `.env.example` as a safe reference.
 
-- `index.html` — Homepage
-- `real-estate.html` — Real Estate desk
-- `fintech.html` — Fintech desk
-- `logistics.html` — Logistics desk
-- `shipping.html` — Shipping desk
-- `premium.html` — Premium client support
-- `insights.html` — Market intelligence / updates
-- `contact.html` — Contact and WhatsApp enquiry
-- `exchange.html` — Backward-compatible Fintech / FX desk
-- `auth.html`, `register.html`, `dashboard.html`, `admin.html` — Portal-ready screens
-
-## Deployment
-
-Upload the full folder contents to your hosting provider. The site is static and can run on shared hosting, cPanel, Netlify, Vercel, Cloudflare Pages, GitHub Pages or any static hosting service.
-
-Recommended production domain: `https://heylarmah.tech/`
-
-## Security note
-
-No secret keys are included. Use `.env.example` as a reference only. Add production keys directly in your hosting environment or secure backend.
-
-## Brand line
-
-**Building assets. Moving trade. Financing growth.**
+## 5. SEO files
+Update `sitemap.xml` if your final domain changes from `https://heylarmah.tech`.

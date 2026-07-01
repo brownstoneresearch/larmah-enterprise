@@ -1,1 +1,1 @@
-// Compatibility entry. Main site scripts live in assets/js/app.js
+// Compatibility wrapper for older pages

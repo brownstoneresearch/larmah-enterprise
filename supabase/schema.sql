@@ -1,7 +1,7 @@
 -- schema.sql (FULL UPDATED — Hey Larmah Enterprise Limited)
--- Supports: Real Estate, Fintech, Logistics, Shipping, Insights
+-- Supports: Real Estate, Logistics, Insights, Exchange
 -- Includes: Admin gate (profiles), RLS policies, catalog, requests, insights (pinned),
--- fintech request notes (dynamic), and safe seeds.
+-- exchange rates (dynamic), and safe seeds.
 -- Safe to run multiple times.
 
 create extension if not exists "pgcrypto";
@@ -46,7 +46,7 @@ using (
 );
 
 -- =========================================================
--- 2) CATALOG ITEMS (Real Estate / Fintech / Logistics / Shipping)
+-- 2) CATALOG ITEMS (Real Estate / Logistics / Exchange)
 -- =========================================================
 create table if not exists public.catalog_items (
   id uuid primary key default gen_random_uuid(),
@@ -153,8 +153,8 @@ with check (
 -- seed pinned post if none exists
 insert into public.insights_posts (title, body, pinned)
 select
-  'Pinned: Welcome to Hey Larmah',
-  'Real Estate • Logistics • Insights • Fintech. Every enquiry includes a reference ID for traceability. Use WhatsApp for fast support.',
+  'Pinned: Welcome to Larmah',
+  'Real Estate • Logistics • Insights • Exchange. Every enquiry includes a reference ID for traceability. Use WhatsApp for fast support.',
   true
 where not exists (select 1 from public.insights_posts where pinned = true);
 
