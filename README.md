@@ -12,11 +12,9 @@ This package remodels the site into a cleaner enterprise brand for **Real Estate
 - Social icon set added for Instagram, X.com, TikTok and WhatsApp.
 - SEO, sitemap, manifest and responsive layout updated.
 
-## Social handles
+## Social icons
 
-- Instagram: @heylarmah_ltd
-- X.com: @heylarmah_ltd
-- TikTok: @heylarmah_ltd
+Instagram, X.com and TikTok icons remain in the interface without displaying a handle. Add final profile URLs when the official channels are ready.
 
 ## WhatsApp number
 
