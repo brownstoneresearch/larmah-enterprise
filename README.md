@@ -21,7 +21,7 @@ Project URL: `https://ipohjsdhakjbetyievmv.supabase.co`
 
 Run `schema.sql` in the Supabase SQL Editor. Then create the admin Auth user with:
 
-- Email: `heylarmahtech@outlook.com`
+- Email: 
 - Password: use the assigned admin password privately in Supabase Auth.
 
 Do not hard-code the admin password in frontend files.
