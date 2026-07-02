@@ -10,36 +10,49 @@
   <meta name="theme-color" content="#06130d" />
   <meta name="color-scheme" content="dark light" />
   <meta name="robots" content="index,follow" />
-  <link rel="canonical" href="https://heylarmah.tech/insights.html" />
+  <link rel="canonical" href="https://heylarmah.xyz/insights.html" />
   <meta property="og:locale" content="en_NG" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Insights Blog — Hey Larmah Enterprise Limited" />
   <meta property="og:description" content="Blog insights from Hey Larmah Enterprise Limited across real estate, fintech, logistics and shipping." />
-  <meta property="og:url" content="https://heylarmah.tech/insights.html" />
+  <meta property="og:url" content="https://heylarmah.xyz/insights.html" />
   <meta property="og:site_name" content="Hey Larmah Enterprise Limited" />
-  <meta property="og:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
+  <meta property="og:image" content="https://heylarmah.xyz/assets/images/brand-og-cover.jpg" />
   <meta property="og:image:alt" content="Hey Larmah Enterprise Limited" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Insights Blog — Hey Larmah Enterprise Limited" />
   <meta name="twitter:description" content="Blog insights from Hey Larmah Enterprise Limited across real estate, fintech, logistics and shipping." />
-  <meta name="twitter:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
+  <meta name="twitter:image" content="https://heylarmah.xyz/assets/images/brand-og-cover.jpg" />
   <link rel="icon" href="assets/images/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
   <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="preload" href="assets/images/larmah-logo-icon.png" as="image" />
+  <link rel="preload" href="assets/images/larmah-logo-icon-256.webp" as="image" />
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/supabase-client.js"></script>
   <script defer src="assets/js/app.js"></script>
+
+  <!-- hey-larmah-insights-schema -->
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "@id": "https://heylarmah.xyz/insights.html#blog",
+  "name": "Hey Larmah Insights",
+  "description": "Blog articles and business notes across real estate, fintech, logistics, shipping and premium enterprise support.",
+  "publisher": {
+    "@id": "https://heylarmah.xyz/#organization"
+  },
+  "url": "https://heylarmah.xyz/insights.html"
+}</script>
 </head>
 <body data-page="insights">
   <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header" id="siteHeader">
     <div class="container nav-shell">
       <a class="brand brand-icon-only" href="index.html" aria-label="Hey Larmah Enterprise Limited homepage">
-        <span class="brand-mark"><img src="assets/images/larmah-logo-icon.png" alt="Hey Larmah Enterprise Limited logo icon" /></span>
+        <span class="brand-mark"><img src="assets/images/larmah-logo-icon-256.webp" width="56" height="56" alt="Hey Larmah Enterprise Limited logo icon" /></span>
       </a>
       <nav class="desktop-nav" aria-label="Main navigation">
         <a class="nav-link " href="real-estate.html">Real Estate</a>
@@ -119,6 +132,7 @@
         <button class="filter-chip" type="button" data-blog-filter="Shipping">Shipping</button>
         <button class="filter-chip" type="button" data-blog-filter="Enterprise">Enterprise</button>
       </div>
+      <div class="container seo-link-strip" id="static-seo-article-links"><a href="blog/how-to-verify-land-before-buying-in-lagos.html">How to Verify Land Before Buying in Lagos</a><a href="blog/import-export-documentation-checklist-nigeria.html">Import and Export Documentation Checklist in Nigeria</a><a href="blog/merchant-payment-systems-nigeria-smes.html">Merchant Payment Setup for Nigerian SMEs</a><a href="blog/corporate-delivery-planning-lagos-businesses.html">Corporate Delivery Planning for Lagos Businesses</a><a href="blog/property-investment-nigeria-due-diligence.html">What Investors Should Know Before Acquiring Property in Nigeria</a><a href="blog/index.html">All blog guides</a></div>
       <div class="container blog-grid" data-page-grid>
         <article class="blog-card reveal" data-item data-blog-card data-category="Real Estate" data-title="Market Discipline: How to Approach Property Decisions Without Noise" data-body="A mature property decision is built on location logic, document review, inspection discipline and clear exit options. Buyers and investors should slow down enough to verify the opportunity before they accelerate payment commitments.
 
@@ -208,7 +222,7 @@ Hey Larmah Enterprise Limited approaches this with a focus on verification, disc
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
-        <a class="footer-brand" href="index.html"><img src="assets/images/larmah-logo-icon.png" alt="Hey Larmah Enterprise Limited icon" /><span><strong>Hey Larmah</strong><small>Enterprise Limited</small></span></a>
+        <a class="footer-brand" href="index.html"><img src="assets/images/larmah-logo-icon-256.webp" width="56" height="56" alt="Hey Larmah Enterprise Limited icon" /><span><strong>Hey Larmah</strong><small>Enterprise Limited</small></span></a>
         <p>A mature enterprise brand positioned around property, fintech support, logistics coordination and shipping facilitation.</p>
         <div class="footer-pills"><span>RC: 9488632</span><span>Lagos, Nigeria</span></div>
       </div>
@@ -217,6 +231,7 @@ Hey Larmah Enterprise Limited approaches this with a focus on verification, disc
         <a href="premium.html">Premium</a>
         <a href="insights.html">Insights</a>
         <a href="auth.html">Client Login</a>
+        <a href="services/index.html">Service Map</a>
         <a href="contact.html">Contact</a>
       </div>
       <div>
@@ -225,6 +240,7 @@ Hey Larmah Enterprise Limited approaches this with a focus on verification, disc
         <a href="fintech.html">Fintech</a>
         <a href="logistics.html">Logistics</a>
         <a href="shipping.html">Shipping</a>
+        <a href="services/index.html">All Services</a>
       </div>
       <div>
         <h3>Enquiries</h3>

@@ -1,0 +1,4 @@
+/login /auth.html 302
+/client-login /auth.html 302
+/blog /blog/index.html 301
+/services /services/index.html 301
