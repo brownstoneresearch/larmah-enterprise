@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Client Dashboard — Hey Larmah Enterprise Limited</title>
-  <meta name="description" content="Client Dashboard for Hey Larmah Enterprise Limited." />
+  <meta name="description" content="Secured client dashboard for Hey Larmah premium users." />
   <meta name="keywords" content="Hey Larmah Enterprise Limited, Real Estate Nigeria, Fintech Nigeria, Logistics Nigeria, Shipping Nigeria, Lagos business, RC 9488632" />
   <meta name="author" content="Hey Larmah Enterprise Limited" />
   <meta name="theme-color" content="#06130d" />
@@ -14,14 +14,14 @@
   <meta property="og:locale" content="en_NG" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Client Dashboard — Hey Larmah Enterprise Limited" />
-  <meta property="og:description" content="Client Dashboard for Hey Larmah Enterprise Limited." />
+  <meta property="og:description" content="Secured client dashboard for Hey Larmah premium users." />
   <meta property="og:url" content="https://heylarmah.tech/dashboard.html" />
   <meta property="og:site_name" content="Hey Larmah Enterprise Limited" />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
   <meta property="og:image:alt" content="Hey Larmah Enterprise Limited" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Client Dashboard — Hey Larmah Enterprise Limited" />
-  <meta name="twitter:description" content="Client Dashboard for Hey Larmah Enterprise Limited." />
+  <meta name="twitter:description" content="Secured client dashboard for Hey Larmah premium users." />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
   <link rel="icon" href="assets/images/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
@@ -33,7 +33,7 @@
   <script defer src="assets/js/supabase-client.js"></script>
   <script defer src="assets/js/app.js"></script>
 </head>
-<body data-page="contact">
+<body data-page="dashboard" data-requires-auth="true">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="topbar">
     <div class="container topbar-inner">
@@ -42,77 +42,83 @@
         <span><i class="fa-solid fa-location-dot"></i> Lagos, Nigeria</span>
         <span><i class="fa-solid fa-layer-group"></i> Real Estate • Fintech • Logistics • Shipping</span>
       </div>
+      <div class="topbar-right"><span><i class="fa-solid fa-lock"></i> Supabase secured portal</span></div>
     </div>
   </div>
   <header class="site-header" id="siteHeader">
     <div class="container nav-shell">
-      <a class="brand brand-icon-only" href="index.html" aria-label="Hey Larmah Enterprise Limited home">
+      <a class="brand brand-icon-only" href="index.html" aria-label="Hey Larmah Enterprise Limited homepage">
         <span class="brand-mark"><img src="assets/images/larmah-logo-icon.png" alt="Hey Larmah Enterprise Limited logo icon" /></span>
       </a>
       <nav class="desktop-nav" aria-label="Main navigation">
-<a class="nav-link " href="real-estate.html">Real Estate</a>
+        <a class="nav-link " href="real-estate.html">Real Estate</a>
 <a class="nav-link " href="fintech.html">Fintech</a>
 <a class="nav-link " href="logistics.html">Logistics</a>
 <a class="nav-link " href="shipping.html">Shipping</a>
 <a class="nav-link " href="premium.html">Premium</a>
 <a class="nav-link " href="insights.html">Insights</a>
-<a class="nav-link active" href="contact.html">Contact</a>
+<a class="nav-link " href="contact.html">Contact</a>
       </nav>
       <div class="nav-actions">
-        <div class="header-social social-icons" aria-label="Official social media links">
+        <div class="header-social social-icons" aria-label="Official social links">
           <a href="https://www.instagram.com/heylarmah_ltd/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           <a href="https://x.com/heylarmah_ltd" target="_blank" rel="noopener" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
           <a href="https://www.tiktok.com/@heylarmah_ltd" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-          <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20assistance." target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
         </div>
         <button class="theme-toggle" type="button" aria-label="Toggle color theme" data-theme-toggle><i class="fa-solid fa-moon"></i></button>
-        <a class="btn btn-sm btn-primary" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20would%20like%20to%20make%20an%20enquiry." target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu"><span></span><span></span><span></span></button>
       </div>
     </div>
     <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
       <div class="container mobile-menu-inner">
-<a class="mobile-link " href="real-estate.html">Real Estate<span>→</span></a>
+        <a class="mobile-link " href="real-estate.html">Real Estate<span>→</span></a>
 <a class="mobile-link " href="fintech.html">Fintech<span>→</span></a>
 <a class="mobile-link " href="logistics.html">Logistics<span>→</span></a>
 <a class="mobile-link " href="shipping.html">Shipping<span>→</span></a>
 <a class="mobile-link " href="premium.html">Premium<span>→</span></a>
 <a class="mobile-link " href="insights.html">Insights<span>→</span></a>
-<a class="mobile-link active" href="contact.html">Contact<span>→</span></a>
+<a class="mobile-link " href="contact.html">Contact<span>→</span></a>
         <div class="mobile-social-wrap">
-      <div class="social-icons" aria-label="Official social media links">
-        <a href="https://www.instagram.com/heylarmah_ltd/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-        <a href="https://x.com/heylarmah_ltd" target="_blank" rel="noopener" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
-        <a href="https://www.tiktok.com/@heylarmah_ltd" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-        <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20assistance." target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
-      </div></div>
-        <a class="mobile-link mobile-cta" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20would%20like%20to%20make%20an%20enquiry." target="_blank" rel="noopener">Chat on WhatsApp <span>↗</span></a>
+          <div class="social-icons" aria-label="Official social links">
+            <a href="https://www.instagram.com/heylarmah_ltd/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://x.com/heylarmah_ltd" target="_blank" rel="noopener" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="https://www.tiktok.com/@heylarmah_ltd" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
+        </div>
       </div>
     </div>
   </header>
   <main id="main">
     <section class="dashboard-hero">
-      <div class="container reveal"><span class="eyebrow">RC: 9488632</span><h1>Client Dashboard</h1><p>Supabase-ready dashboard for enquiry records and client activity.</p></div>
+      <div class="container reveal">
+        <span class="eyebrow"><i class="fa-solid fa-lock"></i> Premium user dashboard • RC: 9488632</span>
+        <h1>Welcome, <span data-user-email>premium user</span>.</h1>
+        <p>Your dashboard is secured with your email and password through Supabase Auth.</p>
+        <div class="dash-toolbar"><div class="mini-proof"><span>Real Estate</span><span>Fintech</span><span>Logistics</span><span>Shipping</span></div><button class="btn btn-danger" type="button" data-sign-out><i class="fa-solid fa-right-from-bracket"></i> Sign out</button></div>
+      </div>
     </section>
-    <section class="section"><div class="container dash-grid"><article class="dash-card card reveal"><i class="fa-solid fa-building"></i><strong>24</strong><span>Real Estate requests</span></article>
-<article class="dash-card card reveal"><i class="fa-solid fa-chart-line"></i><strong>18</strong><span>Fintech enquiries</span></article>
-<article class="dash-card card reveal"><i class="fa-solid fa-truck-fast"></i><strong>31</strong><span>Logistics movements</span></article>
-<article class="dash-card card reveal"><i class="fa-solid fa-ship"></i><strong>12</strong><span>Shipping briefs</span></article></div></section>
-    <section class="section"><div class="container cta-panel reveal"><h2>Supabase connection is active</h2><p>Website forms and WhatsApp enquiry actions are configured to save request records into Supabase.</p><a class="btn btn-primary" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20support%20with%20the%20dashboard/portal." target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Contact Admin Support</a></div></section>
-
+    <section class="section compact-section"><div class="container dash-grid"><article class="dash-card card reveal"><i class="fa-solid fa-building"></i><strong>0</strong><span>Real Estate requests</span></article><article class="dash-card card reveal"><i class="fa-solid fa-chart-line"></i><strong>0</strong><span>Fintech enquiries</span></article><article class="dash-card card reveal"><i class="fa-solid fa-truck-fast"></i><strong>0</strong><span>Logistics movements</span></article><article class="dash-card card reveal"><i class="fa-solid fa-ship"></i><strong>0</strong><span>Shipping briefs</span></article></div></section>
+    <section class="section">
+      <div class="container dashboard-layout">
+        <aside class="profile-card reveal"><span class="eyebrow">Secured profile</span><h2>Premium access</h2><p><strong>Email:</strong> <span data-user-email>premium user</span></p><p><strong>User ID:</strong> <span data-user-id>loading</span></p><p>Use the enquiry form to save client requests into your profile and open WhatsApp at the same time.</p></aside>
+        <form class="auth-card card js-wa-form reveal" data-wa-title="Premium Dashboard Enquiry"><span class="eyebrow">New request</span><h2>Send a secured enquiry.</h2><div class="form-grid"><div class="form-row"><label>Pillar</label><select name="Pillar"><option>Real Estate</option><option>Fintech</option><option>Logistics</option><option>Shipping</option><option>Premium</option></select></div><div class="form-row"><label>Request title</label><input name="Name" required placeholder="Example: property inspection or cargo movement" /></div><div class="form-row"><label>Details</label><textarea name="Message" required placeholder="Provide the details for the team"></textarea></div><button class="btn btn-primary" type="submit"><i class="fa-brands fa-whatsapp"></i> Save and send to WhatsApp</button></div></form>
+      </div>
+    </section>
+    <section class="section"><div class="container"><div class="section-head reveal"><span class="eyebrow">Recent activity</span><h2>Your saved enquiries.</h2></div><div class="activity-list reveal" data-user-requests><div class="activity-item"><strong>Loading</strong><span>Fetching your secured request records.</span></div></div></div></section>
   </main>
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
         <a class="footer-brand" href="index.html"><img src="assets/images/larmah-logo-icon.png" alt="Hey Larmah Enterprise Limited icon" /><span><strong>Hey Larmah</strong><small>Enterprise Limited</small></span></a>
-        <p>A matured enterprise brand positioned around property, fintech support, logistics coordination and shipping facilitation.</p>
+        <p>A mature enterprise brand positioned around property, fintech support, logistics coordination and shipping facilitation.</p>
         <div class="footer-pills"><span>RC: 9488632</span><span>Lagos, Nigeria</span></div>
       </div>
       <div>
         <h3>Company</h3>
         <a href="premium.html">Premium</a>
         <a href="insights.html">Insights</a>
-        <a href="contact.html">Contact</a>
+        <a href="auth.html">Client Login</a>
+        <a href="admin.html">Admin</a>
       </div>
       <div>
         <h3>Pillars</h3>
@@ -123,8 +129,8 @@
       </div>
       <div>
         <h3>Enquiries</h3>
-        <p>For catalogue requests, property interest, logistics movement, fintech support or shipping coordination, chat with the team on WhatsApp.</p>
-        <a class="btn btn-primary btn-wide" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20am%20making%20an%20enquiry%20from%20the%20website." target="_blank" rel="noopener"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp Chat</a>
+        <p>For catalogue requests, property interest, logistics movement, fintech support or shipping coordination, chat with the team directly.</p>
+        <a class="btn btn-primary btn-wide" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20am%20making%20an%20enquiry%20from%20the%20website." target="_blank" rel="noopener" data-enquiry-title="Footer enquiry"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp Chat</a>
       </div>
     </div>
     <div class="container footer-bottom">
@@ -132,9 +138,34 @@
       <span>Building assets. Moving trade. Financing growth.</span>
     </div>
   </footer>
-  <div class="floating-actions" aria-label="Quick actions">
-    <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20assistance." target="_blank" rel="noopener" aria-label="Chat with Hey Larmah on WhatsApp"><i class="fa-brands fa-whatsapp"></i><span>Chat</span></a>
+  <div class="floating-actions" aria-label="Quick WhatsApp action">
+    <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20assistance." target="_blank" rel="noopener" aria-label="Chat with Hey Larmah on WhatsApp" data-enquiry-title="Floating WhatsApp"><i class="fa-brands fa-whatsapp"></i><span>Chat</span></a>
   </div>
+  <section class="cookie-consent" data-cookie-consent hidden aria-live="polite">
+    <div class="cookie-panel">
+      <div class="cookie-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="cookie-copy">
+        <strong>Cloudflare cookie consent</strong>
+        <p>We use essential cookies for site security, performance and Supabase login sessions. Optional analytics cookies stay off unless accepted.</p>
+        <button class="cookie-link" type="button" data-cookie-manage>Manage preferences</button>
+      </div>
+      <div class="cookie-actions">
+        <button class="btn btn-ghost btn-sm" type="button" data-cookie-essential>Essential only</button>
+        <button class="btn btn-primary btn-sm" type="button" data-cookie-accept>Accept all</button>
+      </div>
+    </div>
+    <div class="cookie-preferences" data-cookie-preferences hidden>
+      <div class="cookie-preferences-card">
+        <button class="modal-close" type="button" data-cookie-close aria-label="Close cookie preferences">×</button>
+        <span class="eyebrow">Privacy controls</span>
+        <h2>Cookie preferences</h2>
+        <p>Essential cookies support Cloudflare security checks, theme preference and secure portal sessions. Analytics can be enabled later when tracking tools are connected.</p>
+        <label class="check-row"><input type="checkbox" checked disabled /> Essential security and session cookies</label>
+        <label class="check-row"><input type="checkbox" data-analytics-toggle /> Optional analytics cookies</label>
+        <button class="btn btn-primary" type="button" data-cookie-save>Save preferences</button>
+      </div>
+    </div>
+  </section>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>

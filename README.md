@@ -1,33 +1,31 @@
-# Hey Larmah Enterprise Limited — Professional Supabase Upgrade
+# Hey Larmah Enterprise Limited — Professional Website Upgrade
 
-This package remodels the site into a matured enterprise brand for **Real Estate • Fintech • Logistics • Shipping**.
+This package remodels and rebrands the site for **Real Estate • Fintech • Logistics • Shipping** with **RC: 9488632**.
 
-## Key upgrades
+## Included upgrades
 
-- Header brand copy removed; the header now uses the premium logo icon only.
-- Header social icons are active for Instagram, X.com, TikTok and WhatsApp.
-- Footer social icons removed for a cleaner, more corporate footer.
-- Supabase is configured as the website database.
-- WhatsApp enquiry buttons and enquiry forms still open direct WhatsApp chat.
-- Enquiry form submissions and WhatsApp enquiry clicks are saved to the Supabase `requests` table.
-- Client login and registration pages are wired to Supabase Auth.
-- Homepage catalogue remains limited to six clean preview containers.
-- Pillar pages keep pagination for catalogue browsing.
-- All registration references use **RC: 9488632**.
+- Mature black, deep-green and gold enterprise styling.
+- Header logo icon only, with Instagram, X.com and TikTok icons.
+- No Home nav link and no WhatsApp button in the navigation area.
+- WhatsApp enquiry CTAs still direct users to the WhatsApp chat.
+- Homepage catalogue preview uses exactly six containers from all pillars.
+- Pillar pages use paginated catalogue containers.
+- Insights page is rebuilt as a blog with featured article, filters, modal reading and pagination.
+- Admin page uploads catalogue records and insight blog posts to Supabase.
+- Premium user dashboard is secured by Supabase email/password authentication.
+- Cloudflare-ready cookie consent banner and preferences panel.
 
-## Brand pillars
+## Supabase setup
 
-**Real Estate • Fintech • Logistics • Shipping**
+Project URL: `https://ipohjsdhakjbetyievmv.supabase.co`
 
-## WhatsApp number
+Run `schema.sql` in the Supabase SQL Editor. Then create the admin Auth user with:
 
-`+2347063080605`
+- Email: `heylarmahtech@outlook.com`
+- Password: use the assigned admin password privately in Supabase Auth.
 
-## Supabase
+Do not hard-code the admin password in frontend files.
 
-Project URL is configured in `assets/js/supabase-client.js` and `.env.example`.
-Run `schema.sql` in the Supabase SQL editor before publishing so the database tables and Row Level Security policies are ready.
+## Media uploads
 
-## Deployment
-
-Upload the complete folder to your hosting provider. For static hosting, no server build step is required.
+Admin image uploads use the public Supabase Storage bucket `larmah-media`, created by `schema.sql`.

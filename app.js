@@ -1,1 +1,1 @@
-// Compatibility wrapper for older pages
+import "./assets/js/app.js";

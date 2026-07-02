@@ -1,11 +1,13 @@
-# Professional Mature Upgrade Changelog
+# Changelog — Optimal Professional Upgrade
 
-- Reworked homepage structure into a clean hero, six-container catalogue preview, process section and WhatsApp CTA.
-- Added social icons in the top bar, mobile menu, contact page and footer.
-- Wired all enquiry forms and CTA buttons to WhatsApp using `wa.me/2347063080605`.
-- Added paginated catalogue grids to pillar pages and paginated cards to Premium/Insights.
-- Rebranded all copy around Real Estate, Fintech, Logistics and Shipping.
-- Confirmed **RC: 9488632** across the site.
-- Removed the visible Home link from desktop navigation, mobile navigation and footer navigation.
-- Removed the old Lagos-and-social-handle line from the homepage hero showcase.
-- Removed the old social handle from the package and kept social icons handle-free.
+- Removed the requested showcase overlay cards from all pages.
+- Removed visible header brand text and kept logo icon only.
+- Removed WhatsApp button from navigation.
+- Kept header social icons for Instagram, X.com and TikTok.
+- Removed footer social icons.
+- Rebuilt Insights as a blog with featured content, filters, modal reading and pagination.
+- Added Supabase admin upload forms for catalogue items and insight posts.
+- Added Supabase Storage upload support for catalogue and blog images.
+- Added secured premium user dashboard using Supabase Auth.
+- Added Cloudflare-ready cookie consent and privacy preferences.
+- Maintained RC: 9488632 and the Real Estate • Fintech • Logistics • Shipping positioning.
