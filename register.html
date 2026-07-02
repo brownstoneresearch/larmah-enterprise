@@ -83,25 +83,29 @@
     <section class="auth-section auth-suite">
       <div class="container auth-grid auth-grid-wide">
         <aside class="auth-visual reveal">
-          <span class="eyebrow">Premium users</span>
-          <h1>Create secured access.</h1>
-          <p>Register with your email and password, then confirm your email address before signing in. This protects every premium dashboard with verified ownership.</p>
-          <div class="mini-proof"><span>Confirm email</span><span>Password protected</span><span>Premium dashboard</span></div>
+          <span class="eyebrow">New user registration</span>
+          <h1>Create your premium dashboard access.</h1>
+          <p>New users can register directly with their own email and password. After email confirmation, the account enters a pending review state until the admin verifies the user profile.</p>
+          <div class="mini-proof"><span>Open registration</span><span>Email confirmation</span><span>Admin verification</span></div>
         </aside>
         <div class="auth-stack">
           <form class="auth-card card reveal" data-auth-form data-auth-mode="register" data-auth-redirect="dashboard.html">
             <span class="eyebrow">Client registration</span>
             <h2>Create account</h2>
-            <p>Email confirmation is required after sign up. Check your inbox and verify before login.</p>
+            <p>Complete the form below to create a secured client account. Your profile will appear in the admin dashboard for verification.</p>
             <div class="form-grid">
-              <div class="form-row"><label>Full name</label><input name="full_name" autocomplete="name" placeholder="Your full name" /></div>
+              <div class="form-row"><label>Full name</label><input name="full_name" autocomplete="name" required placeholder="Your full name" /></div>
+              <div class="form-row"><label>Phone number</label><input name="phone" autocomplete="tel" placeholder="Phone / WhatsApp number" /></div>
+              <div class="form-row"><label>Company / profile name</label><input name="company" autocomplete="organization" placeholder="Optional company or client profile" /></div>
               <div class="form-row"><label>Email</label><input type="email" name="email" required autocomplete="email" /></div>
-              <div class="form-row"><label>Password</label><input type="password" name="password" required minlength="8" autocomplete="new-password" /></div>
-              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-user-plus"></i> Create premium access</button>
+              <div class="form-row"><label>Password</label><input type="password" name="password" required minlength="8" autocomplete="new-password" placeholder="Minimum 8 characters" /></div>
+              <div class="form-row"><label>Confirm password</label><input type="password" name="confirm_password" required minlength="8" autocomplete="new-password" /></div>
+              <label class="check-row registration-consent"><input type="checkbox" name="terms" required /> I agree to create a Hey Larmah premium user profile for dashboard access.</label>
+              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-user-plus"></i> Create account</button>
               <button class="btn btn-google" type="button" data-google-signin data-google-redirect="dashboard.html"><i class="fa-brands fa-google"></i> Continue with Google</button>
             </div>
             <p class="auth-status" data-auth-status></p>
-            <p class="form-alt">Already registered? <a href="auth.html">Login here</a></p>
+            <p class="form-alt auth-links-row"><span>Already registered? <a href="auth.html">Login here</a></span><span><a href="reset-password.html">Reset password</a></span></p>
           </form>
 
           <form class="auth-card card reveal" data-resend-confirmation>
@@ -131,6 +135,7 @@
         <a href="premium.html">Premium</a>
         <a href="insights.html">Insights</a>
         <a href="auth.html">Client Login</a>
+        <a href="register.html">Create Account</a>
         <a href="services/index.html">Service Map</a>
         <a href="contact.html">Contact</a>
       </div>

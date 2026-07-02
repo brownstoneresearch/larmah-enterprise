@@ -85,8 +85,8 @@
         <aside class="auth-visual reveal">
           <span class="eyebrow">Premium access</span>
           <h1>Secure client dashboard.</h1>
-          <p>Premium users can sign in with email and password or Google. Account recovery, email confirmation and sensitive changes are handled securely through Supabase Auth.</p>
-          <div class="mini-proof"><span>Email confirmation</span><span>Password recovery</span><span>Google sign-in</span></div>
+          <p>Premium users can sign in with email and password or Google. New users can also create an account directly, confirm their email and wait for admin verification.</p>
+          <div class="mini-proof"><span>Open registration</span><span>Email confirmation</span><span>Google sign-in</span></div>
         </aside>
         <div class="auth-stack">
           <form class="auth-card card reveal" data-auth-form data-auth-mode="login" data-auth-redirect="dashboard.html">
@@ -100,8 +100,18 @@
               <button class="btn btn-google" type="button" data-google-signin data-google-redirect="dashboard.html"><i class="fa-brands fa-google"></i> Continue with Google</button>
             </div>
             <p class="auth-status" data-auth-status></p>
-            <p class="form-alt auth-links-row"><span>New premium user? <a href="register.html">Create secure account</a></span><span><a href="reset-password.html">Reset password</a></span></p>
+            <p class="form-alt auth-links-row"><span>New user? <a href="register.html">Create account</a></span><span><a href="reset-password.html">Reset password</a></span></p>
           </form>
+
+          <div class="auth-card card reveal registration-open-card">
+            <span class="eyebrow"><i class="fa-solid fa-user-plus"></i> Registration open</span>
+            <h2>Create a new client account.</h2>
+            <p>Register as a new Hey Larmah premium user, confirm your email address, then access your secured dashboard after admin verification.</p>
+            <div class="registration-open-actions">
+              <a class="btn btn-primary" href="register.html"><i class="fa-solid fa-user-plus"></i> Create account</a>
+              <a class="btn btn-ghost" href="reset-password.html"><i class="fa-solid fa-key"></i> Reset password</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -118,6 +128,7 @@
         <a href="premium.html">Premium</a>
         <a href="insights.html">Insights</a>
         <a href="auth.html">Client Login</a>
+        <a href="register.html">Create Account</a>
         <a href="services/index.html">Service Map</a>
         <a href="contact.html">Contact</a>
       </div>

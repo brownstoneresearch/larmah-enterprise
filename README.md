@@ -51,3 +51,8 @@ This package adds professional admin tools for catalogue photo/video uploads, bl
 ## SEO implementation
 
 This package includes a search-first architecture: focused service pages, blog library, sitemap, robots, llms.txt, structured data, Cloudflare headers and noindex rules for private pages. See `SEO-IMPLEMENTATION.md`.
+
+
+## New user registration
+
+New users can register from `register.html`. Run `schema.sql` and make sure Supabase email signups are enabled. Newly registered users appear as pending premium users until verified by admin.
