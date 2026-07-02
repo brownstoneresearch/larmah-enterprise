@@ -49,6 +49,15 @@ create trigger on_auth_user_created
 after insert on auth.users
 for each row execute procedure public.handle_new_user();
 
+-- Migration safety for existing installations where tables were created by earlier packages.
+alter table public.profiles add column if not exists email text;
+alter table public.profiles add column if not exists role text not null default 'premium';
+alter table public.profiles add column if not exists full_name text;
+alter table public.profiles add column if not exists created_at timestamptz not null default now();
+alter table public.profiles add column if not exists updated_at timestamptz not null default now();
+alter table public.profiles drop constraint if exists profiles_role_check;
+alter table public.profiles add constraint profiles_role_check check (role in ('user','premium','admin'));
+
 alter table public.profiles enable row level security;
 
 drop policy if exists profiles_read_own on public.profiles;
@@ -76,6 +85,19 @@ create table if not exists public.catalog_items (
   updated_at timestamptz not null default now()
 );
 
+-- Migration safety for existing catalogue tables.
+alter table public.catalog_items add column if not exists category text;
+alter table public.catalog_items add column if not exists title text;
+alter table public.catalog_items add column if not exists description text;
+alter table public.catalog_items add column if not exists price text;
+alter table public.catalog_items add column if not exists image_url text;
+alter table public.catalog_items add column if not exists tags text[] not null default '{}'::text[];
+alter table public.catalog_items add column if not exists active boolean not null default true;
+alter table public.catalog_items add column if not exists featured boolean not null default false;
+alter table public.catalog_items add column if not exists sort_order integer not null default 0;
+alter table public.catalog_items add column if not exists created_at timestamptz not null default now();
+alter table public.catalog_items add column if not exists updated_at timestamptz not null default now();
+
 alter table public.catalog_items drop constraint if exists catalog_items_category_check;
 alter table public.catalog_items add constraint catalog_items_category_check check (category in ('real-estate','fintech','logistics','shipping','premium'));
 
@@ -100,6 +122,15 @@ create table if not exists public.requests (
   status text not null default 'new' check (status in ('new','contacted','in-progress','closed')),
   created_at timestamptz not null default now()
 );
+
+-- Migration safety for existing enquiry/request tables.
+alter table public.requests add column if not exists user_id uuid references auth.users(id) on delete set null;
+alter table public.requests add column if not exists category text;
+alter table public.requests add column if not exists name text;
+alter table public.requests add column if not exists phone text;
+alter table public.requests add column if not exists details jsonb not null default '{}'::jsonb;
+alter table public.requests add column if not exists status text not null default 'new';
+alter table public.requests add column if not exists created_at timestamptz not null default now();
 
 alter table public.requests drop constraint if exists requests_category_check;
 alter table public.requests add constraint requests_category_check check (category in ('real-estate','fintech','logistics','shipping','premium','contact','insights','whatsapp','general'));
@@ -134,6 +165,18 @@ create table if not exists public.insights_posts (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Migration safety for existing blog tables.
+alter table public.insights_posts add column if not exists title text;
+alter table public.insights_posts add column if not exists excerpt text;
+alter table public.insights_posts add column if not exists body text;
+alter table public.insights_posts add column if not exists category text not null default 'Enterprise';
+alter table public.insights_posts add column if not exists read_time text not null default '4 min read';
+alter table public.insights_posts add column if not exists image_url text;
+alter table public.insights_posts add column if not exists pinned boolean not null default false;
+alter table public.insights_posts add column if not exists active boolean not null default true;
+alter table public.insights_posts add column if not exists created_at timestamptz not null default now();
+alter table public.insights_posts add column if not exists updated_at timestamptz not null default now();
 
 alter table public.insights_posts enable row level security;
 
