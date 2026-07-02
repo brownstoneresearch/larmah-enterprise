@@ -10,6 +10,29 @@
   function showToast(message){ if(!toast) return; toast.textContent = message; toast.classList.add('show'); clearTimeout(window.__HLToast); window.__HLToast = setTimeout(()=>toast.classList.remove('show'), 3800); }
   function encode(s){ return encodeURIComponent(String(s||'').trim()); }
   function clean(s){ return String(s || '').trim(); }
+  function readableError(err, fallback){
+    const defaultMessage = fallback || 'Unable to continue.';
+    if(!err) return defaultMessage;
+    if(typeof err === 'string') return err.trim() || defaultMessage;
+    const candidates = [err.message, err.error_description, err.error, err.msg, err.details, err.hint, err.statusText];
+    if(err.data){ candidates.push(err.data.message, err.data.error_description, err.data.error, err.data.msg, err.data.details, err.data.hint); }
+    for(const item of candidates){
+      if(typeof item === 'string'){
+        const text = item.trim();
+        if(text && text !== '{}' && text !== '[object Object]') return text;
+      }
+    }
+    try{ const text = JSON.stringify(err); if(text && text !== '{}' && text !== '[]') return text; }catch{}
+    return defaultMessage;
+  }
+  function registrationErrorMessage(err){
+    const text = readableError(err, 'Registration could not be completed. Please try again.');
+    const lower = text.toLowerCase();
+    if(text === '{}' || lower.includes('database error saving new user') || lower.includes('error saving new user')){
+      return 'Registration needs the Supabase SQL fix. Run fix_registration_signup.sql in Supabase SQL Editor, then try again.';
+    }
+    return text;
+  }
   function formFields(form){ return Object.fromEntries(new FormData(form).entries()); }
   function slug(s){ return clean(s).toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'general'; }
   function categoryFrom(value){ const raw = slug(value || page || 'general'); if(raw.includes('real')) return 'real-estate'; if(raw.includes('fintech') || raw.includes('exchange') || raw.includes('fx')) return 'fintech'; if(raw.includes('logistics')) return 'logistics'; if(raw.includes('shipping')) return 'shipping'; if(raw.includes('premium')) return 'premium'; if(raw.includes('contact')) return 'contact'; if(raw.includes('insight') || raw.includes('blog')) return 'insights'; return ['real-estate','fintech','logistics','shipping','premium','contact','insights','whatsapp','general'].includes(raw) ? raw : 'general'; }
@@ -128,7 +151,7 @@
           showToast('Signed in. Opening secure dashboard…');
           setTimeout(()=>{ window.location.href = redirect; }, 650);
         }
-      }).catch(err=>{ setStatus(status, err && err.message ? err.message : 'Unable to continue.', 'error'); showToast(err && err.message ? err.message : 'Unable to continue.'); });
+      }).catch(err=>{ const message = mode === 'register' ? registrationErrorMessage(err) : readableError(err, 'Unable to continue.'); setStatus(status, message, 'error'); showToast(message); });
     });
   });
 
