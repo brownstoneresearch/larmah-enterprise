@@ -17,7 +17,7 @@ This package remodels and rebrands the site for **Real Estate • Fintech • Lo
 
 ## Supabase setup
 
-Project URL: `https://ipohjsdhakjbetyievmv.supabase.co`
+Project URL: `https://ip***********.supabase.co`
 
 Run `schema.sql` in the Supabase SQL Editor. Then create the admin Auth user with:
 
