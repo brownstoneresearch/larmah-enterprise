@@ -128,24 +128,6 @@
     });
   });
 
-  document.querySelectorAll('[data-magic-form]').forEach(form=>{
-    form.addEventListener('submit', async ev=>{
-      ev.preventDefault(); const data=formFields(form); const email=clean(data.email); const status=form.querySelector('[data-auth-status]');
-      if(!email){ showToast('Enter your email address.'); return; }
-      const btn=form.querySelector('button[type="submit"]');
-      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending…', async()=>{ await dbReady(); await window.HLDatabase.sendMagicLink(email); setStatus(status, 'Magic link / OTP sent. Check your email inbox.', 'success'); showToast('Magic link or OTP sent to your email.'); }).catch(err=>{ setStatus(status, err.message || 'Unable to send magic link.', 'error'); showToast(err.message || 'Unable to send magic link.'); });
-    });
-  });
-
-  document.querySelectorAll('[data-otp-verify-form]').forEach(form=>{
-    form.addEventListener('submit', async ev=>{
-      ev.preventDefault(); const data=formFields(form); const email=clean(data.email); const token=clean(data.token); const status=form.querySelector('[data-auth-status]');
-      if(!email || !token){ showToast('Enter email and OTP code.'); return; }
-      const btn=form.querySelector('button[type="submit"]');
-      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…', async()=>{ await dbReady(); await window.HLDatabase.verifyOtp(email, token, clean(data.type || 'magiclink')); setStatus(status, 'Verified. Opening dashboard…', 'success'); showToast('OTP verified.'); setTimeout(()=>{ location.href='dashboard.html'; },650); }).catch(err=>{ setStatus(status, err.message || 'OTP verification failed.', 'error'); showToast(err.message || 'OTP verification failed.'); });
-    });
-  });
-
   document.querySelectorAll('[data-reset-form]').forEach(form=>{
     form.addEventListener('submit', async ev=>{
       ev.preventDefault(); const data=formFields(form); const email=clean(data.email); const status=form.querySelector('[data-auth-status]');
@@ -157,10 +139,10 @@
 
   document.querySelectorAll('[data-update-password-form]').forEach(form=>{
     form.addEventListener('submit', async ev=>{
-      ev.preventDefault(); const data=formFields(form); const password=clean(data.password); const nonce=clean(data.nonce); const status=form.querySelector('[data-auth-status]');
+      ev.preventDefault(); const data=formFields(form); const password=clean(data.password); const status=form.querySelector('[data-auth-status]');
       if(!password || password.length < 8){ showToast('Password must be at least 8 characters.'); return; }
       const btn=form.querySelector('button[type="submit"]');
-      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Updating…', async()=>{ await dbReady(); await window.HLDatabase.updatePassword(password, nonce || undefined); setStatus(status, 'Password updated successfully.', 'success'); showToast('Password updated.'); form.reset(); }).catch(err=>{ setStatus(status, err.message || 'Password update failed.', 'error'); showToast(err.message || 'Password update failed.'); });
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Updating…', async()=>{ await dbReady(); await window.HLDatabase.updatePassword(password); setStatus(status, 'Password updated successfully.', 'success'); showToast('Password updated.'); form.reset(); }).catch(err=>{ setStatus(status, err.message || 'Password update failed.', 'error'); showToast(err.message || 'Password update failed.'); });
     });
   });
 
@@ -184,8 +166,21 @@
 
   document.querySelectorAll('[data-reauth-form]').forEach(form=>{
     form.addEventListener('submit', async ev=>{
-      ev.preventDefault(); const status=form.querySelector('[data-auth-status]'); const btn=form.querySelector('button[type="submit"]');
-      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending code…', async()=>{ await dbReady(); await window.HLDatabase.reauthenticate(); setStatus(status, 'Security code sent. Use the nonce code when changing your password.', 'success'); showToast('Reauthentication code sent.'); }).catch(err=>{ setStatus(status, err.message || 'Unable to send reauthentication code.', 'error'); showToast(err.message || 'Unable to send reauthentication code.'); });
+      ev.preventDefault();
+      const data = formFields(form);
+      const password = clean(data.password);
+      const status = form.querySelector('[data-auth-status]');
+      if(!password){ showToast('Enter your current password.'); return; }
+      const btn = form.querySelector('button[type="submit"]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Confirming…', async()=>{
+        await dbReady();
+        const user = await window.HLDatabase.getCurrentUser();
+        if(!user || !user.email){ throw new Error('Sign in again to continue.'); }
+        await window.HLDatabase.signIn(user.email, password);
+        setStatus(status, 'Identity confirmed. Your secure session has been refreshed.', 'success');
+        showToast('Identity confirmed.');
+        form.reset();
+      }).catch(err=>{ setStatus(status, err.message || 'Unable to reconfirm identity.', 'error'); showToast(err.message || 'Unable to reconfirm identity.'); });
     });
   });
 

@@ -132,23 +132,6 @@
   }
   async function getProfile(){ const rows = await select("profiles", "?select=*&limit=1"); return Array.isArray(rows) ? rows[0] : null; }
   function isAdminEmail(email){ return String(email || "").toLowerCase() === String(config.adminEmail).toLowerCase(); }
-
-  async function sendMagicLink(email){
-    const redirectTo = authRedirect("dashboard.html");
-    if(client){
-      const { data, error } = await client.auth.signInWithOtp({ email, options:{ emailRedirectTo: redirectTo, shouldCreateUser: false } });
-      if(error) throw error; return data;
-    }
-    return supabaseFetch(`/auth/v1/otp?redirect_to=${encodeURIComponent(redirectTo)}`, { method:"POST", body: JSON.stringify({ email, should_create_user:false }) });
-  }
-  async function verifyOtp(email, token, type){
-    const otpType = type || "magiclink";
-    if(client){
-      const { data, error } = await client.auth.verifyOtp({ email, token, type: otpType });
-      if(error) throw error; return setSessionFromData(data);
-    }
-    return setSessionFromData(await supabaseFetch("/auth/v1/verify", { method:"POST", body: JSON.stringify({ email, token, type: otpType }) }));
-  }
   async function resendConfirmation(email, type){
     const redirectTo = authRedirect(type === "email_change" ? "dashboard.html?email-change=1" : "auth.html?confirmed=1");
     if(client){
@@ -174,15 +157,7 @@
     return setSessionFromData(await supabaseFetch("/auth/v1/user", { method:"PUT", token: currentAccessToken(), body: JSON.stringify(attributes) }));
   }
   async function changeEmail(email){ return updateUser({ email }); }
-  async function updatePassword(password, nonce){ return updateUser(nonce ? { password, nonce } : { password }); }
-  async function reauthenticate(){
-    await ready.catch(()=>{});
-    if(client && client.auth.reauthenticate){
-      const { data, error } = await client.auth.reauthenticate();
-      if(error) throw error; return data;
-    }
-    return supabaseFetch("/auth/v1/reauthenticate", { method:"GET", token: currentAccessToken() });
-  }
+  async function updatePassword(password){ return updateUser({ password }); }
   async function signInWithGoogle(redirectPath){
     const redirectTo = authRedirect(redirectPath || "dashboard.html");
     if(client){
@@ -219,8 +194,8 @@
   window.HL_CONFIG = config;
   window.HLDatabase = {
     config, client, ready, request:supabaseFetch, insert, update, select,
-    signUp, signIn, signOut, sendMagicLink, verifyOtp, resendConfirmation, resetPassword,
-    updateUser, changeEmail, updatePassword, reauthenticate, signInWithGoogle, inviteUser,
+    signUp, signIn, signOut, resendConfirmation, resetPassword,
+    updateUser, changeEmail, updatePassword, signInWithGoogle, inviteUser,
     getSession, setSession, currentAccessToken, getCurrentUser, getProfile, isAdminEmail,
     uploadMedia, publicUrl, syncSession, authRedirect
   };

@@ -85,8 +85,8 @@
         <aside class="auth-visual reveal">
           <span class="eyebrow">Premium access</span>
           <h1>Secure client dashboard.</h1>
-          <p>Premium users can sign in with email and password, Google, magic link, or OTP. Account recovery and sensitive changes are handled through Supabase Auth.</p>
-          <div class="mini-proof"><span>Email confirmation</span><span>Magic link / OTP</span><span>Google sign-in</span></div>
+          <p>Premium users can sign in with email and password or Google. Account recovery, email confirmation and sensitive changes are handled securely through Supabase Auth.</p>
+          <div class="mini-proof"><span>Email confirmation</span><span>Password recovery</span><span>Google sign-in</span></div>
         </aside>
         <div class="auth-stack">
           <form class="auth-card card reveal" data-auth-form data-auth-mode="login" data-auth-redirect="dashboard.html">
@@ -101,30 +101,6 @@
             </div>
             <p class="auth-status" data-auth-status></p>
             <p class="form-alt">New premium user? <a href="register.html">Create secure account</a></p>
-          </form>
-
-          <form class="auth-card card reveal" data-magic-form>
-            <span class="eyebrow">Magic link or OTP</span>
-            <h2>Passwordless access</h2>
-            <p>Receive a one-time sign-in link or OTP code in your email inbox.</p>
-            <div class="form-grid">
-              <div class="form-row"><label>Email</label><input type="email" name="email" required autocomplete="email" /></div>
-              <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-wand-magic-sparkles"></i> Send magic link / OTP</button>
-            </div>
-            <p class="auth-status" data-auth-status></p>
-          </form>
-
-          <form class="auth-card card reveal" data-otp-verify-form>
-            <span class="eyebrow">OTP verification</span>
-            <h2>Enter one-time code</h2>
-            <p>Use this only when your Supabase email template sends an OTP token instead of a link.</p>
-            <div class="form-grid two-col-form">
-              <div class="form-row"><label>Email</label><input type="email" name="email" required autocomplete="email" /></div>
-              <div class="form-row"><label>OTP code</label><input name="token" inputmode="numeric" autocomplete="one-time-code" required placeholder="6-digit code" /></div>
-              <input type="hidden" name="type" value="magiclink" />
-              <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-key"></i> Verify OTP</button>
-            </div>
-            <p class="auth-status" data-auth-status></p>
           </form>
 
           <form class="auth-card card reveal" data-reset-form>

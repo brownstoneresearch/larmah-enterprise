@@ -97,7 +97,7 @@
     </section>
     <section class="section security-section">
       <div class="container">
-        <div class="section-head reveal"><span class="eyebrow">Account security</span><h2>Manage your verified access.</h2><p>Update sensitive account details with email verification and reauthentication codes.</p></div>
+        <div class="section-head reveal"><span class="eyebrow">Account security</span><h2>Manage your verified access.</h2><p>Update sensitive account details with verified email flows and password-based reauthentication.</p></div>
         <div class="security-grid">
           <form class="auth-card card reveal" data-change-email-form>
             <span class="eyebrow">Change email address</span>
@@ -111,18 +111,20 @@
           </form>
           <form class="auth-card card reveal" data-reauth-form>
             <span class="eyebrow">Reauthentication</span>
-            <h2>Verify identity</h2>
-            <p>Send a reauthentication code before password updates or other sensitive operations.</p>
-            <div class="form-grid"><button class="btn btn-ghost" type="submit"><i class="fa-solid fa-fingerprint"></i> Send security code</button></div>
+            <h2>Confirm identity</h2>
+            <p>Enter your current password to refresh your secure session before sensitive account updates.</p>
+            <div class="form-grid">
+              <div class="form-row"><label>Current password</label><input type="password" name="password" required autocomplete="current-password" /></div>
+              <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-fingerprint"></i> Reconfirm identity</button>
+            </div>
             <p class="auth-status" data-auth-status></p>
           </form>
           <form class="auth-card card reveal" data-update-password-form>
             <span class="eyebrow">Password security</span>
             <h2>Update password</h2>
-            <p>Use the security nonce sent to your email when secure password change is enabled.</p>
+            <p>Set a new password after confirming your identity or opening a password reset link.</p>
             <div class="form-grid">
               <div class="form-row"><label>New password</label><input type="password" name="password" required minlength="8" autocomplete="new-password" /></div>
-              <div class="form-row"><label>Security nonce / OTP</label><input name="nonce" autocomplete="one-time-code" placeholder="Optional code" /></div>
               <button class="btn btn-primary" type="submit"><i class="fa-solid fa-shield-halved"></i> Update password</button>
             </div>
             <p class="auth-status" data-auth-status></p>

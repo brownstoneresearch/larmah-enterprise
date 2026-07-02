@@ -15,7 +15,7 @@ Registration: **RC: 9488632**
 - Supabase-backed catalogue, insights and enquiry records
 - Admin workspace for catalogue uploads, insight posts and premium user invitations
 - Premium dashboards secured with user email and password
-- Confirm sign up, magic link / OTP, password reset, verified email change and reauthentication flows
+- Confirm sign up, password reset, verified email change and password-based reauthentication flows
 - Sign in with Google button wired through Supabase Auth
 - Cloudflare-ready cookie consent
 - WhatsApp enquiry flow

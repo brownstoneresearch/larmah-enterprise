@@ -4,10 +4,9 @@ This package includes the frontend wiring for a mature Supabase authentication f
 
 - Confirm sign up / email confirmation
 - Invite premium users through the admin workspace
-- Magic link / email OTP sign-in
 - Password reset email
 - Verified email change
-- Reauthentication code before sensitive password updates
+- Password-based reauthentication before sensitive password updates
 - Sign in with Google
 
 ## 1. Run the database schema

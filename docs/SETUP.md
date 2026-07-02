@@ -7,6 +7,6 @@
 5. Configure Google provider under Authentication → Providers → Google.
 6. Deploy the `supabase/functions/invite-user` Edge Function and set the required secrets listed in `AUTH-SETUP.md`.
 7. Add your final domain to Supabase Auth redirect URL allow list.
-8. Test: register, confirm email, login, magic link, reset password, Google login, admin invite and catalogue upload.
+8. Test: register, confirm email, login, reset password, Google login, admin invite and catalogue upload.
 
 Do not publish Supabase service-role keys in frontend code.
