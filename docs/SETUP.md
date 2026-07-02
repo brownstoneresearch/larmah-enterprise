@@ -10,3 +10,11 @@
 8. Test: register, confirm email, login, reset password, Google login, admin invite and catalogue upload.
 
 Do not publish Supabase service-role keys in frontend code.
+
+
+Admin upgrade note: deploy `supabase/functions/admin-users` with service-role secrets to enable user verification and data editing. The frontend never exposes the service-role key.
+
+
+## SEO implementation
+
+This package includes a search-first architecture: focused service pages, blog library, sitemap, robots, llms.txt, structured data, Cloudflare headers and noindex rules for private pages. See `SEO-IMPLEMENTATION.md`.
