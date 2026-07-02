@@ -210,6 +210,17 @@ create index if not exists idx_requests_user_created on public.requests (user_id
 create index if not exists idx_requests_category_created on public.requests (category, created_at desc);
 create index if not exists idx_insights_pinned_created on public.insights_posts (pinned desc, created_at desc);
 
+
+-- Ensure the approved admin email is promoted when the Auth user already exists.
+insert into public.profiles (id, email, role)
+select id, email, 'admin'
+from auth.users
+where lower(email) = lower(public.admin_email())
+on conflict (id) do update
+set email = excluded.email,
+    role = 'admin',
+    updated_at = now();
+
 -- =========================================================
 -- Seed catalogue previews and blog content
 -- =========================================================

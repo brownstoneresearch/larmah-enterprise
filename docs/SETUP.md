@@ -11,3 +11,5 @@
 7. Cookie consent is built in and Cloudflare-ready.
 
 WhatsApp buttons and enquiry forms direct users to WhatsApp and attempt to save records to Supabase.
+
+4. Run `set_admin_email.sql` after creating the admin Auth user to promote `heylarmahtech@outlook.com` to admin role if the user already existed before the schema was installed.
