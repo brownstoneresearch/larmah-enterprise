@@ -544,15 +544,15 @@
     const list=document.querySelector('[data-admin-users-list]'); if(!list || !window.HLDatabase || !window.HLDatabase.adminUsers) return;
     const stats=document.querySelector('[data-admin-user-stats] strong');
     const search=clean(document.querySelector('[data-admin-user-search]')?.value || '');
-    if(force) list.innerHTML = '<div class="admin-list-item"><span><strong>Refreshing users…</strong><br>Please wait while the secured admin function responds.</span></div>';
+    if(force) list.innerHTML = '<div class="admin-list-item"><span><strong>Refreshing users…</strong><br>Loading profiles from Supabase user management.</span></div>';
     try{
       const data = await window.HLDatabase.adminUsers('list_users', { search, page:1, per_page:40 });
       const users = Array.isArray(data?.users) ? data.users : [];
       if(stats) stats.textContent = `${users.length} shown`;
       list.innerHTML = users.length ? users.map(userCard).join('') : '<div class="admin-list-item"><span><strong>No users found.</strong><br>Invite or register premium users to manage them here.</span></div>';
     }catch(err){
-      if(stats) stats.textContent = 'Function required';
-      list.innerHTML = `<div class="admin-list-item"><span><strong>User management is not connected yet.</strong><br>${escapeHTML(err.message || 'Deploy the admin-users Edge Function and set Supabase service role secrets.')}</span></div>`;
+      if(stats) stats.textContent = 'Check setup';
+      list.innerHTML = `<div class="admin-list-item"><span><strong>User management could not load.</strong><br>${escapeHTML(err.message || 'Run schema.sql, sign in with heylarmahtech@outlook.com, then refresh the admin dashboard.')}</span></div>`;
     }
   }
   async function hydrateAdminCatalogue(force){

@@ -557,3 +557,26 @@ create policy profiles_read_own on public.profiles for select using (auth.uid() 
 
 drop policy if exists profiles_admin_all on public.profiles;
 create policy profiles_admin_all on public.profiles for all using (public.current_user_is_admin()) with check (public.current_user_is_admin());
+
+-- =========================================================
+-- Admin user management reliability fix
+-- Allows the admin dashboard to load, verify and edit profile users directly from Supabase when the optional admin-users Edge Function has not been deployed yet.
+-- =========================================================
+
+grant usage on schema public to anon, authenticated;
+grant select, insert, update on public.profiles to authenticated;
+
+alter table public.profiles enable row level security;
+
+drop policy if exists profiles_read_own on public.profiles;
+create policy profiles_read_own on public.profiles for select using (auth.uid() = id);
+
+drop policy if exists profiles_admin_read_all on public.profiles;
+create policy profiles_admin_read_all on public.profiles for select using (public.current_user_is_admin());
+
+drop policy if exists profiles_admin_all on public.profiles;
+create policy profiles_admin_all on public.profiles for all using (public.current_user_is_admin()) with check (public.current_user_is_admin());
+
+update public.profiles
+set role = 'admin', account_status = 'verified', is_verified = true, verified_at = coalesce(verified_at, now()), updated_at = now()
+where lower(email) = lower(public.admin_email());

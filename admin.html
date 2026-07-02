@@ -111,7 +111,7 @@
             <div>
               <span class="eyebrow"><i class="fa-solid fa-users-gear"></i> User verification</span>
               <h2>Verify and manage premium users.</h2>
-              <p>Review new accounts, verify users, assign access level and update client profile data. Sensitive Auth operations run through the secured admin Edge Function.</p>
+              <p>Review registered accounts, verify users, assign access level and update client profile data. The dashboard now loads profile records directly from Supabase, with the Edge Function used only when deployed for advanced Auth operations.</p>
             </div>
             <button class="btn btn-ghost" type="button" data-admin-refresh-users><i class="fa-solid fa-rotate"></i> Refresh users</button>
           </div>
@@ -120,7 +120,7 @@
             <div class="admin-mini-stats" data-admin-user-stats><span>Users</span><strong>Loading…</strong></div>
           </div>
           <div class="admin-users-list" data-admin-users-list>
-            <div class="admin-list-item"><span><strong>Loading users…</strong><br>Connect the admin-users Edge Function to enable user management.</span></div>
+            <div class="admin-list-item"><span><strong>Loading users…</strong><br>Registered profiles will appear here after admin login.</span></div>
           </div>
         </section>
 
