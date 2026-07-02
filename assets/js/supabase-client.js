@@ -35,6 +35,55 @@
     catch{ return path || config.defaultRedirect; }
   }
   function authRedirect(path){ return absoluteUrl(path || config.defaultRedirect); }
+  function readableError(err, fallback){
+    const defaultMessage = fallback || "The request could not be completed. Please try again.";
+    if(!err) return defaultMessage;
+    if(typeof err === "string") return err.trim() || defaultMessage;
+    const candidates = [err.message, err.error_description, err.error, err.msg, err.details, err.hint, err.statusText];
+    if(err.data){
+      candidates.push(err.data.message, err.data.error_description, err.data.error, err.data.msg, err.data.details, err.data.hint);
+    }
+    for(const item of candidates){
+      if(typeof item === "string"){
+        const text = item.trim();
+        if(text && text !== "{}" && text !== "[object Object]") return text;
+      }
+    }
+    try{
+      const text = JSON.stringify(err);
+      if(text && text !== "{}" && text !== "[]") return text;
+    }catch{}
+    return defaultMessage;
+  }
+  function friendlyAuthMessage(err, fallback){
+    const raw = readableError(err, fallback);
+    const lower = raw.toLowerCase();
+    if(raw === "{}" || lower.includes("database error saving new user") || lower.includes("error saving new user")){
+      return "Registration is blocked by the Supabase profile trigger. Run fix_registration_signup.sql in Supabase SQL Editor, then try creating the account again.";
+    }
+    if(lower.includes("user already registered") || lower.includes("already registered") || lower.includes("already exists")){
+      return "This email already has an account. Please log in or use Reset password.";
+    }
+    if(lower.includes("signup") && lower.includes("disabled")){
+      return "New user sign-up is disabled in Supabase. Enable email sign-ups in Authentication settings, then try again.";
+    }
+    if(lower.includes("password") && (lower.includes("weak") || lower.includes("least") || lower.includes("characters"))){
+      return "Please use a stronger password with at least 8 characters.";
+    }
+    if(lower.includes("invalid email")) return "Please enter a valid email address.";
+    if(lower.includes("failed to fetch") || lower.includes("network") || lower.includes("load failed")){
+      return "Network connection to Supabase failed. Check internet connection, project URL, and allowed redirect/domain settings.";
+    }
+    return raw || fallback || "Registration could not be completed. Please try again.";
+  }
+  function throwFriendly(err, fallback){
+    if(!err) return;
+    const wrapped = new Error(friendlyAuthMessage(err, fallback));
+    wrapped.original = err;
+    if(err.status) wrapped.status = err.status;
+    if(err.data) wrapped.data = err.data;
+    throw wrapped;
+  }
   function baseHeaders(token, contentType=true){
     const h = { "apikey": config.supabaseAnonKey, "Authorization": `Bearer ${token || config.supabaseAnonKey}` };
     if(contentType) h["Content-Type"] = "application/json";
@@ -51,7 +100,7 @@
     let data = null;
     if(text){ try{ data = JSON.parse(text); }catch{ data = text; } }
     if(!response.ok){
-      const message = (data && (data.message || data.error_description || data.error || data.msg)) || `Supabase request failed with ${response.status}`;
+      const message = readableError(data, `Supabase request failed with ${response.status}`);
       const err = new Error(message); err.status = response.status; err.data = data; throw err;
     }
     return data;
@@ -97,22 +146,100 @@
     return supabaseFetch(`/rest/v1/${encodeURIComponent(table)}${query || ""}`, { method:"GET", token: options && options.token ? options.token : currentAccessToken() });
   }
 
+  async function syncMyProfile(metadata){
+    await ready.catch(()=>{});
+    const meta = metadata || {};
+    const payload = {
+      profile_full_name: String(meta.full_name || meta.name || "").trim(),
+      profile_phone: String(meta.phone || "").trim(),
+      profile_company: String(meta.company || "").trim(),
+      profile_country: String(meta.country || "").trim(),
+      profile_state: String(meta.state || "").trim(),
+      profile_city: String(meta.city || "").trim(),
+      profile_address: String(meta.address || "").trim(),
+      profile_occupation: String(meta.occupation || meta.job_title || "").trim(),
+      profile_preferred_pillar: String(meta.preferred_pillar || "").trim(),
+      profile_bio: String(meta.bio || meta.note || "").trim()
+    };
+    if(client && client.rpc){
+      const { data, error } = await client.rpc("sync_my_profile", payload);
+      if(error) throwFriendly(error, "Profile sync failed.");
+      return data;
+    }
+    return supabaseFetch("/rest/v1/rpc/sync_my_profile", { method:"POST", token: currentAccessToken(), body: JSON.stringify(payload) });
+  }
+
+
+
+  async function updateMyProfile(profile){
+    await ready.catch(()=>{});
+    const meta = profile || {};
+    const payload = {
+      profile_full_name: String(meta.full_name || meta.name || "").trim(),
+      profile_phone: String(meta.phone || "").trim(),
+      profile_company: String(meta.company || "").trim(),
+      profile_country: String(meta.country || "").trim(),
+      profile_state: String(meta.state || "").trim(),
+      profile_city: String(meta.city || "").trim(),
+      profile_address: String(meta.address || "").trim(),
+      profile_occupation: String(meta.occupation || meta.job_title || "").trim(),
+      profile_preferred_pillar: String(meta.preferred_pillar || "").trim(),
+      profile_bio: String(meta.bio || meta.note || "").trim()
+    };
+    try{
+      if(client && client.rpc){
+        const { data, error } = await client.rpc("update_my_profile_bio", payload);
+        if(error) throw error;
+        return data;
+      }
+      return await supabaseFetch("/rest/v1/rpc/update_my_profile_bio", { method:"POST", token: currentAccessToken(), body: JSON.stringify(payload) });
+    }catch(err){
+      try{
+        return await syncMyProfile(meta);
+      }catch(syncErr){
+        const message = readableError(err, "Bio data update failed. Run the latest schema.sql in Supabase SQL Editor, then try again.");
+        const wrapped = new Error(message);
+        wrapped.original = err;
+        wrapped.syncError = syncErr;
+        throw wrapped;
+      }
+    }
+  }
+
   async function signUp(email, password, metadata){
     const redirectTo = authRedirect("auth.html?registered=1&confirmed=1");
-    if(client){
-      const { data, error } = await client.auth.signUp({ email, password, options:{ emailRedirectTo: redirectTo, data: metadata || {} } });
-      if(error) throw error;
-      return setSessionFromData(data);
+    const safeMeta = Object.assign({ account_type:"premium", account_status:"pending", is_verified:false }, metadata || {});
+    try{
+      if(client){
+        const { data, error } = await client.auth.signUp({ email, password, options:{ emailRedirectTo: redirectTo, data: safeMeta } });
+        throwFriendly(error, "Registration could not be completed.");
+        const saved = setSessionFromData(data);
+        if(data && data.session){ try{ await syncMyProfile(safeMeta); }catch{} }
+        return saved;
+      }
+      const data = await supabaseFetch(`/auth/v1/signup?redirect_to=${encodeURIComponent(redirectTo)}`, { method:"POST", body: JSON.stringify({ email, password, data: safeMeta }) });
+      const saved = setSessionFromData(data);
+      if(saved && (saved.session || saved.access_token)){ try{ await syncMyProfile(safeMeta); }catch{} }
+      return saved;
+    }catch(err){
+      throw new Error(friendlyAuthMessage(err, "Registration could not be completed. Please check the details and try again."));
     }
-    return setSessionFromData(await supabaseFetch(`/auth/v1/signup?redirect_to=${encodeURIComponent(redirectTo)}`, { method:"POST", body: JSON.stringify({ email, password, data: metadata || {} }) }));
   }
   async function signIn(email, password){
-    if(client){
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
-      if(error) throw error;
-      return setSessionFromData(data);
+    try{
+      let signedIn;
+      if(client){
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+        throwFriendly(error, "Login could not be completed.");
+        signedIn = setSessionFromData(data);
+      }else{
+        signedIn = setSessionFromData(await supabaseFetch("/auth/v1/token?grant_type=password", { method:"POST", body: JSON.stringify({ email, password }) }));
+      }
+      try{ await syncMyProfile({}); }catch{}
+      return signedIn;
+    }catch(err){
+      throw new Error(friendlyAuthMessage(err, "Login could not be completed. Please check your email and password."));
     }
-    return setSessionFromData(await supabaseFetch("/auth/v1/token?grant_type=password", { method:"POST", body: JSON.stringify({ email, password }) }));
   }
   async function signOut(){
     if(client){ try{ await client.auth.signOut(); }catch{} }
@@ -124,7 +251,7 @@
     await ready.catch(()=>{});
     if(client){
       const { data, error } = await client.auth.getUser();
-      if(error) throw error;
+      throwFriendly(error, "Request failed.");
       return data && data.user ? data.user : null;
     }
     const token = currentAccessToken(); if(!token) return null;
@@ -136,7 +263,7 @@
     const redirectTo = authRedirect(type === "email_change" ? "dashboard.html?email-change=1" : "auth.html?confirmed=1");
     if(client){
       const { data, error } = await client.auth.resend({ type: type || "signup", email, options:{ emailRedirectTo: redirectTo } });
-      if(error) throw error; return data;
+      throwFriendly(error, "Request failed."); return data;
     }
     return supabaseFetch("/auth/v1/resend", { method:"POST", body: JSON.stringify({ type: type || "signup", email, options:{ email_redirect_to: redirectTo } }) });
   }
@@ -144,7 +271,7 @@
     const redirectTo = authRedirect("reset-password.html?type=recovery");
     if(client){
       const { data, error } = await client.auth.resetPasswordForEmail(email, { redirectTo });
-      if(error) throw error; return data;
+      throwFriendly(error, "Request failed."); return data;
     }
     return supabaseFetch(`/auth/v1/recover?redirect_to=${encodeURIComponent(redirectTo)}`, { method:"POST", body: JSON.stringify({ email }) });
   }
@@ -152,7 +279,7 @@
     await ready.catch(()=>{});
     if(client){
       const { data, error } = await client.auth.updateUser(attributes);
-      if(error) throw error; return setSessionFromData(data);
+      throwFriendly(error, "Request failed."); return setSessionFromData(data);
     }
     return setSessionFromData(await supabaseFetch("/auth/v1/user", { method:"PUT", token: currentAccessToken(), body: JSON.stringify(attributes) }));
   }
@@ -162,7 +289,7 @@
     const redirectTo = authRedirect(redirectPath || "dashboard.html");
     if(client){
       const { data, error } = await client.auth.signInWithOAuth({ provider:"google", options:{ redirectTo } });
-      if(error) throw error; return data;
+      throwFriendly(error, "Request failed."); return data;
     }
     window.location.href = `${config.supabaseUrl}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(redirectTo)}`;
   }
@@ -170,7 +297,7 @@
     await ready.catch(()=>{});
     if(client && client.functions){
       const { data, error } = await client.functions.invoke("invite-user", { body:{ email, metadata: metadata || {}, redirectTo: authRedirect("auth.html?invited=1") } });
-      if(error) throw error; return data;
+      throwFriendly(error, "Request failed."); return data;
     }
     return supabaseFetch("/functions/v1/invite-user", { method:"POST", token: currentAccessToken(), body: JSON.stringify({ email, metadata: metadata || {}, redirectTo: authRedirect("auth.html?invited=1") }) });
   }
@@ -179,7 +306,7 @@
     await ready.catch(()=>{});
     if(client && client.functions){
       const { data, error } = await client.functions.invoke(name, { body: body || {} });
-      if(error) throw error;
+      throwFriendly(error, "Request failed.");
       return data;
     }
     return supabaseFetch(`/functions/v1/${name}`, { method:"POST", token: currentAccessToken(), body: JSON.stringify(body || {}) });
@@ -207,6 +334,12 @@
           full_name: profile.full_name || "",
           phone: profile.phone || "",
           company: profile.company || "",
+          country: profile.country || "",
+          state: profile.state || "",
+          city: profile.city || "",
+          occupation: profile.occupation || "",
+          preferred_pillar: profile.preferred_pillar || "",
+          bio: profile.bio || "",
           account_type: profile.role || "premium",
           account_status: profile.account_status || "pending"
         }
@@ -226,7 +359,7 @@
       let profiles = Array.isArray(rows) ? rows : [];
       if(search){
         profiles = profiles.filter((profile)=>{
-          return [profile.email, profile.full_name, profile.phone, profile.company, profile.role, profile.account_status, profile.last_admin_note]
+          return [profile.email, profile.full_name, profile.phone, profile.company, profile.country, profile.state, profile.city, profile.occupation, profile.preferred_pillar, profile.bio, profile.role, profile.account_status, profile.last_admin_note]
             .map((value)=>String(value || "").toLowerCase())
             .join(" ")
             .includes(search);
@@ -265,6 +398,13 @@
         full_name: String(body.full_name || "").trim(),
         phone: String(body.phone || "").trim(),
         company: String(body.company || "").trim(),
+        country: String(body.country || "").trim(),
+        state: String(body.state || "").trim(),
+        city: String(body.city || "").trim(),
+        address: String(body.address || "").trim(),
+        occupation: String(body.occupation || body.job_title || "").trim(),
+        preferred_pillar: String(body.preferred_pillar || "").trim(),
+        bio: String(body.bio || body.note || "").trim(),
         role,
         account_status,
         is_verified,
@@ -314,7 +454,7 @@
     const contentType = file.type || "application/octet-stream";
     if(client){
       const { error } = await client.storage.from(config.storageBucket).upload(key, file, { upsert:true, contentType });
-      if(error) throw error;
+      throwFriendly(error, "Request failed.");
       const { data } = client.storage.from(config.storageBucket).getPublicUrl(key);
       return { url:data.publicUrl, path:key, media_type:mediaKindFromMime(contentType, originalName), mime_type:contentType, file_name:originalName, size:file.size || 0 };
     }
@@ -330,8 +470,8 @@
   window.HLDatabase = {
     config, client, ready, request:supabaseFetch, insert, update, select,
     signUp, signIn, signOut, resendConfirmation, resetPassword,
-    updateUser, changeEmail, updatePassword, signInWithGoogle, inviteUser, adminUsers,
-    getSession, setSession, currentAccessToken, getCurrentUser, getProfile, isAdminEmail,
-    uploadMedia, uploadMediaObject, publicUrl, syncSession, authRedirect
+    updateUser, changeEmail, updatePassword, updateMyProfile, signInWithGoogle, inviteUser, adminUsers,
+    getSession, setSession, currentAccessToken, getCurrentUser, getProfile, syncMyProfile, isAdminEmail,
+    errorMessage: readableError, friendlyAuthMessage, uploadMedia, uploadMediaObject, publicUrl, syncSession, authRedirect
   };
 })();
