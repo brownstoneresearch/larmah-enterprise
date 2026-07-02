@@ -124,27 +124,41 @@
           </div>
         </section>
 
-        <form class="admin-panel reveal" data-catalogue-upload>
-          <span class="eyebrow"><i class="fa-solid fa-photo-film"></i> Catalogue media</span>
-          <h2>Upload catalogue photos and videos.</h2>
-          <p>Publish professional catalogue records across Real Estate, Fintech, Logistics, Shipping and Premium. Upload a primary photo or video, then attach optional gallery media.</p>
-          <div class="form-grid">
-            <div class="form-row"><label>Category</label><select name="category" required><option value="real-estate">Real Estate</option><option value="fintech">Fintech</option><option value="logistics">Logistics</option><option value="shipping">Shipping</option><option value="premium">Premium</option></select></div>
-            <div class="form-row"><label>Title</label><input name="title" required placeholder="Catalogue title" /></div>
-            <div class="form-row"><label>Description</label><textarea name="description" required placeholder="Short catalogue description"></textarea></div>
-            <div class="form-row"><label>Price / note</label><input name="price" placeholder="Optional price, range or note" /></div>
-            <div class="form-row"><label>Primary photo or video</label><input type="file" name="media_file" accept="image/*,video/*" /><small class="field-note">Recommended: WebP/JPG for photos, MP4/WebM for videos.</small></div>
-            <div class="form-row"><label>Additional photos/videos</label><input type="file" name="gallery_files" accept="image/*,video/*" multiple /><small class="field-note">Optional gallery files for the catalogue record.</small></div>
-            <div class="form-row"><label>Existing media URL</label><input name="media_url" placeholder="Optional existing photo/video URL" /></div>
-            <div class="form-row"><label>Tags</label><input name="tags" placeholder="property, verified, lagos" /></div>
-            <div class="form-row"><label>Sort order</label><input type="number" name="sort_order" value="10" /></div>
-            <label class="check-row"><input type="checkbox" name="featured" /> Feature on homepage when selected by database order</label>
-            <label class="check-row"><input type="checkbox" name="active" checked /> Publish as active</label>
-            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload catalogue</button>
+        <section class="admin-panel admin-panel-wide reveal" data-catalogue-admin-panel>
+          <div class="admin-panel-heading">
+            <div>
+              <span class="eyebrow"><i class="fa-solid fa-photo-film"></i> Catalogue manager</span>
+              <h2>Upload and edit catalogue photos, videos and service records.</h2>
+              <p>Manage the active homepage containers and all paginated pillar catalogue records. The default records such as Import &amp; Export Coordination, Land Acquisition Support, Merchant Payment Setup, Corporate Delivery Coordination, Verified Property Sourcing and Priority Enterprise Desk are editable here.</p>
+            </div>
+            <button class="btn btn-ghost" type="button" data-admin-refresh-catalogue><i class="fa-solid fa-rotate"></i> Refresh catalogue</button>
           </div>
-          <p class="auth-status" data-catalogue-status></p>
-          <div class="admin-list" data-admin-catalogue-list></div>
-        </form>
+          <form class="admin-create-form" data-catalogue-upload>
+            <div class="form-grid two-col-form">
+              <div class="form-row"><label>Category</label><select name="category" required><option value="real-estate">Real Estate</option><option value="fintech">Fintech</option><option value="logistics">Logistics</option><option value="shipping">Shipping</option><option value="premium">Premium</option></select></div>
+              <div class="form-row"><label>Title</label><input name="title" required placeholder="Catalogue title" /></div>
+              <div class="form-row"><label>Description</label><textarea name="description" required placeholder="Short catalogue description"></textarea></div>
+              <div class="form-row"><label>Price / note</label><input name="price" placeholder="Optional price, range or note" /></div>
+              <div class="form-row"><label>Primary photo or video</label><input type="file" name="media_file" accept="image/*,video/*" /><small class="field-note">Recommended: WebP/JPG for photos, MP4/WebM for videos.</small></div>
+              <div class="form-row"><label>Additional photos/videos</label><input type="file" name="gallery_files" accept="image/*,video/*" multiple /><small class="field-note">Optional gallery files for the catalogue record.</small></div>
+              <div class="form-row"><label>Existing media URL</label><input name="media_url" placeholder="Optional existing photo/video URL" /></div>
+              <div class="form-row"><label>Tags</label><input name="tags" placeholder="property, verified, lagos" /></div>
+              <div class="form-row"><label>Sort order</label><input type="number" name="sort_order" value="10" /></div>
+              <label class="check-row"><input type="checkbox" name="featured" /> Feature on homepage when selected by database order</label>
+              <label class="check-row"><input type="checkbox" name="active" checked /> Publish as active</label>
+              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload catalogue</button>
+            </div>
+            <p class="auth-status" data-catalogue-status></p>
+          </form>
+          <div class="admin-priority-block">
+            <div class="admin-list-head"><strong>Priority editable catalogue records</strong><span>Core active records requested for direct editing across Real Estate, Fintech, Logistics, Shipping and Premium.</span></div>
+            <div class="admin-priority-grid" data-catalogue-priority-list>
+              <div class="admin-list-item"><span><strong>Loading priority records…</strong><br>Sign in as admin to edit these catalogue items.</span></div>
+            </div>
+          </div>
+          <div class="admin-subhead"><span class="eyebrow">Editable catalogue records</span><p>Change title, category, description, media URL, active status, homepage priority and sort order without touching code.</p></div>
+          <div class="admin-catalogue-edit-list" data-admin-catalogue-list><div class="admin-list-item"><span><strong>Loading catalogue records…</strong><br>Sign in as admin to edit published service containers.</span></div></div>
+        </section>
 
         <form class="admin-panel reveal" data-insight-upload>
           <span class="eyebrow"><i class="fa-solid fa-newspaper"></i> Blog publishing</span>

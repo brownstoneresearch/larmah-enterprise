@@ -141,7 +141,7 @@
     return supabaseFetch("/auth/v1/resend", { method:"POST", body: JSON.stringify({ type: type || "signup", email, options:{ email_redirect_to: redirectTo } }) });
   }
   async function resetPassword(email){
-    const redirectTo = authRedirect("auth.html?type=recovery");
+    const redirectTo = authRedirect("reset-password.html?type=recovery");
     if(client){
       const { data, error } = await client.auth.resetPasswordForEmail(email, { redirectTo });
       if(error) throw error; return data;

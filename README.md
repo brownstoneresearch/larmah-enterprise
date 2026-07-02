@@ -38,3 +38,11 @@ Company email:
 ## Latest admin upgrade
 
 This package adds professional admin tools for catalogue photo/video uploads, blog publishing, premium user verification and profile editing through Supabase Auth, Storage, RLS and secured Edge Functions. Run `schema.sql`, create the `larmah-media` storage bucket through the SQL, and deploy `invite-user` plus `admin-users` before launch.
+
+
+## Latest professional upgrade
+
+- Client login now links to a dedicated `reset-password.html` recovery page.
+- Admin catalogue records are editable directly from `admin.html`, including title, category, active/draft status, featured status, sort order, description, tags and media replacement.
+- `schema.sql` now removes duplicate seed catalogue records and adds a unique category/title constraint so the six default homepage containers do not keep duplicating.
+- Homepage and Premium page were restructured using a Moatify-style flow: hero workflow preview, feature strip, problem framing, steps, access plans and CTA.

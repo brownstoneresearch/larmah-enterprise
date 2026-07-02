@@ -78,7 +78,12 @@
     if(params.get('confirmed')) showToast('Email confirmed. You can now sign in.');
     if(params.get('invited')) showToast('Invitation accepted. Complete your secure sign in.');
     if(params.get('type') === 'recovery' || hash.get('type') === 'recovery'){
-      document.querySelectorAll('[data-password-recovery-panel]').forEach(el=>el.hidden=false);
+      const panels = document.querySelectorAll('[data-password-recovery-panel]');
+      if(!panels.length && !/reset-password\.html$/i.test(location.pathname)){
+        window.location.href = 'reset-password.html' + (location.search || '?type=recovery') + (location.hash || '');
+        return;
+      }
+      panels.forEach(el=>el.hidden=false);
       showToast('Password recovery session detected. Set a new password.');
     }
   }
@@ -313,10 +318,34 @@
     document.querySelector('[data-admin-sign-out]')?.addEventListener('click', async()=>{ await dbReady(); await window.HLDatabase.signOut(); setVisible(false); showToast('Admin signed out.'); });
     document.querySelector('[data-invite-user]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.currentTarget; const data=formFields(form); const email=clean(data.email); const name=clean(data.full_name); const status=form.querySelector('[data-auth-status]'); if(!email){ showToast('Enter invitee email.'); return; } const btn=form.querySelector('button[type="submit"]'); await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending invite…', async()=>{ await dbReady(); await window.HLDatabase.inviteUser(email, { full_name:name, account_type:'premium', invited_by:ADMIN_EMAIL }); setStatus(status, 'Invitation email sent successfully.', 'success'); showToast('Invitation sent.'); form.reset(); }).catch(err=>{ setStatus(status, err.message || 'Invitation failed. Deploy the invite-user Edge Function and set service role secret.', 'error'); showToast(err.message || 'Invitation failed.'); }); });
     document.querySelector('[data-admin-refresh-users]')?.addEventListener('click', ()=>hydrateAdminUsers(true));
+    document.querySelector('[data-admin-refresh-catalogue]')?.addEventListener('click', ()=>hydrateAdminCatalogue(true));
     let userSearchTimer = null;
     document.querySelector('[data-admin-user-search]')?.addEventListener('input', ()=>{ clearTimeout(userSearchTimer); userSearchTimer = setTimeout(()=>hydrateAdminUsers(true), 350); });
     document.querySelector('[data-admin-users-list]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.target.closest('[data-user-editor]'); if(!form) return; const data=formFields(form); const btn=form.querySelector('button[type="submit"]'); const payload={ user_id: clean(data.user_id), full_name: clean(data.full_name), phone: clean(data.phone), company: clean(data.company), role: clean(data.role || 'premium'), account_status: clean(data.account_status || 'pending'), is_verified: !!form.querySelector('input[name="is_verified"]')?.checked, admin_note: clean(data.admin_note) }; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('update_user', payload); showToast('User data updated.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'User update failed.')); });
     document.querySelector('[data-admin-users-list]')?.addEventListener('click', async ev=>{ const btn=ev.target.closest('[data-verify-user]'); if(!btn) return; const form=btn.closest('[data-user-editor]'); const user_id=form?.querySelector('input[name="user_id"]')?.value; if(!user_id) return; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('verify_user', { user_id }); showToast('User verified successfully.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'Verification failed.')); });
+    document.querySelector('[data-catalogue-priority-list]')?.addEventListener('click', ev=>{
+      const prefill = ev.target.closest('[data-prefill-catalogue]');
+      if(prefill){ prefillCatalogueCreate(prefill.getAttribute('data-prefill-catalogue')); return; }
+      const jump = ev.target.closest('[data-jump-catalogue]');
+      if(jump){ scrollToCatalogueRecord(jump.getAttribute('data-jump-catalogue')); }
+    });
+    document.querySelector('[data-admin-catalogue-list]')?.addEventListener('submit', async ev=>{
+      ev.preventDefault();
+      const form = ev.target.closest('[data-catalogue-editor]'); if(!form) return;
+      const data = formFields(form); const id = clean(data.id);
+      if(!id){ showToast('Catalogue record ID missing.'); return; }
+      const file = form.querySelector('input[name="media_file"]')?.files?.[0];
+      const btn = form.querySelector('button[type="submit"]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving…', async()=>{
+        await dbReady();
+        let media_url = clean(data.media_url); let media_type = mediaKind(media_url, data.media_type);
+        let image_url = media_type === 'image' ? media_url : ''; let video_url = media_type === 'video' ? media_url : '';
+        if(file){ const uploaded = await window.HLDatabase.uploadMediaObject(file, 'catalogue/updates'); media_url = uploaded.url; media_type = uploaded.media_type; image_url = media_type === 'image' ? media_url : ''; video_url = media_type === 'video' ? media_url : ''; }
+        const payload = { category: clean(data.category), title: clean(data.title), description: clean(data.description), price: clean(data.price), media_url, media_type, image_url, video_url, tags: clean(data.tags).split(',').map(x=>x.trim()).filter(Boolean), active: clean(data.active) === 'true', featured: !!form.querySelector('input[name="featured"]')?.checked, sort_order: parseInt(data.sort_order,10)||0, updated_at: new Date().toISOString() };
+        await window.HLDatabase.update('catalog_items', `?id=eq.${encodeURIComponent(id)}`, payload);
+        showToast('Catalogue record updated.'); await hydrateAdminCatalogue(true);
+      }).catch(err=>showToast(err.message || 'Catalogue update failed.'));
+    });
     document.querySelector('[data-catalogue-upload]')?.addEventListener('submit', async ev=>{
       ev.preventDefault();
       const form=ev.currentTarget; const data=formFields(form);
@@ -353,8 +382,85 @@
     });
     await check();
   }
+  const PRIORITY_CATALOGUE_ITEMS = [
+    { key:'shipping-import-export', title:'Import & Export Coordination', category:'shipping', description:'Trade documentation and freight coordination for importers and exporters.', tags:'freight, trade', sort_order:40, featured:true },
+    { key:'real-estate-land-acquisition', title:'Land Acquisition Support', category:'real-estate', description:'Structured guidance for title checks, surveys and acquisition coordination.', tags:'land, documentation', sort_order:12, featured:true },
+    { key:'fintech-merchant-payment', title:'Merchant Payment Setup', category:'fintech', description:'Digital payment readiness support for SMEs and trade-focused businesses.', tags:'payments, sme', sort_order:20, featured:true },
+    { key:'logistics-corporate-delivery', title:'Corporate Delivery Coordination', category:'logistics', description:'Structured local and interstate movement support for businesses.', tags:'delivery, movement', sort_order:30, featured:true },
+    { key:'real-estate-verified-property', title:'Verified Property Sourcing', category:'real-estate', description:'Curated property options with inspection and documentation guidance.', tags:'property, inspection', sort_order:10, featured:true },
+    { key:'premium-priority-enterprise', title:'Priority Enterprise Desk', category:'premium', description:'A private support lane for serious enquiries across all four pillars.', tags:'priority, enterprise', sort_order:50, featured:true }
+  ];
+  function priorityCatalogueSpec(row){
+    return PRIORITY_CATALOGUE_ITEMS.find(spec => clean(row && row.title).toLowerCase() === spec.title.toLowerCase() && clean(row && row.category) === spec.category) || null;
+  }
+  function priorityIndex(row){ const spec = priorityCatalogueSpec(row); return spec ? PRIORITY_CATALOGUE_ITEMS.findIndex(x => x.key === spec.key) : 999; }
+  function priorityCatalogueSort(rows){
+    return Array.isArray(rows) ? rows.slice().sort((a,b)=>{
+      const ai = priorityIndex(a), bi = priorityIndex(b);
+      if(ai !== bi) return ai - bi;
+      return (Number(a.sort_order)||0) - (Number(b.sort_order)||0) || clean(a.title).localeCompare(clean(b.title));
+    }) : [];
+  }
+  function setCreateField(form, name, value){ const field=form && form.querySelector(`[name="${name}"]`); if(field) field.value = value == null ? '' : String(value); }
+  function setCreateCheck(form, name, value){ const field=form && form.querySelector(`input[name="${name}"]`); if(field) field.checked = !!value; }
+  function prefillCatalogueCreate(key){
+    const spec = PRIORITY_CATALOGUE_ITEMS.find(x=>x.key === key); const form=document.querySelector('[data-catalogue-upload]');
+    if(!spec || !form) return;
+    setCreateField(form,'category',spec.category); setCreateField(form,'title',spec.title); setCreateField(form,'description',spec.description); setCreateField(form,'tags',spec.tags); setCreateField(form,'sort_order',spec.sort_order);
+    setCreateCheck(form,'featured',spec.featured); setCreateCheck(form,'active',true);
+    form.scrollIntoView({ behavior:'smooth', block:'center' }); showToast(`Starter ready: ${spec.title}`);
+  }
+  function scrollToCatalogueRecord(id){
+    const target = document.querySelector(`[data-catalogue-editor][data-record-id="${window.CSS && window.CSS.escape ? window.CSS.escape(id) : id}"]`);
+    if(target){ target.scrollIntoView({ behavior:'smooth', block:'center' }); target.classList.add('priority-flash'); setTimeout(()=>target.classList.remove('priority-flash'), 1800); }
+  }
+  function renderPriorityCatalogueList(rows){
+    const target=document.querySelector('[data-catalogue-priority-list]'); if(!target) return;
+    const records=Array.isArray(rows) ? rows : [];
+    target.innerHTML = PRIORITY_CATALOGUE_ITEMS.map(spec=>{
+      const matches = records.filter(item => clean(item.title).toLowerCase() === spec.title.toLowerCase() && clean(item.category) === spec.category);
+      if(!matches.length){
+        return `<div class="admin-list-item priority-row missing"><span><strong>${escapeHTML(spec.title)}</strong><br>${escapeHTML(labelForCategory(spec.category))} • Missing from database</span><span class="status-pill pending">Create</span><div class="admin-list-actions"><button class="btn btn-ghost btn-sm" type="button" data-prefill-catalogue="${escapeHTML(spec.key)}"><i class="fa-solid fa-plus"></i> Prefill</button></div></div>`;
+      }
+      return matches.map((item, idx)=>{
+        const duplicate = matches.length > 1 ? ` • Duplicate ${idx + 1}/${matches.length}` : '';
+        return `<div class="admin-list-item priority-row"><span><strong>${escapeHTML(item.title)}</strong><br>${escapeHTML(labelForCategory(item.category))} • ${item.active ? 'Active' : 'Draft'}${duplicate}</span><span class="status-pill ${item.active ? 'verified' : 'pending'}">${item.active ? 'Active' : 'Draft'}</span><div class="admin-list-actions"><button class="btn btn-primary btn-sm" type="button" data-jump-catalogue="${escapeHTML(item.id || '')}"><i class="fa-solid fa-pen-to-square"></i> Edit</button></div></div>`;
+      }).join('');
+    }).join('');
+  }
   function selected(value, expected){ return clean(value) === clean(expected) ? 'selected' : ''; }
   function checked(value){ return value ? 'checked' : ''; }
+  function tagsToText(value){ return Array.isArray(value) ? value.join(', ') : clean(value || ''); }
+  function catalogueEditor(row){
+    const id = clean(row.id);
+    const title = clean(row.title || 'Catalogue item');
+    const category = clean(row.category || 'premium');
+    const priority = priorityCatalogueSpec(row);
+    const description = clean(row.description || '');
+    const price = clean(row.price || '');
+    const mediaUrl = clean(row.media_url || row.video_url || row.image_url || '');
+    const mediaType = clean(row.media_type || mediaTypeFromUrl(mediaUrl) || 'image');
+    const tags = tagsToText(row.tags);
+    const sortOrder = Number.isFinite(Number(row.sort_order)) ? Number(row.sort_order) : 0;
+    const priorityBadge = priority ? '<span class="plan-kicker catalogue-priority-kicker">Priority editable</span>' : '';
+    return `<form class="admin-catalogue-card ${priority ? 'priority-catalogue-card' : ''}" data-catalogue-editor data-record-id="${escapeHTML(id)}">
+      <input type="hidden" name="id" value="${escapeHTML(id)}" />
+      <div class="admin-catalogue-top"><div>${priorityBadge}<strong>${escapeHTML(title)}</strong><span>${escapeHTML(labelForCategory(category))} • ${row.active ? 'Active' : 'Draft'}</span></div><span class="status-pill ${row.active ? 'verified' : 'pending'}">${row.active ? 'Active' : 'Draft'}</span></div>
+      <div class="admin-user-fields admin-catalogue-fields">
+        <div class="form-row"><label>Title</label><input name="title" value="${escapeHTML(title)}" required /></div>
+        <div class="form-row"><label>Category</label><select name="category"><option value="real-estate" ${selected(category,'real-estate')}>Real Estate</option><option value="fintech" ${selected(category,'fintech')}>Fintech</option><option value="logistics" ${selected(category,'logistics')}>Logistics</option><option value="shipping" ${selected(category,'shipping')}>Shipping</option><option value="premium" ${selected(category,'premium')}>Premium</option></select></div>
+        <div class="form-row"><label>Status</label><select name="active"><option value="true" ${row.active ? 'selected' : ''}>Active</option><option value="false" ${!row.active ? 'selected' : ''}>Draft</option></select></div>
+        <div class="form-row"><label>Description</label><textarea name="description">${escapeHTML(description)}</textarea></div>
+        <div class="form-row"><label>Media URL</label><input name="media_url" value="${escapeHTML(mediaUrl)}" placeholder="Photo or video URL" /></div>
+        <div class="form-row"><label>Replace photo/video</label><input type="file" name="media_file" accept="image/*,video/*" /><small class="field-note">Optional: upload a new primary media file.</small></div>
+        <div class="form-row"><label>Price / note</label><input name="price" value="${escapeHTML(price)}" placeholder="Optional" /></div>
+        <div class="form-row"><label>Tags</label><input name="tags" value="${escapeHTML(tags)}" placeholder="comma separated" /></div>
+        <div class="form-row"><label>Sort order</label><input type="number" name="sort_order" value="${escapeHTML(String(sortOrder))}" /></div>
+      </div>
+      <div class="catalogue-editor-checks"><label class="check-row"><input type="checkbox" name="featured" ${checked(row.featured)} /> Feature on homepage</label></div>
+      <div class="admin-user-actions"><button class="btn btn-primary btn-sm" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save catalogue</button><a class="btn btn-ghost btn-sm" href="${escapeHTML(mediaUrl || '#')}" target="_blank" rel="noopener"><i class="fa-solid fa-up-right-from-square"></i> Preview media</a></div>
+    </form>`;
+  }
   function userCard(record){
     const user = record.user || record;
     const profile = record.profile || {};
@@ -398,8 +504,27 @@
       list.innerHTML = `<div class="admin-list-item"><span><strong>User management is not connected yet.</strong><br>${escapeHTML(err.message || 'Deploy the admin-users Edge Function and set Supabase service role secrets.')}</span></div>`;
     }
   }
+  async function hydrateAdminCatalogue(force){
+    const list=document.querySelector('[data-admin-catalogue-list]');
+    if(!list || !window.HLDatabase || !window.HLDatabase.select) return;
+    if(force) list.innerHTML = '<div class="admin-list-item"><span><strong>Refreshing catalogue…</strong><br>Loading editable records from Supabase.</span></div>';
+    try{
+      const cats = await window.HLDatabase.select('catalog_items','?select=id,category,title,description,price,tags,active,featured,sort_order,image_url,media_url,media_type,video_url,created_at,updated_at&order=category.asc,sort_order.asc,created_at.desc&limit=120');
+      const sorted = priorityCatalogueSort(cats);
+      renderPriorityCatalogueList(sorted);
+      if(Array.isArray(sorted) && sorted.length){
+        list.innerHTML = sorted.map(catalogueEditor).join('');
+      }else{
+        list.innerHTML = '<div class="admin-list-item"><span><strong>No catalogue records yet.</strong><br>Use the upload form above to publish the first record.</span></div>';
+      }
+    }catch(err){
+      list.innerHTML = `<div class="admin-list-item"><span><strong>Catalogue management is not connected yet.</strong><br>${escapeHTML(err.message || 'Run schema.sql and sign in with the admin account.')}</span></div>`;
+      const priority=document.querySelector('[data-catalogue-priority-list]');
+      if(priority) priority.innerHTML = `<div class="admin-list-item"><span><strong>Priority catalogue records could not load.</strong><br>${escapeHTML(err.message || 'Run schema.sql and sign in with the admin account.')}</span></div>`;
+    }
+  }
   async function hydrateAdmin(){
-    try{ const cats = await window.HLDatabase.select('catalog_items','?select=category,title,active,media_type,created_at&order=created_at.desc&limit=8'); const list=document.querySelector('[data-admin-catalogue-list]'); if(list && Array.isArray(cats)){ list.innerHTML = cats.length ? cats.map(x=>`<div class="admin-list-item"><span><strong>${escapeHTML(x.title)}</strong><br>${escapeHTML(labelForCategory(x.category))} • ${escapeHTML(x.media_type || 'media')}</span><span>${x.active?'Active':'Draft'}</span></div>`).join('') : '<div class="admin-list-item"><span>No catalogue records yet.</span></div>'; } }catch{}
+    await hydrateAdminCatalogue(false);
     try{ const posts = await window.HLDatabase.select('insights_posts','?select=category,title,active,media_type,created_at&order=created_at.desc&limit=8'); const list=document.querySelector('[data-admin-insight-list]'); if(list && Array.isArray(posts)){ list.innerHTML = posts.length ? posts.map(x=>`<div class="admin-list-item"><span><strong>${escapeHTML(x.title)}</strong><br>${escapeHTML(x.category)} • ${escapeHTML(x.media_type || 'article')}</span><span>${x.active?'Live':'Draft'}</span></div>`).join('') : '<div class="admin-list-item"><span>No insight posts yet.</span></div>'; } }catch{}
     await hydrateAdminUsers(false);
   }

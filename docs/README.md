@@ -36,3 +36,11 @@ Company email:
 
 
 Admin upgrade note: deploy `supabase/functions/admin-users` with service-role secrets to enable user verification and data editing. The frontend never exposes the service-role key.
+
+
+## Latest professional upgrade
+
+- Client login now links to a dedicated `reset-password.html` recovery page.
+- Admin catalogue records are editable directly from `admin.html`, including title, category, active/draft status, featured status, sort order, description, tags and media replacement.
+- `schema.sql` now removes duplicate seed catalogue records and adds a unique category/title constraint so the six default homepage containers do not keep duplicating.
+- Homepage and Premium page were restructured using a Moatify-style flow: hero workflow preview, feature strip, problem framing, steps, access plans and CTA.

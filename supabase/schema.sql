@@ -253,18 +253,41 @@ set email = excluded.email,
     role = 'admin',
     updated_at = now();
 
+
+-- =========================================================
+-- Catalogue editability and duplicate-safe featured records
+-- =========================================================
+with ranked_catalogue as (
+  select id,
+         row_number() over (partition by lower(coalesce(category,'')), lower(coalesce(title,'')) order by created_at asc, id asc) as rn
+  from public.catalog_items
+  where title is not null and category is not null
+)
+delete from public.catalog_items c
+using ranked_catalogue r
+where c.id = r.id and r.rn > 1;
+
+alter table public.catalog_items drop constraint if exists catalog_items_category_title_unique;
+alter table public.catalog_items add constraint catalog_items_category_title_unique unique (category, title);
+
 -- =========================================================
 -- Seed catalogue previews and blog content
 -- =========================================================
-insert into public.catalog_items (category, title, description, tags, featured, sort_order)
+insert into public.catalog_items (category, title, description, tags, featured, sort_order, active)
 values
-('real-estate','Verified Property Sourcing','Curated property options with inspection and documentation guidance.', array['property','inspection'], true, 10),
-('real-estate','Land Acquisition Support','Structured guidance for title checks, surveys and acquisition coordination.', array['land','documentation'], true, 12),
-('fintech','Merchant Payment Setup','Digital payment readiness support for SMEs and trade-focused businesses.', array['payments','sme'], true, 20),
-('logistics','Corporate Delivery Coordination','Structured local and interstate movement support for businesses.', array['delivery','movement'], true, 30),
-('shipping','Import & Export Coordination','Trade documentation and freight coordination for importers and exporters.', array['freight','trade'], true, 40),
-('premium','Priority Enterprise Desk','A private support lane for serious enquiries across all four pillars.', array['priority','enterprise'], true, 50)
-on conflict do nothing;
+('shipping','Import & Export Coordination','Trade documentation and freight coordination for importers and exporters.', array['freight','trade'], true, 10, true),
+('real-estate','Land Acquisition Support','Structured guidance for title checks, surveys and acquisition coordination.', array['land','documentation'], true, 20, true),
+('fintech','Merchant Payment Setup','Digital payment readiness support for SMEs and trade-focused businesses.', array['payments','sme'], true, 30, true),
+('logistics','Corporate Delivery Coordination','Structured local and interstate movement support for businesses.', array['delivery','movement'], true, 40, true),
+('real-estate','Verified Property Sourcing','Curated property options with inspection and documentation guidance.', array['property','inspection'], true, 50, true),
+('premium','Priority Enterprise Desk','A private support lane for serious enquiries across all four pillars.', array['priority','enterprise'], true, 60, true)
+on conflict (category, title) do update
+set description = excluded.description,
+    tags = excluded.tags,
+    featured = excluded.featured,
+    sort_order = excluded.sort_order,
+    active = excluded.active,
+    updated_at = now();
 
 insert into public.insights_posts (title, excerpt, body, category, read_time, pinned)
 values
@@ -336,3 +359,40 @@ create index if not exists idx_insights_slug on public.insights_posts (slug);
 update public.profiles
 set role = 'admin', account_status = 'verified', is_verified = true, verified_at = coalesce(verified_at, now()), updated_at = now()
 where lower(email) = lower(public.admin_email());
+
+
+-- =========================================================
+-- Starter catalogue editorial control upgrade
+-- Keeps the six requested core records editable from the admin dashboard and prevents repeated setup runs from duplicating them.
+-- =========================================================
+with ranked as (
+  select id,
+         row_number() over (partition by lower(category), lower(title) order by active desc, featured desc, sort_order asc, created_at asc, id asc) as rn
+  from public.catalog_items
+  where (lower(category), lower(title)) in (
+    ('shipping','import & export coordination'),
+    ('real-estate','land acquisition support'),
+    ('fintech','merchant payment setup'),
+    ('logistics','corporate delivery coordination'),
+    ('real-estate','verified property sourcing'),
+    ('premium','priority enterprise desk')
+  )
+)
+delete from public.catalog_items c
+using ranked r
+where c.id = r.id and r.rn > 1;
+
+insert into public.catalog_items (category, title, description, tags, featured, active, sort_order, updated_at)
+select v.category, v.title, v.description, v.tags, v.featured, v.active, v.sort_order, now()
+from (values
+  ('shipping','Import & Export Coordination','Trade documentation and freight coordination for importers and exporters.', array['freight','trade']::text[], true, true, 40),
+  ('real-estate','Land Acquisition Support','Structured guidance for title checks, surveys and acquisition coordination.', array['land','documentation']::text[], true, true, 12),
+  ('fintech','Merchant Payment Setup','Digital payment readiness support for SMEs and trade-focused businesses.', array['payments','sme']::text[], true, true, 20),
+  ('logistics','Corporate Delivery Coordination','Structured local and interstate movement support for businesses.', array['delivery','movement']::text[], true, true, 30),
+  ('real-estate','Verified Property Sourcing','Curated property options with inspection and documentation guidance.', array['property','inspection']::text[], true, true, 10),
+  ('premium','Priority Enterprise Desk','A private support lane for serious enquiries across all four pillars.', array['priority','enterprise']::text[], true, true, 50)
+) as v(category,title,description,tags,featured,active,sort_order)
+where not exists (
+  select 1 from public.catalog_items c
+  where lower(c.category) = lower(v.category) and lower(c.title) = lower(v.title)
+);
