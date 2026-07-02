@@ -79,23 +79,207 @@
       </div>
     </div>
   </header>
-  <main id="main">
-    <section class="dashboard-hero">
+  <main id="main" class="premium-dashboard-main">
+    <section class="dashboard-hero premium-desk-hero">
       <div class="container reveal">
-        <span class="eyebrow"><i class="fa-solid fa-lock"></i> Premium user dashboard • RC: 9488632</span>
-        <h1>Welcome, <span data-user-email>premium user</span>.</h1>
-        <p>Your dashboard is secured with your email and password.</p>
-        <div class="dash-toolbar"><div class="mini-proof"><span>Real Estate</span><span>Fintech</span><span>Logistics</span><span>Shipping</span></div><button class="btn btn-danger" type="button" data-sign-out><i class="fa-solid fa-right-from-bracket"></i> Sign out</button></div>
+        <span class="eyebrow"><i class="fa-solid fa-crown"></i> Premium enterprise control desk</span>
+        <h1>Welcome back, <span data-user-name data-user-email>premium user</span>.</h1>
+        <p>Your private workspace keeps requests, documents, updates, catalogue access and support activity organised across Real Estate, Fintech, Logistics and Shipping.</p>
+        <div class="dash-toolbar premium-toolbar">
+          <div class="mini-proof premium-proof">
+            <span data-profile-status>Checking verification</span>
+            <span data-profile-role>Premium</span>
+            <span>Secure request centre</span>
+          </div>
+          <button class="btn btn-danger" type="button" data-sign-out><i class="fa-solid fa-right-from-bracket"></i> Sign out</button>
+        </div>
       </div>
     </section>
-    <section class="section compact-section"><div class="container dash-grid"><article class="dash-card card reveal"><i class="fa-solid fa-building"></i><strong>0</strong><span>Real Estate requests</span></article><article class="dash-card card reveal"><i class="fa-solid fa-chart-line"></i><strong>0</strong><span>Fintech enquiries</span></article><article class="dash-card card reveal"><i class="fa-solid fa-truck-fast"></i><strong>0</strong><span>Logistics movements</span></article><article class="dash-card card reveal"><i class="fa-solid fa-ship"></i><strong>0</strong><span>Shipping briefs</span></article></div></section>
-    <section class="section">
-      <div class="container dashboard-layout">
-        <aside class="profile-card reveal"><span class="eyebrow">Secured profile</span><h2>Premium access</h2><p><strong>Email:</strong> <span data-user-email>premium user</span></p><p><strong>User ID:</strong> <span data-user-id>loading</span></p><p><strong>Access:</strong> <span data-profile-role>Premium</span></p><p><strong>Status:</strong> <span data-profile-status>Checking verification</span></p><p>Use the enquiry form to save client requests into your profile and open WhatsApp at the same time.</p></aside>
-        <form class="auth-card card js-wa-form reveal" data-wa-title="Premium Dashboard Enquiry"><span class="eyebrow">New request</span><h2>Send a secured enquiry.</h2><div class="form-grid"><div class="form-row"><label>Pillar</label><select name="Pillar"><option>Real Estate</option><option>Fintech</option><option>Logistics</option><option>Shipping</option><option>Premium</option></select></div><div class="form-row"><label>Request title</label><input name="Name" required placeholder="Example: property inspection or cargo movement" /></div><div class="form-row"><label>Details</label><textarea name="Message" required placeholder="Provide the details for the team"></textarea></div><button class="btn btn-primary" type="submit"><i class="fa-brands fa-whatsapp"></i> Save and send to WhatsApp</button></div></form>
+
+    <section class="premium-dashboard-nav" aria-label="Premium dashboard navigation">
+      <div class="container premium-nav-inner">
+        <a href="#overview"><i class="fa-solid fa-chart-pie"></i> Overview</a>
+        <a href="#request-centre"><i class="fa-solid fa-file-pen"></i> Request Centre</a>
+        <a href="#pillar-desks"><i class="fa-solid fa-layer-group"></i> Pillar Desks</a>
+        <a href="#document-vault"><i class="fa-solid fa-folder-open"></i> Document Vault</a>
+        <a href="#premium-catalogue"><i class="fa-solid fa-gem"></i> Catalogue</a>
+        <a href="#security"><i class="fa-solid fa-shield-halved"></i> Security</a>
       </div>
     </section>
-    <section class="section security-section">
+
+    <section class="section compact-section" id="overview">
+      <div class="container dashboard-summary-grid">
+        <article class="dashboard-summary-card premium-profile-card reveal">
+          <span class="eyebrow">Account overview</span>
+          <h2>Premium access</h2>
+          <p><strong>Email:</strong> <span data-user-email>premium user</span></p>
+          <p><strong>User ID:</strong> <span data-user-id>loading</span></p>
+          <p><strong>Status:</strong> <span data-profile-status>Checking verification</span></p>
+          <p><strong>Access level:</strong> <span data-profile-role>Premium</span></p>
+        </article>
+        <article class="dashboard-summary-card reveal">
+          <span class="eyebrow">Active requests</span>
+          <strong class="dashboard-big-number" data-total-requests>0</strong>
+          <p>Submitted enterprise requests across all four pillars.</p>
+        </article>
+        <article class="dashboard-summary-card reveal">
+          <span class="eyebrow">Pending actions</span>
+          <strong class="dashboard-big-number" data-pending-actions-count>0</strong>
+          <p>Items that may require your document, confirmation or response.</p>
+        </article>
+      </div>
+      <div class="container dash-grid premium-pillar-stats">
+        <article class="dash-card card reveal" data-pillar-stat="real-estate"><i class="fa-solid fa-building"></i><strong>0</strong><span>Real Estate requests</span><small data-pillar-latest="real-estate">No request yet</small></article>
+        <article class="dash-card card reveal" data-pillar-stat="fintech"><i class="fa-solid fa-chart-line"></i><strong>0</strong><span>Fintech requests</span><small data-pillar-latest="fintech">No request yet</small></article>
+        <article class="dash-card card reveal" data-pillar-stat="logistics"><i class="fa-solid fa-truck-fast"></i><strong>0</strong><span>Logistics movements</span><small data-pillar-latest="logistics">No request yet</small></article>
+        <article class="dash-card card reveal" data-pillar-stat="shipping"><i class="fa-solid fa-ship"></i><strong>0</strong><span>Shipping briefs</span><small data-pillar-latest="shipping">No request yet</small></article>
+      </div>
+    </section>
+
+    <section class="section premium-two-column" id="request-centre">
+      <div class="container dashboard-workspace-grid">
+        <form class="auth-card card premium-request-form reveal" data-dashboard-request>
+          <span class="eyebrow"><i class="fa-solid fa-file-signature"></i> Request Centre</span>
+          <h2>Create a structured request.</h2>
+          <p>Every request is saved into your premium profile, categorised by pillar and prepared for Hey Larmah follow-through.</p>
+          <div class="form-grid two-col-form">
+            <div class="form-row"><label>Pillar</label><select name="Pillar" required><option>Real Estate</option><option>Fintech</option><option>Logistics</option><option>Shipping</option><option>Premium</option></select></div>
+            <div class="form-row"><label>Request title</label><input name="Name" required placeholder="Example: Verified Property Sourcing" /></div>
+            <div class="form-row"><label>Objective</label><input name="Objective" placeholder="What should be achieved?" /></div>
+            <div class="form-row"><label>Location / route</label><input name="Location" placeholder="Lagos, destination, pickup/drop-off or trade route" /></div>
+            <div class="form-row"><label>Budget / value / note</label><input name="Budget" placeholder="Optional budget, cargo value, or transaction note" /></div>
+            <div class="form-row"><label>Timeline</label><input name="Timeline" placeholder="Urgent, this week, 30 days, etc." /></div>
+            <div class="form-row"><label>Preferred contact</label><input name="Contact" placeholder="Phone or email" /></div>
+            <div class="form-row"><label>Supporting document</label><input type="file" name="Document" accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,video/*" /><small class="field-note">Optional. You can also upload more documents in the Document Vault below.</small></div>
+            <div class="form-row full-span"><label>Details</label><textarea name="Message" required placeholder="Describe the request, documents available, next step needed, and any important context."></textarea></div>
+            <label class="check-row"><input type="checkbox" name="Priority" /> Mark as priority premium request</label>
+            <button class="btn btn-primary" type="submit"><i class="fa-brands fa-whatsapp"></i> Submit request & open WhatsApp</button>
+          </div>
+          <p class="auth-status" data-dashboard-request-status></p>
+        </form>
+
+        <aside class="dashboard-side-stack reveal">
+          <section class="dashboard-panel card">
+            <span class="eyebrow">Pending actions</span>
+            <h3>What needs attention</h3>
+            <div class="pending-action-list" data-pending-actions>
+              <div class="activity-item"><strong>Loading</strong><span>Checking request actions.</span></div>
+            </div>
+          </section>
+          <section class="dashboard-panel card">
+            <span class="eyebrow">Recent updates</span>
+            <h3>Latest movement</h3>
+            <div class="activity-list mini-activity" data-dashboard-updates>
+              <div class="activity-item"><strong>Loading</strong><span>Fetching your request timeline.</span></div>
+            </div>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="pillar-desks">
+      <div class="container">
+        <div class="section-head reveal"><span class="eyebrow">Four premium desks</span><h2>What each pillar workspace handles.</h2><p>Use these desks to submit more complete requests, prepare documents and understand what stage your matter is in.</p></div>
+        <div class="premium-desk-grid">
+          <article class="premium-desk-card reveal" data-pillar-card="real-estate">
+            <div class="desk-icon"><i class="fa-solid fa-building"></i></div>
+            <span class="catalogue-tag">Real Estate Desk</span>
+            <h3>Property, land and verification support.</h3>
+            <p>For land acquisition, verified property sourcing, inspection planning, document review and transaction guidance.</p>
+            <ul><li>Property sourcing request</li><li>Land acquisition brief</li><li>Inspection and verification checklist</li><li>Document vault for title papers</li></ul>
+            <button class="card-link" type="button" data-pillar-quick="Real Estate" data-title="Verified Property Sourcing">Create Real Estate request <i class="fa-solid fa-arrow-right"></i></button>
+          </article>
+          <article class="premium-desk-card reveal" data-pillar-card="fintech">
+            <div class="desk-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <span class="catalogue-tag">Fintech Desk</span>
+            <h3>Merchant payment and transaction readiness.</h3>
+            <p>For merchant setup, KYC readiness, settlement support, payment documentation and business transaction clarity.</p>
+            <ul><li>Merchant payment setup</li><li>KYC document checklist</li><li>Settlement support ticket</li><li>Business payment workflow support</li></ul>
+            <button class="card-link" type="button" data-pillar-quick="Fintech" data-title="Merchant Payment Setup">Create Fintech request <i class="fa-solid fa-arrow-right"></i></button>
+          </article>
+          <article class="premium-desk-card reveal" data-pillar-card="logistics">
+            <div class="desk-icon"><i class="fa-solid fa-truck-fast"></i></div>
+            <span class="catalogue-tag">Logistics Desk</span>
+            <h3>Delivery, dispatch and movement coordination.</h3>
+            <p>For pickup/drop-off planning, route details, package records, proof of pickup and proof of delivery.</p>
+            <ul><li>Corporate delivery request</li><li>Pickup and drop-off details</li><li>Movement status tracking</li><li>Proof of delivery record</li></ul>
+            <button class="card-link" type="button" data-pillar-quick="Logistics" data-title="Corporate Delivery Coordination">Create Logistics request <i class="fa-solid fa-arrow-right"></i></button>
+          </article>
+          <article class="premium-desk-card reveal" data-pillar-card="shipping">
+            <div class="desk-icon"><i class="fa-solid fa-ship"></i></div>
+            <span class="catalogue-tag">Shipping Desk</span>
+            <h3>Import, export and freight documentation.</h3>
+            <p>For cargo briefs, freight support, route details, document checklists, customs/clearing coordination and release updates.</p>
+            <ul><li>Import/export request</li><li>Cargo and route details</li><li>Shipping document checklist</li><li>Freight coordination timeline</li></ul>
+            <button class="card-link" type="button" data-pillar-quick="Shipping" data-title="Import & Export Coordination">Create Shipping request <i class="fa-solid fa-arrow-right"></i></button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section request-tracking-section">
+      <div class="container">
+        <div class="section-head reveal"><span class="eyebrow">Request tracking</span><h2>All saved enquiries and service requests.</h2><p>Track each request by pillar, status, next action and latest update.</p></div>
+        <div class="request-tracking-grid reveal" data-dashboard-request-list>
+          <div class="activity-item"><strong>Loading</strong><span>Fetching your secured request records.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section premium-two-column" id="document-vault">
+      <div class="container dashboard-workspace-grid reverse-grid">
+        <form class="auth-card card reveal" data-document-upload>
+          <span class="eyebrow"><i class="fa-solid fa-folder-open"></i> Document Vault</span>
+          <h2>Upload a document to your profile.</h2>
+          <p>Store supporting documents for property, KYC, delivery, cargo, invoices, permits, media proof and other request files.</p>
+          <div class="form-grid two-col-form">
+            <div class="form-row"><label>Pillar</label><select name="category" required><option value="real-estate">Real Estate</option><option value="fintech">Fintech</option><option value="logistics">Logistics</option><option value="shipping">Shipping</option><option value="premium">Premium</option></select></div>
+            <div class="form-row"><label>Document title</label><input name="title" required placeholder="Example: Survey plan, invoice, waybill" /></div>
+            <div class="form-row full-span"><label>Choose file</label><input type="file" name="file" required accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,video/*" /></div>
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload document</button>
+          </div>
+          <p class="auth-status" data-document-status></p>
+        </form>
+        <section class="dashboard-panel card reveal">
+          <span class="eyebrow">Vault records</span>
+          <h3>Uploaded documents</h3>
+          <div class="document-vault-list" data-document-list>
+            <div class="activity-item"><strong>No documents loaded yet</strong><span>Upload files here after running the dashboard schema upgrade.</span></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="section" id="premium-catalogue">
+      <div class="container">
+        <div class="section-head reveal"><span class="eyebrow">Premium catalogue</span><h2>Current enterprise services available to you.</h2><p>Preview active catalogue records from Real Estate, Fintech, Logistics, Shipping and Premium support.</p></div>
+        <div class="catalogue-grid premium-catalogue-grid" data-dashboard-catalogue>
+          <article class="catalogue-card"><span class="catalogue-tag">Loading</span><h3>Catalogue loading</h3><p>Fetching active catalogue records from Supabase.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section premium-two-column">
+      <div class="container dashboard-workspace-grid">
+        <section class="dashboard-panel card reveal">
+          <span class="eyebrow">Support desk</span>
+          <h3>Continue with the team.</h3>
+          <p>Use WhatsApp for urgent follow-up, or email the admin desk for account and catalogue support.</p>
+          <div class="dashboard-support-actions">
+            <a class="btn btn-primary" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20am%20following%20up%20from%20my%20premium%20dashboard." target="_blank" rel="noopener" data-enquiry-title="Premium dashboard support"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp Chat</a>
+            <a class="btn btn-ghost" href="mailto:admin@heylarmah.xyz"><i class="fa-solid fa-envelope"></i> admin@heylarmah.xyz</a>
+          </div>
+        </section>
+        <section class="dashboard-panel card reveal">
+          <span class="eyebrow">Profile & security</span>
+          <h3>Your secured profile</h3>
+          <p>Keep your account protected with verified email changes, reauthentication and password updates.</p>
+          <div class="security-jump"><a class="card-link" href="#security">Manage account security <i class="fa-solid fa-arrow-right"></i></a></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="section security-section" id="security">
       <div class="container">
         <div class="section-head reveal"><span class="eyebrow">Account security</span><h2>Manage your verified access.</h2><p>Update sensitive account details with verified email flows and password-based reauthentication.</p></div>
         <div class="security-grid">
@@ -142,7 +326,6 @@
         </div>
       </div>
     </section>
-    <section class="section"><div class="container"><div class="section-head reveal"><span class="eyebrow">Recent activity</span><h2>Your saved enquiries.</h2></div><div class="activity-list reveal" data-user-requests><div class="activity-item"><strong>Loading</strong><span>Fetching your secured request records.</span></div></div></div></section>
   </main>
   <footer class="site-footer">
     <div class="container footer-grid">
