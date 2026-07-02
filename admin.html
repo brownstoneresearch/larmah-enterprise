@@ -91,22 +91,146 @@
         </form>
       </div>
     </section>
-    <section class="section" data-admin-workspace hidden>
-      <div class="container dash-toolbar reveal"><div><span class="eyebrow">Active admin</span><h2><span data-admin-email-label>heylarmahtech@outlook.com</span></h2></div><button class="btn btn-danger" type="button" data-admin-sign-out><i class="fa-solid fa-right-from-bracket"></i> Sign out</button></div>
-      <div class="container admin-grid admin-grid-wide">
-        <form class="admin-panel admin-panel-wide reveal" data-invite-user>
-          <span class="eyebrow"><i class="fa-solid fa-user-plus"></i> Premium access</span>
-          <h2>Invite a premium user.</h2>
-          <p>Send a secure account invitation to a client or team member. The invitation is handled through the protected Supabase Edge Function, not the public frontend.</p>
-          <div class="form-grid two-col-form">
-            <div class="form-row"><label>Full name</label><input name="full_name" placeholder="Invitee name" autocomplete="name" /></div>
-            <div class="form-row"><label>Email address</label><input type="email" name="email" required placeholder="client@example.com" autocomplete="email" /></div>
-            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Send invitation</button>
-          </div>
-          <p class="auth-status" data-auth-status></p>
-        </form>
+    <section class="section admin-workspace-section" data-admin-workspace hidden>
+      <div class="container admin-control-bar reveal">
+        <div>
+          <span class="eyebrow"><i class="fa-solid fa-gauge-high"></i> Admin dashboard</span>
+          <h2>Complete content control desk.</h2>
+          <p>Signed in as <strong data-admin-email-label>heylarmahtech@outlook.com</strong>. Use the quick panels below to upload catalogue media, edit service records, post blog content, invite clients and verify premium users.</p>
+        </div>
+        <button class="btn btn-danger" type="button" data-admin-sign-out><i class="fa-solid fa-right-from-bracket"></i> Sign out</button>
+      </div>
 
-        <section class="admin-panel admin-panel-wide reveal" data-admin-users-panel>
+      <div class="container admin-overview-grid reveal" aria-label="Admin dashboard quick actions">
+        <a class="admin-overview-card admin-overview-primary" href="#catalogue-upload">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <strong>Upload catalogue</strong>
+          <span>Add photos, videos, categories and homepage-ready service containers.</span>
+        </a>
+        <a class="admin-overview-card" href="#catalogue-records">
+          <i class="fa-solid fa-pen-to-square"></i>
+          <strong>Edit catalogue records</strong>
+          <span>Update active/draft status, featured order, titles, descriptions and media.</span>
+        </a>
+        <a class="admin-overview-card" href="#blog-publishing">
+          <i class="fa-solid fa-newspaper"></i>
+          <strong>Post blog content</strong>
+          <span>Publish SEO-ready insight articles with cover media and categories.</span>
+        </a>
+        <a class="admin-overview-card" href="#user-management">
+          <i class="fa-solid fa-users-gear"></i>
+          <strong>Verify users</strong>
+          <span>Approve new premium users and edit client profile data.</span>
+        </a>
+        <a class="admin-overview-card" href="#premium-invite">
+          <i class="fa-solid fa-user-plus"></i>
+          <strong>Invite premium users</strong>
+          <span>Send secured Supabase invitations for dashboard access.</span>
+        </a>
+      </div>
+
+      <div class="container admin-tabbar reveal" aria-label="Admin workspace sections">
+        <a href="#catalogue-upload"><i class="fa-solid fa-photo-film"></i> Catalogue upload</a>
+        <a href="#catalogue-records"><i class="fa-solid fa-layer-group"></i> Catalogue records</a>
+        <a href="#blog-publishing"><i class="fa-solid fa-blog"></i> Blog posts</a>
+        <a href="#user-management"><i class="fa-solid fa-user-check"></i> Users</a>
+        <a href="#premium-invite"><i class="fa-solid fa-paper-plane"></i> Invites</a>
+      </div>
+
+      <div class="container admin-content-stack">
+        <section class="admin-panel admin-panel-wide admin-section-card admin-upload-panel reveal" id="catalogue-upload" data-catalogue-admin-panel>
+          <div class="admin-panel-heading">
+            <div>
+              <span class="eyebrow"><i class="fa-solid fa-photo-film"></i> Start here</span>
+              <h2>Upload catalogue photos, videos and service records.</h2>
+              <p>This section is now placed first on the admin dashboard so catalogue upload is easy to find. Upload a primary photo/video, add optional gallery files, choose the pillar category and publish the record to the public catalogue.</p>
+            </div>
+            <button class="btn btn-ghost" type="button" data-admin-refresh-catalogue><i class="fa-solid fa-rotate"></i> Refresh catalogue</button>
+          </div>
+
+          <div class="admin-upload-layout">
+            <aside class="admin-upload-guide">
+              <span class="eyebrow">Catalogue workflow</span>
+              <h3>What this publishes</h3>
+              <ul>
+                <li><i class="fa-solid fa-check"></i> Homepage catalogue containers when featured.</li>
+                <li><i class="fa-solid fa-check"></i> Paginated pillar page records.</li>
+                <li><i class="fa-solid fa-check"></i> Photo, video and gallery media through Supabase Storage.</li>
+                <li><i class="fa-solid fa-check"></i> Active or draft records controlled from admin.</li>
+              </ul>
+              <div class="admin-upload-note"><strong>Tip:</strong> For homepage visibility, tick <em>Feature on homepage</em>, keep the item active, and set a low sort order.</div>
+            </aside>
+
+            <form class="admin-create-form admin-upload-form" data-catalogue-upload>
+              <div class="form-grid two-col-form">
+                <div class="form-row"><label>Category</label><select name="category" required><option value="real-estate">Real Estate</option><option value="fintech">Fintech</option><option value="logistics">Logistics</option><option value="shipping">Shipping</option><option value="premium">Premium</option></select></div>
+                <div class="form-row"><label>Title</label><input name="title" required placeholder="Catalogue title" /></div>
+                <div class="form-row form-row-full"><label>Description</label><textarea name="description" required placeholder="Short catalogue description"></textarea></div>
+                <div class="form-row"><label>Price / note</label><input name="price" placeholder="Optional price, range or note" /></div>
+                <div class="form-row"><label>Sort order</label><input type="number" name="sort_order" value="10" /></div>
+                <div class="form-row"><label>Primary photo or video</label><input type="file" name="media_file" accept="image/*,video/*" /><small class="field-note">Recommended: WebP/JPG for photos, MP4/WebM for videos.</small></div>
+                <div class="form-row"><label>Additional photos/videos</label><input type="file" name="gallery_files" accept="image/*,video/*" multiple /><small class="field-note">Optional gallery files for the catalogue record.</small></div>
+                <div class="form-row"><label>Existing media URL</label><input name="media_url" placeholder="Optional existing photo/video URL" /></div>
+                <div class="form-row"><label>Tags</label><input name="tags" placeholder="property, verified, lagos" /></div>
+                <label class="check-row"><input type="checkbox" name="featured" /> Feature on homepage when selected by database order</label>
+                <label class="check-row"><input type="checkbox" name="active" checked /> Publish as active</label>
+                <button class="btn btn-primary" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload catalogue</button>
+              </div>
+              <p class="auth-status" data-catalogue-status></p>
+            </form>
+          </div>
+        </section>
+
+        <section class="admin-panel admin-panel-wide admin-section-card reveal" id="catalogue-records">
+          <div class="admin-panel-heading">
+            <div>
+              <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> Catalogue records</span>
+              <h2>Edit active catalogue containers.</h2>
+              <p>The core records requested for direct editing are highlighted first. You can change title, category, description, media URL, uploaded media, active status, homepage priority and sort order without touching code.</p>
+            </div>
+            <a class="btn btn-ghost" href="#catalogue-upload"><i class="fa-solid fa-plus"></i> Add new catalogue</a>
+          </div>
+          <div class="admin-priority-block">
+            <div class="admin-list-head"><strong>Priority editable catalogue records</strong><span>Core active records across Real Estate, Fintech, Logistics, Shipping and Premium.</span></div>
+            <div class="admin-priority-grid" data-catalogue-priority-list>
+              <div class="admin-list-item"><span><strong>Loading priority records…</strong><br>Sign in as admin to edit these catalogue items.</span></div>
+            </div>
+          </div>
+          <div class="admin-subhead"><span class="eyebrow">All editable catalogue records</span><p>Every Supabase catalogue item appears below after admin login.</p></div>
+          <div class="admin-catalogue-edit-list" data-admin-catalogue-list><div class="admin-list-item"><span><strong>Loading catalogue records…</strong><br>Sign in as admin to edit published service containers.</span></div></div>
+        </section>
+
+        <section class="admin-panel admin-panel-wide admin-section-card reveal" id="blog-publishing">
+          <div class="admin-panel-heading">
+            <div>
+              <span class="eyebrow"><i class="fa-solid fa-newspaper"></i> Blog publishing</span>
+              <h2>Post and manage insight content.</h2>
+              <p>Create matured blog articles for the Insights page with categories, excerpts, body content, author, tags and optional cover photo or video.</p>
+            </div>
+          </div>
+          <form class="admin-create-form admin-blog-form" data-insight-upload>
+            <div class="form-grid two-col-form">
+              <div class="form-row"><label>Category</label><select name="category" required><option>Enterprise</option><option>Real Estate</option><option>Fintech</option><option>Logistics</option><option>Shipping</option><option>Premium</option></select></div>
+              <div class="form-row"><label>Title</label><input name="title" required placeholder="Insight title" /></div>
+              <div class="form-row"><label>Slug</label><input name="slug" placeholder="Optional URL-friendly slug" /></div>
+              <div class="form-row"><label>Author</label><input name="author" value="Hey Larmah Editorial Desk" /></div>
+              <div class="form-row"><label>Read time</label><input name="read_time" value="4 min read" /></div>
+              <div class="form-row"><label>Cover photo or video</label><input type="file" name="media_file" accept="image/*,video/*" /></div>
+              <div class="form-row"><label>Existing media URL</label><input name="media_url" placeholder="Optional existing image/video URL" /></div>
+              <div class="form-row"><label>Tags</label><input name="tags" placeholder="enterprise, trade, growth" /></div>
+              <div class="form-row form-row-full"><label>Excerpt</label><textarea name="excerpt" required placeholder="Short blog preview"></textarea></div>
+              <div class="form-row form-row-full"><label>Body</label><textarea name="body" required placeholder="Full blog article"></textarea></div>
+              <label class="check-row"><input type="checkbox" name="pinned" /> Pin as featured</label>
+              <label class="check-row"><input type="checkbox" name="active" checked /> Publish as active</label>
+              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-pen-nib"></i> Publish blog post</button>
+            </div>
+            <p class="auth-status" data-insight-status></p>
+          </form>
+          <div class="admin-subhead"><span class="eyebrow">Recent blog posts</span><p>Published and draft insight posts load here after sign in.</p></div>
+          <div class="admin-list" data-admin-insight-list><div class="admin-list-item"><span><strong>Loading blog posts…</strong><br>Published insight records will appear here.</span></div></div>
+        </section>
+
+        <section class="admin-panel admin-panel-wide admin-section-card reveal" id="user-management" data-admin-users-panel>
           <div class="admin-panel-heading">
             <div>
               <span class="eyebrow"><i class="fa-solid fa-users-gear"></i> User verification</span>
@@ -124,63 +248,16 @@
           </div>
         </section>
 
-        <section class="admin-panel admin-panel-wide reveal" data-catalogue-admin-panel>
-          <div class="admin-panel-heading">
-            <div>
-              <span class="eyebrow"><i class="fa-solid fa-photo-film"></i> Catalogue manager</span>
-              <h2>Upload and edit catalogue photos, videos and service records.</h2>
-              <p>Manage the active homepage containers and all paginated pillar catalogue records. The default records such as Import &amp; Export Coordination, Land Acquisition Support, Merchant Payment Setup, Corporate Delivery Coordination, Verified Property Sourcing and Priority Enterprise Desk are editable here.</p>
-            </div>
-            <button class="btn btn-ghost" type="button" data-admin-refresh-catalogue><i class="fa-solid fa-rotate"></i> Refresh catalogue</button>
+        <form class="admin-panel admin-panel-wide admin-section-card reveal" id="premium-invite" data-invite-user>
+          <span class="eyebrow"><i class="fa-solid fa-user-plus"></i> Premium access</span>
+          <h2>Invite a premium user.</h2>
+          <p>Send a secure account invitation to a client or team member. The invitation is handled through the protected Supabase Edge Function, not the public frontend.</p>
+          <div class="form-grid two-col-form">
+            <div class="form-row"><label>Full name</label><input name="full_name" placeholder="Invitee name" autocomplete="name" /></div>
+            <div class="form-row"><label>Email address</label><input type="email" name="email" required placeholder="client@example.com" autocomplete="email" /></div>
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Send invitation</button>
           </div>
-          <form class="admin-create-form" data-catalogue-upload>
-            <div class="form-grid two-col-form">
-              <div class="form-row"><label>Category</label><select name="category" required><option value="real-estate">Real Estate</option><option value="fintech">Fintech</option><option value="logistics">Logistics</option><option value="shipping">Shipping</option><option value="premium">Premium</option></select></div>
-              <div class="form-row"><label>Title</label><input name="title" required placeholder="Catalogue title" /></div>
-              <div class="form-row"><label>Description</label><textarea name="description" required placeholder="Short catalogue description"></textarea></div>
-              <div class="form-row"><label>Price / note</label><input name="price" placeholder="Optional price, range or note" /></div>
-              <div class="form-row"><label>Primary photo or video</label><input type="file" name="media_file" accept="image/*,video/*" /><small class="field-note">Recommended: WebP/JPG for photos, MP4/WebM for videos.</small></div>
-              <div class="form-row"><label>Additional photos/videos</label><input type="file" name="gallery_files" accept="image/*,video/*" multiple /><small class="field-note">Optional gallery files for the catalogue record.</small></div>
-              <div class="form-row"><label>Existing media URL</label><input name="media_url" placeholder="Optional existing photo/video URL" /></div>
-              <div class="form-row"><label>Tags</label><input name="tags" placeholder="property, verified, lagos" /></div>
-              <div class="form-row"><label>Sort order</label><input type="number" name="sort_order" value="10" /></div>
-              <label class="check-row"><input type="checkbox" name="featured" /> Feature on homepage when selected by database order</label>
-              <label class="check-row"><input type="checkbox" name="active" checked /> Publish as active</label>
-              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload catalogue</button>
-            </div>
-            <p class="auth-status" data-catalogue-status></p>
-          </form>
-          <div class="admin-priority-block">
-            <div class="admin-list-head"><strong>Priority editable catalogue records</strong><span>Core active records requested for direct editing across Real Estate, Fintech, Logistics, Shipping and Premium.</span></div>
-            <div class="admin-priority-grid" data-catalogue-priority-list>
-              <div class="admin-list-item"><span><strong>Loading priority records…</strong><br>Sign in as admin to edit these catalogue items.</span></div>
-            </div>
-          </div>
-          <div class="admin-subhead"><span class="eyebrow">Editable catalogue records</span><p>Change title, category, description, media URL, active status, homepage priority and sort order without touching code.</p></div>
-          <div class="admin-catalogue-edit-list" data-admin-catalogue-list><div class="admin-list-item"><span><strong>Loading catalogue records…</strong><br>Sign in as admin to edit published service containers.</span></div></div>
-        </section>
-
-        <form class="admin-panel reveal" data-insight-upload>
-          <span class="eyebrow"><i class="fa-solid fa-newspaper"></i> Blog publishing</span>
-          <h2>Post blog content.</h2>
-          <p>Create matured blog articles for the Insights page with categories, excerpts, body content, author, tags and optional cover media.</p>
-          <div class="form-grid">
-            <div class="form-row"><label>Category</label><select name="category" required><option>Enterprise</option><option>Real Estate</option><option>Fintech</option><option>Logistics</option><option>Shipping</option><option>Premium</option></select></div>
-            <div class="form-row"><label>Title</label><input name="title" required placeholder="Insight title" /></div>
-            <div class="form-row"><label>Slug</label><input name="slug" placeholder="Optional URL-friendly slug" /></div>
-            <div class="form-row"><label>Excerpt</label><textarea name="excerpt" required placeholder="Short blog preview"></textarea></div>
-            <div class="form-row"><label>Body</label><textarea name="body" required placeholder="Full blog article"></textarea></div>
-            <div class="form-row"><label>Author</label><input name="author" value="Hey Larmah Editorial Desk" /></div>
-            <div class="form-row"><label>Read time</label><input name="read_time" value="4 min read" /></div>
-            <div class="form-row"><label>Cover photo or video</label><input type="file" name="media_file" accept="image/*,video/*" /></div>
-            <div class="form-row"><label>Existing media URL</label><input name="media_url" placeholder="Optional existing image/video URL" /></div>
-            <div class="form-row"><label>Tags</label><input name="tags" placeholder="enterprise, trade, growth" /></div>
-            <label class="check-row"><input type="checkbox" name="pinned" /> Pin as featured</label>
-            <label class="check-row"><input type="checkbox" name="active" checked /> Publish as active</label>
-            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-pen-nib"></i> Publish blog post</button>
-          </div>
-          <p class="auth-status" data-insight-status></p>
-          <div class="admin-list" data-admin-insight-list></div>
+          <p class="auth-status" data-auth-status></p>
         </form>
       </div>
     </section>
