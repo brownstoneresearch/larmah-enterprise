@@ -98,7 +98,7 @@
   }
 
   async function signUp(email, password, metadata){
-    const redirectTo = authRedirect("auth.html?confirmed=1");
+    const redirectTo = authRedirect("auth.html?registered=1&confirmed=1");
     if(client){
       const { data, error } = await client.auth.signUp({ email, password, options:{ emailRedirectTo: redirectTo, data: metadata || {} } });
       if(error) throw error;
@@ -184,8 +184,118 @@
     }
     return supabaseFetch(`/functions/v1/${name}`, { method:"POST", token: currentAccessToken(), body: JSON.stringify(body || {}) });
   }
+
+  async function requireAdminSession(){
+    await ready.catch(()=>{});
+    const user = await getCurrentUser();
+    if(!user || !isAdminEmail(user.email)){
+      throw new Error("Approved admin session required. Sign in with heylarmahtech@outlook.com.");
+    }
+    return user;
+  }
+
+  function normalizedProfileUser(row){
+    const profile = row || {};
+    return {
+      user: {
+        id: profile.id,
+        email: profile.email,
+        created_at: profile.created_at,
+        last_sign_in_at: profile.last_sign_in_at || "Profile record",
+        email_confirmed_at: profile.email_confirmed_at || null,
+        user_metadata: {
+          full_name: profile.full_name || "",
+          phone: profile.phone || "",
+          company: profile.company || "",
+          account_type: profile.role || "premium",
+          account_status: profile.account_status || "pending"
+        }
+      },
+      profile
+    };
+  }
+
+  async function adminUsersDirect(action, payload){
+    const admin = await requireAdminSession();
+    const body = payload || {};
+    const now = new Date().toISOString();
+
+    if(action === "list_users"){
+      const rows = await select("profiles", "?select=*&order=created_at.desc&limit=150", { token: currentAccessToken() });
+      const search = String(body.search || "").trim().toLowerCase();
+      let profiles = Array.isArray(rows) ? rows : [];
+      if(search){
+        profiles = profiles.filter((profile)=>{
+          return [profile.email, profile.full_name, profile.phone, profile.company, profile.role, profile.account_status, profile.last_admin_note]
+            .map((value)=>String(value || "").toLowerCase())
+            .join(" ")
+            .includes(search);
+        });
+      }
+      return { ok:true, source:"profiles-direct", users: profiles.map(normalizedProfileUser), total: profiles.length };
+    }
+
+    const userId = String(body.user_id || body.id || "").trim();
+    if(!userId) throw new Error("User ID is required.");
+
+    const lookup = await select("profiles", `?select=*&id=eq.${encodeURIComponent(userId)}&limit=1`, { token: currentAccessToken() });
+    const existing = Array.isArray(lookup) ? lookup[0] : null;
+    if(!existing) throw new Error("User profile was not found. Ask the user to register first, then refresh the admin dashboard.");
+
+    if(action === "verify_user"){
+      const patch = {
+        role: existing.email && isAdminEmail(existing.email) ? "admin" : "premium",
+        account_status: "verified",
+        is_verified: true,
+        verified_at: now,
+        verified_by: admin.id,
+        updated_at: now
+      };
+      const updated = await update("profiles", `?id=eq.${encodeURIComponent(userId)}`, patch);
+      return { ok:true, source:"profiles-direct", user_id:userId, profile: Array.isArray(updated) ? updated[0] : patch };
+    }
+
+    if(action === "update_user"){
+      const wantedRole = String(body.role || existing.role || "premium").trim();
+      const role = (wantedRole === "admin" && isAdminEmail(existing.email)) ? "admin" : (["user","premium"].includes(wantedRole) ? wantedRole : "premium");
+      const wantedStatus = String(body.account_status || existing.account_status || "pending").trim();
+      const account_status = ["pending","verified","suspended"].includes(wantedStatus) ? wantedStatus : "pending";
+      const is_verified = Boolean(body.is_verified) || account_status === "verified";
+      const patch = {
+        full_name: String(body.full_name || "").trim(),
+        phone: String(body.phone || "").trim(),
+        company: String(body.company || "").trim(),
+        role,
+        account_status,
+        is_verified,
+        verified_at: is_verified ? (existing.verified_at || now) : null,
+        verified_by: is_verified ? (existing.verified_by || admin.id) : null,
+        last_admin_note: String(body.admin_note || "").trim(),
+        updated_at: now
+      };
+      const updated = await update("profiles", `?id=eq.${encodeURIComponent(userId)}`, patch);
+      return { ok:true, source:"profiles-direct", user_id:userId, profile: Array.isArray(updated) ? updated[0] : Object.assign({}, existing, patch) };
+    }
+
+    throw new Error("Unsupported user management action.");
+  }
+
   async function adminUsers(action, payload){
-    return invokeFunction("admin-users", Object.assign({ action }, payload || {}));
+    await ready.catch(()=>{});
+    const body = Object.assign({ action }, payload || {});
+    try{
+      return await invokeFunction("admin-users", body);
+    }catch(edgeError){
+      try{
+        return await adminUsersDirect(action, payload || {});
+      }catch(directError){
+        const message = directError && directError.message ? directError.message : (edgeError && edgeError.message ? edgeError.message : "User management failed.");
+        const err = new Error(message);
+        err.edgeError = edgeError;
+        err.directError = directError;
+        throw err;
+      }
+    }
   }
 
   function publicUrl(path){ return `${config.supabaseUrl}/storage/v1/object/public/${config.storageBucket}/${path}`; }

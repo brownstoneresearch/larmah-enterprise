@@ -4,6 +4,9 @@ verify_jwt = false
 [functions.invite-user]
 verify_jwt = true
 
+[functions.admin-users]
+verify_jwt = true
+
 # Local Supabase CLI Google provider config. In hosted Supabase, enable this in Dashboard → Authentication → Providers → Google.
 [auth.external.google]
 enabled = true

@@ -222,8 +222,8 @@ create policy invitations_admin_all on public.invitations for all using (public.
 -- Storage bucket for admin uploads
 -- =========================================================
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values ('larmah-media', 'larmah-media', true, 104857600, array['image/jpeg','image/png','image/webp','image/gif','image/avif','video/mp4','video/webm','video/quicktime','video/mpeg','application/pdf','text/plain','text/csv','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'])
-on conflict (id) do update set public = true, file_size_limit = 104857600, allowed_mime_types = excluded.allowed_mime_types;
+values ('larmah-media', 'larmah-media', true, 5242880, array['image/jpeg','image/png','image/webp','image/gif'])
+on conflict (id) do update set public = true, file_size_limit = 5242880, allowed_mime_types = excluded.allowed_mime_types;
 
 drop policy if exists "larmah_media_public_read" on storage.objects;
 create policy "larmah_media_public_read" on storage.objects for select using (bucket_id = 'larmah-media');
@@ -345,7 +345,7 @@ values (
   'larmah-media',
   true,
   104857600,
-  array['image/jpeg','image/png','image/webp','image/gif','image/avif','video/mp4','video/webm','video/quicktime','video/mpeg','application/pdf','text/plain','text/csv','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']
+  array['image/jpeg','image/png','image/webp','image/gif','image/avif','video/mp4','video/webm','video/quicktime','video/mpeg']
 )
 on conflict (id) do update
 set public = true,
@@ -495,80 +495,88 @@ on conflict (slug) do update set title = excluded.title, excerpt = excluded.exce
 
 
 -- =========================================================
--- Premium dashboard request/document upgrade
--- Enables premium users to track requests, upload documents and view a document vault.
+-- New user self-registration enablement
+-- Keeps public registration open while admin verification remains controlled.
 -- =========================================================
-alter table public.requests add column if not exists updated_at timestamptz not null default now();
-alter table public.requests add column if not exists priority text not null default 'normal';
-alter table public.requests add column if not exists assigned_to uuid references auth.users(id) on delete set null;
-alter table public.requests drop constraint if exists requests_status_check;
-alter table public.requests add constraint requests_status_check check (status in ('new','submitted','contacted','under-review','documents-required','in-progress','awaiting-client','awaiting-client-response','scheduled','completed','closed','archived'));
-alter table public.requests drop constraint if exists requests_priority_check;
-alter table public.requests add constraint requests_priority_check check (priority in ('normal','priority','urgent'));
+create or replace function public.handle_new_user()
+returns trigger as $$
+declare
+  requested_role text := coalesce(new.raw_user_meta_data ->> 'account_type', 'premium');
+  admin_match boolean := lower(new.email) = lower(public.admin_email());
+begin
+  insert into public.profiles (
+    id,
+    email,
+    role,
+    full_name,
+    phone,
+    company,
+    account_status,
+    is_verified,
+    verified_at,
+    updated_at
+  )
+  values (
+    new.id,
+    new.email,
+    case
+      when admin_match then 'admin'
+      when requested_role in ('user','premium') then requested_role
+      else 'premium'
+    end,
+    coalesce(new.raw_user_meta_data ->> 'full_name',''),
+    coalesce(new.raw_user_meta_data ->> 'phone',''),
+    coalesce(new.raw_user_meta_data ->> 'company',''),
+    case when admin_match then 'verified' else 'pending' end,
+    case when admin_match then true else false end,
+    case when admin_match then now() else null end,
+    now()
+  )
+  on conflict (id) do update
+  set email = excluded.email,
+      role = case when admin_match then 'admin' else public.profiles.role end,
+      full_name = coalesce(nullif(excluded.full_name,''), public.profiles.full_name),
+      phone = coalesce(nullif(excluded.phone,''), public.profiles.phone),
+      company = coalesce(nullif(excluded.company,''), public.profiles.company),
+      account_status = case when admin_match then 'verified' else coalesce(public.profiles.account_status, 'pending') end,
+      is_verified = case when admin_match then true else public.profiles.is_verified end,
+      verified_at = case when admin_match then coalesce(public.profiles.verified_at, now()) else public.profiles.verified_at end,
+      updated_at = now();
+  return new;
+end;
+$$ language plpgsql security definer set search_path = public;
 
-create table if not exists public.request_documents (
-  id uuid primary key default gen_random_uuid(),
-  request_id uuid references public.requests(id) on delete set null,
-  user_id uuid references auth.users(id) on delete cascade,
-  category text not null default 'premium',
-  title text not null,
-  file_url text not null,
-  file_path text,
-  file_type text,
-  mime_type text,
-  size bigint,
-  status text not null default 'uploaded',
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+after insert on auth.users
+for each row execute procedure public.handle_new_user();
 
-alter table public.request_documents add column if not exists request_id uuid references public.requests(id) on delete set null;
-alter table public.request_documents add column if not exists user_id uuid references auth.users(id) on delete cascade;
-alter table public.request_documents add column if not exists category text not null default 'premium';
-alter table public.request_documents add column if not exists title text;
-alter table public.request_documents add column if not exists file_url text;
-alter table public.request_documents add column if not exists file_path text;
-alter table public.request_documents add column if not exists file_type text;
-alter table public.request_documents add column if not exists mime_type text;
-alter table public.request_documents add column if not exists size bigint;
-alter table public.request_documents add column if not exists status text not null default 'uploaded';
-alter table public.request_documents add column if not exists created_at timestamptz not null default now();
-alter table public.request_documents add column if not exists updated_at timestamptz not null default now();
-alter table public.request_documents drop constraint if exists request_documents_category_check;
-alter table public.request_documents add constraint request_documents_category_check check (category in ('real-estate','fintech','logistics','shipping','premium','general'));
-alter table public.request_documents drop constraint if exists request_documents_status_check;
-alter table public.request_documents add constraint request_documents_status_check check (status in ('uploaded','reviewing','approved','rejected','archived'));
-alter table public.request_documents enable row level security;
+-- Keep admins able to verify/edit users while newly registered clients can read their own profile.
+drop policy if exists profiles_read_own on public.profiles;
+create policy profiles_read_own on public.profiles for select using (auth.uid() = id);
 
-drop policy if exists request_documents_insert_own on public.request_documents;
-create policy request_documents_insert_own on public.request_documents for insert with check (auth.uid() = user_id);
-drop policy if exists request_documents_read_own on public.request_documents;
-create policy request_documents_read_own on public.request_documents for select using (auth.uid() = user_id);
-drop policy if exists request_documents_admin_all on public.request_documents;
-create policy request_documents_admin_all on public.request_documents for all using (public.current_user_is_admin()) with check (public.current_user_is_admin());
+drop policy if exists profiles_admin_all on public.profiles;
+create policy profiles_admin_all on public.profiles for all using (public.current_user_is_admin()) with check (public.current_user_is_admin());
 
--- Authenticated premium users can upload their own dashboard documents into the larmah-media bucket.
-drop policy if exists "larmah_media_authenticated_dashboard_insert" on storage.objects;
-create policy "larmah_media_authenticated_dashboard_insert" on storage.objects for insert with check (
-  bucket_id = 'larmah-media'
-  and auth.role() = 'authenticated'
-  and (storage.foldername(name))[1] = 'client-documents'
-  and (storage.foldername(name))[2] = auth.uid()::text
-);
+-- =========================================================
+-- Admin user management reliability fix
+-- Allows the admin dashboard to load, verify and edit profile users directly from Supabase when the optional admin-users Edge Function has not been deployed yet.
+-- =========================================================
 
-drop policy if exists "larmah_media_authenticated_dashboard_update" on storage.objects;
-create policy "larmah_media_authenticated_dashboard_update" on storage.objects for update using (
-  bucket_id = 'larmah-media'
-  and auth.role() = 'authenticated'
-  and (storage.foldername(name))[1] = 'client-documents'
-  and (storage.foldername(name))[2] = auth.uid()::text
-) with check (
-  bucket_id = 'larmah-media'
-  and auth.role() = 'authenticated'
-  and (storage.foldername(name))[1] = 'client-documents'
-  and (storage.foldername(name))[2] = auth.uid()::text
-);
+grant usage on schema public to anon, authenticated;
+grant select, insert, update on public.profiles to authenticated;
 
-create index if not exists idx_request_documents_user_created on public.request_documents (user_id, created_at desc);
-create index if not exists idx_request_documents_request on public.request_documents (request_id, created_at desc);
-create index if not exists idx_requests_status_created on public.requests (status, created_at desc);
+alter table public.profiles enable row level security;
+
+drop policy if exists profiles_read_own on public.profiles;
+create policy profiles_read_own on public.profiles for select using (auth.uid() = id);
+
+drop policy if exists profiles_admin_read_all on public.profiles;
+create policy profiles_admin_read_all on public.profiles for select using (public.current_user_is_admin());
+
+drop policy if exists profiles_admin_all on public.profiles;
+create policy profiles_admin_all on public.profiles for all using (public.current_user_is_admin()) with check (public.current_user_is_admin());
+
+update public.profiles
+set role = 'admin', account_status = 'verified', is_verified = true, verified_at = coalesce(verified_at, now()), updated_at = now()
+where lower(email) = lower(public.admin_email());

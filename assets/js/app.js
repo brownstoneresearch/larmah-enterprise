@@ -10,15 +10,7 @@
   function showToast(message){ if(!toast) return; toast.textContent = message; toast.classList.add('show'); clearTimeout(window.__HLToast); window.__HLToast = setTimeout(()=>toast.classList.remove('show'), 3800); }
   function encode(s){ return encodeURIComponent(String(s||'').trim()); }
   function clean(s){ return String(s || '').trim(); }
-  function formFields(form){
-    const out = {};
-    new FormData(form).forEach((value, key)=>{
-      const isFile = (typeof File !== 'undefined' && value instanceof File) || (value && typeof value === 'object' && 'name' in value && 'size' in value && 'type' in value);
-      if(isFile) return;
-      out[key] = value;
-    });
-    return out;
-  }
+  function formFields(form){ return Object.fromEntries(new FormData(form).entries()); }
   function slug(s){ return clean(s).toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'') || 'general'; }
   function categoryFrom(value){ const raw = slug(value || page || 'general'); if(raw.includes('real')) return 'real-estate'; if(raw.includes('fintech') || raw.includes('exchange') || raw.includes('fx')) return 'fintech'; if(raw.includes('logistics')) return 'logistics'; if(raw.includes('shipping')) return 'shipping'; if(raw.includes('premium')) return 'premium'; if(raw.includes('contact')) return 'contact'; if(raw.includes('insight') || raw.includes('blog')) return 'insights'; return ['real-estate','fintech','logistics','shipping','premium','contact','insights','whatsapp','general'].includes(raw) ? raw : 'general'; }
   function escapeHTML(value){ return clean(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch])); }
@@ -28,30 +20,8 @@
     const category = categoryFrom(fields.Pillar || fields.Category || fields.category || (source === 'whatsapp-link' ? page : title) || source);
     const contact = clean(fields.Contact || fields.Phone || fields.Email || fields.email || '');
     const session = window.HLDatabase && window.HLDatabase.getSession ? window.HLDatabase.getSession() : null;
-    const currentUser = window.__HLDashboardUser || (session && session.user) || null;
-    const requestTitle = clean(fields.Name || fields.name || fields.Title || fields.title || title || 'Website enquiry');
-    const payload = {
-      category,
-      name: requestTitle,
-      phone: contact,
-      status: clean(fields.Status || fields.status || 'new') || 'new',
-      details: {
-        title: requestTitle,
-        source: source || 'website',
-        page: location.pathname.split('/').pop() || 'index.html',
-        url: location.href,
-        rc: RC,
-        objective: clean(fields.Objective || fields.objective || ''),
-        location: clean(fields.Location || fields.location || ''),
-        budget: clean(fields.Budget || fields.budget || ''),
-        timeline: clean(fields.Timeline || fields.timeline || ''),
-        priority: !!(fields.Priority || fields.priority),
-        message: clean(fields.Message || fields.message || fields.Details || fields.details || ''),
-        next_action: clean(fields.NextAction || fields.next_action || ''),
-        fields
-      }
-    };
-    if(currentUser && currentUser.id) payload.user_id = currentUser.id;
+    const payload = { category, name: clean(fields.Name || fields.name || ''), phone: contact, details: { title, source: source || 'website', page: location.pathname.split('/').pop() || 'index.html', url: location.href, rc: RC, fields } };
+    if(session && session.user && session.user.id) payload.user_id = session.user.id;
     return payload;
   }
   async function saveEnquiry(title, fields, source){ if(!window.HLDatabase || !window.HLDatabase.insert) return null; return window.HLDatabase.insert('requests', requestPayload(title, fields, source), { returning:false }); }
@@ -105,6 +75,7 @@
     const hash = new URLSearchParams((location.hash || '').replace(/^#/,''));
     const error = params.get('error_description') || hash.get('error_description');
     if(error) showToast(error.replace(/\+/g,' '));
+    if(params.get('registered')) showToast('Registration received. Check your email to confirm your account.');
     if(params.get('confirmed')) showToast('Email confirmed. You can now sign in.');
     if(params.get('invited')) showToast('Invitation accepted. Complete your secure sign in.');
     if(params.get('type') === 'recovery' || hash.get('type') === 'recovery'){
@@ -126,22 +97,30 @@
       const email = clean(data.email || data.Email);
       const password = clean(data.password || data.Password);
       const name = clean(data.full_name || data.Name || '');
+      const phone = clean(data.phone || data.Phone || '');
+      const company = clean(data.company || data.Company || '');
+      const confirmPassword = clean(data.confirm_password || '');
       const mode = form.getAttribute('data-auth-mode') || 'login';
       const redirect = form.getAttribute('data-auth-redirect') || 'dashboard.html';
       const status = form.querySelector('[data-auth-status]');
       if(!email || !password){ showToast('Enter email and password.'); return; }
+      if(mode === 'register'){
+        if(!name){ showToast('Enter your full name.'); return; }
+        if(password.length < 8){ showToast('Password must be at least 8 characters.'); return; }
+        if(confirmPassword && password !== confirmPassword){ showToast('Passwords do not match.'); setStatus(status, 'Passwords do not match.', 'error'); return; }
+      }
       if(!window.HLDatabase){ showToast('Supabase is not configured.'); return; }
       const button = form.querySelector('button[type="submit"]');
       await withButton(button, mode === 'register' ? '<i class="fa-solid fa-spinner fa-spin"></i> Creating account…' : '<i class="fa-solid fa-spinner fa-spin"></i> Signing in…', async()=>{
         await dbReady();
         if(mode === 'register'){
-          const result = await window.HLDatabase.signUp(email, password, { full_name: name, account_type: 'premium' });
+          const result = await window.HLDatabase.signUp(email, password, { full_name: name, phone, company, account_type: 'premium', account_status: 'pending', is_verified: false });
           if(result && result.session){
             showToast('Account created. Opening your premium dashboard…');
             setTimeout(()=>{ window.location.href = redirect; }, 650);
           }else{
-            setStatus(status, 'Account created. Please confirm your email address before signing in.', 'success');
-            showToast('Please confirm your email address to activate your account.');
+            setStatus(status, 'Account created. Please confirm your email address. After confirmation, your profile will be available for admin verification.', 'success');
+            showToast('Registration successful. Please confirm your email address.');
             form.reset();
           }
         }else{
@@ -356,144 +335,25 @@
     try{ const user = await window.HLDatabase.getCurrentUser(); if(!user || !user.id){ await window.HLDatabase.signOut(); window.location.href='auth.html'; return; } document.querySelectorAll('[data-user-email]').forEach(el=>el.textContent = user.email || 'Premium user'); document.querySelectorAll('[data-user-id]').forEach(el=>el.textContent = user.id || ''); await hydrateDashboard(user); }
     catch(err){ window.location.href = 'auth.html'; }
   }
-  function statusLabel(status){
-    const key = slug(status || 'new');
-    return ({
-      new:'New', submitted:'Submitted', contacted:'Contacted', review:'Under Review', 'under-review':'Under Review',
-      'documents-required':'Documents Required', 'in-progress':'In Progress', 'awaiting-client':'Awaiting Client',
-      'awaiting-client-response':'Awaiting Client Response', scheduled:'Scheduled', completed:'Completed', closed:'Closed', archived:'Archived'
-    })[key] || clean(status || 'New').replace(/-/g,' ').replace(/\b\w/g, m=>m.toUpperCase());
-  }
-  function statusClass(status){ return slug(status || 'new'); }
-  function formatDate(value){ try{ return value ? new Date(value).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}) : 'Not dated'; }catch{ return 'Not dated'; } }
-  function detail(row, key){ const d = row && row.details && typeof row.details === 'object' ? row.details : {}; return clean(d[key] || (d.fields && d.fields[key]) || (d.fields && d.fields[key.charAt(0).toUpperCase()+key.slice(1)]) || ''); }
-  function requestTitle(row){ return clean(detail(row,'title') || row.name || 'Premium request'); }
-  function requestNextAction(row){
-    const status = slug(row.status || 'new');
-    const custom = detail(row,'next_action');
-    if(custom) return custom;
-    if(status === 'documents-required') return 'Upload supporting documents in the Document Vault.';
-    if(status === 'awaiting-client' || status === 'awaiting-client-response') return 'Respond to the latest admin update or continue on WhatsApp.';
-    if(status === 'completed' || status === 'closed') return 'Request completed. Archive or create a new follow-up if needed.';
-    if(status === 'in-progress') return 'Hey Larmah desk is coordinating the next stage.';
-    return 'Request is saved and awaiting admin review.';
-  }
-  function statusBadge(status){ return `<span class="status-pill ${escapeHTML(statusClass(status))}">${escapeHTML(statusLabel(status))}</span>`; }
-  function renderRequestCard(row){
-    const category = clean(row.category || 'general');
-    const title = requestTitle(row);
-    const objective = detail(row,'objective') || detail(row,'message') || 'No detailed objective supplied yet.';
-    const location = detail(row,'location');
-    const timeline = detail(row,'timeline');
-    const next = requestNextAction(row);
-    const msg = `Hello Hey Larmah, I am following up on my ${labelForCategory(category)} request: ${title}.`;
-    return `<article class="request-card" data-request-id="${escapeHTML(row.id || '')}"><div><div class="request-card-top"><strong>${escapeHTML(title)}</strong><span class="catalogue-tag">${escapeHTML(labelForCategory(category))}</span></div><p>${escapeHTML(objective.length > 180 ? objective.slice(0,177)+'...' : objective)}</p><div class="request-meta"><span><i class="fa-regular fa-calendar"></i> ${escapeHTML(formatDate(row.created_at))}</span>${location ? `<span><i class="fa-solid fa-location-dot"></i> ${escapeHTML(location)}</span>` : ''}${timeline ? `<span><i class="fa-regular fa-clock"></i> ${escapeHTML(timeline)}</span>` : ''}</div><div class="request-next"><strong>Next action:</strong> <span>${escapeHTML(next)}</span></div><div class="request-actions"><a class="card-link" href="${waUrl(msg)}" target="_blank" rel="noopener" data-enquiry-title="Dashboard request follow-up">Continue on WhatsApp <i class="fa-brands fa-whatsapp"></i></a></div></div><div>${statusBadge(row.status)}</div></article>`;
-  }
-  function renderPending(rows){
-    const target = document.querySelector('[data-pending-actions]'); if(!target) return;
-    const active = (rows || []).filter(r => !['completed','closed','archived'].includes(statusClass(r.status))).slice(0,5);
-    target.innerHTML = active.length ? active.map(r=>`<div class="activity-item"><div><strong>${escapeHTML(requestNextAction(r))}</strong><span>${escapeHTML(requestTitle(r))} • ${escapeHTML(labelForCategory(r.category))}</span></div>${statusBadge(r.status)}</div>`).join('') : '<div class="activity-item"><strong>No pending action</strong><span>Create a request when you need support across any pillar.</span></div>';
-    const countEl = document.querySelector('[data-pending-actions-count]'); if(countEl) countEl.textContent = String(active.length);
-  }
-  function renderUpdates(rows){
-    const target = document.querySelector('[data-dashboard-updates]'); if(!target) return;
-    target.innerHTML = (rows && rows.length) ? rows.slice(0,6).map(r=>`<div class="activity-item"><div><strong>${escapeHTML(requestTitle(r))}</strong><span>${escapeHTML(labelForCategory(r.category))} • ${escapeHTML(statusLabel(r.status))} • ${escapeHTML(formatDate(r.created_at))}</span></div></div>`).join('') : '<div class="activity-item"><strong>No updates yet</strong><span>Your dashboard timeline will appear after your first saved request.</span></div>';
-  }
-  async function hydrateDashboardCatalogue(){
-    const grid = document.querySelector('[data-dashboard-catalogue]'); if(!grid || !window.HLDatabase) return;
-    try{
-      const rows = await window.HLDatabase.select('catalog_items', '?select=category,title,slug,description,price,tags,image_url,media_url,media_type,video_url,gallery&active=eq.true&order=featured.desc,sort_order.asc,created_at.desc&limit=8');
-      grid.innerHTML = Array.isArray(rows) && rows.length ? rows.map(catalogueCard).join('') : '<article class="catalogue-card"><span class="catalogue-tag">Catalogue</span><h3>No active catalogue yet</h3><p>Admin catalogue uploads will display here for premium users.</p></article>';
-    }catch{ grid.innerHTML = '<article class="catalogue-card"><span class="catalogue-tag">Catalogue</span><h3>Catalogue unavailable</h3><p>Run the Supabase schema and confirm catalogue table access.</p></article>'; }
-  }
-  function renderDocuments(rows){
-    const list = document.querySelector('[data-document-list]'); if(!list) return;
-    list.innerHTML = Array.isArray(rows) && rows.length ? rows.slice(0,12).map(doc=>`<div class="document-card"><div><strong>${escapeHTML(doc.title || 'Document')}</strong><span>${escapeHTML(labelForCategory(doc.category))} • ${escapeHTML(formatDate(doc.created_at))} • ${escapeHTML(doc.file_type || 'file')}</span></div><a href="${escapeHTML(doc.file_url || '#')}" target="_blank" rel="noopener">Preview <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>`).join('') : '<div class="activity-item"><strong>No documents yet</strong><span>Upload property papers, KYC files, invoices, waybills, cargo documents or media proof here.</span></div>';
-  }
-  async function hydrateDocuments(){
-    if(!document.querySelector('[data-document-list]') || !window.HLDatabase) return;
-    try{ const docs = await window.HLDatabase.select('request_documents','?select=id,category,title,file_url,file_type,created_at&order=created_at.desc&limit=30'); renderDocuments(docs); }
-    catch{ renderDocuments([]); }
-  }
   async function hydrateDashboard(user){
-    window.__HLDashboardUser = user || window.__HLDashboardUser || null;
     const grid = document.querySelector('.dash-grid');
     try{
       const profile = await window.HLDatabase.getProfile?.();
       if(profile){
-        const name = clean(profile.full_name || profile.company || user?.email || 'Premium user');
-        document.querySelectorAll('[data-user-name]').forEach(el=>el.textContent = name);
         document.querySelectorAll('[data-profile-role]').forEach(el=>el.textContent = labelForCategory(profile.role === 'admin' ? 'premium' : (profile.role || 'premium')));
-        document.querySelectorAll('[data-profile-status]').forEach(el=>el.textContent = profile.is_verified ? 'Verified Premium User' : (profile.account_status === 'suspended' ? 'Suspended' : 'Pending admin verification'));
+        document.querySelectorAll('[data-profile-status]').forEach(el=>el.textContent = profile.is_verified ? 'Verified by admin' : (profile.account_status === 'suspended' ? 'Suspended' : 'Pending admin verification'));
       }
     }catch{}
     try{
-      const rows = await window.HLDatabase.select('requests', '?select=id,category,status,created_at,details,name,phone&order=created_at.desc&limit=120');
+      const rows = await window.HLDatabase.select('requests', '?select=category,status,created_at,details&order=created_at.desc&limit=100');
       if(Array.isArray(rows)){
         const counts = rows.reduce((acc,row)=>{ acc[row.category] = (acc[row.category] || 0) + 1; return acc; }, {});
-        const totalEl = document.querySelector('[data-total-requests]'); if(totalEl) totalEl.textContent = String(rows.length);
-        const mapping = [['real-estate','Real Estate requests'],['fintech','Fintech requests'],['logistics','Logistics movements'],['shipping','Shipping briefs']];
-        if(grid){ Array.from(grid.querySelectorAll('[data-pillar-stat]')).forEach((card)=>{ const key=card.getAttribute('data-pillar-stat'); const strong=card.querySelector('strong'); const span=card.querySelector('span'); if(strong) strong.textContent=String(counts[key]||0); if(span) span.textContent=(mapping.find(x=>x[0]===key)||['','Requests'])[1]; }); }
-        mapping.forEach(([key])=>{ const latest = rows.find(r=>r.category === key); const el = document.querySelector(`[data-pillar-latest="${key}"]`); if(el) el.textContent = latest ? `${statusLabel(latest.status)} • ${requestTitle(latest)}` : 'No request yet'; });
-        renderPending(rows); renderUpdates(rows);
-        const list = document.querySelector('[data-dashboard-request-list]') || document.querySelector('[data-user-requests]');
-        if(list){ list.innerHTML = rows.length ? rows.map(renderRequestCard).join('') : '<div class="activity-item"><strong>No requests yet</strong><span>Create your first structured request using the Request Centre.</span></div>'; }
+        const mapping = [['real-estate','Real Estate requests'],['fintech','Fintech enquiries'],['logistics','Logistics movements'],['shipping','Shipping briefs']];
+        if(grid){ Array.from(grid.querySelectorAll('.dash-card')).forEach((card,i)=>{ const [key,label]=mapping[i]||[]; const strong=card.querySelector('strong'), span=card.querySelector('span'); if(strong&&key) strong.textContent=String(counts[key]||0); if(span&&label) span.textContent=label; }); }
+        const list = document.querySelector('[data-user-requests]'); if(list){ list.innerHTML = rows.length ? rows.slice(0,8).map(row=>`<div class="activity-item"><strong>${escapeHTML(labelForCategory(row.category))}</strong><span>${escapeHTML((row.details && row.details.title) || 'Website enquiry')}</span></div>`).join('') : '<div class="activity-item"><strong>No requests yet</strong><span>Your premium dashboard will show your saved enquiries here.</span></div>'; }
       }
-    }catch(err){
-      const list = document.querySelector('[data-dashboard-request-list]') || document.querySelector('[data-user-requests]'); if(list) list.innerHTML = '<div class="activity-item"><strong>Request records unavailable</strong><span>Run the updated Supabase schema and sign in again.</span></div>';
-    }
-    await hydrateDocuments();
-    await hydrateDashboardCatalogue();
+    }catch{}
   }
-  function initDashboardInteractions(){
-    const requestForm = document.querySelector('[data-dashboard-request]');
-    if(requestForm){ requestForm.addEventListener('submit', async ev=>{
-      ev.preventDefault();
-      const form = ev.currentTarget;
-      const data = formFields(form);
-      const file = form.querySelector('input[name="Document"]')?.files?.[0] || null;
-      const status = form.querySelector('[data-dashboard-request-status]');
-      const btn = form.querySelector('button[type="submit"]');
-      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Submitting…', async()=>{
-        await dbReady();
-        const title = clean(data.Name || 'Premium Dashboard Request');
-        const payload = requestPayload(title, data, 'premium-dashboard');
-        const inserted = await window.HLDatabase.insert('requests', payload);
-        const row = Array.isArray(inserted) ? inserted[0] : null;
-        if(file){
-          try{
-            const uploaded = await window.HLDatabase.uploadMediaObject(file, `client-documents/${(window.__HLDashboardUser && window.__HLDashboardUser.id) || 'user'}`);
-            if(uploaded){ await window.HLDatabase.insert('request_documents', { request_id: row?.id || null, user_id: (window.__HLDashboardUser && window.__HLDashboardUser.id) || null, category: payload.category, title: clean(file.name || title), file_url: uploaded.url, file_path: uploaded.path, file_type: uploaded.media_type || uploaded.mime_type || 'file', mime_type: uploaded.mime_type || '', size: uploaded.size || 0 }, { returning:false }); }
-          }catch(docErr){ console.warn('Dashboard document upload skipped:', docErr); }
-        }
-        setStatus(status, 'Request saved. Opening WhatsApp for follow-through.', 'success');
-        showToast('Premium request saved.');
-        const message = buildMessage('Premium Dashboard Request', data);
-        const opened = window.open(waUrl(message), '_blank', 'noopener,noreferrer'); if(!opened) window.location.href = waUrl(message);
-        form.reset();
-        const user = window.__HLDashboardUser || await window.HLDatabase.getCurrentUser(); await hydrateDashboard(user);
-      }).catch(err=>{ setStatus(status, err.message || 'Request could not be saved.', 'error'); showToast(err.message || 'Request could not be saved.'); });
-    }); }
-    document.querySelectorAll('[data-pillar-quick]').forEach(btn=>btn.addEventListener('click', ()=>{
-      const pillar = btn.getAttribute('data-pillar-quick') || 'Premium'; const title = btn.getAttribute('data-title') || `${pillar} request`;
-      const form = document.querySelector('[data-dashboard-request]'); if(!form) return;
-      const pillarInput = form.querySelector('[name="Pillar"]'); const titleInput = form.querySelector('[name="Name"]');
-      if(pillarInput) pillarInput.value = pillar; if(titleInput) titleInput.value = title;
-      form.scrollIntoView({behavior:'smooth', block:'center'}); titleInput?.focus();
-    }));
-    const docForm = document.querySelector('[data-document-upload]');
-    if(docForm){ docForm.addEventListener('submit', async ev=>{
-      ev.preventDefault(); const form = ev.currentTarget; const data = formFields(form); const file = form.querySelector('input[name="file"]')?.files?.[0]; const status = form.querySelector('[data-document-status]'); const btn=form.querySelector('button[type="submit"]');
-      if(!file){ showToast('Choose a document to upload.'); return; }
-      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Uploading…', async()=>{
-        await dbReady(); const user = window.__HLDashboardUser || await window.HLDatabase.getCurrentUser();
-        const uploaded = await window.HLDatabase.uploadMediaObject(file, `client-documents/${user?.id || 'user'}`);
-        await window.HLDatabase.insert('request_documents', { user_id:user?.id || null, category:clean(data.category || 'premium'), title:clean(data.title || file.name), file_url:uploaded.url, file_path:uploaded.path, file_type:uploaded.media_type || 'file', mime_type:uploaded.mime_type || file.type || '', size:uploaded.size || file.size || 0 }, { returning:false });
-        setStatus(status, 'Document uploaded to your premium vault.', 'success'); showToast('Document uploaded.'); form.reset(); await hydrateDocuments();
-      }).catch(err=>{ setStatus(status, err.message || 'Document upload failed. Run the dashboard schema and storage policy upgrade.', 'error'); showToast(err.message || 'Document upload failed.'); });
-    }); }
-  }
-  initDashboardInteractions();
   guardDashboard();
 
   async function initAdmin(){
@@ -513,8 +373,6 @@
     let userSearchTimer = null;
     document.querySelector('[data-admin-user-search]')?.addEventListener('input', ()=>{ clearTimeout(userSearchTimer); userSearchTimer = setTimeout(()=>hydrateAdminUsers(true), 350); });
     document.querySelector('[data-admin-users-list]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.target.closest('[data-user-editor]'); if(!form) return; const data=formFields(form); const btn=form.querySelector('button[type="submit"]'); const payload={ user_id: clean(data.user_id), full_name: clean(data.full_name), phone: clean(data.phone), company: clean(data.company), role: clean(data.role || 'premium'), account_status: clean(data.account_status || 'pending'), is_verified: !!form.querySelector('input[name="is_verified"]')?.checked, admin_note: clean(data.admin_note) }; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('update_user', payload); showToast('User data updated.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'User update failed.')); });
-    document.querySelector('[data-admin-refresh-requests]')?.addEventListener('click', ()=>hydrateAdminRequests(true));
-    document.querySelector('[data-admin-requests-list]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.target.closest('[data-admin-request-editor]'); if(!form) return; const data=formFields(form); const id=clean(data.id); if(!id) return; const btn=form.querySelector('button[type="submit"]'); const prior = await window.HLDatabase.select('requests', `?select=details&id=eq.${encodeURIComponent(id)}&limit=1`).catch(()=>[]); const currentDetails = Array.isArray(prior) && prior[0] && prior[0].details && typeof prior[0].details === 'object' ? prior[0].details : {}; const details=Object.assign({}, currentDetails, { next_action: clean(data.next_action), admin_note: clean(data.admin_note), updated_by: ADMIN_EMAIL, updated_at: new Date().toISOString() }); await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving…', async()=>{ await dbReady(); await window.HLDatabase.update('requests', `?id=eq.${encodeURIComponent(id)}`, { status: clean(data.status || 'new'), details }, { returning:false }); showToast('Request updated for client dashboard.'); await hydrateAdminRequests(true); }).catch(err=>showToast(err.message || 'Request update failed.')); });
     document.querySelector('[data-admin-users-list]')?.addEventListener('click', async ev=>{ const btn=ev.target.closest('[data-verify-user]'); if(!btn) return; const form=btn.closest('[data-user-editor]'); const user_id=form?.querySelector('input[name="user_id"]')?.value; if(!user_id) return; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('verify_user', { user_id }); showToast('User verified successfully.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'Verification failed.')); });
     document.querySelector('[data-catalogue-priority-list]')?.addEventListener('click', ev=>{
       const prefill = ev.target.closest('[data-prefill-catalogue]');
@@ -682,35 +540,19 @@
       <div class="admin-user-actions"><button class="btn btn-primary btn-sm" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save data</button><button class="btn btn-ghost btn-sm" type="button" data-verify-user><i class="fa-solid fa-circle-check"></i> Verify user</button></div>
     </form>`;
   }
-  function adminRequestCard(row){
-    const category = clean(row.category || 'general');
-    const title = requestTitle(row);
-    const next = requestNextAction(row);
-    const adminNote = detail(row,'admin_note');
-    return `<article class="admin-request-card"><div class="admin-request-top"><div><strong>${escapeHTML(title)}</strong><span>${escapeHTML(labelForCategory(category))} • ${escapeHTML(formatDate(row.created_at))}</span></div>${statusBadge(row.status)}</div><form class="admin-request-editor" data-admin-request-editor><input type="hidden" name="id" value="${escapeHTML(row.id || '')}" /><div class="form-row"><label>Status</label><select name="status"><option value="new" ${selected(row.status,'new')}>New</option><option value="under-review" ${selected(row.status,'under-review')}>Under Review</option><option value="documents-required" ${selected(row.status,'documents-required')}>Documents Required</option><option value="in-progress" ${selected(row.status,'in-progress')}>In Progress</option><option value="awaiting-client" ${selected(row.status,'awaiting-client')}>Awaiting Client</option><option value="scheduled" ${selected(row.status,'scheduled')}>Scheduled</option><option value="completed" ${selected(row.status,'completed')}>Completed</option><option value="closed" ${selected(row.status,'closed')}>Closed</option><option value="archived" ${selected(row.status,'archived')}>Archived</option></select></div><div class="form-row"><label>Next action</label><input name="next_action" value="${escapeHTML(next)}" /></div><div class="form-row full-span"><label>Admin note</label><textarea name="admin_note" placeholder="Private or client-facing progress note">${escapeHTML(adminNote)}</textarea></div><button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Update request</button></form></article>`;
-  }
-  async function hydrateAdminRequests(force){
-    const list = document.querySelector('[data-admin-requests-list]'); if(!list || !window.HLDatabase) return;
-    if(force) list.innerHTML = '<div class="admin-list-item"><span><strong>Loading client requests…</strong><br>Fetching premium request records.</span></div>';
-    try{
-      const rows = await window.HLDatabase.select('requests','?select=id,category,status,created_at,details,name,phone&order=created_at.desc&limit=80');
-      list.innerHTML = Array.isArray(rows) && rows.length ? rows.map(adminRequestCard).join('') : '<div class="admin-list-item"><span><strong>No client requests yet.</strong><br>Premium user dashboard requests will appear here.</span></div>';
-    }catch(err){ list.innerHTML = '<div class="admin-list-item"><span><strong>Unable to load requests.</strong><br>Run the updated schema and confirm admin policies.</span></div>'; }
-  }
-
   async function hydrateAdminUsers(force){
     const list=document.querySelector('[data-admin-users-list]'); if(!list || !window.HLDatabase || !window.HLDatabase.adminUsers) return;
     const stats=document.querySelector('[data-admin-user-stats] strong');
     const search=clean(document.querySelector('[data-admin-user-search]')?.value || '');
-    if(force) list.innerHTML = '<div class="admin-list-item"><span><strong>Refreshing users…</strong><br>Please wait while the secured admin function responds.</span></div>';
+    if(force) list.innerHTML = '<div class="admin-list-item"><span><strong>Refreshing users…</strong><br>Loading profiles from Supabase user management.</span></div>';
     try{
       const data = await window.HLDatabase.adminUsers('list_users', { search, page:1, per_page:40 });
       const users = Array.isArray(data?.users) ? data.users : [];
       if(stats) stats.textContent = `${users.length} shown`;
       list.innerHTML = users.length ? users.map(userCard).join('') : '<div class="admin-list-item"><span><strong>No users found.</strong><br>Invite or register premium users to manage them here.</span></div>';
     }catch(err){
-      if(stats) stats.textContent = 'Function required';
-      list.innerHTML = `<div class="admin-list-item"><span><strong>User management is not connected yet.</strong><br>${escapeHTML(err.message || 'Deploy the admin-users Edge Function and set Supabase service role secrets.')}</span></div>`;
+      if(stats) stats.textContent = 'Check setup';
+      list.innerHTML = `<div class="admin-list-item"><span><strong>User management could not load.</strong><br>${escapeHTML(err.message || 'Run schema.sql, sign in with heylarmahtech@outlook.com, then refresh the admin dashboard.')}</span></div>`;
     }
   }
   async function hydrateAdminCatalogue(force){
@@ -734,7 +576,6 @@
   }
   async function hydrateAdmin(){
     await hydrateAdminCatalogue(false);
-    await hydrateAdminRequests(false);
     try{ const posts = await window.HLDatabase.select('insights_posts','?select=category,title,active,media_type,created_at&order=created_at.desc&limit=8'); const list=document.querySelector('[data-admin-insight-list]'); if(list && Array.isArray(posts)){ list.innerHTML = posts.length ? posts.map(x=>`<div class="admin-list-item"><span><strong>${escapeHTML(x.title)}</strong><br>${escapeHTML(x.category)} • ${escapeHTML(x.media_type || 'article')}</span><span>${x.active?'Live':'Draft'}</span></div>`).join('') : '<div class="admin-list-item"><span>No insight posts yet.</span></div>'; } }catch{}
     await hydrateAdminUsers(false);
   }
