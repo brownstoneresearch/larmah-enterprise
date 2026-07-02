@@ -1,28 +1,15 @@
-# Hey Larmah Admin Access
+# Admin Access
 
-Approved admin email: `heylarmahtech@outlook.com`
+Approved admin email:
 
-The public frontend does not store the admin password or service-role key. Create or update this admin user in Supabase Auth, then run `schema.sql` to promote the profile to admin.
+`heylarmahtech@outlook.com`
 
-## Admin functions included
+Create this account in Supabase Auth and set the password privately in Supabase Dashboard.
 
-- Upload catalogue photos and videos to Supabase Storage.
-- Publish blog/insight posts.
-- Invite premium users.
-- Verify new users.
-- Edit premium user profile data.
+The public website does not store the admin password or any service-role key.
 
-## Required Edge Functions
+Admin capabilities included:
 
-Deploy both functions in `supabase/functions`:
-
-- `invite-user`
-- `admin-users`
-
-Set these Edge Function secrets:
-
-- `SUPABASE_URL`
-- `SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `ADMIN_EMAIL=heylarmahtech@outlook.com`
-- `SITE_URL=https://heylarmah.xyz`
+- Catalogue upload
+- Insight/blog post upload
+- Premium user invitation through the `invite-user` Edge Function

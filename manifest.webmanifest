@@ -1,28 +1,13 @@
 {
   "name": "Hey Larmah Enterprise Limited",
   "short_name": "Hey Larmah",
-  "description": "Real Estate \u2022 Fintech \u2022 Logistics \u2022 Shipping enterprise support in Lagos, Nigeria.",
+  "description": "Real Estate • Fintech • Logistics • Shipping",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#030604",
   "theme_color": "#06130d",
   "icons": [
-    {
-      "src": "assets/images/favicon.png",
-      "sizes": "256x256",
-      "type": "image/png"
-    },
-    {
-      "src": "assets/images/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png"
-    },
-    {
-      "src": "assets/images/larmah-logo-icon-256.webp",
-      "sizes": "256x256",
-      "type": "image/webp",
-      "purpose": "any"
-    }
-  ],
-  "scope": "/"
+    {"src":"assets/images/favicon.png","sizes":"256x256","type":"image/png"},
+    {"src":"assets/images/apple-touch-icon.png","sizes":"180x180","type":"image/png"}
+  ]
 }

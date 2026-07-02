@@ -141,7 +141,7 @@
     return supabaseFetch("/auth/v1/resend", { method:"POST", body: JSON.stringify({ type: type || "signup", email, options:{ email_redirect_to: redirectTo } }) });
   }
   async function resetPassword(email){
-    const redirectTo = authRedirect("reset-password.html?type=recovery");
+    const redirectTo = authRedirect("auth.html?type=recovery");
     if(client){
       const { data, error } = await client.auth.resetPasswordForEmail(email, { redirectTo });
       if(error) throw error; return data;
@@ -175,53 +175,28 @@
     return supabaseFetch("/functions/v1/invite-user", { method:"POST", token: currentAccessToken(), body: JSON.stringify({ email, metadata: metadata || {}, redirectTo: authRedirect("auth.html?invited=1") }) });
   }
 
-  async function invokeFunction(name, body){
-    await ready.catch(()=>{});
-    if(client && client.functions){
-      const { data, error } = await client.functions.invoke(name, { body: body || {} });
-      if(error) throw error;
-      return data;
-    }
-    return supabaseFetch(`/functions/v1/${name}`, { method:"POST", token: currentAccessToken(), body: JSON.stringify(body || {}) });
-  }
-  async function adminUsers(action, payload){
-    return invokeFunction("admin-users", Object.assign({ action }, payload || {}));
-  }
-
   function publicUrl(path){ return `${config.supabaseUrl}/storage/v1/object/public/${config.storageBucket}/${path}`; }
-  function mediaKindFromMime(mime, name){
-    const value = String(mime || name || "").toLowerCase();
-    if(value.startsWith("video/") || /\.(mp4|webm|mov|m4v|mpeg|mpg)$/i.test(value)) return "video";
-    if(value.startsWith("image/") || /\.(jpg|jpeg|png|webp|gif|avif|svg)$/i.test(value)) return "image";
-    return "external";
-  }
-  async function uploadMediaObject(file, folder){
-    if(!file) return null;
-    const originalName = file.name || "upload.bin";
-    const safeName = originalName.toLowerCase().replace(/[^a-z0-9.]+/g,"-").replace(/^-+|-+$/g,"") || "upload.bin";
+  async function uploadMedia(file, folder){
+    if(!file) return "";
+    const safeName = file.name.toLowerCase().replace(/[^a-z0-9.]+/g,"-").replace(/^-+|-+$/g,"");
     const ext = safeName.includes('.') ? safeName.split('.').pop() : 'bin';
     const key = `${folder || 'uploads'}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const contentType = file.type || "application/octet-stream";
     if(client){
-      const { error } = await client.storage.from(config.storageBucket).upload(key, file, { upsert:true, contentType });
+      const { error } = await client.storage.from(config.storageBucket).upload(key, file, { upsert:true, contentType:file.type || "application/octet-stream" });
       if(error) throw error;
       const { data } = client.storage.from(config.storageBucket).getPublicUrl(key);
-      return { url:data.publicUrl, path:key, media_type:mediaKindFromMime(contentType, originalName), mime_type:contentType, file_name:originalName, size:file.size || 0 };
+      return data.publicUrl;
     }
-    await supabaseFetch(`/storage/v1/object/${config.storageBucket}/${key}`, { method:"POST", token: currentAccessToken(), contentType:false, headers:{ "Content-Type": contentType, "x-upsert":"true" }, body:file });
-    return { url:publicUrl(key), path:key, media_type:mediaKindFromMime(contentType, originalName), mime_type:contentType, file_name:originalName, size:file.size || 0 };
-  }
-  async function uploadMedia(file, folder){
-    const uploaded = await uploadMediaObject(file, folder);
-    return uploaded ? uploaded.url : "";
+    await supabaseFetch(`/storage/v1/object/${config.storageBucket}/${key}`, { method:"POST", token: currentAccessToken(), contentType:false, headers:{ "Content-Type": file.type || "application/octet-stream", "x-upsert":"true" }, body:file });
+    return publicUrl(key);
   }
 
   window.HL_CONFIG = config;
   window.HLDatabase = {
     config, client, ready, request:supabaseFetch, insert, update, select,
     signUp, signIn, signOut, resendConfirmation, resetPassword,
-    updateUser, changeEmail, updatePassword, signInWithGoogle, inviteUser, adminUsers,
+    updateUser, changeEmail, updatePassword, signInWithGoogle, inviteUser,
     getSession, setSession, currentAccessToken, getCurrentUser, getProfile, isAdminEmail,
-    uploadMedia, uploadMediaObject, publicUrl, syncSession, authRedirect
+    uploadMedia, publicUrl, syncSession, authRedirect
   };
 })();

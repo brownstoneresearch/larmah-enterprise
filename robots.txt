@@ -1,11 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /admin.html
-Disallow: /dashboard.html
-Disallow: /auth.html
-Disallow: /register.html
-Disallow: /reset-password.html
-Disallow: /supabase/
-Disallow: /docs/
-Disallow: /*.sql$
-Sitemap: https://heylarmah.xyz/sitemap.xml
+Sitemap: https://heylarmah.tech/sitemap.xml
