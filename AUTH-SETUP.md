@@ -75,3 +75,6 @@ Never place the service-role key in frontend JavaScript.
 ## 6. Confirm bucket setup
 
 The schema creates a public `larmah-media` bucket for catalogue and insight images. If your Supabase project already has policies, review Storage → Policies and confirm admin upload access.
+
+
+Admin upgrade note: deploy `supabase/functions/admin-users` with service-role secrets to enable user verification and data editing. The frontend never exposes the service-role key.

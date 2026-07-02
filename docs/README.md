@@ -33,3 +33,6 @@ Admin email:
 Company email:
 
 `admin@heylarmah.xyz`
+
+
+Admin upgrade note: deploy `supabase/functions/admin-users` with service-role secrets to enable user verification and data editing. The frontend never exposes the service-role key.

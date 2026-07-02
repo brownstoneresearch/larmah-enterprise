@@ -33,3 +33,8 @@ Admin email:
 Company email:
 
 `admin@heylarmah.xyz`
+
+
+## Latest admin upgrade
+
+This package adds professional admin tools for catalogue photo/video uploads, blog publishing, premium user verification and profile editing through Supabase Auth, Storage, RLS and secured Edge Functions. Run `schema.sql`, create the `larmah-media` storage bucket through the SQL, and deploy `invite-user` plus `admin-users` before launch.

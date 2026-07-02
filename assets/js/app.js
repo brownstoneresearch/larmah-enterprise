@@ -196,27 +196,64 @@
   }
   function labelForCategory(category){ return ({'real-estate':'Real Estate',fintech:'Fintech',logistics:'Logistics',shipping:'Shipping',premium:'Premium',insights:'Insights'})[category] || 'Enterprise'; }
   function iconForCategory(category){ return ({'real-estate':'fa-solid fa-building',fintech:'fa-solid fa-chart-line',logistics:'fa-solid fa-truck-fast',shipping:'fa-solid fa-ship',premium:'fa-solid fa-crown',insights:'fa-solid fa-lightbulb'})[category] || 'fa-solid fa-layer-group'; }
-  function catalogueCard(row){ const category = clean(row.category || 'general'); const title = clean(row.title || 'Enterprise Catalogue Item'); const description = clean(row.description || 'Speak with Hey Larmah Enterprise Limited for details.'); const msg = `Hello Hey Larmah, I want to enquire about ${title}.`; return `<article class="catalogue-card reveal in" data-item><div class="catalogue-icon"><i class="${iconForCategory(category)}"></i></div><span class="catalogue-tag">${escapeHTML(labelForCategory(category))}</span><h3>${escapeHTML(title)}</h3><p>${escapeHTML(description)}</p><a class="card-link" href="${waUrl(msg)}" target="_blank" rel="noopener" data-enquiry-title="${escapeHTML(title)}">Enquire <i class="fa-brands fa-whatsapp"></i></a></article>`; }
-  function blogCard(row){ const title = clean(row.title || 'Hey Larmah Insight'); const excerpt = clean(row.excerpt || row.body || 'Speak with Hey Larmah Enterprise Limited for details.'); const body = clean(row.body || excerpt); const category = clean(row.category || 'Enterprise'); const read = clean(row.read_time || '4 min read'); const image = clean(row.image_url || ''); return `<article class="blog-card reveal in" data-item data-blog-card data-category="${escapeHTML(category)}" data-title="${escapeHTML(title)}" data-body="${escapeHTML(body)}" data-excerpt="${escapeHTML(excerpt)}" data-read="${escapeHTML(read)}"><div class="blog-meta"><span class="blog-category">${escapeHTML(category)}</span><span>${escapeHTML(read)}</span></div><h3>${escapeHTML(title)}</h3><p>${escapeHTML(excerpt.length > 170 ? excerpt.slice(0,167)+'...' : excerpt)}</p><button class="card-link" type="button" data-read-post>Read article <i class="fa-solid fa-arrow-right"></i></button></article>`; }
+  function mediaTypeFromUrl(url){
+    const value = clean(url).toLowerCase();
+    if(/\.(mp4|webm|mov|m4v|mpeg|mpg)(\?|#|$)/.test(value)) return 'video';
+    if(/\.(jpg|jpeg|png|webp|gif|avif|svg)(\?|#|$)/.test(value)) return 'image';
+    return '';
+  }
+  function mediaKind(fileOrUrl, explicit){
+    const type = clean(explicit).toLowerCase();
+    if(type === 'video' || type === 'image') return type;
+    if(fileOrUrl && fileOrUrl.type){ return fileOrUrl.type.startsWith('video/') ? 'video' : 'image'; }
+    return mediaTypeFromUrl(fileOrUrl) || 'image';
+  }
+  function mediaBlock(url, type, label, variant){
+    const src = clean(url); if(!src) return '';
+    const kind = mediaKind(src, type);
+    const cls = variant === 'blog' ? 'blog-media' : 'catalogue-media';
+    if(kind === 'video') return `<div class="${cls}"><video src="${escapeHTML(src)}" controls muted playsinline preload="metadata" aria-label="${escapeHTML(label)} video"></video></div>`;
+    return `<div class="${cls}"><img src="${escapeHTML(src)}" alt="${escapeHTML(label)}" loading="lazy" /></div>`;
+  }
+  function catalogueCard(row){
+    const category = clean(row.category || 'general');
+    const title = clean(row.title || 'Enterprise Catalogue Item');
+    const description = clean(row.description || 'Speak with Hey Larmah Enterprise Limited for details.');
+    const mediaUrl = clean(row.media_url || row.video_url || row.image_url || '');
+    const mediaType = clean(row.media_type || mediaTypeFromUrl(mediaUrl) || 'image');
+    const msg = `Hello Hey Larmah, I want to enquire about ${title}.`;
+    return `<article class="catalogue-card reveal in catalogue-card-rich" data-item>${mediaBlock(mediaUrl, mediaType, title)}<div class="catalogue-icon"><i class="${iconForCategory(category)}"></i></div><span class="catalogue-tag">${escapeHTML(labelForCategory(category))}</span><h3>${escapeHTML(title)}</h3><p>${escapeHTML(description)}</p><a class="card-link" href="${waUrl(msg)}" target="_blank" rel="noopener" data-enquiry-title="${escapeHTML(title)}">Enquire <i class="fa-brands fa-whatsapp"></i></a></article>`;
+  }
+  function blogCard(row){
+    const title = clean(row.title || 'Hey Larmah Insight');
+    const excerpt = clean(row.excerpt || row.body || 'Speak with Hey Larmah Enterprise Limited for details.');
+    const body = clean(row.body || excerpt);
+    const category = clean(row.category || 'Enterprise');
+    const read = clean(row.read_time || '4 min read');
+    const author = clean(row.author || 'Hey Larmah Editorial Desk');
+    const mediaUrl = clean(row.media_url || row.video_url || row.image_url || '');
+    const mediaType = clean(row.media_type || mediaTypeFromUrl(mediaUrl) || 'image');
+    return `<article class="blog-card reveal in" data-item data-blog-card data-category="${escapeHTML(category)}" data-title="${escapeHTML(title)}" data-body="${escapeHTML(body)}" data-excerpt="${escapeHTML(excerpt)}" data-read="${escapeHTML(read)}" data-author="${escapeHTML(author)}" data-media-url="${escapeHTML(mediaUrl)}" data-media-type="${escapeHTML(mediaType)}">${mediaBlock(mediaUrl, mediaType, title, 'blog')}<div class="blog-meta"><span class="blog-category">${escapeHTML(category)}</span><span>${escapeHTML(read)}</span></div><h3>${escapeHTML(title)}</h3><p>${escapeHTML(excerpt.length > 170 ? excerpt.slice(0,167)+'...' : excerpt)}</p><button class="card-link" type="button" data-read-post>Read article <i class="fa-solid fa-arrow-right"></i></button></article>`;
+  }
   async function hydrateCatalogues(){
     if(!window.HLDatabase || !window.HLDatabase.select) return;
     try{
       if(page === 'insights'){
         const grid = document.querySelector('.blog-grid[data-page-grid]'); if(!grid) return;
-        const rows = await window.HLDatabase.select('insights_posts', '?select=title,excerpt,body,category,read_time,pinned,image_url,created_at&active=eq.true&order=pinned.desc,created_at.desc&limit=30');
+        const rows = await window.HLDatabase.select('insights_posts', '?select=title,slug,excerpt,body,category,read_time,author,tags,pinned,image_url,media_url,media_type,video_url,gallery,created_at&active=eq.true&order=pinned.desc,created_at.desc&limit=30');
         if(Array.isArray(rows) && rows.length){ grid.innerHTML = rows.map(blogCard).join(''); initBlogModal(); }
         return;
       }
       if(page === 'home'){
         const grid = document.querySelector('#catalogue-preview .catalogue-grid'); if(!grid) return;
-        const rows = await window.HLDatabase.select('catalog_items', '?select=category,title,description,price,tags,image_url&active=eq.true&order=featured.desc,sort_order.asc,created_at.desc&limit=6');
+        const rows = await window.HLDatabase.select('catalog_items', '?select=category,title,description,price,tags,image_url,media_url,media_type,video_url,gallery&active=eq.true&order=featured.desc,sort_order.asc,created_at.desc&limit=6');
         if(Array.isArray(rows) && rows.length >= 6){ grid.innerHTML = rows.slice(0,6).map(catalogueCard).join(''); }
         return;
       }
       const allowed = ['real-estate','fintech','logistics','shipping','premium'];
       if(allowed.includes(page)){
         const grid = document.querySelector('.catalogue-grid[data-page-grid]'); if(!grid) return;
-        const rows = await window.HLDatabase.select('catalog_items', `?select=category,title,description,price,tags,image_url&active=eq.true&category=eq.${page}&order=sort_order.asc,created_at.desc&limit=60`);
+        const rows = await window.HLDatabase.select('catalog_items', `?select=category,title,description,price,tags,image_url,media_url,media_type,video_url,gallery&active=eq.true&category=eq.${page}&order=sort_order.asc,created_at.desc&limit=60`);
         if(Array.isArray(rows) && rows.length){ grid.innerHTML = rows.map(catalogueCard).join(''); }
       }
     }catch(err){ }
@@ -227,7 +264,7 @@
     const titleEl = modal.querySelector('[data-modal-title]'); const bodyEl = modal.querySelector('[data-modal-body]'); const metaEl = modal.querySelector('[data-modal-meta]'); const close = ()=>{ modal.hidden = true; document.body.style.overflow=''; };
     modal.querySelectorAll('[data-modal-close]').forEach(btn=>btn.addEventListener('click', close));
     modal.addEventListener('click', ev=>{ if(ev.target === modal) close(); });
-    document.querySelectorAll('[data-read-post]').forEach(btn=>{ btn.addEventListener('click', ()=>{ const card = btn.closest('[data-blog-card]'); if(!card) return; titleEl.textContent = card.getAttribute('data-title') || 'Insight'; metaEl.textContent = `${card.getAttribute('data-category') || 'Enterprise'} • ${card.getAttribute('data-read') || '4 min read'}`; bodyEl.innerHTML = `<p>${escapeHTML(card.getAttribute('data-body') || '').replace(/\n+/g,'</p><p>')}</p>`; modal.hidden = false; document.body.style.overflow='hidden'; }); });
+    document.querySelectorAll('[data-read-post]').forEach(btn=>{ btn.addEventListener('click', ()=>{ const card = btn.closest('[data-blog-card]'); if(!card) return; titleEl.textContent = card.getAttribute('data-title') || 'Insight'; metaEl.textContent = `${card.getAttribute('data-category') || 'Enterprise'} • ${card.getAttribute('data-read') || '4 min read'}`; const mUrl = card.getAttribute('data-media-url') || ''; const mType = card.getAttribute('data-media-type') || ''; const article = `<p>${escapeHTML(card.getAttribute('data-body') || '').replace(/\n+/g,'</p><p>')}</p>`; bodyEl.innerHTML = `${mediaBlock(mUrl, mType, card.getAttribute('data-title') || 'Insight', 'blog')}<p><strong>By ${escapeHTML(card.getAttribute('data-author') || 'Hey Larmah Editorial Desk')}</strong></p>${article}`; modal.hidden = false; document.body.style.overflow='hidden'; }); });
   }
   initBlogModal();
   document.querySelectorAll('[data-blog-filter]').forEach(btn=>{ btn.addEventListener('click', ()=>{ const category = btn.getAttribute('data-blog-filter'); document.querySelectorAll('[data-blog-filter]').forEach(b=>b.classList.toggle('active', b === btn)); document.querySelectorAll('[data-blog-card]').forEach(card=>{ const show = category === 'all' || clean(card.getAttribute('data-category')).toLowerCase() === category.toLowerCase(); card.style.display = show ? '' : 'none'; }); }); });
@@ -244,6 +281,13 @@
   }
   async function hydrateDashboard(user){
     const grid = document.querySelector('.dash-grid');
+    try{
+      const profile = await window.HLDatabase.getProfile?.();
+      if(profile){
+        document.querySelectorAll('[data-profile-role]').forEach(el=>el.textContent = labelForCategory(profile.role === 'admin' ? 'premium' : (profile.role || 'premium')));
+        document.querySelectorAll('[data-profile-status]').forEach(el=>el.textContent = profile.is_verified ? 'Verified by admin' : (profile.account_status === 'suspended' ? 'Suspended' : 'Pending admin verification'));
+      }
+    }catch{}
     try{
       const rows = await window.HLDatabase.select('requests', '?select=category,status,created_at,details&order=created_at.desc&limit=100');
       if(Array.isArray(rows)){
@@ -268,13 +312,96 @@
     document.querySelector('[data-admin-auth]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const data = formFields(ev.currentTarget); const email = clean(data.email); const password = clean(data.password); if(email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()){ showToast('Use the approved admin email.'); return; } const btn=ev.currentTarget.querySelector('button[type="submit"]'); const original=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='Verifying admin…';} try{ await window.HLDatabase.signIn(email,password); const user = await check(); if(user) showToast('Admin workspace unlocked.'); }catch(err){ showToast(err && err.message ? err.message : 'Admin sign-in failed.'); }finally{ if(btn){btn.disabled=false;btn.textContent=original;} } });
     document.querySelector('[data-admin-sign-out]')?.addEventListener('click', async()=>{ await dbReady(); await window.HLDatabase.signOut(); setVisible(false); showToast('Admin signed out.'); });
     document.querySelector('[data-invite-user]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.currentTarget; const data=formFields(form); const email=clean(data.email); const name=clean(data.full_name); const status=form.querySelector('[data-auth-status]'); if(!email){ showToast('Enter invitee email.'); return; } const btn=form.querySelector('button[type="submit"]'); await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending invite…', async()=>{ await dbReady(); await window.HLDatabase.inviteUser(email, { full_name:name, account_type:'premium', invited_by:ADMIN_EMAIL }); setStatus(status, 'Invitation email sent successfully.', 'success'); showToast('Invitation sent.'); form.reset(); }).catch(err=>{ setStatus(status, err.message || 'Invitation failed. Deploy the invite-user Edge Function and set service role secret.', 'error'); showToast(err.message || 'Invitation failed.'); }); });
-    document.querySelector('[data-catalogue-upload]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.currentTarget; const data=formFields(form); const file=form.querySelector('input[name="image_file"]')?.files?.[0]; const btn=form.querySelector('button[type="submit"]'); const original=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='Publishing catalogue…';} try{ let image_url=clean(data.image_url); if(file) image_url = await window.HLDatabase.uploadMedia(file,'catalogue'); const payload={ category: clean(data.category), title: clean(data.title), description: clean(data.description), price: clean(data.price), image_url, tags: clean(data.tags).split(',').map(x=>x.trim()).filter(Boolean), active: data.active === 'on', featured: data.featured === 'on', sort_order: parseInt(data.sort_order,10)||0 }; await window.HLDatabase.insert('catalog_items', payload); showToast('Catalogue item published to Supabase.'); form.reset(); await hydrateAdmin(); }catch(err){ showToast(err && err.message ? err.message : 'Catalogue upload failed.'); }finally{ if(btn){btn.disabled=false;btn.textContent=original;} } });
-    document.querySelector('[data-insight-upload]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.currentTarget; const data=formFields(form); const file=form.querySelector('input[name="image_file"]')?.files?.[0]; const btn=form.querySelector('button[type="submit"]'); const original=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='Publishing insight…';} try{ let image_url=clean(data.image_url); if(file) image_url = await window.HLDatabase.uploadMedia(file,'insights'); const payload={ title: clean(data.title), category: clean(data.category || 'Enterprise'), excerpt: clean(data.excerpt), body: clean(data.body), read_time: clean(data.read_time || '4 min read'), image_url, pinned: data.pinned === 'on', active: data.active === 'on' }; await window.HLDatabase.insert('insights_posts', payload); showToast('Insight blog post published.'); form.reset(); await hydrateAdmin(); }catch(err){ showToast(err && err.message ? err.message : 'Insight upload failed.'); }finally{ if(btn){btn.disabled=false;btn.textContent=original;} } });
+    document.querySelector('[data-admin-refresh-users]')?.addEventListener('click', ()=>hydrateAdminUsers(true));
+    let userSearchTimer = null;
+    document.querySelector('[data-admin-user-search]')?.addEventListener('input', ()=>{ clearTimeout(userSearchTimer); userSearchTimer = setTimeout(()=>hydrateAdminUsers(true), 350); });
+    document.querySelector('[data-admin-users-list]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.target.closest('[data-user-editor]'); if(!form) return; const data=formFields(form); const btn=form.querySelector('button[type="submit"]'); const payload={ user_id: clean(data.user_id), full_name: clean(data.full_name), phone: clean(data.phone), company: clean(data.company), role: clean(data.role || 'premium'), account_status: clean(data.account_status || 'pending'), is_verified: !!form.querySelector('input[name="is_verified"]')?.checked, admin_note: clean(data.admin_note) }; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('update_user', payload); showToast('User data updated.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'User update failed.')); });
+    document.querySelector('[data-admin-users-list]')?.addEventListener('click', async ev=>{ const btn=ev.target.closest('[data-verify-user]'); if(!btn) return; const form=btn.closest('[data-user-editor]'); const user_id=form?.querySelector('input[name="user_id"]')?.value; if(!user_id) return; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('verify_user', { user_id }); showToast('User verified successfully.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'Verification failed.')); });
+    document.querySelector('[data-catalogue-upload]')?.addEventListener('submit', async ev=>{
+      ev.preventDefault();
+      const form=ev.currentTarget; const data=formFields(form);
+      const primary=form.querySelector('input[name="media_file"]')?.files?.[0] || form.querySelector('input[name="image_file"]')?.files?.[0];
+      const galleryFiles=Array.from(form.querySelector('input[name="gallery_files"]')?.files || []);
+      const btn=form.querySelector('button[type="submit"]'); const status=form.querySelector('[data-catalogue-status]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Publishing catalogue…', async()=>{
+        await dbReady();
+        let media_url=clean(data.media_url || data.image_url); let media_type=mediaKind(media_url, data.media_type);
+        let image_url = media_type === 'image' ? media_url : ''; let video_url = media_type === 'video' ? media_url : '';
+        if(primary){ const uploaded = await window.HLDatabase.uploadMediaObject(primary,'catalogue'); media_url = uploaded.url; media_type = uploaded.media_type; image_url = media_type === 'image' ? media_url : ''; video_url = media_type === 'video' ? media_url : ''; }
+        const gallery=[];
+        for(const file of galleryFiles){ const uploaded = await window.HLDatabase.uploadMediaObject(file,'catalogue/gallery'); if(uploaded) gallery.push(uploaded); }
+        const payload={ category: clean(data.category), title: clean(data.title), description: clean(data.description), price: clean(data.price), image_url, media_url, media_type, video_url, gallery, tags: clean(data.tags).split(',').map(x=>x.trim()).filter(Boolean), active: data.active === 'on', featured: data.featured === 'on', sort_order: parseInt(data.sort_order,10)||0 };
+        await window.HLDatabase.insert('catalog_items', payload);
+        setStatus(status, 'Catalogue item published with media support.', 'success');
+        showToast('Catalogue item published.'); form.reset(); await hydrateAdmin();
+      }).catch(err=>{ setStatus(status, err.message || 'Catalogue upload failed.', 'error'); showToast(err.message || 'Catalogue upload failed.'); });
+    });
+    document.querySelector('[data-insight-upload]')?.addEventListener('submit', async ev=>{
+      ev.preventDefault();
+      const form=ev.currentTarget; const data=formFields(form); const primary=form.querySelector('input[name="media_file"]')?.files?.[0] || form.querySelector('input[name="image_file"]')?.files?.[0];
+      const btn=form.querySelector('button[type="submit"]'); const status=form.querySelector('[data-insight-status]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Publishing blog…', async()=>{
+        await dbReady();
+        let media_url=clean(data.media_url || data.image_url); let media_type=mediaKind(media_url, data.media_type);
+        let image_url = media_type === 'image' ? media_url : ''; let video_url = media_type === 'video' ? media_url : '';
+        if(primary){ const uploaded = await window.HLDatabase.uploadMediaObject(primary,'insights'); media_url = uploaded.url; media_type = uploaded.media_type; image_url = media_type === 'image' ? media_url : ''; video_url = media_type === 'video' ? media_url : ''; }
+        const payload={ title: clean(data.title), slug: clean(data.slug || slug(data.title)), category: clean(data.category || 'Enterprise'), excerpt: clean(data.excerpt), body: clean(data.body), read_time: clean(data.read_time || '4 min read'), author: clean(data.author || 'Hey Larmah Editorial Desk'), tags: clean(data.tags).split(',').map(x=>x.trim()).filter(Boolean), image_url, media_url, media_type, video_url, pinned: data.pinned === 'on', active: data.active === 'on', published_at: new Date().toISOString() };
+        await window.HLDatabase.insert('insights_posts', payload);
+        setStatus(status, 'Blog post published successfully.', 'success');
+        showToast('Insight blog post published.'); form.reset(); await hydrateAdmin();
+      }).catch(err=>{ setStatus(status, err.message || 'Insight upload failed.', 'error'); showToast(err.message || 'Insight upload failed.'); });
+    });
     await check();
   }
+  function selected(value, expected){ return clean(value) === clean(expected) ? 'selected' : ''; }
+  function checked(value){ return value ? 'checked' : ''; }
+  function userCard(record){
+    const user = record.user || record;
+    const profile = record.profile || {};
+    const id = clean(user.id || profile.id);
+    const email = clean(user.email || profile.email || 'No email');
+    const fullName = clean(profile.full_name || user.user_metadata?.full_name || '');
+    const phone = clean(profile.phone || user.user_metadata?.phone || '');
+    const company = clean(profile.company || user.user_metadata?.company || '');
+    const role = clean(profile.role || user.user_metadata?.account_type || 'premium');
+    const status = clean(profile.account_status || (profile.is_verified ? 'verified' : 'pending'));
+    const verified = !!profile.is_verified;
+    const note = clean(profile.last_admin_note || '');
+    const lastSignIn = clean(user.last_sign_in_at || 'Not yet signed in');
+    return `<form class="admin-user-card" data-user-editor data-user-id="${escapeHTML(id)}">
+      <input type="hidden" name="user_id" value="${escapeHTML(id)}" />
+      <div class="admin-user-top"><div><strong>${escapeHTML(email)}</strong><span>${verified ? 'Verified premium user' : 'Pending verification'} • Last sign in: ${escapeHTML(lastSignIn)}</span></div><span class="status-pill ${verified ? 'verified' : 'pending'}">${verified ? 'Verified' : 'Pending'}</span></div>
+      <div class="admin-user-fields">
+        <div class="form-row"><label>Full name</label><input name="full_name" value="${escapeHTML(fullName)}" placeholder="Full name" /></div>
+        <div class="form-row"><label>Phone</label><input name="phone" value="${escapeHTML(phone)}" placeholder="Phone number" /></div>
+        <div class="form-row"><label>Company</label><input name="company" value="${escapeHTML(company)}" placeholder="Company / client profile" /></div>
+        <div class="form-row"><label>Role</label><select name="role"><option value="premium" ${selected(role,'premium')}>Premium</option><option value="user" ${selected(role,'user')}>User</option>${email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? `<option value="admin" ${selected(role,'admin')}>Admin</option>` : ``}</select></div>
+        <div class="form-row"><label>Status</label><select name="account_status"><option value="pending" ${selected(status,'pending')}>Pending</option><option value="verified" ${selected(status,'verified')}>Verified</option><option value="suspended" ${selected(status,'suspended')}>Suspended</option></select></div>
+        <div class="form-row"><label>Admin note</label><input name="admin_note" value="${escapeHTML(note)}" placeholder="Optional internal note" /></div>
+      </div>
+      <label class="check-row"><input type="checkbox" name="is_verified" ${checked(verified)} /> Verified account</label>
+      <div class="admin-user-actions"><button class="btn btn-primary btn-sm" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save data</button><button class="btn btn-ghost btn-sm" type="button" data-verify-user><i class="fa-solid fa-circle-check"></i> Verify user</button></div>
+    </form>`;
+  }
+  async function hydrateAdminUsers(force){
+    const list=document.querySelector('[data-admin-users-list]'); if(!list || !window.HLDatabase || !window.HLDatabase.adminUsers) return;
+    const stats=document.querySelector('[data-admin-user-stats] strong');
+    const search=clean(document.querySelector('[data-admin-user-search]')?.value || '');
+    if(force) list.innerHTML = '<div class="admin-list-item"><span><strong>Refreshing users…</strong><br>Please wait while the secured admin function responds.</span></div>';
+    try{
+      const data = await window.HLDatabase.adminUsers('list_users', { search, page:1, per_page:40 });
+      const users = Array.isArray(data?.users) ? data.users : [];
+      if(stats) stats.textContent = `${users.length} shown`;
+      list.innerHTML = users.length ? users.map(userCard).join('') : '<div class="admin-list-item"><span><strong>No users found.</strong><br>Invite or register premium users to manage them here.</span></div>';
+    }catch(err){
+      if(stats) stats.textContent = 'Function required';
+      list.innerHTML = `<div class="admin-list-item"><span><strong>User management is not connected yet.</strong><br>${escapeHTML(err.message || 'Deploy the admin-users Edge Function and set Supabase service role secrets.')}</span></div>`;
+    }
+  }
   async function hydrateAdmin(){
-    try{ const cats = await window.HLDatabase.select('catalog_items','?select=category,title,active,created_at&order=created_at.desc&limit=8'); const list=document.querySelector('[data-admin-catalogue-list]'); if(list && Array.isArray(cats)){ list.innerHTML = cats.length ? cats.map(x=>`<div class="admin-list-item"><span><strong>${escapeHTML(x.title)}</strong><br>${escapeHTML(labelForCategory(x.category))}</span><span>${x.active?'Active':'Draft'}</span></div>`).join('') : '<div class="admin-list-item"><span>No catalogue records yet.</span></div>'; } }catch{}
-    try{ const posts = await window.HLDatabase.select('insights_posts','?select=category,title,active,created_at&order=created_at.desc&limit=8'); const list=document.querySelector('[data-admin-insight-list]'); if(list && Array.isArray(posts)){ list.innerHTML = posts.length ? posts.map(x=>`<div class="admin-list-item"><span><strong>${escapeHTML(x.title)}</strong><br>${escapeHTML(x.category)}</span><span>${x.active?'Live':'Draft'}</span></div>`).join('') : '<div class="admin-list-item"><span>No insight posts yet.</span></div>'; } }catch{}
+    try{ const cats = await window.HLDatabase.select('catalog_items','?select=category,title,active,media_type,created_at&order=created_at.desc&limit=8'); const list=document.querySelector('[data-admin-catalogue-list]'); if(list && Array.isArray(cats)){ list.innerHTML = cats.length ? cats.map(x=>`<div class="admin-list-item"><span><strong>${escapeHTML(x.title)}</strong><br>${escapeHTML(labelForCategory(x.category))} • ${escapeHTML(x.media_type || 'media')}</span><span>${x.active?'Active':'Draft'}</span></div>`).join('') : '<div class="admin-list-item"><span>No catalogue records yet.</span></div>'; } }catch{}
+    try{ const posts = await window.HLDatabase.select('insights_posts','?select=category,title,active,media_type,created_at&order=created_at.desc&limit=8'); const list=document.querySelector('[data-admin-insight-list]'); if(list && Array.isArray(posts)){ list.innerHTML = posts.length ? posts.map(x=>`<div class="admin-list-item"><span><strong>${escapeHTML(x.title)}</strong><br>${escapeHTML(x.category)} • ${escapeHTML(x.media_type || 'article')}</span><span>${x.active?'Live':'Draft'}</span></div>`).join('') : '<div class="admin-list-item"><span>No insight posts yet.</span></div>'; } }catch{}
+    await hydrateAdminUsers(false);
   }
   initAdmin();
 })();

@@ -275,3 +275,64 @@ on conflict do nothing;
 -- Email: heylarmahtech@outlook.com
 -- Password: set the assigned admin password in Supabase Auth, not in public frontend code.
 -- The trigger above automatically marks this email as admin when the Auth user exists.
+
+
+-- =========================================================
+-- Professional admin media/user-management upgrade
+-- Enables catalogue photos/videos, blog media, user verification and profile editing.
+-- =========================================================
+
+alter table public.profiles add column if not exists phone text;
+alter table public.profiles add column if not exists company text;
+alter table public.profiles add column if not exists account_status text not null default 'pending';
+alter table public.profiles add column if not exists is_verified boolean not null default false;
+alter table public.profiles add column if not exists verified_at timestamptz;
+alter table public.profiles add column if not exists verified_by uuid references auth.users(id) on delete set null;
+alter table public.profiles add column if not exists last_admin_note text;
+alter table public.profiles drop constraint if exists profiles_account_status_check;
+alter table public.profiles add constraint profiles_account_status_check check (account_status in ('pending','verified','suspended'));
+
+drop policy if exists profiles_admin_all on public.profiles;
+create policy profiles_admin_all on public.profiles for all using (public.current_user_is_admin()) with check (public.current_user_is_admin());
+
+-- Profile edits are admin-only in this public website package.
+drop policy if exists profiles_update_own_basic on public.profiles;
+
+alter table public.catalog_items add column if not exists media_url text;
+alter table public.catalog_items add column if not exists media_type text not null default 'image';
+alter table public.catalog_items add column if not exists video_url text;
+alter table public.catalog_items add column if not exists gallery jsonb not null default '[]'::jsonb;
+alter table public.catalog_items drop constraint if exists catalog_items_media_type_check;
+alter table public.catalog_items add constraint catalog_items_media_type_check check (media_type in ('image','video','external'));
+
+alter table public.insights_posts add column if not exists slug text;
+alter table public.insights_posts add column if not exists author text not null default 'Hey Larmah Editorial Desk';
+alter table public.insights_posts add column if not exists tags text[] not null default '{}'::text[];
+alter table public.insights_posts add column if not exists media_url text;
+alter table public.insights_posts add column if not exists media_type text not null default 'image';
+alter table public.insights_posts add column if not exists video_url text;
+alter table public.insights_posts add column if not exists gallery jsonb not null default '[]'::jsonb;
+alter table public.insights_posts add column if not exists published_at timestamptz;
+alter table public.insights_posts drop constraint if exists insights_posts_media_type_check;
+alter table public.insights_posts add constraint insights_posts_media_type_check check (media_type in ('image','video','external'));
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'larmah-media',
+  'larmah-media',
+  true,
+  104857600,
+  array['image/jpeg','image/png','image/webp','image/gif','image/avif','video/mp4','video/webm','video/quicktime','video/mpeg']
+)
+on conflict (id) do update
+set public = true,
+    file_size_limit = 104857600,
+    allowed_mime_types = excluded.allowed_mime_types;
+
+create index if not exists idx_profiles_status_role on public.profiles (account_status, role, created_at desc);
+create index if not exists idx_catalog_items_media_type on public.catalog_items (media_type, created_at desc);
+create index if not exists idx_insights_slug on public.insights_posts (slug);
+
+update public.profiles
+set role = 'admin', account_status = 'verified', is_verified = true, verified_at = coalesce(verified_at, now()), updated_at = now()
+where lower(email) = lower(public.admin_email());

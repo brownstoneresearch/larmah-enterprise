@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Admin Workspace — Hey Larmah Enterprise Limited</title>
-  <meta name="description" content="Admin workspace for uploading Hey Larmah catalogue items and insight blog posts." />
+  <meta name="description" content="Secured Hey Larmah admin workspace for catalogue media, blog publishing and premium user management." />
   <meta name="keywords" content="Hey Larmah Enterprise Limited, Real Estate Nigeria, Fintech Nigeria, Logistics Nigeria, Shipping Nigeria, Lagos business, RC 9488632" />
   <meta name="author" content="Hey Larmah Enterprise Limited" />
   <meta name="theme-color" content="#06130d" />
@@ -14,14 +14,14 @@
   <meta property="og:locale" content="en_NG" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Admin Workspace — Hey Larmah Enterprise Limited" />
-  <meta property="og:description" content="Admin workspace for uploading Hey Larmah catalogue items and insight blog posts." />
+  <meta property="og:description" content="Secured Hey Larmah admin workspace for catalogue media, blog publishing and premium user management" />
   <meta property="og:url" content="https://heylarmah.tech/admin.html" />
   <meta property="og:site_name" content="Hey Larmah Enterprise Limited" />
   <meta property="og:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
   <meta property="og:image:alt" content="Hey Larmah Enterprise Limited" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Admin Workspace — Hey Larmah Enterprise Limited" />
-  <meta name="twitter:description" content="Admin workspace for uploading Hey Larmah catalogue items and insight blog posts." />
+  <meta name="twitter:description" content="Secured Hey Larmah admin workspace for catalogue media, blog publishing and premium user management" />
   <meta name="twitter:image" content="https://heylarmah.tech/assets/images/brand-og-cover.jpg" />
   <link rel="icon" href="assets/images/favicon.png" type="image/png" />
   <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" />
@@ -81,7 +81,7 @@
   </header>
   <main id="main" data-admin-root>
     <section class="dashboard-hero">
-      <div class="container reveal"><span class="eyebrow"><i class="fa-solid fa-user-shield"></i> Admin workspace • RC: 9488632</span><h1>Catalogue and blog publishing desk.</h1><p>Upload catalogue records and insight posts into Supabase. Admin access is restricted to the approved admin email.</p></div>
+      <div class="container reveal"><span class="eyebrow"><i class="fa-solid fa-user-shield"></i> Admin workspace • RC: 9488632</span><h1>Professional admin control desk.</h1><p>Upload catalogue media, publish blog content, verify premium users and manage client profile data from one secured workspace.</p></div>
     </section>
     <section class="section" data-admin-login-panel>
       <div class="container admin-locked">
@@ -93,49 +93,79 @@
     </section>
     <section class="section" data-admin-workspace hidden>
       <div class="container dash-toolbar reveal"><div><span class="eyebrow">Active admin</span><h2><span data-admin-email-label>heylarmahtech@outlook.com</span></h2></div><button class="btn btn-danger" type="button" data-admin-sign-out><i class="fa-solid fa-right-from-bracket"></i> Sign out</button></div>
-      <div class="container admin-grid">
-        <form class="admin-panel reveal" data-invite-user>
-          <span class="eyebrow">Invite premium user</span>
-          <h2>Send secure account invitation.</h2>
-          <p>Invite a client or team member to create a verified account. The invite is sent through Supabase Auth using the secured Edge Function.</p>
-          <div class="form-grid">
+      <div class="container admin-grid admin-grid-wide">
+        <form class="admin-panel admin-panel-wide reveal" data-invite-user>
+          <span class="eyebrow"><i class="fa-solid fa-user-plus"></i> Premium access</span>
+          <h2>Invite a premium user.</h2>
+          <p>Send a secure account invitation to a client or team member. The invitation is handled through the protected Supabase Edge Function, not the public frontend.</p>
+          <div class="form-grid two-col-form">
             <div class="form-row"><label>Full name</label><input name="full_name" placeholder="Invitee name" autocomplete="name" /></div>
             <div class="form-row"><label>Email address</label><input type="email" name="email" required placeholder="client@example.com" autocomplete="email" /></div>
-            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-user-plus"></i> Send invitation</button>
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-paper-plane"></i> Send invitation</button>
           </div>
           <p class="auth-status" data-auth-status></p>
         </form>
+
+        <section class="admin-panel admin-panel-wide reveal" data-admin-users-panel>
+          <div class="admin-panel-heading">
+            <div>
+              <span class="eyebrow"><i class="fa-solid fa-users-gear"></i> User verification</span>
+              <h2>Verify and manage premium users.</h2>
+              <p>Review new accounts, verify users, assign access level and update client profile data. Sensitive Auth operations run through the secured admin Edge Function.</p>
+            </div>
+            <button class="btn btn-ghost" type="button" data-admin-refresh-users><i class="fa-solid fa-rotate"></i> Refresh users</button>
+          </div>
+          <div class="form-grid admin-tools">
+            <div class="form-row"><label>Search users</label><input type="search" data-admin-user-search placeholder="Search by email, name, phone or company" /></div>
+            <div class="admin-mini-stats" data-admin-user-stats><span>Users</span><strong>Loading…</strong></div>
+          </div>
+          <div class="admin-users-list" data-admin-users-list>
+            <div class="admin-list-item"><span><strong>Loading users…</strong><br>Connect the admin-users Edge Function to enable user management.</span></div>
+          </div>
+        </section>
+
         <form class="admin-panel reveal" data-catalogue-upload>
-          <span class="eyebrow">Catalogue upload</span><h2>Publish a catalogue item.</h2><p>Add catalogue containers to any pillar page. Image files upload to Supabase Storage when the storage bucket is active.</p>
+          <span class="eyebrow"><i class="fa-solid fa-photo-film"></i> Catalogue media</span>
+          <h2>Upload catalogue photos and videos.</h2>
+          <p>Publish professional catalogue records across Real Estate, Fintech, Logistics, Shipping and Premium. Upload a primary photo or video, then attach optional gallery media.</p>
           <div class="form-grid">
             <div class="form-row"><label>Category</label><select name="category" required><option value="real-estate">Real Estate</option><option value="fintech">Fintech</option><option value="logistics">Logistics</option><option value="shipping">Shipping</option><option value="premium">Premium</option></select></div>
             <div class="form-row"><label>Title</label><input name="title" required placeholder="Catalogue title" /></div>
             <div class="form-row"><label>Description</label><textarea name="description" required placeholder="Short catalogue description"></textarea></div>
             <div class="form-row"><label>Price / note</label><input name="price" placeholder="Optional price, range or note" /></div>
-            <div class="form-row"><label>Image file</label><input type="file" name="image_file" accept="image/*" /></div>
-            <div class="form-row"><label>Image URL</label><input name="image_url" placeholder="Optional existing image URL" /></div>
+            <div class="form-row"><label>Primary photo or video</label><input type="file" name="media_file" accept="image/*,video/*" /><small class="field-note">Recommended: WebP/JPG for photos, MP4/WebM for videos.</small></div>
+            <div class="form-row"><label>Additional photos/videos</label><input type="file" name="gallery_files" accept="image/*,video/*" multiple /><small class="field-note">Optional gallery files for the catalogue record.</small></div>
+            <div class="form-row"><label>Existing media URL</label><input name="media_url" placeholder="Optional existing photo/video URL" /></div>
             <div class="form-row"><label>Tags</label><input name="tags" placeholder="property, verified, lagos" /></div>
             <div class="form-row"><label>Sort order</label><input type="number" name="sort_order" value="10" /></div>
             <label class="check-row"><input type="checkbox" name="featured" /> Feature on homepage when selected by database order</label>
             <label class="check-row"><input type="checkbox" name="active" checked /> Publish as active</label>
             <button class="btn btn-primary" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i> Upload catalogue</button>
           </div>
+          <p class="auth-status" data-catalogue-status></p>
           <div class="admin-list" data-admin-catalogue-list></div>
         </form>
+
         <form class="admin-panel reveal" data-insight-upload>
-          <span class="eyebrow">Insight blog upload</span><h2>Publish an insight post.</h2><p>Create blog-style posts for the Insights page with category, excerpt, body and optional image.</p>
+          <span class="eyebrow"><i class="fa-solid fa-newspaper"></i> Blog publishing</span>
+          <h2>Post blog content.</h2>
+          <p>Create matured blog articles for the Insights page with categories, excerpts, body content, author, tags and optional cover media.</p>
           <div class="form-grid">
             <div class="form-row"><label>Category</label><select name="category" required><option>Enterprise</option><option>Real Estate</option><option>Fintech</option><option>Logistics</option><option>Shipping</option><option>Premium</option></select></div>
             <div class="form-row"><label>Title</label><input name="title" required placeholder="Insight title" /></div>
+            <div class="form-row"><label>Slug</label><input name="slug" placeholder="Optional URL-friendly slug" /></div>
             <div class="form-row"><label>Excerpt</label><textarea name="excerpt" required placeholder="Short blog preview"></textarea></div>
             <div class="form-row"><label>Body</label><textarea name="body" required placeholder="Full blog article"></textarea></div>
+            <div class="form-row"><label>Author</label><input name="author" value="Hey Larmah Editorial Desk" /></div>
             <div class="form-row"><label>Read time</label><input name="read_time" value="4 min read" /></div>
-            <div class="form-row"><label>Image file</label><input type="file" name="image_file" accept="image/*" /></div>
-            <div class="form-row"><label>Image URL</label><input name="image_url" placeholder="Optional existing image URL" /></div>
+            <div class="form-row"><label>Cover photo or video</label><input type="file" name="media_file" accept="image/*,video/*" /></div>
+            <div class="form-row"><label>Existing media URL</label><input name="media_url" placeholder="Optional existing image/video URL" /></div>
+            <div class="form-row"><label>Tags</label><input name="tags" placeholder="enterprise, trade, growth" /></div>
             <label class="check-row"><input type="checkbox" name="pinned" /> Pin as featured</label>
             <label class="check-row"><input type="checkbox" name="active" checked /> Publish as active</label>
-            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-newspaper"></i> Upload insight post</button>
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-pen-nib"></i> Publish blog post</button>
           </div>
+          <p class="auth-status" data-insight-status></p>
           <div class="admin-list" data-admin-insight-list></div>
         </form>
       </div>
