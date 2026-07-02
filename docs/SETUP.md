@@ -1,15 +1,12 @@
-# Setup Guide — Hey Larmah Enterprise Limited
+# Setup Guide
 
-1. Upload the site files to your hosting account.
-2. Open Supabase SQL Editor and run `schema.sql`.
-3. In Supabase Authentication, create the admin user:
-   - Email: `heylarmahtech@outlook.com`
-   - Password: set the assigned admin password privately.
-4. Login through `admin.html` to upload catalogue records and insight blog posts.
-5. Premium users should register via `register.html` or sign in through `auth.html`.
-6. `dashboard.html` is protected and redirects unauthenticated users to login.
-7. Cookie consent is built in and Cloudflare-ready.
+1. Upload the website files to your hosting provider.
+2. In Supabase SQL Editor, run `schema.sql`.
+3. In Supabase Authentication, create the admin user: `heylarmahtech@outlook.com`.
+4. Enable email confirmation, secure email change and secure password change where available.
+5. Configure Google provider under Authentication → Providers → Google.
+6. Deploy the `supabase/functions/invite-user` Edge Function and set the required secrets listed in `AUTH-SETUP.md`.
+7. Add your final domain to Supabase Auth redirect URL allow list.
+8. Test: register, confirm email, login, magic link, reset password, Google login, admin invite and catalogue upload.
 
-WhatsApp buttons and enquiry forms direct users to WhatsApp and attempt to save records to Supabase.
-
-4. Run `set_admin_email.sql` after creating the admin Auth user to promote `heylarmahtech@outlook.com` to admin role if the user already existed before the schema was installed.
+Do not publish Supabase service-role keys in frontend code.

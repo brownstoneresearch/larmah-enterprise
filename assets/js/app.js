@@ -6,6 +6,7 @@
   const ADMIN_EMAIL = (window.HL_CONFIG && window.HL_CONFIG.adminEmail) || "heylarmahtech@outlook.com";
   const toast = document.getElementById('toast');
   const page = document.body.getAttribute('data-page') || 'home';
+  async function dbReady(){ if(window.HLDatabase && window.HLDatabase.ready){ try{ await window.HLDatabase.ready; await window.HLDatabase.syncSession?.(); }catch{} } }
   function showToast(message){ if(!toast) return; toast.textContent = message; toast.classList.add('show'); clearTimeout(window.__HLToast); window.__HLToast = setTimeout(()=>toast.classList.remove('show'), 3800); }
   function encode(s){ return encodeURIComponent(String(s||'').trim()); }
   function clean(s){ return String(s || '').trim(); }
@@ -57,18 +58,138 @@
   });
   document.querySelectorAll('a[href*="wa.me/"]').forEach(link=>{ link.addEventListener('click', ()=>{ const label = clean(link.getAttribute('data-enquiry-title') || link.textContent || link.getAttribute('aria-label') || 'WhatsApp enquiry'); saveEnquiry(label, { Enquiry: label, Link: link.href, Page: location.pathname }, 'whatsapp-link').catch(()=>{}); }, { passive:true }); });
 
+  function setStatus(target, message, type){
+    if(!target) return;
+    target.textContent = message || '';
+    target.classList.remove('success','error','info');
+    if(type) target.classList.add(type);
+  }
+  async function withButton(button, busyText, task){
+    const original = button ? button.innerHTML : '';
+    if(button){ button.disabled = true; button.innerHTML = busyText; }
+    try{ return await task(); }
+    finally{ if(button){ button.disabled = false; button.innerHTML = original; } }
+  }
+  function authMessageFromUrl(){
+    const params = new URLSearchParams(location.search);
+    const hash = new URLSearchParams((location.hash || '').replace(/^#/,''));
+    const error = params.get('error_description') || hash.get('error_description');
+    if(error) showToast(error.replace(/\+/g,' '));
+    if(params.get('confirmed')) showToast('Email confirmed. You can now sign in.');
+    if(params.get('invited')) showToast('Invitation accepted. Complete your secure sign in.');
+    if(params.get('type') === 'recovery' || hash.get('type') === 'recovery'){
+      document.querySelectorAll('[data-password-recovery-panel]').forEach(el=>el.hidden=false);
+      showToast('Password recovery session detected. Set a new password.');
+    }
+  }
+  authMessageFromUrl();
+
   document.querySelectorAll('[data-auth-form]').forEach(form=>{
     form.addEventListener('submit', async ev=>{
-      ev.preventDefault(); const data = formFields(form); const email = clean(data.email || data.Email); const password = clean(data.password || data.Password); const mode = form.getAttribute('data-auth-mode') || 'login'; const redirect = form.getAttribute('data-auth-redirect') || 'dashboard.html';
-      if(!email || !password){ showToast('Enter email and password.'); return; } if(!window.HLDatabase){ showToast('Supabase is not configured.'); return; }
-      const button = form.querySelector('button[type="submit"]'); const original = button ? button.textContent : '';
-      if(button){ button.disabled = true; button.textContent = mode === 'register' ? 'Creating secure access…' : 'Signing in…'; }
-      try{ if(mode === 'register'){ await window.HLDatabase.signUp(email, password); showToast('Account created. Opening your premium dashboard…'); } else { await window.HLDatabase.signIn(email, password); showToast('Signed in. Opening secure dashboard…'); } setTimeout(()=>{ window.location.href = redirect; }, 650); }
-      catch(err){ showToast(err && err.message ? err.message : 'Unable to continue.'); }
-      finally{ if(button){ button.disabled = false; button.textContent = original; } }
+      ev.preventDefault();
+      const data = formFields(form);
+      const email = clean(data.email || data.Email);
+      const password = clean(data.password || data.Password);
+      const name = clean(data.full_name || data.Name || '');
+      const mode = form.getAttribute('data-auth-mode') || 'login';
+      const redirect = form.getAttribute('data-auth-redirect') || 'dashboard.html';
+      const status = form.querySelector('[data-auth-status]');
+      if(!email || !password){ showToast('Enter email and password.'); return; }
+      if(!window.HLDatabase){ showToast('Supabase is not configured.'); return; }
+      const button = form.querySelector('button[type="submit"]');
+      await withButton(button, mode === 'register' ? '<i class="fa-solid fa-spinner fa-spin"></i> Creating account…' : '<i class="fa-solid fa-spinner fa-spin"></i> Signing in…', async()=>{
+        await dbReady();
+        if(mode === 'register'){
+          const result = await window.HLDatabase.signUp(email, password, { full_name: name, account_type: 'premium' });
+          if(result && result.session){
+            showToast('Account created. Opening your premium dashboard…');
+            setTimeout(()=>{ window.location.href = redirect; }, 650);
+          }else{
+            setStatus(status, 'Account created. Please confirm your email address before signing in.', 'success');
+            showToast('Please confirm your email address to activate your account.');
+            form.reset();
+          }
+        }else{
+          await window.HLDatabase.signIn(email, password);
+          showToast('Signed in. Opening secure dashboard…');
+          setTimeout(()=>{ window.location.href = redirect; }, 650);
+        }
+      }).catch(err=>{ setStatus(status, err && err.message ? err.message : 'Unable to continue.', 'error'); showToast(err && err.message ? err.message : 'Unable to continue.'); });
     });
   });
-  document.querySelectorAll('[data-sign-out]').forEach(btn=>{ btn.addEventListener('click', async()=>{ try{ await window.HLDatabase.signOut(); }catch{} window.location.href = 'auth.html'; }); });
+
+  document.querySelectorAll('[data-google-signin]').forEach(btn=>{
+    btn.addEventListener('click', async()=>{
+      if(!window.HLDatabase){ showToast('Supabase is not configured.'); return; }
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Redirecting…', async()=>{
+        await dbReady();
+        await window.HLDatabase.signInWithGoogle(btn.getAttribute('data-google-redirect') || 'dashboard.html');
+      }).catch(err=>showToast(err && err.message ? err.message : 'Google sign-in could not start.'));
+    });
+  });
+
+  document.querySelectorAll('[data-magic-form]').forEach(form=>{
+    form.addEventListener('submit', async ev=>{
+      ev.preventDefault(); const data=formFields(form); const email=clean(data.email); const status=form.querySelector('[data-auth-status]');
+      if(!email){ showToast('Enter your email address.'); return; }
+      const btn=form.querySelector('button[type="submit"]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending…', async()=>{ await dbReady(); await window.HLDatabase.sendMagicLink(email); setStatus(status, 'Magic link / OTP sent. Check your email inbox.', 'success'); showToast('Magic link or OTP sent to your email.'); }).catch(err=>{ setStatus(status, err.message || 'Unable to send magic link.', 'error'); showToast(err.message || 'Unable to send magic link.'); });
+    });
+  });
+
+  document.querySelectorAll('[data-otp-verify-form]').forEach(form=>{
+    form.addEventListener('submit', async ev=>{
+      ev.preventDefault(); const data=formFields(form); const email=clean(data.email); const token=clean(data.token); const status=form.querySelector('[data-auth-status]');
+      if(!email || !token){ showToast('Enter email and OTP code.'); return; }
+      const btn=form.querySelector('button[type="submit"]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…', async()=>{ await dbReady(); await window.HLDatabase.verifyOtp(email, token, clean(data.type || 'magiclink')); setStatus(status, 'Verified. Opening dashboard…', 'success'); showToast('OTP verified.'); setTimeout(()=>{ location.href='dashboard.html'; },650); }).catch(err=>{ setStatus(status, err.message || 'OTP verification failed.', 'error'); showToast(err.message || 'OTP verification failed.'); });
+    });
+  });
+
+  document.querySelectorAll('[data-reset-form]').forEach(form=>{
+    form.addEventListener('submit', async ev=>{
+      ev.preventDefault(); const data=formFields(form); const email=clean(data.email); const status=form.querySelector('[data-auth-status]');
+      if(!email){ showToast('Enter your email address.'); return; }
+      const btn=form.querySelector('button[type="submit"]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending reset…', async()=>{ await dbReady(); await window.HLDatabase.resetPassword(email); setStatus(status, 'Password reset link sent. Check your email.', 'success'); showToast('Password reset email sent.'); }).catch(err=>{ setStatus(status, err.message || 'Unable to send reset link.', 'error'); showToast(err.message || 'Unable to send reset link.'); });
+    });
+  });
+
+  document.querySelectorAll('[data-update-password-form]').forEach(form=>{
+    form.addEventListener('submit', async ev=>{
+      ev.preventDefault(); const data=formFields(form); const password=clean(data.password); const nonce=clean(data.nonce); const status=form.querySelector('[data-auth-status]');
+      if(!password || password.length < 8){ showToast('Password must be at least 8 characters.'); return; }
+      const btn=form.querySelector('button[type="submit"]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Updating…', async()=>{ await dbReady(); await window.HLDatabase.updatePassword(password, nonce || undefined); setStatus(status, 'Password updated successfully.', 'success'); showToast('Password updated.'); form.reset(); }).catch(err=>{ setStatus(status, err.message || 'Password update failed.', 'error'); showToast(err.message || 'Password update failed.'); });
+    });
+  });
+
+  document.querySelectorAll('[data-resend-confirmation]').forEach(form=>{
+    form.addEventListener('submit', async ev=>{
+      ev.preventDefault(); const data=formFields(form); const email=clean(data.email); const type=clean(data.type || 'signup'); const status=form.querySelector('[data-auth-status]');
+      if(!email){ showToast('Enter your email address.'); return; }
+      const btn=form.querySelector('button[type="submit"]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Resending…', async()=>{ await dbReady(); await window.HLDatabase.resendConfirmation(email, type); setStatus(status, 'Verification email resent.', 'success'); showToast('Verification email resent.'); }).catch(err=>{ setStatus(status, err.message || 'Unable to resend verification.', 'error'); showToast(err.message || 'Unable to resend verification.'); });
+    });
+  });
+
+  document.querySelectorAll('[data-change-email-form]').forEach(form=>{
+    form.addEventListener('submit', async ev=>{
+      ev.preventDefault(); const data=formFields(form); const email=clean(data.email); const status=form.querySelector('[data-auth-status]');
+      if(!email){ showToast('Enter the new email address.'); return; }
+      const btn=form.querySelector('button[type="submit"]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Requesting change…', async()=>{ await dbReady(); await window.HLDatabase.changeEmail(email); setStatus(status, 'Email change requested. Check both old and new email inboxes if secure email change is enabled.', 'success'); showToast('Email verification sent for the new address.'); }).catch(err=>{ setStatus(status, err.message || 'Email change failed.', 'error'); showToast(err.message || 'Email change failed.'); });
+    });
+  });
+
+  document.querySelectorAll('[data-reauth-form]').forEach(form=>{
+    form.addEventListener('submit', async ev=>{
+      ev.preventDefault(); const status=form.querySelector('[data-auth-status]'); const btn=form.querySelector('button[type="submit"]');
+      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending code…', async()=>{ await dbReady(); await window.HLDatabase.reauthenticate(); setStatus(status, 'Security code sent. Use the nonce code when changing your password.', 'success'); showToast('Reauthentication code sent.'); }).catch(err=>{ setStatus(status, err.message || 'Unable to send reauthentication code.', 'error'); showToast(err.message || 'Unable to send reauthentication code.'); });
+    });
+  });
+
+  document.querySelectorAll('[data-sign-out]').forEach(btn=>{ btn.addEventListener('click', async()=>{ try{ await dbReady(); await window.HLDatabase.signOut(); }catch{} window.location.href = 'auth.html'; }); });
 
   function setupPagination(section){
     const perPage = Math.max(1, parseInt(section.getAttribute('data-paginate'), 10) || 6); const grid = section.querySelector('[data-page-grid]'); const pager = section.querySelector('[data-pagination]'); if(!grid || !pager) return;
@@ -121,6 +242,7 @@
 
   async function guardDashboard(){
     if(!document.body.hasAttribute('data-requires-auth')) return;
+    await dbReady();
     if(!window.HLDatabase || !window.HLDatabase.currentAccessToken || !window.HLDatabase.currentAccessToken()){ window.location.href = 'auth.html'; return; }
     try{ const user = await window.HLDatabase.getCurrentUser(); if(!user || !user.id){ await window.HLDatabase.signOut(); window.location.href='auth.html'; return; } document.querySelectorAll('[data-user-email]').forEach(el=>el.textContent = user.email || 'Premium user'); document.querySelectorAll('[data-user-id]').forEach(el=>el.textContent = user.id || ''); await hydrateDashboard(user); }
     catch(err){ window.location.href = 'auth.html'; }
@@ -144,11 +266,13 @@
     const loginPanel = document.querySelector('[data-admin-login-panel]'); const workspace = document.querySelector('[data-admin-workspace]'); const emailLabel = document.querySelector('[data-admin-email-label]');
     function setVisible(isAdmin, email){ if(loginPanel) loginPanel.hidden = !!isAdmin; if(workspace) workspace.hidden = !isAdmin; if(emailLabel) emailLabel.textContent = email || ADMIN_EMAIL; }
     async function check(){
+      await dbReady();
       if(!window.HLDatabase || !window.HLDatabase.currentAccessToken || !window.HLDatabase.currentAccessToken()){ setVisible(false); return null; }
       try{ const user = await window.HLDatabase.getCurrentUser(); if(user && window.HLDatabase.isAdminEmail(user.email)){ setVisible(true, user.email); await hydrateAdmin(); return user; } setVisible(false); showToast('This account is not authorised for admin access.'); return null; }catch{ setVisible(false); return null; }
     }
     document.querySelector('[data-admin-auth]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const data = formFields(ev.currentTarget); const email = clean(data.email); const password = clean(data.password); if(email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()){ showToast('Use the approved admin email.'); return; } const btn=ev.currentTarget.querySelector('button[type="submit"]'); const original=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='Verifying admin…';} try{ await window.HLDatabase.signIn(email,password); const user = await check(); if(user) showToast('Admin workspace unlocked.'); }catch(err){ showToast(err && err.message ? err.message : 'Admin sign-in failed.'); }finally{ if(btn){btn.disabled=false;btn.textContent=original;} } });
-    document.querySelector('[data-admin-sign-out]')?.addEventListener('click', async()=>{ await window.HLDatabase.signOut(); setVisible(false); showToast('Admin signed out.'); });
+    document.querySelector('[data-admin-sign-out]')?.addEventListener('click', async()=>{ await dbReady(); await window.HLDatabase.signOut(); setVisible(false); showToast('Admin signed out.'); });
+    document.querySelector('[data-invite-user]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.currentTarget; const data=formFields(form); const email=clean(data.email); const name=clean(data.full_name); const status=form.querySelector('[data-auth-status]'); if(!email){ showToast('Enter invitee email.'); return; } const btn=form.querySelector('button[type="submit"]'); await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending invite…', async()=>{ await dbReady(); await window.HLDatabase.inviteUser(email, { full_name:name, account_type:'premium', invited_by:ADMIN_EMAIL }); setStatus(status, 'Invitation email sent successfully.', 'success'); showToast('Invitation sent.'); form.reset(); }).catch(err=>{ setStatus(status, err.message || 'Invitation failed. Deploy the invite-user Edge Function and set service role secret.', 'error'); showToast(err.message || 'Invitation failed.'); }); });
     document.querySelector('[data-catalogue-upload]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.currentTarget; const data=formFields(form); const file=form.querySelector('input[name="image_file"]')?.files?.[0]; const btn=form.querySelector('button[type="submit"]'); const original=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='Publishing catalogue…';} try{ let image_url=clean(data.image_url); if(file) image_url = await window.HLDatabase.uploadMedia(file,'catalogue'); const payload={ category: clean(data.category), title: clean(data.title), description: clean(data.description), price: clean(data.price), image_url, tags: clean(data.tags).split(',').map(x=>x.trim()).filter(Boolean), active: data.active === 'on', featured: data.featured === 'on', sort_order: parseInt(data.sort_order,10)||0 }; await window.HLDatabase.insert('catalog_items', payload); showToast('Catalogue item published to Supabase.'); form.reset(); await hydrateAdmin(); }catch(err){ showToast(err && err.message ? err.message : 'Catalogue upload failed.'); }finally{ if(btn){btn.disabled=false;btn.textContent=original;} } });
     document.querySelector('[data-insight-upload]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.currentTarget; const data=formFields(form); const file=form.querySelector('input[name="image_file"]')?.files?.[0]; const btn=form.querySelector('button[type="submit"]'); const original=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='Publishing insight…';} try{ let image_url=clean(data.image_url); if(file) image_url = await window.HLDatabase.uploadMedia(file,'insights'); const payload={ title: clean(data.title), category: clean(data.category || 'Enterprise'), excerpt: clean(data.excerpt), body: clean(data.body), read_time: clean(data.read_time || '4 min read'), image_url, pinned: data.pinned === 'on', active: data.active === 'on' }; await window.HLDatabase.insert('insights_posts', payload); showToast('Insight blog post published.'); form.reset(); await hydrateAdmin(); }catch(err){ showToast(err && err.message ? err.message : 'Insight upload failed.'); }finally{ if(btn){btn.disabled=false;btn.textContent=original;} } });
     await check();

@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/supabase-client.js"></script>
   <script defer src="assets/js/app.js"></script>
 </head>
@@ -79,14 +80,42 @@
     </div>
   </header>
   <main id="main">
-    <section class="auth-section">
-      <div class="container auth-grid">
-        <aside class="auth-visual reveal"><span class="eyebrow">Premium users</span><h1>Create your secured access.</h1><p>Register with your email and password to access a client dashboard for requests and premium coordination.</p><div class="mini-proof"><span>RC: 9488632</span><span>Email secured</span><span>Password protected</span></div></aside>
-        <form class="auth-card card reveal" data-auth-form data-auth-mode="register" data-auth-redirect="dashboard.html">
-          <span class="eyebrow">Client registration</span><h2>Create account</h2><p>Email authentication protects the dashboard and client records.</p>
-          <div class="form-grid"><div class="form-row"><label>Email</label><input type="email" name="email" required autocomplete="email" /></div><div class="form-row"><label>Password</label><input type="password" name="password" required minlength="8" autocomplete="new-password" /></div><button class="btn btn-primary" type="submit"><i class="fa-solid fa-user-plus"></i> Create premium access</button></div>
-          <p class="form-alt">Already registered? <a href="auth.html">Login here</a></p>
-        </form>
+    <section class="auth-section auth-suite">
+      <div class="container auth-grid auth-grid-wide">
+        <aside class="auth-visual reveal">
+          <span class="eyebrow">Premium users</span>
+          <h1>Create secured access.</h1>
+          <p>Register with your email and password, then confirm your email address before signing in. This protects every premium dashboard with verified ownership.</p>
+          <div class="mini-proof"><span>Confirm email</span><span>Password protected</span><span>Premium dashboard</span></div>
+        </aside>
+        <div class="auth-stack">
+          <form class="auth-card card reveal" data-auth-form data-auth-mode="register" data-auth-redirect="dashboard.html">
+            <span class="eyebrow">Client registration</span>
+            <h2>Create account</h2>
+            <p>Email confirmation is required after sign up. Check your inbox and verify before login.</p>
+            <div class="form-grid">
+              <div class="form-row"><label>Full name</label><input name="full_name" autocomplete="name" placeholder="Your full name" /></div>
+              <div class="form-row"><label>Email</label><input type="email" name="email" required autocomplete="email" /></div>
+              <div class="form-row"><label>Password</label><input type="password" name="password" required minlength="8" autocomplete="new-password" /></div>
+              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-user-plus"></i> Create premium access</button>
+              <button class="btn btn-google" type="button" data-google-signin data-google-redirect="dashboard.html"><i class="fa-brands fa-google"></i> Continue with Google</button>
+            </div>
+            <p class="auth-status" data-auth-status></p>
+            <p class="form-alt">Already registered? <a href="auth.html">Login here</a></p>
+          </form>
+
+          <form class="auth-card card reveal" data-resend-confirmation>
+            <span class="eyebrow">Confirm sign up</span>
+            <h2>Resend confirmation email</h2>
+            <p>Use this if the confirmation message did not arrive after creating your account.</p>
+            <div class="form-grid">
+              <div class="form-row"><label>Email</label><input type="email" name="email" required autocomplete="email" /></div>
+              <input type="hidden" name="type" value="signup" />
+              <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-paper-plane"></i> Resend confirmation</button>
+            </div>
+            <p class="auth-status" data-auth-status></p>
+          </form>
+        </div>
       </div>
     </section>
   </main>

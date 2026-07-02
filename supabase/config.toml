@@ -1,2 +1,12 @@
 [functions.p2p-sync]
 verify_jwt = false
+
+[functions.invite-user]
+verify_jwt = true
+
+# Local Supabase CLI Google provider config. In hosted Supabase, enable this in Dashboard → Authentication → Providers → Google.
+[auth.external.google]
+enabled = true
+client_id = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_SECRET)"
+skip_nonce_check = false

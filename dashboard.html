@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/supabase-client.js"></script>
   <script defer src="assets/js/app.js"></script>
 </head>
@@ -92,6 +93,51 @@
       <div class="container dashboard-layout">
         <aside class="profile-card reveal"><span class="eyebrow">Secured profile</span><h2>Premium access</h2><p><strong>Email:</strong> <span data-user-email>premium user</span></p><p><strong>User ID:</strong> <span data-user-id>loading</span></p><p>Use the enquiry form to save client requests into your profile and open WhatsApp at the same time.</p></aside>
         <form class="auth-card card js-wa-form reveal" data-wa-title="Premium Dashboard Enquiry"><span class="eyebrow">New request</span><h2>Send a secured enquiry.</h2><div class="form-grid"><div class="form-row"><label>Pillar</label><select name="Pillar"><option>Real Estate</option><option>Fintech</option><option>Logistics</option><option>Shipping</option><option>Premium</option></select></div><div class="form-row"><label>Request title</label><input name="Name" required placeholder="Example: property inspection or cargo movement" /></div><div class="form-row"><label>Details</label><textarea name="Message" required placeholder="Provide the details for the team"></textarea></div><button class="btn btn-primary" type="submit"><i class="fa-brands fa-whatsapp"></i> Save and send to WhatsApp</button></div></form>
+      </div>
+    </section>
+    <section class="section security-section">
+      <div class="container">
+        <div class="section-head reveal"><span class="eyebrow">Account security</span><h2>Manage your verified access.</h2><p>Update sensitive account details with email verification and reauthentication codes.</p></div>
+        <div class="security-grid">
+          <form class="auth-card card reveal" data-change-email-form>
+            <span class="eyebrow">Change email address</span>
+            <h2>Verify new email</h2>
+            <p>Enter a new email address. Supabase will ask you to verify the change before it becomes active.</p>
+            <div class="form-grid">
+              <div class="form-row"><label>New email</label><input type="email" name="email" required autocomplete="email" /></div>
+              <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-envelope-circle-check"></i> Request email change</button>
+            </div>
+            <p class="auth-status" data-auth-status></p>
+          </form>
+          <form class="auth-card card reveal" data-reauth-form>
+            <span class="eyebrow">Reauthentication</span>
+            <h2>Verify identity</h2>
+            <p>Send a reauthentication code before password updates or other sensitive operations.</p>
+            <div class="form-grid"><button class="btn btn-ghost" type="submit"><i class="fa-solid fa-fingerprint"></i> Send security code</button></div>
+            <p class="auth-status" data-auth-status></p>
+          </form>
+          <form class="auth-card card reveal" data-update-password-form>
+            <span class="eyebrow">Password security</span>
+            <h2>Update password</h2>
+            <p>Use the security nonce sent to your email when secure password change is enabled.</p>
+            <div class="form-grid">
+              <div class="form-row"><label>New password</label><input type="password" name="password" required minlength="8" autocomplete="new-password" /></div>
+              <div class="form-row"><label>Security nonce / OTP</label><input name="nonce" autocomplete="one-time-code" placeholder="Optional code" /></div>
+              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-shield-halved"></i> Update password</button>
+            </div>
+            <p class="auth-status" data-auth-status></p>
+          </form>
+          <form class="auth-card card reveal" data-reset-form>
+            <span class="eyebrow">Reset link</span>
+            <h2>Send recovery email</h2>
+            <p>Need a fresh reset email? Send a recovery link to your verified address.</p>
+            <div class="form-grid">
+              <div class="form-row"><label>Email</label><input type="email" name="email" required autocomplete="email" /></div>
+              <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-envelope-open-text"></i> Send reset link</button>
+            </div>
+            <p class="auth-status" data-auth-status></p>
+          </form>
+        </div>
       </div>
     </section>
     <section class="section"><div class="container"><div class="section-head reveal"><span class="eyebrow">Recent activity</span><h2>Your saved enquiries.</h2></div><div class="activity-list reveal" data-user-requests><div class="activity-item"><strong>Loading</strong><span>Fetching your secured request records.</span></div></div></div></section>

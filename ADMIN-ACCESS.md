@@ -1,7 +1,15 @@
 # Admin Access
 
-Approved admin email: `heylarmahtech@outlook.com`
+Approved admin email:
 
-Create or update this user in Supabase Auth, set the password privately in the Supabase dashboard, then run `set_admin_email.sql` in Supabase SQL Editor.
+`heylarmahtech@outlook.com`
 
-The website does not hard-code admin passwords in public files.
+Create this account in Supabase Auth and set the password privately in Supabase Dashboard.
+
+The public website does not store the admin password or any service-role key.
+
+Admin capabilities included:
+
+- Catalogue upload
+- Insight/blog post upload
+- Premium user invitation through the `invite-user` Edge Function

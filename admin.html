@@ -30,6 +30,7 @@
   <link rel="stylesheet" href="assets/css/style.css" />
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="assets/js/supabase-client.js"></script>
   <script defer src="assets/js/app.js"></script>
 </head>
@@ -93,6 +94,17 @@
     <section class="section" data-admin-workspace hidden>
       <div class="container dash-toolbar reveal"><div><span class="eyebrow">Active admin</span><h2><span data-admin-email-label>heylarmahtech@outlook.com</span></h2></div><button class="btn btn-danger" type="button" data-admin-sign-out><i class="fa-solid fa-right-from-bracket"></i> Sign out</button></div>
       <div class="container admin-grid">
+        <form class="admin-panel reveal" data-invite-user>
+          <span class="eyebrow">Invite premium user</span>
+          <h2>Send secure account invitation.</h2>
+          <p>Invite a client or team member to create a verified account. The invite is sent through Supabase Auth using the secured Edge Function.</p>
+          <div class="form-grid">
+            <div class="form-row"><label>Full name</label><input name="full_name" placeholder="Invitee name" autocomplete="name" /></div>
+            <div class="form-row"><label>Email address</label><input type="email" name="email" required placeholder="client@example.com" autocomplete="email" /></div>
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-user-plus"></i> Send invitation</button>
+          </div>
+          <p class="auth-status" data-auth-status></p>
+        </form>
         <form class="admin-panel reveal" data-catalogue-upload>
           <span class="eyebrow">Catalogue upload</span><h2>Publish a catalogue item.</h2><p>Add catalogue containers to any pillar page. Image files upload to Supabase Storage when the storage bucket is active.</p>
           <div class="form-grid">

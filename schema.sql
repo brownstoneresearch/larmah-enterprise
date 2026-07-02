@@ -37,9 +37,18 @@ $$;
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, email, role)
-  values (new.id, new.email, case when lower(new.email) = lower(public.admin_email()) then 'admin' else 'premium' end)
-  on conflict (id) do update set email = excluded.email, role = case when lower(excluded.email) = lower(public.admin_email()) then 'admin' else public.profiles.role end, updated_at = now();
+  insert into public.profiles (id, email, role, full_name)
+  values (
+    new.id,
+    new.email,
+    case when lower(new.email) = lower(public.admin_email()) then 'admin' else coalesce(new.raw_user_meta_data ->> 'account_type','premium') end,
+    coalesce(new.raw_user_meta_data ->> 'full_name','')
+  )
+  on conflict (id) do update
+  set email = excluded.email,
+      role = case when lower(excluded.email) = lower(public.admin_email()) then 'admin' else public.profiles.role end,
+      full_name = coalesce(nullif(excluded.full_name,''), public.profiles.full_name),
+      updated_at = now();
   return new;
 end;
 $$ language plpgsql security definer set search_path = public;
@@ -185,6 +194,29 @@ create policy insights_public_read_active on public.insights_posts for select us
 
 drop policy if exists insights_admin_all on public.insights_posts;
 create policy insights_admin_all on public.insights_posts for all using (public.current_user_is_admin()) with check (public.current_user_is_admin());
+
+-- =========================================================
+-- Invitations audit trail (optional)
+-- =========================================================
+create table if not exists public.invitations (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  full_name text,
+  invited_by uuid references auth.users(id) on delete set null,
+  status text not null default 'sent' check (status in ('sent','accepted','revoked')),
+  created_at timestamptz not null default now()
+);
+
+alter table public.invitations add column if not exists email text;
+alter table public.invitations add column if not exists full_name text;
+alter table public.invitations add column if not exists invited_by uuid references auth.users(id) on delete set null;
+alter table public.invitations add column if not exists status text not null default 'sent';
+alter table public.invitations add column if not exists created_at timestamptz not null default now();
+
+alter table public.invitations enable row level security;
+
+drop policy if exists invitations_admin_all on public.invitations;
+create policy invitations_admin_all on public.invitations for all using (public.current_user_is_admin()) with check (public.current_user_is_admin());
 
 -- =========================================================
 -- Storage bucket for admin uploads
