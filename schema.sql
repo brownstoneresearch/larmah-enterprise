@@ -1,8 +1,3 @@
--- Hey Larmah Enterprise Limited — Supabase schema
--- Project URL: https://ipohjsdhakjbetyievmv.supabase.co
--- Registration: RC: 9488632
--- Admin email: heylarmahtech@outlook.com
-
 create extension if not exists "pgcrypto";
 
 -- =========================================================
