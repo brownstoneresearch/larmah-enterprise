@@ -201,6 +201,43 @@
   }
   function labelForCategory(category){ return ({'real-estate':'Real Estate',fintech:'Fintech',logistics:'Logistics',shipping:'Shipping',premium:'Premium',insights:'Insights'})[category] || 'Enterprise'; }
   function iconForCategory(category){ return ({'real-estate':'fa-solid fa-building',fintech:'fa-solid fa-chart-line',logistics:'fa-solid fa-truck-fast',shipping:'fa-solid fa-ship',premium:'fa-solid fa-crown',insights:'fa-solid fa-lightbulb'})[category] || 'fa-solid fa-layer-group'; }
+  const SERVICE_PAGE_BY_KEY = {
+    'real-estate:verified-property-sourcing':'services/real-estate/verified-property-sourcing-nigeria.html',
+    'real-estate:verified-property-sourcing-in-nigeria':'services/real-estate/verified-property-sourcing-nigeria.html',
+    'real-estate:land-acquisition-support':'services/real-estate/land-acquisition-support-lagos.html',
+    'real-estate:land-acquisition-support-in-lagos':'services/real-estate/land-acquisition-support-lagos.html',
+    'real-estate:property-investment-support-in-lagos':'services/real-estate/property-investment-support-lagos.html',
+    'fintech:merchant-payment-setup':'services/fintech/merchant-payment-setup-nigeria.html',
+    'fintech:merchant-payment-setup-in-nigeria':'services/fintech/merchant-payment-setup-nigeria.html',
+    'fintech:business-payment-support-for-smes-in-nigeria':'services/fintech/business-payment-support-smes-nigeria.html',
+    'fintech:enterprise-transaction-support-in-nigeria':'services/fintech/enterprise-transaction-support-nigeria.html',
+    'logistics:corporate-delivery-coordination':'services/logistics/corporate-delivery-coordination-lagos.html',
+    'logistics:corporate-delivery-coordination-in-lagos':'services/logistics/corporate-delivery-coordination-lagos.html',
+    'logistics:business-logistics-support-in-nigeria':'services/logistics/business-logistics-support-nigeria.html',
+    'logistics:last-mile-and-scheduled-delivery-services-in-lagos':'services/logistics/last-mile-scheduled-delivery-lagos.html',
+    'shipping:import-and-export-coordination':'services/shipping/import-export-coordination-nigeria.html',
+    'shipping:import-export-coordination':'services/shipping/import-export-coordination-nigeria.html',
+    'shipping:import-and-export-coordination-in-nigeria':'services/shipping/import-export-coordination-nigeria.html',
+    'shipping:shipping-documentation-support-in-nigeria':'services/shipping/shipping-documentation-support-nigeria.html',
+    'shipping:freight-and-cargo-coordination-in-nigeria':'services/shipping/freight-cargo-coordination-nigeria.html',
+    'premium:priority-enterprise-desk':'services/premium/priority-enterprise-desk.html',
+    'premium:premium-business-support-for-investors-and-companies':'services/premium/premium-business-support-investors-companies.html'
+  };
+  function serviceUrlFor(row){
+    const category = clean(row.category || '');
+    const title = clean(row.title || '');
+    const explicitSlug = clean(row.slug || '');
+    let path = '';
+    if(explicitSlug){
+      const safeSlug = explicitSlug.replace(/^services\//,'').replace(/\.html$/,'').replace(/^\/+|\/+$/g,'');
+      if(safeSlug.includes('/')) path = `services/${safeSlug}.html`;
+    }
+    if(!path) path = SERVICE_PAGE_BY_KEY[`${category}:${slug(title)}`] || '';
+    if(!path) return '';
+    const depth = location.pathname.split('/').filter(Boolean).length - 1;
+    if(depth <= 0) return path;
+    return '../'.repeat(depth) + path;
+  }
   function mediaTypeFromUrl(url){
     const value = clean(url).toLowerCase();
     if(/\.(mp4|webm|mov|m4v|mpeg|mpg)(\?|#|$)/.test(value)) return 'video';
@@ -227,7 +264,12 @@
     const mediaUrl = clean(row.media_url || row.video_url || row.image_url || '');
     const mediaType = clean(row.media_type || mediaTypeFromUrl(mediaUrl) || 'image');
     const msg = `Hello Hey Larmah, I want to enquire about ${title}.`;
-    return `<article class="catalogue-card reveal in catalogue-card-rich" data-item>${mediaBlock(mediaUrl, mediaType, title)}<div class="catalogue-icon"><i class="${iconForCategory(category)}"></i></div><span class="catalogue-tag">${escapeHTML(labelForCategory(category))}</span><h3>${escapeHTML(title)}</h3><p>${escapeHTML(description)}</p><a class="card-link" href="${waUrl(msg)}" target="_blank" rel="noopener" data-enquiry-title="${escapeHTML(title)}">Enquire <i class="fa-brands fa-whatsapp"></i></a></article>`;
+    const detailsUrl = serviceUrlFor(row);
+    const href = detailsUrl || waUrl(msg);
+    const attrs = detailsUrl ? '' : ' target="_blank" rel="noopener"';
+    const label = detailsUrl ? 'View details' : 'Enquire';
+    const icon = detailsUrl ? 'fa-solid fa-arrow-right' : 'fa-brands fa-whatsapp';
+    return `<article class="catalogue-card reveal in catalogue-card-rich" data-item>${mediaBlock(mediaUrl, mediaType, title)}<div class="catalogue-icon"><i class="${iconForCategory(category)}"></i></div><span class="catalogue-tag">${escapeHTML(labelForCategory(category))}</span><h3>${escapeHTML(title)}</h3><p>${escapeHTML(description)}</p><a class="card-link" href="${escapeHTML(href)}"${attrs} data-enquiry-title="${escapeHTML(title)}">${label} <i class="${icon}"></i></a></article>`;
   }
   function blogCard(row){
     const title = clean(row.title || 'Hey Larmah Insight');
@@ -251,14 +293,14 @@
       }
       if(page === 'home'){
         const grid = document.querySelector('#catalogue-preview .catalogue-grid'); if(!grid) return;
-        const rows = await window.HLDatabase.select('catalog_items', '?select=category,title,description,price,tags,image_url,media_url,media_type,video_url,gallery&active=eq.true&order=featured.desc,sort_order.asc,created_at.desc&limit=6');
+        const rows = await window.HLDatabase.select('catalog_items', '?select=category,title,slug,description,price,tags,image_url,media_url,media_type,video_url,gallery&active=eq.true&order=featured.desc,sort_order.asc,created_at.desc&limit=6');
         if(Array.isArray(rows) && rows.length >= 6){ grid.innerHTML = rows.slice(0,6).map(catalogueCard).join(''); }
         return;
       }
       const allowed = ['real-estate','fintech','logistics','shipping','premium'];
       if(allowed.includes(page)){
         const grid = document.querySelector('.catalogue-grid[data-page-grid]'); if(!grid) return;
-        const rows = await window.HLDatabase.select('catalog_items', `?select=category,title,description,price,tags,image_url,media_url,media_type,video_url,gallery&active=eq.true&category=eq.${page}&order=sort_order.asc,created_at.desc&limit=60`);
+        const rows = await window.HLDatabase.select('catalog_items', `?select=category,title,slug,description,price,tags,image_url,media_url,media_type,video_url,gallery&active=eq.true&category=eq.${page}&order=sort_order.asc,created_at.desc&limit=60`);
         if(Array.isArray(rows) && rows.length){ grid.innerHTML = rows.map(catalogueCard).join(''); }
       }
     }catch(err){ }
