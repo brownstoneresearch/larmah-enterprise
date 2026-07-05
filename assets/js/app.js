@@ -122,7 +122,6 @@
       const name = clean(data.full_name || data.Name || '');
       const phone = clean(data.phone || data.Phone || '');
       const company = clean(data.company || data.Company || '');
-      const country = clean(data.country || data.Country || '');
       const confirmPassword = clean(data.confirm_password || '');
       const mode = form.getAttribute('data-auth-mode') || 'login';
       const redirect = form.getAttribute('data-auth-redirect') || 'dashboard.html';
@@ -138,7 +137,7 @@
       await withButton(button, mode === 'register' ? '<i class="fa-solid fa-spinner fa-spin"></i> Creating account…' : '<i class="fa-solid fa-spinner fa-spin"></i> Signing in…', async()=>{
         await dbReady();
         if(mode === 'register'){
-          const result = await window.HLDatabase.signUp(email, password, { full_name: name, phone, company, country, account_type: 'premium', account_status: 'pending', is_verified: false });
+          const result = await window.HLDatabase.signUp(email, password, { full_name: name, phone, company, account_type: 'premium', account_status: 'pending', is_verified: false });
           if(result && result.session){
             showToast('Account created. Opening your premium dashboard…');
             setTimeout(()=>{ window.location.href = redirect; }, 650);
@@ -223,41 +222,6 @@
   });
 
   document.querySelectorAll('[data-sign-out]').forEach(btn=>{ btn.addEventListener('click', async()=>{ try{ await dbReady(); await window.HLDatabase.signOut(); }catch{} window.location.href = 'auth.html'; }); });
-
-
-  document.querySelectorAll('[data-profile-update-form]').forEach(form=>{
-    form.addEventListener('submit', async ev=>{
-      ev.preventDefault();
-      const data = formFields(form);
-      const payload = {
-        full_name: clean(data.full_name),
-        phone: clean(data.phone),
-        country: clean(data.country),
-        state: clean(data.state),
-        city: clean(data.city),
-        company: clean(data.company),
-        occupation: clean(data.occupation),
-        preferred_pillar: clean(data.preferred_pillar),
-        address: clean(data.address),
-        bio: clean(data.bio)
-      };
-      const status = form.querySelector('[data-profile-update-status]');
-      const btn = form.querySelector('button[type="submit"]');
-      await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving profile…', async()=>{
-        await dbReady();
-        if(!window.HLDatabase || !window.HLDatabase.updateMyProfile){ throw new Error('Profile editing is not connected yet. Run the latest schema.sql, then refresh.'); }
-        const updated = await window.HLDatabase.updateMyProfile(payload);
-        try{ await window.HLDatabase.updateUser?.({ data: payload }); }catch{}
-        fillProfileBio(updated || payload, await window.HLDatabase.getCurrentUser?.());
-        setStatus(status, 'Bio data saved successfully.', 'success');
-        showToast('Bio data updated.');
-      }).catch(err=>{
-        const msg = readableError(err, 'Bio data could not be saved. Run schema.sql and try again.');
-        setStatus(status, msg, 'error');
-        showToast(msg);
-      });
-    });
-  });
 
   function setupPagination(section){
     const perPage = Math.max(1, parseInt(section.getAttribute('data-paginate'), 10) || 6); const grid = section.querySelector('[data-page-grid]'); const pager = section.querySelector('[data-pagination]'); if(!grid || !pager) return;
@@ -394,55 +358,27 @@
     try{ const user = await window.HLDatabase.getCurrentUser(); if(!user || !user.id){ await window.HLDatabase.signOut(); window.location.href='auth.html'; return; } document.querySelectorAll('[data-user-email]').forEach(el=>el.textContent = user.email || 'Premium user'); document.querySelectorAll('[data-user-id]').forEach(el=>el.textContent = user.id || ''); await hydrateDashboard(user); }
     catch(err){ window.location.href = 'auth.html'; }
   }
-
-  function setFormValue(form, name, value){
-    const field = form && form.elements ? form.elements[name] : null;
-    if(field) field.value = value || '';
-  }
-  function profileValue(profile, user, key){
-    if(profile && profile[key] !== undefined && profile[key] !== null && clean(profile[key]) !== '') return clean(profile[key]);
-    const meta = user && user.user_metadata ? user.user_metadata : {};
-    if(meta && meta[key] !== undefined && meta[key] !== null && clean(meta[key]) !== '') return clean(meta[key]);
-    return '';
-  }
-  function fillProfileBio(profile, user){
-    profile = profile || {};
-    const fullName = profileValue(profile, user, 'full_name') || (user && user.email ? user.email.split('@')[0] : 'Premium client');
-    const phone = profileValue(profile, user, 'phone') || 'Not added';
-    const country = profileValue(profile, user, 'country') || 'Not added';
-    const company = profileValue(profile, user, 'company') || 'Not added';
-    const city = profileValue(profile, user, 'city');
-    const state = profileValue(profile, user, 'state');
-    const locationText = [city, state].filter(Boolean).join(', ') || 'Not added';
-    const occupation = profileValue(profile, user, 'occupation') || 'Not added';
-    const preferred = profileValue(profile, user, 'preferred_pillar');
-    const preferredText = preferred ? labelForCategory(preferred) : 'Not selected';
-    const address = profileValue(profile, user, 'address');
-    const bio = profileValue(profile, user, 'bio') || 'No bio data added yet.';
-
-    document.querySelectorAll('[data-profile-display-name]').forEach(el=>el.textContent = fullName);
-    document.querySelectorAll('[data-profile-full-name]').forEach(el=>el.textContent = fullName);
-    document.querySelectorAll('[data-profile-phone]').forEach(el=>el.textContent = phone);
-    document.querySelectorAll('[data-profile-country]').forEach(el=>el.textContent = country);
-    document.querySelectorAll('[data-profile-company]').forEach(el=>el.textContent = company);
-    document.querySelectorAll('[data-profile-location]').forEach(el=>el.textContent = locationText);
-    document.querySelectorAll('[data-profile-occupation]').forEach(el=>el.textContent = occupation);
-    document.querySelectorAll('[data-profile-preferred-pillar]').forEach(el=>el.textContent = preferredText);
-    document.querySelectorAll('[data-profile-bio]').forEach(el=>el.textContent = bio);
-
-    document.querySelectorAll('[data-profile-update-form]').forEach(form=>{
-      setFormValue(form, 'full_name', fullName === 'Premium client' ? '' : fullName);
-      setFormValue(form, 'phone', phone === 'Not added' ? '' : phone);
-      setFormValue(form, 'country', country === 'Not added' ? '' : country);
-      setFormValue(form, 'company', company === 'Not added' ? '' : company);
-      setFormValue(form, 'city', city);
-      setFormValue(form, 'state', state);
-      setFormValue(form, 'occupation', occupation === 'Not added' ? '' : occupation);
-      setFormValue(form, 'preferred_pillar', preferred);
-      setFormValue(form, 'address', address);
-      setFormValue(form, 'bio', bio === 'No bio data added yet.' ? '' : bio);
+  function populateProfileForm(profile, user){
+    const form = document.querySelector('[data-profile-update-form]');
+    if(!form) return;
+    const meta = (user && user.user_metadata) || {};
+    const data = profile || {};
+    const values = {
+      full_name: data.full_name || meta.full_name || meta.name || '',
+      phone: data.phone || meta.phone || '',
+      country: data.country || meta.country || 'Nigeria',
+      company: data.company || meta.company || '',
+      preferred_pillar: data.preferred_pillar || meta.preferred_pillar || '',
+      address: data.address || meta.address || '',
+      bio: data.bio || meta.bio || '',
+      website: data.website || meta.website || ''
+    };
+    Object.entries(values).forEach(([name,value])=>{
+      const field = form.elements[name];
+      if(field && !field.dataset.userTouched){ field.value = value || ''; }
     });
   }
+
   async function hydrateDashboard(user){
     const grid = document.querySelector('.dash-grid');
     try{
@@ -450,11 +386,11 @@
       if(profile){
         document.querySelectorAll('[data-profile-role]').forEach(el=>el.textContent = labelForCategory(profile.role === 'admin' ? 'premium' : (profile.role || 'premium')));
         document.querySelectorAll('[data-profile-status]').forEach(el=>el.textContent = profile.is_verified ? 'Verified by admin' : (profile.account_status === 'suspended' ? 'Suspended' : 'Pending admin verification'));
-        fillProfileBio(profile, user);
+        populateProfileForm(profile, user);
       } else {
-        fillProfileBio({}, user);
+        populateProfileForm({}, user);
       }
-    }catch{ fillProfileBio({}, user); }
+    }catch{}
     try{
       const rows = await window.HLDatabase.select('requests', '?select=category,status,created_at,details&order=created_at.desc&limit=100');
       if(Array.isArray(rows)){
@@ -465,6 +401,31 @@
       }
     }catch{}
   }
+  document.querySelector('[data-profile-update-form]')?.addEventListener('input', ev=>{ if(ev.target && ev.target.name) ev.target.dataset.userTouched = 'true'; });
+  document.querySelector('[data-profile-update-form]')?.addEventListener('submit', async ev=>{
+    ev.preventDefault();
+    const form = ev.currentTarget;
+    const data = formFields(form);
+    const status = form.querySelector('[data-profile-update-status]');
+    const btn = form.querySelector('button[type="submit"]');
+    await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving bio data…', async()=>{
+      await dbReady();
+      if(!window.HLDatabase || !window.HLDatabase.syncMyProfile) throw new Error('Profile update is not connected yet.');
+      const profile = await window.HLDatabase.syncMyProfile({
+        full_name: clean(data.full_name),
+        phone: clean(data.phone),
+        country: clean(data.country),
+        company: clean(data.company),
+        preferred_pillar: clean(data.preferred_pillar),
+        address: clean(data.address),
+        bio: clean(data.bio),
+        website: clean(data.website)
+      });
+      setStatus(status, 'Bio data updated successfully.', 'success');
+      showToast('Bio data updated.');
+      try{ const user = await window.HLDatabase.getCurrentUser(); populateProfileForm(profile || {}, user || {}); }catch{}
+    }).catch(err=>{ setStatus(status, err.message || 'Bio data update failed.', 'error'); showToast(err.message || 'Bio data update failed.'); });
+  });
   guardDashboard();
 
   async function initAdmin(){
@@ -483,7 +444,7 @@
     document.querySelector('[data-admin-refresh-catalogue]')?.addEventListener('click', ()=>hydrateAdminCatalogue(true));
     let userSearchTimer = null;
     document.querySelector('[data-admin-user-search]')?.addEventListener('input', ()=>{ clearTimeout(userSearchTimer); userSearchTimer = setTimeout(()=>hydrateAdminUsers(true), 350); });
-    document.querySelector('[data-admin-users-list]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.target.closest('[data-user-editor]'); if(!form) return; const data=formFields(form); const btn=form.querySelector('button[type="submit"]'); const payload={ user_id: clean(data.user_id), full_name: clean(data.full_name), phone: clean(data.phone), country: clean(data.country), state: clean(data.state), city: clean(data.city), company: clean(data.company), occupation: clean(data.occupation), preferred_pillar: clean(data.preferred_pillar), bio: clean(data.bio), role: clean(data.role || 'premium'), account_status: clean(data.account_status || 'pending'), is_verified: !!form.querySelector('input[name="is_verified"]')?.checked, admin_note: clean(data.admin_note) }; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('update_user', payload); showToast('User data updated.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'User update failed.')); });
+    document.querySelector('[data-admin-users-list]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.target.closest('[data-user-editor]'); if(!form) return; const data=formFields(form); const btn=form.querySelector('button[type="submit"]'); const payload={ user_id: clean(data.user_id), full_name: clean(data.full_name), phone: clean(data.phone), company: clean(data.company), role: clean(data.role || 'premium'), account_status: clean(data.account_status || 'pending'), is_verified: !!form.querySelector('input[name="is_verified"]')?.checked, admin_note: clean(data.admin_note) }; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('update_user', payload); showToast('User data updated.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'User update failed.')); });
     document.querySelector('[data-admin-users-list]')?.addEventListener('click', async ev=>{ const btn=ev.target.closest('[data-verify-user]'); if(!btn) return; const form=btn.closest('[data-user-editor]'); const user_id=form?.querySelector('input[name="user_id"]')?.value; if(!user_id) return; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('verify_user', { user_id }); showToast('User verified successfully.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'Verification failed.')); });
     document.querySelector('[data-catalogue-priority-list]')?.addEventListener('click', ev=>{
       const prefill = ev.target.closest('[data-prefill-catalogue]');
@@ -631,12 +592,6 @@
     const fullName = clean(profile.full_name || user.user_metadata?.full_name || '');
     const phone = clean(profile.phone || user.user_metadata?.phone || '');
     const company = clean(profile.company || user.user_metadata?.company || '');
-    const country = clean(profile.country || user.user_metadata?.country || '');
-    const state = clean(profile.state || user.user_metadata?.state || '');
-    const city = clean(profile.city || user.user_metadata?.city || '');
-    const occupation = clean(profile.occupation || user.user_metadata?.occupation || '');
-    const preferredPillar = clean(profile.preferred_pillar || user.user_metadata?.preferred_pillar || '');
-    const bio = clean(profile.bio || user.user_metadata?.bio || '');
     const role = clean(profile.role || user.user_metadata?.account_type || 'premium');
     const status = clean(profile.account_status || (profile.is_verified ? 'verified' : 'pending'));
     const verified = !!profile.is_verified;
@@ -649,12 +604,6 @@
         <div class="form-row"><label>Full name</label><input name="full_name" value="${escapeHTML(fullName)}" placeholder="Full name" /></div>
         <div class="form-row"><label>Phone</label><input name="phone" value="${escapeHTML(phone)}" placeholder="Phone number" /></div>
         <div class="form-row"><label>Company</label><input name="company" value="${escapeHTML(company)}" placeholder="Company / client profile" /></div>
-        <div class="form-row"><label>Country</label><input name="country" value="${escapeHTML(country)}" placeholder="Country" /></div>
-        <div class="form-row"><label>State</label><input name="state" value="${escapeHTML(state)}" placeholder="State / province" /></div>
-        <div class="form-row"><label>City</label><input name="city" value="${escapeHTML(city)}" placeholder="City" /></div>
-        <div class="form-row"><label>Occupation</label><input name="occupation" value="${escapeHTML(occupation)}" placeholder="Occupation / business type" /></div>
-        <div class="form-row"><label>Preferred pillar</label><select name="preferred_pillar"><option value="">Select pillar</option><option value="real-estate" ${selected(preferredPillar,'real-estate')}>Real Estate</option><option value="fintech" ${selected(preferredPillar,'fintech')}>Fintech</option><option value="logistics" ${selected(preferredPillar,'logistics')}>Logistics</option><option value="shipping" ${selected(preferredPillar,'shipping')}>Shipping</option><option value="premium" ${selected(preferredPillar,'premium')}>Premium</option></select></div>
-        <div class="form-row"><label>Bio note</label><input name="bio" value="${escapeHTML(bio)}" placeholder="Client bio / important note" /></div>
         <div class="form-row"><label>Role</label><select name="role"><option value="premium" ${selected(role,'premium')}>Premium</option><option value="user" ${selected(role,'user')}>User</option>${email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? `<option value="admin" ${selected(role,'admin')}>Admin</option>` : ``}</select></div>
         <div class="form-row"><label>Status</label><select name="account_status"><option value="pending" ${selected(status,'pending')}>Pending</option><option value="verified" ${selected(status,'verified')}>Verified</option><option value="suspended" ${selected(status,'suspended')}>Suspended</option></select></div>
         <div class="form-row"><label>Admin note</label><input name="admin_note" value="${escapeHTML(note)}" placeholder="Optional internal note" /></div>

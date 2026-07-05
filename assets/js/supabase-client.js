@@ -154,12 +154,10 @@
       profile_phone: String(meta.phone || "").trim(),
       profile_company: String(meta.company || "").trim(),
       profile_country: String(meta.country || "").trim(),
-      profile_state: String(meta.state || "").trim(),
-      profile_city: String(meta.city || "").trim(),
       profile_address: String(meta.address || "").trim(),
-      profile_occupation: String(meta.occupation || meta.job_title || "").trim(),
-      profile_preferred_pillar: String(meta.preferred_pillar || "").trim(),
-      profile_bio: String(meta.bio || meta.note || "").trim()
+      profile_preferred_pillar: String(meta.preferred_pillar || meta.preferredPillar || "").trim(),
+      profile_bio: String(meta.bio || meta.notes || "").trim(),
+      profile_website: String(meta.website || meta.url || "").trim()
     };
     if(client && client.rpc){
       const { data, error } = await client.rpc("sync_my_profile", payload);
@@ -167,43 +165,6 @@
       return data;
     }
     return supabaseFetch("/rest/v1/rpc/sync_my_profile", { method:"POST", token: currentAccessToken(), body: JSON.stringify(payload) });
-  }
-
-
-
-  async function updateMyProfile(profile){
-    await ready.catch(()=>{});
-    const meta = profile || {};
-    const payload = {
-      profile_full_name: String(meta.full_name || meta.name || "").trim(),
-      profile_phone: String(meta.phone || "").trim(),
-      profile_company: String(meta.company || "").trim(),
-      profile_country: String(meta.country || "").trim(),
-      profile_state: String(meta.state || "").trim(),
-      profile_city: String(meta.city || "").trim(),
-      profile_address: String(meta.address || "").trim(),
-      profile_occupation: String(meta.occupation || meta.job_title || "").trim(),
-      profile_preferred_pillar: String(meta.preferred_pillar || "").trim(),
-      profile_bio: String(meta.bio || meta.note || "").trim()
-    };
-    try{
-      if(client && client.rpc){
-        const { data, error } = await client.rpc("update_my_profile_bio", payload);
-        if(error) throw error;
-        return data;
-      }
-      return await supabaseFetch("/rest/v1/rpc/update_my_profile_bio", { method:"POST", token: currentAccessToken(), body: JSON.stringify(payload) });
-    }catch(err){
-      try{
-        return await syncMyProfile(meta);
-      }catch(syncErr){
-        const message = readableError(err, "Bio data update failed. Run the latest schema.sql in Supabase SQL Editor, then try again.");
-        const wrapped = new Error(message);
-        wrapped.original = err;
-        wrapped.syncError = syncErr;
-        throw wrapped;
-      }
-    }
   }
 
   async function signUp(email, password, metadata){
@@ -334,12 +295,6 @@
           full_name: profile.full_name || "",
           phone: profile.phone || "",
           company: profile.company || "",
-          country: profile.country || "",
-          state: profile.state || "",
-          city: profile.city || "",
-          occupation: profile.occupation || "",
-          preferred_pillar: profile.preferred_pillar || "",
-          bio: profile.bio || "",
           account_type: profile.role || "premium",
           account_status: profile.account_status || "pending"
         }
@@ -359,7 +314,7 @@
       let profiles = Array.isArray(rows) ? rows : [];
       if(search){
         profiles = profiles.filter((profile)=>{
-          return [profile.email, profile.full_name, profile.phone, profile.company, profile.country, profile.state, profile.city, profile.occupation, profile.preferred_pillar, profile.bio, profile.role, profile.account_status, profile.last_admin_note]
+          return [profile.email, profile.full_name, profile.phone, profile.company, profile.role, profile.account_status, profile.last_admin_note]
             .map((value)=>String(value || "").toLowerCase())
             .join(" ")
             .includes(search);
@@ -398,13 +353,6 @@
         full_name: String(body.full_name || "").trim(),
         phone: String(body.phone || "").trim(),
         company: String(body.company || "").trim(),
-        country: String(body.country || "").trim(),
-        state: String(body.state || "").trim(),
-        city: String(body.city || "").trim(),
-        address: String(body.address || "").trim(),
-        occupation: String(body.occupation || body.job_title || "").trim(),
-        preferred_pillar: String(body.preferred_pillar || "").trim(),
-        bio: String(body.bio || body.note || "").trim(),
         role,
         account_status,
         is_verified,
@@ -470,7 +418,7 @@
   window.HLDatabase = {
     config, client, ready, request:supabaseFetch, insert, update, select,
     signUp, signIn, signOut, resendConfirmation, resetPassword,
-    updateUser, changeEmail, updatePassword, updateMyProfile, signInWithGoogle, inviteUser, adminUsers,
+    updateUser, changeEmail, updatePassword, signInWithGoogle, inviteUser, adminUsers,
     getSession, setSession, currentAccessToken, getCurrentUser, getProfile, syncMyProfile, isAdminEmail,
     errorMessage: readableError, friendlyAuthMessage, uploadMedia, uploadMediaObject, publicUrl, syncSession, authRedirect
   };
