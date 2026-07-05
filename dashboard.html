@@ -91,46 +91,31 @@
     <section class="section compact-section"><div class="container dash-grid"><article class="dash-card card reveal"><i class="fa-solid fa-building"></i><strong>0</strong><span>Real Estate requests</span></article><article class="dash-card card reveal"><i class="fa-solid fa-chart-line"></i><strong>0</strong><span>Fintech enquiries</span></article><article class="dash-card card reveal"><i class="fa-solid fa-truck-fast"></i><strong>0</strong><span>Logistics movements</span></article><article class="dash-card card reveal"><i class="fa-solid fa-ship"></i><strong>0</strong><span>Shipping briefs</span></article></div></section>
     <section class="section">
       <div class="container dashboard-layout">
-        <aside class="profile-card reveal"><span class="eyebrow">Secured profile</span><h2 data-profile-display-name>Premium access</h2><p><strong>Email:</strong> <span data-user-email>premium user</span></p><p><strong>Name:</strong> <span data-profile-full-name>Not added</span></p><p><strong>Phone:</strong> <span data-profile-phone>Not added</span></p><p><strong>Country:</strong> <span data-profile-country>Not added</span></p><p><strong>Access:</strong> <span data-profile-role>Premium</span></p><p><strong>Status:</strong> <span data-profile-status>Checking verification</span></p><p>Keep your bio data updated so the Hey Larmah desk can handle requests with accurate client details.</p></aside>
+        <aside class="profile-card reveal"><span class="eyebrow">Secured profile</span><h2>Premium access</h2><p><strong>Email:</strong> <span data-user-email>premium user</span></p><p><strong>User ID:</strong> <span data-user-id>loading</span></p><p><strong>Access:</strong> <span data-profile-role>Premium</span></p><p><strong>Status:</strong> <span data-profile-status>Checking verification</span></p><p>Use the enquiry form to save client requests into your profile and open WhatsApp at the same time.</p></aside>
         <form class="auth-card card js-wa-form reveal" data-wa-title="Premium Dashboard Enquiry"><span class="eyebrow">New request</span><h2>Send a secured enquiry.</h2><div class="form-grid"><div class="form-row"><label>Pillar</label><select name="Pillar"><option>Real Estate</option><option>Fintech</option><option>Logistics</option><option>Shipping</option><option>Premium</option></select></div><div class="form-row"><label>Request title</label><input name="Name" required placeholder="Example: property inspection or cargo movement" /></div><div class="form-row"><label>Details</label><textarea name="Message" required placeholder="Provide the details for the team"></textarea></div><button class="btn btn-primary" type="submit"><i class="fa-brands fa-whatsapp"></i> Save and send to WhatsApp</button></div></form>
       </div>
     </section>
-    <section class="section compact-section profile-bio-section">
+    <section class="section compact-section dashboard-bio-section">
       <div class="container">
-        <div class="section-head reveal"><span class="eyebrow"><i class="fa-solid fa-id-card-clip"></i> Bio data</span><h2>Edit your client profile.</h2><p>Update your name, phone number, country and other important details used by the premium desk across Real Estate, Fintech, Logistics and Shipping.</p></div>
-        <div class="dashboard-layout bio-layout">
-          <aside class="profile-card reveal profile-bio-summary">
-            <span class="eyebrow">Profile summary</span>
-            <h2 data-profile-display-name>Premium client</h2>
-            <div class="profile-mini-list">
-              <p><strong>Company / profile:</strong> <span data-profile-company>Not added</span></p>
-              <p><strong>Country:</strong> <span data-profile-country>Not added</span></p>
-              <p><strong>City / State:</strong> <span data-profile-location>Not added</span></p>
-              <p><strong>Preferred pillar:</strong> <span data-profile-preferred-pillar>Not selected</span></p>
-              <p><strong>Occupation / business type:</strong> <span data-profile-occupation>Not added</span></p>
-            </div>
-            <div class="bio-note"><strong>Bio / client note</strong><span data-profile-bio>No bio data added yet.</span></div>
-          </aside>
-          <form class="auth-card card reveal profile-bio-form" data-profile-update-form>
-            <span class="eyebrow">Editable bio data</span>
-            <h2>Update your details.</h2>
-            <p>This information is stored securely in your Supabase profile and helps the admin desk verify and coordinate your requests professionally.</p>
-            <div class="form-grid two-col-form">
-              <div class="form-row"><label>Full name</label><input name="full_name" autocomplete="name" placeholder="Your full name" /></div>
-              <div class="form-row"><label>Phone / WhatsApp</label><input name="phone" autocomplete="tel" placeholder="Phone number" /></div>
-              <div class="form-row"><label>Country</label><input name="country" autocomplete="country-name" placeholder="Example: Nigeria" /></div>
-              <div class="form-row"><label>State / Province</label><input name="state" autocomplete="address-level1" placeholder="Example: Lagos" /></div>
-              <div class="form-row"><label>City</label><input name="city" autocomplete="address-level2" placeholder="Example: Lekki, Ikeja, Abuja" /></div>
-              <div class="form-row"><label>Company / profile name</label><input name="company" autocomplete="organization" placeholder="Optional company or client profile" /></div>
-              <div class="form-row"><label>Occupation / business type</label><input name="occupation" placeholder="Investor, SME owner, importer, developer, etc." /></div>
-              <div class="form-row"><label>Preferred pillar</label><select name="preferred_pillar"><option value="">Select preferred pillar</option><option value="real-estate">Real Estate</option><option value="fintech">Fintech</option><option value="logistics">Logistics</option><option value="shipping">Shipping</option><option value="premium">Premium</option></select></div>
-              <div class="form-row form-row-full"><label>Address / location note</label><input name="address" autocomplete="street-address" placeholder="Optional address or service location" /></div>
-              <div class="form-row form-row-full"><label>Short bio / important note</label><textarea name="bio" rows="5" placeholder="Briefly describe your profile, business interest, property need, trade/logistics activity, or any important note for the Hey Larmah desk."></textarea></div>
-              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save bio data</button>
-            </div>
-            <p class="auth-status" data-profile-update-status></p>
-          </form>
+        <div class="section-head reveal">
+          <span class="eyebrow"><i class="fa-solid fa-id-card"></i> Bio data</span>
+          <h2>Update your client profile.</h2>
+          <p>Keep your name, phone number, country, company and preferred service details current so the Hey Larmah team can support your requests accurately.</p>
         </div>
+        <form class="auth-card card bio-data-card reveal" data-profile-update-form>
+          <div class="form-grid two-col-form">
+            <div class="form-row"><label>Full name</label><input name="full_name" autocomplete="name" placeholder="Your full name" /></div>
+            <div class="form-row"><label>Phone number</label><input name="phone" autocomplete="tel" placeholder="+234..." /></div>
+            <div class="form-row"><label>Country</label><input name="country" autocomplete="country-name" placeholder="Nigeria" /></div>
+            <div class="form-row"><label>Company / organisation</label><input name="company" autocomplete="organization" placeholder="Business or organisation name" /></div>
+            <div class="form-row"><label>Preferred pillar</label><select name="preferred_pillar"><option value="">Select preferred pillar</option><option value="real-estate">Real Estate</option><option value="fintech">Fintech</option><option value="logistics">Logistics</option><option value="shipping">Shipping</option><option value="premium">Premium</option></select></div>
+            <div class="form-row"><label>Location / address</label><input name="address" autocomplete="street-address" placeholder="City, state or business address" /></div>
+            <div class="form-row form-row-wide"><label>Bio / business note</label><textarea name="bio" rows="4" placeholder="Briefly describe your business, enquiry focus, or what you want Hey Larmah to know."></textarea></div>
+            <div class="form-row form-row-wide"><label>Website or social link</label><input name="website" inputmode="url" placeholder="Optional website or business profile link" /></div>
+            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save bio data</button>
+          </div>
+          <p class="auth-status" data-profile-update-status></p>
+        </form>
       </div>
     </section>
     <section class="section security-section">

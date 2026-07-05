@@ -358,6 +358,27 @@
     try{ const user = await window.HLDatabase.getCurrentUser(); if(!user || !user.id){ await window.HLDatabase.signOut(); window.location.href='auth.html'; return; } document.querySelectorAll('[data-user-email]').forEach(el=>el.textContent = user.email || 'Premium user'); document.querySelectorAll('[data-user-id]').forEach(el=>el.textContent = user.id || ''); await hydrateDashboard(user); }
     catch(err){ window.location.href = 'auth.html'; }
   }
+  function populateProfileForm(profile, user){
+    const form = document.querySelector('[data-profile-update-form]');
+    if(!form) return;
+    const meta = (user && user.user_metadata) || {};
+    const data = profile || {};
+    const values = {
+      full_name: data.full_name || meta.full_name || meta.name || '',
+      phone: data.phone || meta.phone || '',
+      country: data.country || meta.country || 'Nigeria',
+      company: data.company || meta.company || '',
+      preferred_pillar: data.preferred_pillar || meta.preferred_pillar || '',
+      address: data.address || meta.address || '',
+      bio: data.bio || meta.bio || '',
+      website: data.website || meta.website || ''
+    };
+    Object.entries(values).forEach(([name,value])=>{
+      const field = form.elements[name];
+      if(field && !field.dataset.userTouched){ field.value = value || ''; }
+    });
+  }
+
   async function hydrateDashboard(user){
     const grid = document.querySelector('.dash-grid');
     try{
@@ -365,6 +386,9 @@
       if(profile){
         document.querySelectorAll('[data-profile-role]').forEach(el=>el.textContent = labelForCategory(profile.role === 'admin' ? 'premium' : (profile.role || 'premium')));
         document.querySelectorAll('[data-profile-status]').forEach(el=>el.textContent = profile.is_verified ? 'Verified by admin' : (profile.account_status === 'suspended' ? 'Suspended' : 'Pending admin verification'));
+        populateProfileForm(profile, user);
+      } else {
+        populateProfileForm({}, user);
       }
     }catch{}
     try{
@@ -377,6 +401,31 @@
       }
     }catch{}
   }
+  document.querySelector('[data-profile-update-form]')?.addEventListener('input', ev=>{ if(ev.target && ev.target.name) ev.target.dataset.userTouched = 'true'; });
+  document.querySelector('[data-profile-update-form]')?.addEventListener('submit', async ev=>{
+    ev.preventDefault();
+    const form = ev.currentTarget;
+    const data = formFields(form);
+    const status = form.querySelector('[data-profile-update-status]');
+    const btn = form.querySelector('button[type="submit"]');
+    await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving bio data…', async()=>{
+      await dbReady();
+      if(!window.HLDatabase || !window.HLDatabase.syncMyProfile) throw new Error('Profile update is not connected yet.');
+      const profile = await window.HLDatabase.syncMyProfile({
+        full_name: clean(data.full_name),
+        phone: clean(data.phone),
+        country: clean(data.country),
+        company: clean(data.company),
+        preferred_pillar: clean(data.preferred_pillar),
+        address: clean(data.address),
+        bio: clean(data.bio),
+        website: clean(data.website)
+      });
+      setStatus(status, 'Bio data updated successfully.', 'success');
+      showToast('Bio data updated.');
+      try{ const user = await window.HLDatabase.getCurrentUser(); populateProfileForm(profile || {}, user || {}); }catch{}
+    }).catch(err=>{ setStatus(status, err.message || 'Bio data update failed.', 'error'); showToast(err.message || 'Bio data update failed.'); });
+  });
   guardDashboard();
 
   async function initAdmin(){
