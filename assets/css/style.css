@@ -967,3 +967,110 @@ html[data-theme="light"] .btn-nav-login{
   font-weight:800;
 }
 .pillar-price-note i{font-size:.8rem}
+
+/* =========================================================
+   Shift section — readable contrast (before/after)
+   ========================================================= */
+.shift-section{
+  padding-top:28px;
+  padding-bottom:28px;
+}
+.shift-section .moat-split,
+.shift-section .split-card.moat-split{
+  background:
+    radial-gradient(700px 280px at 15% 0%, rgba(242,201,108,.10), transparent 55%),
+    linear-gradient(165deg, #0a1410 0%, #07110c 50%, #050c09 100%);
+  color:#f3ecda;
+  border:1px solid rgba(242,201,108,.16);
+  border-radius:28px;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+  width:min(100%, var(--max, 1180px));
+  max-width:1180px;
+  margin-inline:auto;
+  padding:clamp(36px,5vw,56px);
+  grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+  gap:32px;
+}
+.shift-section .moat-split::before{
+  opacity:.25;
+}
+.shift-section .moat-split .eyebrow{
+  color:var(--gold2, #f2c96c) !important;
+}
+.shift-section .moat-split h2{
+  color:#faf6ea !important;
+  font-family:"Playfair Display", Georgia, serif;
+  font-weight:600;
+  letter-spacing:-.025em;
+  line-height:1.2;
+}
+.shift-section .moat-split > div > p,
+.shift-section .moat-split p{
+  color:rgba(243,236,218,.78) !important;
+  line-height:1.65;
+  font-size:1rem;
+}
+.shift-section .before-after-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.shift-section .before-after-card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:16px;
+  padding:20px 18px;
+  background:rgba(255,255,255,.045);
+}
+.shift-section .before-after-card span{
+  font-size:10px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:rgba(243,236,218,.48);
+}
+.shift-section .before-after-card strong{
+  display:block;
+  margin:8px 0 6px;
+  color:#faf6ea;
+  font-size:1.02rem;
+  font-weight:800;
+}
+.shift-section .before-after-card p{
+  margin:0;
+  color:rgba(243,236,218,.70) !important;
+  font-size:.9rem;
+  line-height:1.55;
+}
+.shift-section .before-after-card.after{
+  background:rgba(242,201,108,.09);
+  border-color:rgba(242,201,108,.32);
+}
+.shift-section .before-after-card.after span{
+  color:var(--gold2, #f2c96c);
+}
+.shift-section .before-after-card.after strong{
+  color:#f7efd4;
+}
+.shift-section .before-after-card.after p{
+  color:rgba(247,239,212,.78) !important;
+}
+
+/* Light theme: keep this panel dark for brand continuity */
+html[data-theme="light"] .shift-section .moat-split,
+html[data-theme="light"] .shift-section .split-card.moat-split{
+  background:
+    radial-gradient(700px 280px at 15% 0%, rgba(242,201,108,.12), transparent 55%),
+    linear-gradient(165deg, #122018 0%, #0c1611 100%);
+  color:#f3ecda;
+}
+
+@media (max-width:900px){
+  .shift-section .moat-split,
+  .shift-section .split-card.moat-split{
+    grid-template-columns:1fr;
+    padding:28px 22px;
+  }
+  .shift-section .before-after-grid{
+    grid-template-columns:1fr;
+  }
+}
