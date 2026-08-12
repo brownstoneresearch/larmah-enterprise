@@ -50,11 +50,12 @@
         <a class="mobile-link" href="premium.html">Premium<span>→</span></a>
         <a class="mobile-link" href="insights.html">Insights<span>→</span></a>
         <a class="mobile-link" href="contact.html">Contact<span>→</span></a>
+        <a class="mobile-link" href="auth.html">Client Login<span>→</span></a>
       </div>
     </div>
   </header>
 
-  <main id="main" data-admin-root class="dash-app">
+  <main id="main" data-admin-root class="dash-app admin-shell">
     <section class="dash-topbar">
       <div class="container dash-topbar-inner">
         <div class="dash-welcome">
@@ -90,6 +91,7 @@
 
     <section class="section" data-admin-workspace hidden>
       <div class="container">
+        <div class="admin-toolbar-wrap">
         <div class="admin-toolbar reveal">
           <div class="admin-toolbar-left">
             <span class="eyebrow">Active admin</span>
@@ -100,6 +102,8 @@
           </button>
         </div>
 
+        </div>
+        <div class="admin-tabs-wrap">
         <nav class="admin-tabs reveal" aria-label="Admin sections">
           <button type="button" class="admin-tab active" data-admin-tab="invite"><i class="fa-solid fa-user-plus"></i> Invite</button>
           <button type="button" class="admin-tab" data-admin-tab="users"><i class="fa-solid fa-users-gear"></i> Users</button>
@@ -107,6 +111,7 @@
           <button type="button" class="admin-tab" data-admin-tab="blog"><i class="fa-solid fa-newspaper"></i> Blog</button>
         </nav>
 
+        </div>
         <div class="admin-panels">
           <div class="admin-tab-panel active" data-admin-panel="invite">
             <form class="dash-panel card reveal" data-invite-user>

@@ -51,6 +51,7 @@
         <a class="nav-link" href="contact.html">Contact</a>
       </nav>
       <div class="nav-actions">
+        <a class="btn btn-nav-login" href="auth.html"><i class="fa-solid fa-lock"></i><span>Login</span></a>
         <div class="header-social social-icons" aria-label="Official social links">
           <a href="https://www.instagram.com/heylarmah_ltd/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
           <a href="https://x.com/heylarmah_ltd" target="_blank" rel="noopener" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
@@ -69,11 +70,12 @@
         <a class="mobile-link" href="premium.html">Premium<span>→</span></a>
         <a class="mobile-link" href="insights.html">Insights<span>→</span></a>
         <a class="mobile-link" href="contact.html">Contact<span>→</span></a>
+        <a class="mobile-link" href="auth.html">Client Login<span>→</span></a>
       </div>
     </div>
   </header>
 
-  <main id="main" class="dash-app">
+  <main id="main" class="dash-app dash-shell">
     <!-- Top bar -->
     <section class="dash-topbar">
       <div class="container dash-topbar-inner">
@@ -94,6 +96,7 @@
     </section>
 
     <!-- Stats -->
+    <div class="dash-stats-wrap">
     <section class="section compact-section">
       <div class="container dash-stats">
         <article class="stat-card reveal">
@@ -114,8 +117,10 @@
         </article>
       </div>
     </section>
+    </div>
 
     <!-- Main grid -->
+    <div class="dash-body">
     <section class="section">
       <div class="container dash-main-grid">
         <!-- Sidebar profile -->
@@ -225,6 +230,7 @@
         </div>
       </div>
     </section>
+    </div>
   </main>
 
   <footer class="site-footer">
