@@ -355,7 +355,7 @@
     if(!document.body.hasAttribute('data-requires-auth')) return;
     await dbReady();
     if(!window.HLDatabase || !window.HLDatabase.currentAccessToken || !window.HLDatabase.currentAccessToken()){ window.location.href = 'auth.html'; return; }
-    try{ const user = await window.HLDatabase.getCurrentUser(); if(!user || !user.id){ await window.HLDatabase.signOut(); window.location.href='auth.html'; return; } document.querySelectorAll('[data-user-email]').forEach(el=>el.textContent = user.email || 'Premium user'); document.querySelectorAll('[data-user-id]').forEach(el=>el.textContent = user.id || ''); await hydrateDashboard(user); }
+    try{ const user = await window.HLDatabase.getCurrentUser(); if(!user || !user.id){ await window.HLDatabase.signOut(); window.location.href='auth.html'; return; } await hydrateDashboard(user); }
     catch(err){ window.location.href = 'auth.html'; }
   }
   function populateProfileForm(profile, user){
@@ -371,7 +371,8 @@
       preferred_pillar: data.preferred_pillar || meta.preferred_pillar || '',
       address: data.address || meta.address || '',
       bio: data.bio || meta.bio || '',
-      website: data.website || meta.website || ''
+      website: data.website || meta.website || '',
+      rc_bn: data.rc_bn || meta.rc_bn || ''
     };
     Object.entries(values).forEach(([name,value])=>{
       const field = form.elements[name];
@@ -379,17 +380,44 @@
     });
   }
 
+  function firstNameFrom(profile, user){
+    const full = clean((profile && profile.full_name) || user?.user_metadata?.full_name || user?.user_metadata?.name || '');
+    if(full){ return full.split(/\s+/)[0]; }
+    const email = clean(user?.email || '');
+    if(email.includes('@')) return email.split('@')[0];
+    return 'Client';
+  }
+  function statusLabel(profile, user){
+    if(!profile){
+      if(user?.email_confirmed_at) return 'Email confirmed · profile pending';
+      return 'Awaiting profile setup';
+    }
+    if(profile.account_status === 'suspended') return 'Suspended';
+    if(profile.is_verified || profile.account_status === 'verified') return 'Verified by admin';
+    if(user?.email_confirmed_at) return 'Pending admin verification';
+    return 'Confirm email to continue';
+  }
   async function hydrateDashboard(user){
     const grid = document.querySelector('.dash-grid');
+    let profile = null;
+    try{ profile = await window.HLDatabase.getProfile?.(); }catch{}
+    const first = firstNameFrom(profile, user);
+    const email = clean(user?.email || profile?.email || 'Premium user');
+    const role = labelForCategory((profile?.role === 'admin' ? 'premium' : (profile?.role || 'premium')));
+    const status = statusLabel(profile, user);
+    document.querySelectorAll('[data-user-first-name]').forEach(el=>el.textContent = first);
+    document.querySelectorAll('[data-user-email]').forEach(el=>el.textContent = email);
+    document.querySelectorAll('[data-user-id]').forEach(el=>el.textContent = user?.id || profile?.id || '—');
+    document.querySelectorAll('[data-profile-role]').forEach(el=>el.textContent = role);
+    document.querySelectorAll('[data-profile-status]').forEach(el=>{
+      el.textContent = status;
+      el.dataset.status = (profile?.is_verified || profile?.account_status === 'verified') ? 'verified' : (profile?.account_status === 'suspended' ? 'suspended' : 'pending');
+    });
+    const welcome = document.querySelector('[data-dash-welcome-name]');
+    if(welcome) welcome.textContent = first;
     try{
-      const profile = await window.HLDatabase.getProfile?.();
-      if(profile){
-        document.querySelectorAll('[data-profile-role]').forEach(el=>el.textContent = labelForCategory(profile.role === 'admin' ? 'premium' : (profile.role || 'premium')));
-        document.querySelectorAll('[data-profile-status]').forEach(el=>el.textContent = profile.is_verified ? 'Verified by admin' : (profile.account_status === 'suspended' ? 'Suspended' : 'Pending admin verification'));
-        populateProfileForm(profile, user);
-      } else {
-        populateProfileForm({}, user);
-      }
+      if(profile){ populateProfileForm(profile, user); }
+      else { populateProfileForm({}, user); }
     }catch{}
     try{
       const rows = await window.HLDatabase.select('requests', '?select=category,status,created_at,details&order=created_at.desc&limit=100');
@@ -419,11 +447,12 @@
         preferred_pillar: clean(data.preferred_pillar),
         address: clean(data.address),
         bio: clean(data.bio),
-        website: clean(data.website)
+        website: clean(data.website),
+        rc_bn: clean(data.rc_bn)
       });
       setStatus(status, 'Bio data updated successfully.', 'success');
       showToast('Bio data updated.');
-      try{ const user = await window.HLDatabase.getCurrentUser(); populateProfileForm(profile || {}, user || {}); }catch{}
+      try{ const user = await window.HLDatabase.getCurrentUser(); await hydrateDashboard(user || {}); }catch{}
     }).catch(err=>{ setStatus(status, err.message || 'Bio data update failed.', 'error'); showToast(err.message || 'Bio data update failed.'); });
   });
   guardDashboard();
@@ -439,18 +468,43 @@
     }
     document.querySelector('[data-admin-auth]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const data = formFields(ev.currentTarget); const email = clean(data.email); const password = clean(data.password); if(email.toLowerCase() !== ADMIN_EMAIL.toLowerCase()){ showToast('Use the approved admin email.'); return; } const btn=ev.currentTarget.querySelector('button[type="submit"]'); const original=btn?btn.textContent:''; if(btn){btn.disabled=true;btn.textContent='Verifying admin…';} try{ await window.HLDatabase.signIn(email,password); const user = await check(); if(user) showToast('Admin workspace unlocked.'); }catch(err){ showToast(err && err.message ? err.message : 'Admin sign-in failed.'); }finally{ if(btn){btn.disabled=false;btn.textContent=original;} } });
     document.querySelector('[data-admin-sign-out]')?.addEventListener('click', async()=>{ await dbReady(); await window.HLDatabase.signOut(); setVisible(false); showToast('Admin signed out.'); });
-    document.querySelector('[data-invite-user]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.currentTarget; const data=formFields(form); const email=clean(data.email); const name=clean(data.full_name); const status=form.querySelector('[data-auth-status]'); if(!email){ showToast('Enter invitee email.'); return; } const btn=form.querySelector('button[type="submit"]'); await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending invite…', async()=>{ await dbReady(); await window.HLDatabase.inviteUser(email, { full_name:name, account_type:'premium', invited_by:ADMIN_EMAIL }); setStatus(status, 'Invitation email sent successfully.', 'success'); showToast('Invitation sent.'); form.reset(); }).catch(err=>{ setStatus(status, err.message || 'Invitation failed. Deploy the invite-user Edge Function and set service role secret.', 'error'); showToast(err.message || 'Invitation failed.'); }); });
+    document.querySelector('[data-invite-user]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.currentTarget; const data=formFields(form); const email=clean(data.email); const name=clean(data.full_name); const status=form.querySelector('[data-auth-status]'); if(!email){ showToast('Enter invitee email.'); return; } const btn=form.querySelector('button[type="submit"]'); await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Sending invite…', async()=>{ await dbReady(); const result = await window.HLDatabase.inviteUser(email, { full_name:name, account_type:'premium', invited_by:ADMIN_EMAIL }); const msg = result?.message || 'Invitation processed successfully.'; setStatus(status, msg, 'success'); showToast(result?.mode === 'fallback-link' ? 'Invite link ready — share with the user.' : 'Invitation sent.'); if(result?.mode !== 'fallback-link') form.reset(); }).catch(err=>{ setStatus(status, err.message || 'Invitation failed. Deploy the invite-user Edge Function and set service role secret.', 'error'); showToast(err.message || 'Invitation failed.'); }); });
     document.querySelector('[data-admin-refresh-users]')?.addEventListener('click', ()=>hydrateAdminUsers(true));
     document.querySelector('[data-admin-refresh-catalogue]')?.addEventListener('click', ()=>hydrateAdminCatalogue(true));
     let userSearchTimer = null;
     document.querySelector('[data-admin-user-search]')?.addEventListener('input', ()=>{ clearTimeout(userSearchTimer); userSearchTimer = setTimeout(()=>hydrateAdminUsers(true), 350); });
-    document.querySelector('[data-admin-users-list]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.target.closest('[data-user-editor]'); if(!form) return; const data=formFields(form); const btn=form.querySelector('button[type="submit"]'); const payload={ user_id: clean(data.user_id), full_name: clean(data.full_name), phone: clean(data.phone), company: clean(data.company), role: clean(data.role || 'premium'), account_status: clean(data.account_status || 'pending'), is_verified: !!form.querySelector('input[name="is_verified"]')?.checked, admin_note: clean(data.admin_note) }; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('update_user', payload); showToast('User data updated.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'User update failed.')); });
-    document.querySelector('[data-admin-users-list]')?.addEventListener('click', async ev=>{ const btn=ev.target.closest('[data-verify-user]'); if(!btn) return; const form=btn.closest('[data-user-editor]'); const user_id=form?.querySelector('input[name="user_id"]')?.value; if(!user_id) return; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('verify_user', { user_id }); showToast('User verified successfully.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'Verification failed.')); });
+    document.querySelector('[data-admin-users-list]')?.addEventListener('submit', async ev=>{ ev.preventDefault(); const form=ev.target.closest('[data-user-editor]'); if(!form) return; const data=formFields(form); const btn=form.querySelector('button[type="submit"]'); const payload={ user_id: clean(data.user_id), full_name: clean(data.full_name), phone: clean(data.phone), company: clean(data.company), rc_bn: clean(data.rc_bn), role: clean(data.role || 'premium'), account_status: clean(data.account_status || 'pending'), is_verified: !!form.querySelector('input[name="is_verified"]')?.checked, rc_bn_verified: !!form.querySelector('input[name="rc_bn_verified"]')?.checked, admin_note: clean(data.admin_note) }; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Saving…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('update_user', payload); showToast('User data updated.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'User update failed.')); });
+    document.querySelector('[data-admin-users-list]')?.addEventListener('click', async ev=>{
+      const rcBtn = ev.target.closest('[data-verify-rc]');
+      if(rcBtn){
+        const form=rcBtn.closest('[data-user-editor]'); const user_id=form?.querySelector('input[name="user_id"]')?.value; if(!user_id) return;
+        await withButton(rcBtn, '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…', async()=>{
+          await dbReady();
+          await window.HLDatabase.adminUsers('update_user', { user_id, rc_bn_verified: true, admin_note: 'RC/BN marked verified by admin' });
+          showToast('RC/BN marked as verified.'); await hydrateAdminUsers(true);
+        }).catch(err=>showToast(err.message || 'RC verification failed.'));
+        return;
+      }
+      const btn=ev.target.closest('[data-verify-user]'); if(!btn) return; const form=btn.closest('[data-user-editor]'); const user_id=form?.querySelector('input[name="user_id"]')?.value; if(!user_id) return; await withButton(btn, '<i class="fa-solid fa-spinner fa-spin"></i> Verifying…', async()=>{ await dbReady(); await window.HLDatabase.adminUsers('verify_user', { user_id }); showToast('User verified successfully.'); await hydrateAdminUsers(true); }).catch(err=>showToast(err.message || 'Verification failed.'));
+    });
     document.querySelector('[data-catalogue-priority-list]')?.addEventListener('click', ev=>{
       const prefill = ev.target.closest('[data-prefill-catalogue]');
       if(prefill){ prefillCatalogueCreate(prefill.getAttribute('data-prefill-catalogue')); return; }
       const jump = ev.target.closest('[data-jump-catalogue]');
       if(jump){ scrollToCatalogueRecord(jump.getAttribute('data-jump-catalogue')); }
+    });
+    document.querySelector('[data-admin-catalogue-list]')?.addEventListener('click', async ev=>{
+      const del = ev.target.closest('[data-delete-catalogue]');
+      if(!del) return;
+      const form = del.closest('[data-catalogue-editor]');
+      const id = form?.querySelector('input[name="id"]')?.value;
+      if(!id || !confirm('Delete this catalogue item permanently?')) return;
+      await withButton(del, 'Deleting…', async()=>{
+        await dbReady();
+        await window.HLDatabase.delete('catalog_items', `?id=eq.${encodeURIComponent(id)}`);
+        showToast('Catalogue item deleted.');
+        await hydrateAdminCatalogue(true);
+      }).catch(err=>showToast(err.message||'Delete failed.'));
     });
     document.querySelector('[data-admin-catalogue-list]')?.addEventListener('submit', async ev=>{
       ev.preventDefault();
@@ -487,6 +541,33 @@
         setStatus(status, 'Catalogue item published with media support.', 'success');
         showToast('Catalogue item published.'); form.reset(); await hydrateAdmin();
       }).catch(err=>{ setStatus(status, err.message || 'Catalogue upload failed.', 'error'); showToast(err.message || 'Catalogue upload failed.'); });
+    });
+    
+    document.querySelector('[data-admin-insight-list]')?.addEventListener('submit', async ev=>{
+      ev.preventDefault();
+      const form = ev.target.closest('[data-insight-editor]'); if(!form) return;
+      const data = formFields(form); const id = clean(data.id); if(!id) return;
+      const btn = form.querySelector('button[type="submit"]');
+      await withButton(btn, 'Saving…', async()=>{
+        await dbReady();
+        await window.HLDatabase.update('insights_posts', `?id=eq.${encodeURIComponent(id)}`, {
+          title: clean(data.title), category: clean(data.category), excerpt: clean(data.excerpt), body: clean(data.body),
+          active: !!form.querySelector('input[name="active"]')?.checked,
+          pinned: !!form.querySelector('input[name="pinned"]')?.checked,
+          updated_at: new Date().toISOString()
+        });
+        showToast('Insight updated.'); await hydrateAdmin();
+      }).catch(err=>showToast(err.message||'Update failed.'));
+    });
+    document.querySelector('[data-admin-insight-list]')?.addEventListener('click', async ev=>{
+      const del = ev.target.closest('[data-delete-insight]'); if(!del) return;
+      const form = del.closest('[data-insight-editor]'); const id = form?.querySelector('input[name="id"]')?.value;
+      if(!id || !confirm('Delete this insight post?')) return;
+      await withButton(del, 'Deleting…', async()=>{
+        await dbReady();
+        await window.HLDatabase.delete('insights_posts', `?id=eq.${encodeURIComponent(id)}`);
+        showToast('Insight deleted.'); await hydrateAdmin();
+      }).catch(err=>showToast(err.message||'Delete failed.'));
     });
     document.querySelector('[data-insight-upload]')?.addEventListener('submit', async ev=>{
       ev.preventDefault();
@@ -578,6 +659,10 @@
         <div class="form-row"><label>Replace photo/video</label><input type="file" name="media_file" accept="image/*,video/*" /><small class="field-note">Optional: upload a new primary media file.</small></div>
         <div class="form-row"><label>Price / note</label><input name="price" value="${escapeHTML(price)}" placeholder="Optional" /></div>
         <div class="form-row"><label>Tags</label><input name="tags" value="${escapeHTML(tags)}" placeholder="comma separated" /></div>
+        <div class="admin-user-actions">
+          <button class="btn btn-primary btn-sm" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save changes</button>
+          <button class="btn btn-danger btn-sm" type="button" data-delete-catalogue><i class="fa-solid fa-trash"></i> Delete</button>
+        </div>
         <div class="form-row"><label>Sort order</label><input type="number" name="sort_order" value="${escapeHTML(String(sortOrder))}" /></div>
       </div>
       <div class="catalogue-editor-checks"><label class="check-row"><input type="checkbox" name="featured" ${checked(row.featured)} /> Feature on homepage</label></div>
@@ -590,26 +675,54 @@
     const id = clean(user.id || profile.id);
     const email = clean(user.email || profile.email || 'No email');
     const fullName = clean(profile.full_name || user.user_metadata?.full_name || '');
+    const first = fullName ? fullName.split(/\s+/)[0] : (email.includes('@') ? email.split('@')[0] : 'User');
     const phone = clean(profile.phone || user.user_metadata?.phone || '');
     const company = clean(profile.company || user.user_metadata?.company || '');
+    const rcBn = clean(profile.rc_bn || '');
+    const rcVerified = !!profile.rc_bn_verified;
     const role = clean(profile.role || user.user_metadata?.account_type || 'premium');
     const status = clean(profile.account_status || (profile.is_verified ? 'verified' : 'pending'));
     const verified = !!profile.is_verified;
     const note = clean(profile.last_admin_note || '');
     const lastSignIn = clean(user.last_sign_in_at || 'Not yet signed in');
+    const statusClass = (status === 'verified' || verified) ? 'verified' : (status === 'suspended' ? 'suspended' : 'pending');
     return `<form class="admin-user-card" data-user-editor data-user-id="${escapeHTML(id)}">
       <input type="hidden" name="user_id" value="${escapeHTML(id)}" />
-      <div class="admin-user-top"><div><strong>${escapeHTML(email)}</strong><span>${verified ? 'Verified premium user' : 'Pending verification'} • Last sign in: ${escapeHTML(lastSignIn)}</span></div><span class="status-pill ${verified ? 'verified' : 'pending'}">${verified ? 'Verified' : 'Pending'}</span></div>
+      <div class="admin-user-top">
+        <div class="admin-user-identity">
+          <div class="admin-user-avatar">${escapeHTML((first || 'U').charAt(0).toUpperCase())}</div>
+          <div>
+            <strong class="admin-user-name">${escapeHTML(fullName || first)}</strong>
+            <span class="admin-user-email">${escapeHTML(email)}</span>
+            <span class="admin-user-sub">Last sign-in: ${escapeHTML(lastSignIn)}</span>
+          </div>
+        </div>
+        <span class="status-pill ${statusClass}">${escapeHTML(status)}</span>
+      </div>
+      <div class="admin-user-meta-grid">
+        <div><span>Phone</span><strong>${escapeHTML(phone || '—')}</strong></div>
+        <div><span>Company</span><strong>${escapeHTML(company || '—')}</strong></div>
+        <div><span>RC / BN</span><strong>${escapeHTML(rcBn || '—')}${rcVerified ? ' · Verified' : ''}</strong></div>
+        <div><span>Access</span><strong>${escapeHTML(role)}</strong></div>
+      </div>
       <div class="admin-user-fields">
         <div class="form-row"><label>Full name</label><input name="full_name" value="${escapeHTML(fullName)}" placeholder="Full name" /></div>
         <div class="form-row"><label>Phone</label><input name="phone" value="${escapeHTML(phone)}" placeholder="Phone number" /></div>
         <div class="form-row"><label>Company</label><input name="company" value="${escapeHTML(company)}" placeholder="Company / client profile" /></div>
+        <div class="form-row"><label>RC / BN number</label><input name="rc_bn" value="${escapeHTML(rcBn)}" placeholder="RC or BN number" /></div>
         <div class="form-row"><label>Role</label><select name="role"><option value="premium" ${selected(role,'premium')}>Premium</option><option value="user" ${selected(role,'user')}>User</option>${email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? `<option value="admin" ${selected(role,'admin')}>Admin</option>` : ``}</select></div>
         <div class="form-row"><label>Status</label><select name="account_status"><option value="pending" ${selected(status,'pending')}>Pending</option><option value="verified" ${selected(status,'verified')}>Verified</option><option value="suspended" ${selected(status,'suspended')}>Suspended</option></select></div>
-        <div class="form-row"><label>Admin note</label><input name="admin_note" value="${escapeHTML(note)}" placeholder="Optional internal note" /></div>
+        <div class="form-row form-row-wide"><label>Admin note</label><input name="admin_note" value="${escapeHTML(note)}" placeholder="Optional internal note" /></div>
       </div>
-      <label class="check-row"><input type="checkbox" name="is_verified" ${checked(verified)} /> Verified account</label>
-      <div class="admin-user-actions"><button class="btn btn-primary btn-sm" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save data</button><button class="btn btn-ghost btn-sm" type="button" data-verify-user><i class="fa-solid fa-circle-check"></i> Verify user</button></div>
+      <div class="admin-user-checks">
+        <label class="check-row"><input type="checkbox" name="is_verified" ${checked(verified)} /> Account verified</label>
+        <label class="check-row"><input type="checkbox" name="rc_bn_verified" ${checked(rcVerified)} /> RC/BN verified</label>
+      </div>
+      <div class="admin-user-actions">
+        <button class="btn btn-primary btn-sm" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save data</button>
+        <button class="btn btn-ghost btn-sm" type="button" data-verify-user><i class="fa-solid fa-circle-check"></i> Verify user</button>
+        <button class="btn btn-ghost btn-sm" type="button" data-verify-rc><i class="fa-solid fa-building-columns"></i> Verify RC/BN</button>
+      </div>
     </form>`;
   }
   async function hydrateAdminUsers(force){
@@ -648,7 +761,28 @@
   }
   async function hydrateAdmin(){
     await hydrateAdminCatalogue(false);
-    try{ const posts = await window.HLDatabase.select('insights_posts','?select=category,title,active,media_type,created_at&order=created_at.desc&limit=8'); const list=document.querySelector('[data-admin-insight-list]'); if(list && Array.isArray(posts)){ list.innerHTML = posts.length ? posts.map(x=>`<div class="admin-list-item"><span><strong>${escapeHTML(x.title)}</strong><br>${escapeHTML(x.category)} • ${escapeHTML(x.media_type || 'article')}</span><span>${x.active?'Live':'Draft'}</span></div>`).join('') : '<div class="admin-list-item"><span>No insight posts yet.</span></div>'; } }catch{}
+    try{
+      const posts = await window.HLDatabase.select('insights_posts','?select=id,category,title,slug,excerpt,body,active,pinned,media_type,media_url,created_at&order=created_at.desc&limit=20');
+      const list=document.querySelector('[data-admin-insight-list]');
+      if(list && Array.isArray(posts)){
+        list.innerHTML = posts.length ? posts.map(x=>`<form class="admin-user-card" data-insight-editor>
+          <input type="hidden" name="id" value="${escapeHTML(x.id||'')}" />
+          <div class="admin-user-top"><div><strong>${escapeHTML(x.title||'')}</strong><span>${escapeHTML(x.category||'')} • ${x.active?'Live':'Draft'}</span></div><span class="status-pill ${x.active?'verified':'pending'}">${x.active?'Live':'Draft'}</span></div>
+          <div class="admin-user-fields">
+            <div class="form-row"><label>Title</label><input name="title" value="${escapeHTML(x.title||'')}" required /></div>
+            <div class="form-row"><label>Category</label><input name="category" value="${escapeHTML(x.category||'')}" /></div>
+            <div class="form-row form-row-wide"><label>Excerpt</label><textarea name="excerpt" rows="2">${escapeHTML(x.excerpt||'')}</textarea></div>
+            <div class="form-row form-row-wide"><label>Body</label><textarea name="body" rows="4">${escapeHTML(x.body||'')}</textarea></div>
+            <label class="check-row"><input type="checkbox" name="active" ${x.active?'checked':''}/> Active</label>
+            <label class="check-row"><input type="checkbox" name="pinned" ${x.pinned?'checked':''}/> Pinned</label>
+          </div>
+          <div class="admin-user-actions">
+            <button class="btn btn-primary btn-sm" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            <button class="btn btn-danger btn-sm" type="button" data-delete-insight><i class="fa-solid fa-trash"></i> Delete</button>
+          </div>
+        </form>`).join('') : '<div class="admin-list-item"><span>No insight posts yet.</span></div>';
+      }
+    }catch{}
     await hydrateAdminUsers(false);
   }
   initAdmin();

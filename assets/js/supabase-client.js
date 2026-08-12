@@ -145,6 +145,9 @@
   async function select(table, query, options){
     return supabaseFetch(`/rest/v1/${encodeURIComponent(table)}${query || ""}`, { method:"GET", token: options && options.token ? options.token : currentAccessToken() });
   }
+  async function remove(table, query, options){
+    return supabaseFetch(`/rest/v1/${encodeURIComponent(table)}${query || ""}`, { method:"DELETE", headers:{ Prefer: "return=minimal" }, token: options && options.token ? options.token : currentAccessToken() });
+  }
 
   async function syncMyProfile(metadata){
     await ready.catch(()=>{});
@@ -157,14 +160,54 @@
       profile_address: String(meta.address || "").trim(),
       profile_preferred_pillar: String(meta.preferred_pillar || meta.preferredPillar || "").trim(),
       profile_bio: String(meta.bio || meta.notes || "").trim(),
-      profile_website: String(meta.website || meta.url || "").trim()
+      profile_website: String(meta.website || meta.url || "").trim(),
+      profile_rc_bn: String(meta.rc_bn || meta.rc_number || meta.bn_number || "").trim()
     };
+    const row = {
+      full_name: payload.profile_full_name,
+      phone: payload.profile_phone,
+      company: payload.profile_company,
+      country: payload.profile_country,
+      address: payload.profile_address,
+      preferred_pillar: payload.profile_preferred_pillar,
+      bio: payload.profile_bio,
+      website: payload.profile_website,
+      rc_bn: payload.profile_rc_bn,
+      updated_at: new Date().toISOString()
+    };
+    // Prefer RPC when available; fall back to direct profiles update (works once schema is applied)
     if(client && client.rpc){
-      const { data, error } = await client.rpc("sync_my_profile", payload);
-      if(error) throwFriendly(error, "Profile sync failed.");
-      return data;
+      try{
+        const { data, error } = await client.rpc("sync_my_profile", payload);
+        if(!error) return data;
+        const msg = String(error.message || error.details || "");
+        if(!/could not find the function|schema cache|does not exist/i.test(msg)){
+          throwFriendly(error, "Profile sync failed.");
+        }
+      }catch(err){
+        const msg = String(err && err.message || "");
+        if(msg && !/could not find the function|schema cache|does not exist/i.test(msg)){
+          throw err;
+        }
+      }
     }
-    return supabaseFetch("/rest/v1/rpc/sync_my_profile", { method:"POST", token: currentAccessToken(), body: JSON.stringify(payload) });
+    const user = await getCurrentUser();
+    if(!user || !user.id) throw new Error("Sign in required to update your profile.");
+    const token = currentAccessToken();
+    // Upsert-style: update existing profile row for this user
+    try{
+      const updated = await update("profiles", `?id=eq.${encodeURIComponent(user.id)}`, row, { token });
+      if(Array.isArray(updated) && updated.length) return updated[0];
+    }catch{}
+    // If no row yet, insert
+    const insertPayload = Object.assign({
+      id: user.id,
+      email: user.email || "",
+      role: "premium",
+      account_status: "pending",
+      is_verified: false
+    }, row);
+    return insert("profiles", insertPayload, { token });
   }
 
   async function signUp(email, password, metadata){
@@ -256,11 +299,54 @@
   }
   async function inviteUser(email, metadata){
     await ready.catch(()=>{});
-    if(client && client.functions){
-      const { data, error } = await client.functions.invoke("invite-user", { body:{ email, metadata: metadata || {}, redirectTo: authRedirect("auth.html?invited=1") } });
-      throwFriendly(error, "Request failed."); return data;
+    const cleanEmail = String(email || "").trim().toLowerCase();
+    if(!cleanEmail) throw new Error("Enter an email address to invite.");
+    const body = { email: cleanEmail, metadata: metadata || {}, redirectTo: authRedirect("register.html?invited=1&email="+encodeURIComponent(cleanEmail)) };
+    // Try Edge Function first
+    try{
+      if(client && client.functions){
+        const { data, error } = await client.functions.invoke("invite-user", { body });
+        if(!error) return data;
+        const msg = String(error.message || error.context || "");
+        if(!/Failed to send a request to the Edge Function|Failed to fetch|not found|404|FunctionsRelayError/i.test(msg)){
+          throwFriendly(error, "Invitation failed.");
+        }
+      } else {
+        try{
+          return await supabaseFetch("/functions/v1/invite-user", { method:"POST", token: currentAccessToken(), body: JSON.stringify(body) });
+        }catch(err){
+          const msg = String(err && err.message || "");
+          if(!/Failed to send|Failed to fetch|not found|404/i.test(msg)) throw err;
+        }
+      }
+    }catch(err){
+      const msg = String(err && err.message || "");
+      if(!/Failed to send|Failed to fetch|not found|404|Edge Function/i.test(msg)) throw err;
     }
-    return supabaseFetch("/functions/v1/invite-user", { method:"POST", token: currentAccessToken(), body: JSON.stringify({ email, metadata: metadata || {}, redirectTo: authRedirect("auth.html?invited=1") }) });
+    // Fallback without Edge Function: record pending invite + return register link
+    const admin = await requireAdminSession();
+    const meta = metadata || {};
+    const inviteRow = {
+      email: cleanEmail,
+      full_name: String(meta.full_name || "").trim(),
+      invited_by: admin.id,
+      status: "pending",
+      created_at: new Date().toISOString()
+    };
+    try{
+      await insert("pending_invites", inviteRow, { token: currentAccessToken() });
+    }catch(err){
+      // Table may not exist yet — still return usable invite link
+      console.warn("pending_invites insert skipped:", err && err.message);
+    }
+    const registerUrl = authRedirect("register.html?invited=1&email="+encodeURIComponent(cleanEmail));
+    return {
+      ok: true,
+      mode: "fallback-link",
+      email: cleanEmail,
+      register_url: registerUrl,
+      message: "Edge Function is not deployed. Share this registration link with the invitee: "+registerUrl
+    };
   }
 
   async function invokeFunction(name, body){
@@ -416,7 +502,7 @@
 
   window.HL_CONFIG = config;
   window.HLDatabase = {
-    config, client, ready, request:supabaseFetch, insert, update, select,
+    config, client, ready, request:supabaseFetch, insert, update, select, delete:remove, remove,
     signUp, signIn, signOut, resendConfirmation, resetPassword,
     updateUser, changeEmail, updatePassword, signInWithGoogle, inviteUser, adminUsers,
     getSession, setSession, currentAccessToken, getCurrentUser, getProfile, syncMyProfile, isAdminEmail,

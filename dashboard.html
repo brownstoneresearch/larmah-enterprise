@@ -34,7 +34,7 @@
   <script defer src="assets/js/supabase-client.js"></script>
   <script defer src="assets/js/app.js"></script>
 </head>
-<body data-page="dashboard">
+<body data-page="dashboard" data-requires-auth="true">
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header" id="siteHeader">
     <div class="container nav-shell">
@@ -81,8 +81,8 @@
       <div class="container dash-topbar-inner">
         <div class="dash-welcome">
           <span class="eyebrow"><i class="fa-solid fa-lock"></i> Premium dashboard · RC 9488632</span>
-          <h1>Your enterprise desk</h1>
-          <p class="dash-user-line">Signed in as <span data-user-email>premium user</span></p>
+          <h1>Welcome, <span data-dash-welcome-name data-user-first-name>Client</span></h1>
+          <p class="dash-user-line" data-user-email>loading@email</p>
         </div>
         <div class="dash-top-actions">
           <div class="mini-proof">
@@ -128,10 +128,10 @@
           <div class="profile-card">
             <div class="profile-avatar"><i class="fa-solid fa-user"></i></div>
             <span class="eyebrow">Secured profile</span>
-            <h2>Account overview</h2>
+            <h2 class="profile-display-name" data-user-first-name>Client</h2>
+            <p class="profile-email-line" data-user-email>loading@email</p>
             <ul class="profile-meta">
-              <li><span>Email</span><strong data-user-email>premium user</strong></li>
-              <li><span>User ID</span><strong data-user-id class="mono">loading</strong></li>
+              <li><span>User ID</span><strong data-user-id class="mono">—</strong></li>
               <li><span>Access</span><strong data-profile-role>Premium</strong></li>
               <li><span>Status</span><strong data-profile-status>Checking verification</strong></li>
             </ul>
@@ -184,6 +184,7 @@
               <div class="form-row"><label>Phone number</label><input name="phone" autocomplete="tel" placeholder="+234..." /></div>
               <div class="form-row"><label>Country</label><input name="country" autocomplete="country-name" placeholder="Nigeria" /></div>
               <div class="form-row"><label>Company / organisation</label><input name="company" autocomplete="organization" placeholder="Business or organisation name" /></div>
+              <div class="form-row"><label>RC / BN number</label><input name="rc_bn" placeholder="e.g. RC 9488632 or BN number" /></div>
               <div class="form-row">
                 <label>Preferred pillar</label>
                 <select name="preferred_pillar">
