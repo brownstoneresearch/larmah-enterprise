@@ -34,21 +34,21 @@
   <script defer src="assets/js/supabase-client.js"></script>
   <script defer src="assets/js/app.js"></script>
 </head>
-<body data-page="dashboard" data-requires-auth="true">
+<body data-page="dashboard">
   <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header" id="siteHeader">
+  <header class="site-header" id="siteHeader">
     <div class="container nav-shell">
       <a class="brand brand-icon-only" href="index.html" aria-label="Hey Larmah Enterprise Limited homepage">
         <span class="brand-mark"><img src="assets/images/larmah-logo-icon-256.webp" width="56" height="56" alt="Hey Larmah Enterprise Limited logo icon" /></span>
       </a>
-      <nav class="desktop-nav" aria-label="Main navigation">
-        <a class="nav-link " href="real-estate.html">Real Estate</a>
-<a class="nav-link " href="fintech.html">Fintech</a>
-<a class="nav-link " href="logistics.html">Logistics</a>
-<a class="nav-link " href="shipping.html">Shipping</a>
-<a class="nav-link " href="premium.html">Premium</a>
-<a class="nav-link " href="insights.html">Insights</a>
-<a class="nav-link " href="contact.html">Contact</a>
+      <nav class="desktop-nav" aria-label="Primary">
+        <a class="nav-link" href="real-estate.html">Real Estate</a>
+        <a class="nav-link" href="fintech.html">Fintech</a>
+        <a class="nav-link" href="logistics.html">Logistics</a>
+        <a class="nav-link" href="shipping.html">Shipping</a>
+        <a class="nav-link" href="premium.html">Premium</a>
+        <a class="nav-link" href="insights.html">Insights</a>
+        <a class="nav-link" href="contact.html">Contact</a>
       </nav>
       <div class="nav-actions">
         <div class="header-social social-icons" aria-label="Official social links">
@@ -62,111 +62,171 @@
     </div>
     <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
       <div class="container mobile-menu-inner">
-        <a class="mobile-link " href="real-estate.html">Real Estate<span>→</span></a>
-<a class="mobile-link " href="fintech.html">Fintech<span>→</span></a>
-<a class="mobile-link " href="logistics.html">Logistics<span>→</span></a>
-<a class="mobile-link " href="shipping.html">Shipping<span>→</span></a>
-<a class="mobile-link " href="premium.html">Premium<span>→</span></a>
-<a class="mobile-link " href="insights.html">Insights<span>→</span></a>
-<a class="mobile-link " href="contact.html">Contact<span>→</span></a>
-        <div class="mobile-social-wrap">
-          <div class="social-icons" aria-label="Official social links">
-            <a href="https://www.instagram.com/heylarmah_ltd/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-            <a href="https://x.com/heylarmah_ltd" target="_blank" rel="noopener" aria-label="X.com"><i class="fa-brands fa-x-twitter"></i></a>
-            <a href="https://www.tiktok.com/@heylarmah_ltd" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-          </div>
-        </div>
+        <a class="mobile-link" href="real-estate.html">Real Estate<span>→</span></a>
+        <a class="mobile-link" href="fintech.html">Fintech<span>→</span></a>
+        <a class="mobile-link" href="logistics.html">Logistics<span>→</span></a>
+        <a class="mobile-link" href="shipping.html">Shipping<span>→</span></a>
+        <a class="mobile-link" href="premium.html">Premium<span>→</span></a>
+        <a class="mobile-link" href="insights.html">Insights<span>→</span></a>
+        <a class="mobile-link" href="contact.html">Contact<span>→</span></a>
       </div>
     </div>
   </header>
-  <main id="main">
-    <section class="dashboard-hero">
-      <div class="container reveal">
-        <span class="eyebrow"><i class="fa-solid fa-lock"></i> Premium user dashboard • RC: 9488632</span>
-        <h1>Welcome, <span data-user-email>premium user</span>.</h1>
-        <p>Your dashboard is secured with your email and password.</p>
-        <div class="dash-toolbar"><div class="mini-proof"><span>Real Estate</span><span>Fintech</span><span>Logistics</span><span>Shipping</span></div><button class="btn btn-danger" type="button" data-sign-out><i class="fa-solid fa-right-from-bracket"></i> Sign out</button></div>
-      </div>
-    </section>
-    <section class="section compact-section"><div class="container dash-grid"><article class="dash-card card reveal"><i class="fa-solid fa-building"></i><strong>0</strong><span>Real Estate requests</span></article><article class="dash-card card reveal"><i class="fa-solid fa-chart-line"></i><strong>0</strong><span>Fintech enquiries</span></article><article class="dash-card card reveal"><i class="fa-solid fa-truck-fast"></i><strong>0</strong><span>Logistics movements</span></article><article class="dash-card card reveal"><i class="fa-solid fa-ship"></i><strong>0</strong><span>Shipping briefs</span></article></div></section>
-    <section class="section">
-      <div class="container dashboard-layout">
-        <aside class="profile-card reveal"><span class="eyebrow">Secured profile</span><h2>Premium access</h2><p><strong>Email:</strong> <span data-user-email>premium user</span></p><p><strong>User ID:</strong> <span data-user-id>loading</span></p><p><strong>Access:</strong> <span data-profile-role>Premium</span></p><p><strong>Status:</strong> <span data-profile-status>Checking verification</span></p><p>Use the enquiry form to save client requests into your profile and open WhatsApp at the same time.</p></aside>
-        <form class="auth-card card js-wa-form reveal" data-wa-title="Premium Dashboard Enquiry"><span class="eyebrow">New request</span><h2>Send a secured enquiry.</h2><div class="form-grid"><div class="form-row"><label>Pillar</label><select name="Pillar"><option>Real Estate</option><option>Fintech</option><option>Logistics</option><option>Shipping</option><option>Premium</option></select></div><div class="form-row"><label>Request title</label><input name="Name" required placeholder="Example: property inspection or cargo movement" /></div><div class="form-row"><label>Details</label><textarea name="Message" required placeholder="Provide the details for the team"></textarea></div><button class="btn btn-primary" type="submit"><i class="fa-brands fa-whatsapp"></i> Save and send to WhatsApp</button></div></form>
-      </div>
-    </section>
-    <section class="section compact-section dashboard-bio-section">
-      <div class="container">
-        <div class="section-head reveal">
-          <span class="eyebrow"><i class="fa-solid fa-id-card"></i> Bio data</span>
-          <h2>Update your client profile.</h2>
-          <p>Keep your name, phone number, country, company and preferred service details current so the Hey Larmah team can support your requests accurately.</p>
+
+  <main id="main" class="dash-app">
+    <!-- Top bar -->
+    <section class="dash-topbar">
+      <div class="container dash-topbar-inner">
+        <div class="dash-welcome">
+          <span class="eyebrow"><i class="fa-solid fa-lock"></i> Premium dashboard · RC 9488632</span>
+          <h1>Welcome back</h1>
+          <p class="dash-user-line"><span data-user-email>premium user</span></p>
         </div>
-        <form class="auth-card card bio-data-card reveal" data-profile-update-form>
-          <div class="form-grid two-col-form">
-            <div class="form-row"><label>Full name</label><input name="full_name" autocomplete="name" placeholder="Your full name" /></div>
-            <div class="form-row"><label>Phone number</label><input name="phone" autocomplete="tel" placeholder="+234..." /></div>
-            <div class="form-row"><label>Country</label><input name="country" autocomplete="country-name" placeholder="Nigeria" /></div>
-            <div class="form-row"><label>Company / organisation</label><input name="company" autocomplete="organization" placeholder="Business or organisation name" /></div>
-            <div class="form-row"><label>Preferred pillar</label><select name="preferred_pillar"><option value="">Select preferred pillar</option><option value="real-estate">Real Estate</option><option value="fintech">Fintech</option><option value="logistics">Logistics</option><option value="shipping">Shipping</option><option value="premium">Premium</option></select></div>
-            <div class="form-row"><label>Location / address</label><input name="address" autocomplete="street-address" placeholder="City, state or business address" /></div>
-            <div class="form-row form-row-wide"><label>Bio / business note</label><textarea name="bio" rows="4" placeholder="Briefly describe your business, enquiry focus, or what you want Hey Larmah to know."></textarea></div>
-            <div class="form-row form-row-wide"><label>Website or social link</label><input name="website" inputmode="url" placeholder="Optional website or business profile link" /></div>
-            <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save bio data</button>
+        <div class="dash-top-actions">
+          <div class="mini-proof">
+            <span>Real Estate</span><span>Fintech</span><span>Logistics</span><span>Shipping</span>
           </div>
-          <p class="auth-status" data-profile-update-status></p>
-        </form>
-      </div>
-    </section>
-    <section class="section security-section">
-      <div class="container">
-        <div class="section-head reveal"><span class="eyebrow">Account security</span><h2>Manage your verified access.</h2><p>Update sensitive account details with verified email flows and password-based reauthentication.</p></div>
-        <div class="security-grid">
-          <form class="auth-card card reveal" data-change-email-form>
-            <span class="eyebrow">Change email address</span>
-            <h2>Verify new email</h2>
-            <p>Enter a new email address. Supabase will ask you to verify the change before it becomes active.</p>
-            <div class="form-grid">
-              <div class="form-row"><label>New email</label><input type="email" name="email" required autocomplete="email" /></div>
-              <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-envelope-circle-check"></i> Request email change</button>
-            </div>
-            <p class="auth-status" data-auth-status></p>
-          </form>
-          <form class="auth-card card reveal" data-reauth-form>
-            <span class="eyebrow">Reauthentication</span>
-            <h2>Confirm identity</h2>
-            <p>Enter your current password to refresh your secure session before sensitive account updates.</p>
-            <div class="form-grid">
-              <div class="form-row"><label>Current password</label><input type="password" name="password" required autocomplete="current-password" /></div>
-              <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-fingerprint"></i> Reconfirm identity</button>
-            </div>
-            <p class="auth-status" data-auth-status></p>
-          </form>
-          <form class="auth-card card reveal" data-update-password-form>
-            <span class="eyebrow">Password security</span>
-            <h2>Update password</h2>
-            <p>Set a new password after confirming your identity or opening a password reset link.</p>
-            <div class="form-grid">
-              <div class="form-row"><label>New password</label><input type="password" name="password" required minlength="8" autocomplete="new-password" /></div>
-              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-shield-halved"></i> Update password</button>
-            </div>
-            <p class="auth-status" data-auth-status></p>
-          </form>
-          <form class="auth-card card reveal" data-reset-form>
-            <span class="eyebrow">Reset link</span>
-            <h2>Send recovery email</h2>
-            <p>Need a fresh reset email? Send a recovery link to your verified address.</p>
-            <div class="form-grid">
-              <div class="form-row"><label>Email</label><input type="email" name="email" required autocomplete="email" /></div>
-              <button class="btn btn-ghost" type="submit"><i class="fa-solid fa-envelope-open-text"></i> Send reset link</button>
-            </div>
-            <p class="auth-status" data-auth-status></p>
-          </form>
+          <button class="btn btn-danger" type="button" data-sign-out>
+            <i class="fa-solid fa-right-from-bracket"></i> Sign out
+          </button>
         </div>
       </div>
     </section>
-    <section class="section"><div class="container"><div class="section-head reveal"><span class="eyebrow">Recent activity</span><h2>Your saved enquiries.</h2></div><div class="activity-list reveal" data-user-requests><div class="activity-item"><strong>Loading</strong><span>Fetching your secured request records.</span></div></div></div></section>
+
+    <!-- Stats -->
+    <section class="section compact-section">
+      <div class="container dash-stats">
+        <article class="stat-card reveal">
+          <div class="stat-icon"><i class="fa-solid fa-building"></i></div>
+          <div class="stat-body"><strong data-stat-re>0</strong><span>Real Estate</span></div>
+        </article>
+        <article class="stat-card reveal">
+          <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="stat-body"><strong data-stat-ft>0</strong><span>Fintech</span></div>
+        </article>
+        <article class="stat-card reveal">
+          <div class="stat-icon"><i class="fa-solid fa-truck-fast"></i></div>
+          <div class="stat-body"><strong data-stat-lg>0</strong><span>Logistics</span></div>
+        </article>
+        <article class="stat-card reveal">
+          <div class="stat-icon"><i class="fa-solid fa-ship"></i></div>
+          <div class="stat-body"><strong data-stat-sh>0</strong><span>Shipping</span></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Main grid -->
+    <section class="section">
+      <div class="container dash-main-grid">
+        <!-- Sidebar profile -->
+        <aside class="dash-sidebar reveal">
+          <div class="profile-card">
+            <div class="profile-avatar"><i class="fa-solid fa-user"></i></div>
+            <span class="eyebrow">Secured profile</span>
+            <h2>Premium access</h2>
+            <ul class="profile-meta">
+              <li><span>Email</span><strong data-user-email>premium user</strong></li>
+              <li><span>User ID</span><strong data-user-id class="mono">loading</strong></li>
+              <li><span>Access</span><strong data-profile-role>Premium</strong></li>
+              <li><span>Status</span><strong data-profile-status>Checking verification</strong></li>
+            </ul>
+            <p class="profile-note">Use the enquiry form to save client requests into your profile and open WhatsApp at the same time.</p>
+          </div>
+        </aside>
+
+        <!-- Main content -->
+        <div class="dash-content">
+          <!-- New enquiry -->
+          <form class="dash-panel card js-wa-form reveal" data-wa-title="Premium Dashboard Enquiry">
+            <div class="panel-head">
+              <span class="eyebrow">New request</span>
+              <h2>Send a secured enquiry</h2>
+            </div>
+            <div class="form-grid">
+              <div class="form-row">
+                <label>Pillar</label>
+                <select name="Pillar">
+                  <option>Real Estate</option>
+                  <option>Fintech</option>
+                  <option>Logistics</option>
+                  <option>Shipping</option>
+                  <option>Premium</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>Request title</label>
+                <input name="Name" required placeholder="Example: property inspection or cargo movement" />
+              </div>
+              <div class="form-row form-row-wide">
+                <label>Details</label>
+                <textarea name="Message" required rows="4" placeholder="Provide the details for the team"></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit">
+                <i class="fa-brands fa-whatsapp"></i> Save and send to WhatsApp
+              </button>
+            </div>
+          </form>
+
+          <!-- Bio data -->
+          <form class="dash-panel card reveal" data-profile-update-form>
+            <div class="panel-head">
+              <span class="eyebrow"><i class="fa-solid fa-id-card"></i> Bio data</span>
+              <h2>Update your client profile</h2>
+              <p>Keep your details current so the team can support your requests accurately.</p>
+            </div>
+            <div class="form-grid two-col-form">
+              <div class="form-row"><label>Full name</label><input name="full_name" autocomplete="name" placeholder="Your full name" /></div>
+              <div class="form-row"><label>Phone number</label><input name="phone" autocomplete="tel" placeholder="+234..." /></div>
+              <div class="form-row"><label>Country</label><input name="country" autocomplete="country-name" placeholder="Nigeria" /></div>
+              <div class="form-row"><label>Company / organisation</label><input name="company" autocomplete="organization" placeholder="Business or organisation name" /></div>
+              <div class="form-row">
+                <label>Preferred pillar</label>
+                <select name="preferred_pillar">
+                  <option value="">Select preferred pillar</option>
+                  <option value="real-estate">Real Estate</option>
+                  <option value="fintech">Fintech</option>
+                  <option value="logistics">Logistics</option>
+                  <option value="shipping">Shipping</option>
+                  <option value="premium">Premium</option>
+                </select>
+              </div>
+              <div class="form-row"><label>Location / address</label><input name="address" autocomplete="street-address" placeholder="City, state or business address" /></div>
+              <div class="form-row form-row-wide"><label>Bio / business note</label><textarea name="bio" rows="3" placeholder="Briefly describe your business or enquiry focus."></textarea></div>
+              <div class="form-row form-row-wide"><label>Website or social link</label><input name="website" inputmode="url" placeholder="Optional website or business profile link" /></div>
+              <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save bio data</button>
+            </div>
+            <p class="auth-status" data-profile-update-status></p>
+          </form>
+
+          <!-- Security -->
+          <div class="dash-panel card reveal security-panel">
+            <div class="panel-head">
+              <span class="eyebrow">Account security</span>
+              <h2>Manage your verified access</h2>
+            </div>
+            <div class="security-grid">
+              <form class="security-block" data-reauth-form>
+                <h3><i class="fa-solid fa-key"></i> Confirm identity</h3>
+                <p>Re-enter your password to refresh the secure session before making sensitive changes.</p>
+                <div class="form-row"><label>Current password</label><input type="password" name="password" required autocomplete="current-password" /></div>
+                <button class="btn btn-ghost" type="submit">Confirm identity</button>
+                <p class="auth-status" data-auth-status></p>
+              </form>
+              <form class="security-block" data-password-update-form>
+                <h3><i class="fa-solid fa-lock"></i> Change password</h3>
+                <p>Choose a strong password with at least 8 characters.</p>
+                <div class="form-row"><label>New password</label><input type="password" name="password" required autocomplete="new-password" minlength="8" /></div>
+                <div class="form-row"><label>Confirm password</label><input type="password" name="confirm_password" required autocomplete="new-password" minlength="8" /></div>
+                <button class="btn btn-ghost" type="submit">Update password</button>
+                <p class="auth-status" data-password-status></p>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
@@ -180,22 +240,11 @@
         <a href="insights.html">Insights</a>
         <a href="auth.html">Client Login</a>
         <a href="register.html">Create Account</a>
-        <a href="services/index.html">Service Map</a>
-        <a href="contact.html">Contact</a>
       </div>
       <div>
-        <h3>Pillars</h3>
-        <a href="real-estate.html">Real Estate</a>
-        <a href="fintech.html">Fintech</a>
-        <a href="logistics.html">Logistics</a>
-        <a href="shipping.html">Shipping</a>
-        <a href="services/index.html">All Services</a>
-      </div>
-      <div>
-        <h3>Enquiries</h3>
-        <p>For catalogue requests, property interest, logistics movement, fintech support or shipping coordination, chat with the team directly.</p>
-        <a class="footer-email" href="/cdn-cgi/l/email-protection#4c2d282125220c242935202d3e212d2462343536"><i class="fa-solid fa-envelope"></i> <span class="__cf_email__" data-cfemail="d1b0b5bcb8bf91b9b4a8bdb0a3bcb0b9ffa9a8ab">[email&#160;protected]</span></a>
-        <a class="btn btn-primary btn-wide" href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20am%20making%20an%20enquiry%20from%20the%20website." target="_blank" rel="noopener" data-enquiry-title="Footer enquiry"><i class="fa-brands fa-whatsapp"></i> Open WhatsApp Chat</a>
+        <h3>Contact</h3>
+        <a href="contact.html">Contact desk</a>
+        <a href="https://wa.me/2347063080605" target="_blank" rel="noopener">WhatsApp</a>
       </div>
     </div>
     <div class="container footer-bottom">
@@ -203,34 +252,10 @@
       <span>Building assets. Moving trade. Financing growth.</span>
     </div>
   </footer>
+
   <div class="floating-actions" aria-label="Quick WhatsApp action">
     <a href="https://wa.me/2347063080605?text=Hello%20Hey%20Larmah%2C%20I%20need%20assistance." target="_blank" rel="noopener" aria-label="Chat with Hey Larmah on WhatsApp" data-enquiry-title="Floating WhatsApp"><i class="fa-brands fa-whatsapp"></i><span>Chat</span></a>
   </div>
-  <section class="cookie-consent" data-cookie-consent hidden aria-live="polite">
-    <div class="cookie-panel">
-      <div class="cookie-icon"><i class="fa-solid fa-shield-halved"></i></div>
-      <div class="cookie-copy">
-        <strong>Cloudflare cookie consent</strong>
-        <p>We use essential cookies for Cloudflare security, site performance and secure login sessions. Optional analytics cookies stay off unless accepted.</p>
-        <button class="cookie-link" type="button" data-cookie-manage>Manage preferences</button>
-      </div>
-      <div class="cookie-actions">
-        <button class="btn btn-ghost btn-sm" type="button" data-cookie-essential>Essential only</button>
-        <button class="btn btn-primary btn-sm" type="button" data-cookie-accept>Accept all</button>
-      </div>
-    </div>
-    <div class="cookie-preferences" data-cookie-preferences hidden>
-      <div class="cookie-preferences-card">
-        <button class="modal-close" type="button" data-cookie-close aria-label="Close cookie preferences">×</button>
-        <span class="eyebrow">Privacy controls</span>
-        <h2>Cookie preferences</h2>
-        <p>Essential cookies support Cloudflare security checks, theme preference and secure portal sessions. Analytics can be enabled later when tracking tools are connected.</p>
-        <label class="check-row"><input type="checkbox" checked disabled /> Essential security and session cookies</label>
-        <label class="check-row"><input type="checkbox" data-analytics-toggle /> Optional analytics cookies</label>
-        <button class="btn btn-primary" type="button" data-cookie-save>Save preferences</button>
-      </div>
-    </div>
-  </section>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+</body>
 </html>
